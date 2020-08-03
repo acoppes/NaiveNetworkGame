@@ -109,5 +109,21 @@ public class ServerBehaviour : MonoBehaviour
                 }
             }
         }
+        
+        for (var i = 0; i < m_Connections.Length; i++)
+        {
+            if (m_Connections[i].IsCreated)
+            {
+                var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
+                        
+                new GamePacket
+                {
+                    type = GamePacket.GAME_STATE_UPDATE,
+                    mainObjectPosition = (Vector2) moveObject.transform.position
+                }.Write(ref writer);
+                    
+                m_Driver.EndSend(writer);
+            }
+        }
     }
 }

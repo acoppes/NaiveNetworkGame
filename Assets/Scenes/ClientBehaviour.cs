@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using UnityEngine;
 
 using Unity.Networking.Transport;
@@ -10,6 +9,8 @@ public class ClientBehaviour : MonoBehaviour
     public NetworkConnection m_Connection;
     public bool m_Done;
 
+    public GameObject clientObject;
+    
     void Start ()
     {
         m_Driver = NetworkDriver.Create();
@@ -70,11 +71,16 @@ public class ClientBehaviour : MonoBehaviour
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                var value = stream.ReadUInt();
-
-                if (value == GamePacket.SERVER_ACK)
+                var packet = new GamePacket().Read(stream);
+                
+                if (packet.type == GamePacket.SERVER_ACK)
                 {
                     Debug.Log("Got ACK from server");
+                }
+                else if (packet.type == GamePacket.GAME_STATE_UPDATE)
+                {
+                    clientObject.transform.position = new Vector3(packet.mainObjectPosition.x, 
+                        packet.mainObjectPosition.y, 0);
                 }
                 
                 // m_Done = true;
