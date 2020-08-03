@@ -2,12 +2,16 @@
 using UnityEngine.Assertions;
 
 using Unity.Collections;
+using Unity.Mathematics;
 using Unity.Networking.Transport;
 
 public class ServerBehaviour : MonoBehaviour
 {
     public NetworkDriver m_Driver;
     private NativeList<NetworkConnection> m_Connections;
+
+    public GameObject moveObject;
+    public float speed = 1;
 
     void Start ()
     {
@@ -57,16 +61,46 @@ public class ServerBehaviour : MonoBehaviour
             NetworkEvent.Type cmd;
             while ((cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
             {
+                // if (!stream.IsCreated)
+                //     continue;
+                
                 if (cmd == NetworkEvent.Type.Data)
                 {
-                    uint number = stream.ReadUInt();
+                    // var number = stream.ReadUInt();
+                    // var f1 = stream.ReadFloat();
+                    // var f2 = stream.ReadFloat();
+                    
+                    var packet = new GamePacket().Read(stream);
 
-                    Debug.Log("Got " + number + " from the Client adding + 2 to it.");
-                    number +=2;
+                    if (packet.type == GamePacket.CONNECT_COMMAND)
+                    {
+                        Debug.Log("New client connected, sending ACK");
+                        
+                        var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
+                        
+                        new GamePacket
+                        {
+                            type = GamePacket.SERVER_ACK
+                        }.Write(ref writer);
+                    
+                        m_Driver.EndSend(writer);
+                    }
+                    
+                    if (packet.type == GamePacket.MOVE_COMMAND)
+                    {
+                        // TODO: move something in the screen
+                        Debug.Log("new move command received!!");
 
-                    var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
-                    writer.WriteUInt(number);
-                    m_Driver.EndSend(writer);
+                        var dir = new float3(packet.direction, 0);
+                        moveObject.transform.position += (Vector3) dir * (speed * Time.deltaTime);
+                    }
+                    
+                    // Debug.Log("Got " + number + " from the Client adding + 2 to it.");
+                    // number +=2;
+                    //
+                    // var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
+                    // writer.WriteUInt(number);
+                    // m_Driver.EndSend(writer);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {

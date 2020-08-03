@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using Unity.Mathematics;
+using UnityEngine;
 
 using Unity.Networking.Transport;
 
@@ -43,23 +45,79 @@ public class ClientBehaviour : MonoBehaviour
             {
                 Debug.Log("We are now connected to the server");
 
-                uint value = 1;
+                var packet = new GamePacket
+                {
+                    type = 1,
+                    direction = new float2(0, 0)
+                };
+                
+                // uint value = 1;
+
                 var writer = m_Driver.BeginSend(m_Connection);
-                writer.WriteUInt(value);
+
+                // new GamePacket
+                // {
+                //     type = GamePacket.CONNECT_COMMAND
+                // }.Write(writer);
+                
+                packet.Write(ref writer);
+                
+                // writer.WriteUInt(packet.type);
+                // writer.WriteFloat(packet.direction.x);
+                // writer.WriteFloat(packet.direction.y);
+
                 m_Driver.EndSend(writer);
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                uint value = stream.ReadUInt();
-                Debug.Log("Got the value = " + value + " back from the server");
-                m_Done = true;
-                m_Connection.Disconnect(m_Driver);
-                m_Connection = default(NetworkConnection);
+                var value = stream.ReadUInt();
+
+                if (value == GamePacket.SERVER_ACK)
+                {
+                    Debug.Log("Got ACK from server");
+                }
+                
+                // m_Done = true;
+                // m_Connection.Disconnect(m_Driver);
+                // m_Connection = default(NetworkConnection);
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
                 Debug.Log("Client got disconnected from server");
                 m_Connection = default(NetworkConnection);
+            }
+        }
+
+        if (m_Connection.IsCreated)
+        {
+            var move = false;
+            var moveVector = float2.zero;
+            
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                move = true;
+                moveVector.x = -1;
+            }
+            
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                move = true;
+                moveVector.x = 1;
+            }
+
+            if (move)
+            {
+                var writer = m_Driver.BeginSend(m_Connection);
+           
+                new GamePacket
+                {
+                    type = GamePacket.MOVE_COMMAND,
+                    direction = moveVector
+                }.Write(ref writer);
+                
+                // writer.WriteFloat(moveVector.x);
+                
+                m_Driver.EndSend(writer);
             }
         }
     }
