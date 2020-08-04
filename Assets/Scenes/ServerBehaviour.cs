@@ -142,7 +142,7 @@ public class ServerBehaviour : MonoBehaviour
                     new GamePacket
                     {
                         type = GamePacket.SERVER_GAMESTATE_UPDATE,
-                        clientId = (uint) i,
+                        clientId = (uint) j,
                         mainObjectPosition = (Vector2) clientObject.transform.position
                     }.Write(ref writer);
                     
