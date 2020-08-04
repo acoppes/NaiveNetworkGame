@@ -9,8 +9,13 @@ public class ClientBehaviour : MonoBehaviour
     public NetworkConnection m_Connection;
     public bool m_Done;
 
-    public GameObject clientObject;
+    public GameObject clientObjectPrefab;
+
+    private GameObject[] clientObjects = new GameObject[20];
     
+    private bool clientObjectCreated;
+    private uint clientId;
+
     void Start ()
     {
         m_Driver = NetworkDriver.Create();
@@ -73,12 +78,22 @@ public class ClientBehaviour : MonoBehaviour
             {
                 var packet = new GamePacket().Read(stream);
                 
-                if (packet.type == GamePacket.SERVER_ACK)
+                if (packet.type == GamePacket.SERVER_CONNECTION_COMPLETED)
                 {
-                    Debug.Log("Got ACK from server");
+                    clientId = packet.clientId;
+                    clientObjectCreated = true;
+                    
+                    Debug.Log("Got clientid from server");
                 }
-                else if (packet.type == GamePacket.GAME_STATE_UPDATE)
+                else if (packet.type == GamePacket.SERVER_GAMESTATE_UPDATE)
                 {
+                    if (clientObjects[packet.clientId] == null)
+                    {
+                        clientObjects[packet.clientId] = Instantiate(clientObjectPrefab, transform);
+                        clientObjects[packet.clientId].SetActive(true);
+                    }
+
+                    var clientObject = clientObjects[packet.clientId];
                     clientObject.transform.position = new Vector3(packet.mainObjectPosition.x, 
                         packet.mainObjectPosition.y, 0);
                 }
@@ -94,7 +109,7 @@ public class ClientBehaviour : MonoBehaviour
             }
         }
 
-        if (m_Connection.IsCreated)
+        if (m_Connection.IsCreated && clientObjectCreated)
         {
             var move = false;
             var moveVector = float2.zero;
@@ -117,14 +132,25 @@ public class ClientBehaviour : MonoBehaviour
            
                 new GamePacket
                 {
-                    type = GamePacket.MOVE_COMMAND,
+                    type = GamePacket.CLIENT_MOVE_COMMAND,
+                    clientId = clientId,
                     direction = moveVector
                 }.Write(ref writer);
                 
-                // writer.WriteFloat(moveVector.x);
-                
                 m_Driver.EndSend(writer);
             }
+        }
+
+        if (m_Connection.IsCreated)
+        {
+            var writer = m_Driver.BeginSend(m_Connection);
+           
+            new GamePacket
+            {
+                type = GamePacket.CLIENT_KEEP_ALIVE
+            }.Write(ref writer);
+
+            m_Driver.EndSend(writer);
         }
     }
 }

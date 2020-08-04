@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 using Unity.Collections;
@@ -10,7 +11,9 @@ public class ServerBehaviour : MonoBehaviour
     public NetworkDriver m_Driver;
     private NativeList<NetworkConnection> m_Connections;
 
-    public GameObject moveObject;
+    public GameObject moveObjectPrefab;
+    public GameObject[] clientObjects = new GameObject[20];
+    
     public float speed = 1;
 
     void Start ()
@@ -51,10 +54,15 @@ public class ServerBehaviour : MonoBehaviour
         {
             m_Connections.Add(c);
             Debug.Log("Accepted a connection");
+
+            var clientObject = Instantiate(moveObjectPrefab, transform);
+            clientObject.SetActive(true);
+
+            clientObjects[m_Connections.Length - 1] = clientObject;
         }
 
         DataStreamReader stream;
-        for (int i = 0; i < m_Connections.Length; i++)
+        for (var i = 0; i < m_Connections.Length; i++)
         {
             Assert.IsTrue(m_Connections[i].IsCreated);
 
@@ -80,18 +88,27 @@ public class ServerBehaviour : MonoBehaviour
                         
                         new GamePacket
                         {
-                            type = GamePacket.SERVER_ACK
+                            type = GamePacket.SERVER_CONNECTION_COMPLETED,
+                            clientId = (uint) i
                         }.Write(ref writer);
                     
                         m_Driver.EndSend(writer);
                     }
                     
-                    if (packet.type == GamePacket.MOVE_COMMAND)
+                    if (packet.type == GamePacket.CLIENT_KEEP_ALIVE)
+                    {
+                        Debug.Log($"Client[{i}] Keep Alive");
+                    }
+                    
+                    if (packet.type == GamePacket.CLIENT_MOVE_COMMAND)
                     {
                         // TODO: move something in the screen
                         Debug.Log("new move command received!!");
 
+                        var clientIndex = (int) packet.clientId;
                         var dir = new float3(packet.direction, 0);
+                        var moveObject = clientObjects[clientIndex];
+                        
                         moveObject.transform.position += (Vector3) dir * (speed * Time.deltaTime);
                     }
                     
@@ -114,15 +131,24 @@ public class ServerBehaviour : MonoBehaviour
         {
             if (m_Connections[i].IsCreated)
             {
-                var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
-                        
-                new GamePacket
+                for (var j = 0; j < clientObjects.Length; j++)
                 {
-                    type = GamePacket.GAME_STATE_UPDATE,
-                    mainObjectPosition = (Vector2) moveObject.transform.position
-                }.Write(ref writer);
+                    var clientObject = clientObjects[j];
+                    if (clientObject == null)
+                        continue;
                     
-                m_Driver.EndSend(writer);
+                    var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
+                    
+                    new GamePacket
+                    {
+                        type = GamePacket.SERVER_GAMESTATE_UPDATE,
+                        clientId = (uint) i,
+                        mainObjectPosition = (Vector2) clientObject.transform.position
+                    }.Write(ref writer);
+                    
+                    m_Driver.EndSend(writer);
+                }
+
             }
         }
     }

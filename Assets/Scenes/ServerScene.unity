@@ -133,12 +133,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1174007367}
   m_Layer: 8
-  m_Name: ServerObject
+  m_Name: ServerObjectPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1174007367
 Transform:
   m_ObjectHideFlags: 0
@@ -182,7 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c68657874c3e46a958949de13f335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveObject: {fileID: 1174007366}
+  moveObjectPrefab: {fileID: 1174007366}
+  gameObjects: []
   speed: 1
 --- !u!4 &1633604428
 Transform:
