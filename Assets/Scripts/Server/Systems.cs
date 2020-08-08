@@ -4,11 +4,35 @@ using Unity.Transforms;
 
 namespace Server
 {
+    public class PendingPlayerActionsSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.WithAll<PendingPlayerAction>().ForEach(delegate (Entity e, ref PendingPlayerAction p)
+            {
+                PostUpdateCommands.DestroyEntity(e);
+
+                var pendingAction = new PendingAction()
+                {
+                    command = p.command,
+                    target = p.target
+                };
+                
+                Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unit)
+                {
+                    PostUpdateCommands.RemoveComponent<PendingAction>(unit);
+                    PostUpdateCommands.RemoveComponent<MovementAction>(unit);
+                    PostUpdateCommands.AddComponent(unit, pendingAction);
+                });
+            });
+        }
+    }
+    
     public class PendingActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
-            Entities.WithAll<Unit, Movement>().WithNone<MovementAction>().ForEach(delegate (Entity e, ref PendingAction p)
+            Entities.WithAll<PendingAction, Movement>().WithNone<MovementAction>().ForEach(delegate (Entity e, ref PendingAction p)
             {
                 PostUpdateCommands.RemoveComponent<PendingAction>(e);
                 
@@ -30,7 +54,7 @@ namespace Server
         {
             var dt = Time.DeltaTime;
             
-            Entities.WithAll<Unit>().WithAllReadOnly<MovementAction>()
+            Entities.WithAll<Movement, Translation>().WithAllReadOnly<MovementAction>()
                 .ForEach(delegate(Entity e, ref Movement movement, ref Translation t, ref MovementAction m)
                 {
                     var p0 = t.Value.xy;
