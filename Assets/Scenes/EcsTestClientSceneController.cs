@@ -9,20 +9,22 @@ namespace Scenes
     {
         public Camera camera;
 
+        public int player;
+        public int button;
+
         private void Update()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(button))
             {
                 var mousePosition = Input.mousePosition;
                 var worldPosition = camera.ScreenToWorldPoint(mousePosition);
 
-                var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientEntity>());
-                // enqueue command for the network...
+                var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
                 entityManager.AddComponentData(entity, new PendingPlayerAction
                 {
-                    player = 0,
+                    player = player,
                     command = 0,
                     target = new float2(worldPosition.x, worldPosition.y)
                 });

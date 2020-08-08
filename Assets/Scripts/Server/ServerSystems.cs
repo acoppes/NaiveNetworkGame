@@ -9,9 +9,12 @@ namespace Server
     {
         protected override void OnUpdate()
         {
-            Entities.WithAll<ServerManagerComponent>().ForEach(delegate(Entity e, ServerManagerComponent s)
+            Entities
+                .WithNone<ClientOnly>()
+                .WithAll<ServerManagerComponent>()
+                .ForEach(delegate(Entity e, ServerManagerComponent s)
             {
-                var manager = s.manager;
+                var manager = s.networkManager;
 
                 var connectionCount = manager.m_Connections.Length;
                 
@@ -44,26 +47,12 @@ namespace Server
         {
             Entities.WithAll<ServerManagerComponent>().ForEach(delegate(Entity e, ServerManagerComponent s)
             {
-                var manager = s.manager;
+                var manager = s.networkManager;
                 // manager.connections....
                 
                 // given the game state (entities with some interesting commands to share)
                 // send packets to each client...
             });
-        }
-    }
-
-    public class ClientNetworkOutgoingCommandsSystem : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities
-                .WithAll<ClientEntity, PendingPlayerAction>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p)
-                {
-                    PostUpdateCommands.DestroyEntity(e);
-                    // Send command through the network with a packet...
-                });
         }
     }
 
@@ -73,7 +62,7 @@ namespace Server
         {
             // process all player pending actions
             Entities
-                .WithNone<ClientEntity>()
+                .WithNone<ClientOnly>()
                 .WithAll<PendingPlayerAction>()
                 .ForEach(delegate (Entity e, ref PendingPlayerAction p)
             {
@@ -100,7 +89,7 @@ namespace Server
         }
     }
     
-    public class PendingActionSystem : ComponentSystem
+    public class ServerUnitPendingActionsSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
@@ -120,7 +109,7 @@ namespace Server
         }
     }
 
-    public class MovementSystem : ComponentSystem
+    public class ServerMovementSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {

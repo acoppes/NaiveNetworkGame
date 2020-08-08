@@ -19,12 +19,12 @@ namespace Server
         public float2 target;
     }
 
-    public struct ClientEntity : IComponentData
+    public struct ClientOnly : IComponentData
     {
         
     }
 
-    public struct ServerEntity : IComponentData
+    public struct ServerOnly : IComponentData
     {
         
     }
