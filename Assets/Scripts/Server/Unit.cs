@@ -11,6 +11,7 @@ namespace Server
     
     public struct PendingPlayerAction : IComponentData
     {
+        public int player;
         public int command;
         public float2 target;
     }

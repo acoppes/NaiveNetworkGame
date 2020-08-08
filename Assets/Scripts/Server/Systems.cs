@@ -12,17 +12,22 @@ namespace Server
             {
                 PostUpdateCommands.DestroyEntity(e);
 
-                var pendingAction = new PendingAction()
+                var player = p.player;
+                
+                var pendingAction = new PendingAction
                 {
                     command = p.command,
                     target = p.target
                 };
                 
-                Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unit)
+                Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unitEntity, ref Unit unit)
                 {
-                    PostUpdateCommands.RemoveComponent<PendingAction>(unit);
-                    PostUpdateCommands.RemoveComponent<MovementAction>(unit);
-                    PostUpdateCommands.AddComponent(unit, pendingAction);
+                    if (unit.player != player) 
+                        return;
+                    
+                    PostUpdateCommands.RemoveComponent<PendingAction>(unitEntity);
+                    PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
+                    PostUpdateCommands.AddComponent(unitEntity, pendingAction);
                 });
             });
         }

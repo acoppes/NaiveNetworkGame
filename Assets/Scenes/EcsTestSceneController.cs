@@ -20,8 +20,9 @@ namespace Scenes
 
                 var entity = entityManager.CreateEntity();
                 
-                entityManager.AddComponentData(entity, new PendingPlayerAction()
+                entityManager.AddComponentData(entity, new PendingPlayerAction
                 {
+                    player = 0,
                     command = 0,
                     target = new float2(worldPosition.x, worldPosition.y)
                 });
