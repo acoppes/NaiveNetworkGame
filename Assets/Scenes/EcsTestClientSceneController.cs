@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Scenes
 {
-    public class EcsTestSceneController : MonoBehaviour
+    public class EcsTestClientSceneController : MonoBehaviour
     {
         public Camera camera;
 
@@ -18,8 +18,8 @@ namespace Scenes
                 var mousePosition = Input.mousePosition;
                 var worldPosition = camera.ScreenToWorldPoint(mousePosition);
 
-                var entity = entityManager.CreateEntity();
-                
+                var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientEntity>());
+                // enqueue command for the network...
                 entityManager.AddComponentData(entity, new PendingPlayerAction
                 {
                     player = 0,

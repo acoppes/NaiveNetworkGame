@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
@@ -7,10 +8,36 @@ using UnityEngine.Assertions;
 
 namespace Server
 {
-    public class ServerBehaviour : MonoBehaviour
+    public class ServerManager
     {
         public NetworkDriver m_Driver;
-        private NativeList<NetworkConnection> m_Connections;
+        public NativeList<NetworkConnection> m_Connections;
+    }
+
+    public struct ServerManagerComponent : ISharedComponentData, IEquatable<ServerManagerComponent>
+    {
+        public ServerManager manager;
+
+        public bool Equals(ServerManagerComponent other)
+        {
+            return Equals(manager, other.manager);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ServerManagerComponent other && Equals(other);
+        }
+        
+        public override int GetHashCode()
+        {
+            return (manager != null ? manager.GetHashCode() : 0);
+        }
+    }
+    
+    public class ServerBehaviour : MonoBehaviour
+    {
+        [NonSerialized]
+        public ServerManager serverManager = new ServerManager();
 
         public GameObject moveObjectPrefab;
         public GameObject[] clientObjects = new GameObject[20];
@@ -19,25 +46,36 @@ namespace Server
 
         void Start ()
         {
-            m_Driver = NetworkDriver.Create();
+            serverManager.m_Driver = NetworkDriver.Create();
             var endpoint = NetworkEndPoint.AnyIpv4;
             endpoint.Port = 9000;
-            if (m_Driver.Bind(endpoint) != 0)
+            if (serverManager.m_Driver.Bind(endpoint) != 0)
                 Debug.Log("Failed to bind to port 9000");
             else
-                m_Driver.Listen();
+                serverManager.m_Driver.Listen();
 
-            m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
+            serverManager.m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
+
+            var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+            var serverManagerSingleton = entityManager.CreateEntity();
+            entityManager.AddSharedComponentData(serverManagerSingleton, new ServerManagerComponent
+            {
+                manager = serverManager
+            });
         }
 
         public void OnDestroy()
         {
-            m_Driver.Dispose();
-            m_Connections.Dispose();
+            serverManager.m_Driver.Dispose();
+            serverManager.m_Connections.Dispose();
         }
 
         void Update ()
         {
+            var m_Driver = serverManager.m_Driver;
+            var m_Connections = serverManager.m_Connections;
+            
             m_Driver.ScheduleUpdate().Complete();
 
             // CleanUpConnections

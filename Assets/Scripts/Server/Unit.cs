@@ -1,5 +1,8 @@
+using System;
+using Scenes;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Networking.Transport;
 
 namespace Server
 {
@@ -15,4 +18,15 @@ namespace Server
         public int command;
         public float2 target;
     }
+
+    public struct ClientEntity : IComponentData
+    {
+        
+    }
+
+    public struct ServerEntity : IComponentData
+    {
+        
+    }
+    
 }

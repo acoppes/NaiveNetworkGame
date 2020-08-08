@@ -1,14 +1,81 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Server
 {
-    public class PendingPlayerActionsSystem : ComponentSystem
+    public class ServerIncomingCommandsFromNetworkSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
-            Entities.WithAll<PendingPlayerAction>().ForEach(delegate (Entity e, ref PendingPlayerAction p)
+            Entities.WithAll<ServerManagerComponent>().ForEach(delegate(Entity e, ServerManagerComponent s)
+            {
+                var manager = s.manager;
+
+                var connectionCount = manager.m_Connections.Length;
+                
+                Debug.Log($"Connections: {connectionCount}");
+                
+                // manager.connections....
+
+                // create locally interesting commands for the game
+            });
+        }
+    }
+    
+    // public class ServerProcessIncomingCommandsSystem : ComponentSystem
+    // {
+    //     protected override void OnUpdate()
+    //     {
+    //         Entities.WithAll<ServerComponent>().ForEach(delegate(Entity e, ServerComponent s)
+    //         {
+    //             var manager = s.manager;
+    //             // manager.connections....
+    //             
+    //             // create pending player action commands...
+    //         });
+    //     }
+    // }
+    
+    public class ServerOutgoingGameStateSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.WithAll<ServerManagerComponent>().ForEach(delegate(Entity e, ServerManagerComponent s)
+            {
+                var manager = s.manager;
+                // manager.connections....
+                
+                // given the game state (entities with some interesting commands to share)
+                // send packets to each client...
+            });
+        }
+    }
+
+    public class ClientNetworkOutgoingCommandsSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+                .WithAll<ClientEntity, PendingPlayerAction>()
+                .ForEach(delegate (Entity e, ref PendingPlayerAction p)
+                {
+                    PostUpdateCommands.DestroyEntity(e);
+                    // Send command through the network with a packet...
+                });
+        }
+    }
+
+    public class ServerPendingPlayerActionsSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            // process all player pending actions
+            Entities
+                .WithNone<ClientEntity>()
+                .WithAll<PendingPlayerAction>()
+                .ForEach(delegate (Entity e, ref PendingPlayerAction p)
             {
                 PostUpdateCommands.DestroyEntity(e);
 
