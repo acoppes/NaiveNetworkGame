@@ -71,7 +71,7 @@ namespace Scenes
                         }
 
                         var unitView = clientViewManager.instances[unitId];
-                        unitView.transform.position = new Vector3(position.x, position.y, 0);
+                        unitView.transform.localPosition = new Vector3(position.x, position.y, 0);
                     });
             });
         }
