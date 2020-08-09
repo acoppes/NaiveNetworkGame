@@ -6,6 +6,8 @@ namespace Server
     
     public class ServerBehaviour : MonoBehaviour
     {
+        public GameObject go;
+        
         private void Start ()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -13,6 +15,27 @@ namespace Server
             var serverEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ServerOnly>());
             entityManager.AddSharedComponentData(serverEntity, new NetworkManagerSharedComponent());
             entityManager.AddComponentData(serverEntity, new ServerStartComponent());
+            
+            // create multiple player controllers, all disabled....
+            // with each connection, remove disabled component.
+
+            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
+            var prefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(go, settings);
+
+            var e1 = entityManager.Instantiate(prefab);
+            var e2 = entityManager.Instantiate(prefab);
+            
+            entityManager.SetComponentData(e1, new Unit
+            {
+                id = 0,
+                player = 0
+            });
+            
+            entityManager.SetComponentData(e2, new Unit
+            {
+                id = 1,
+                player = 1
+            });
         }
 
         void Update ()
