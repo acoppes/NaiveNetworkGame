@@ -1,6 +1,5 @@
 using Client;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Server
 {
@@ -20,20 +19,29 @@ namespace Server
             // Debug.Log(network.m_Connection.ToString());
             
             Entities
-                .WithAll<ClientOnly, PendingPlayerAction>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p)
+                .WithAll<ClientOnly, ClientNetworkComponent, NetworkPlayerId>()
+                .ForEach(delegate(ClientNetworkComponent c, ref NetworkPlayerId networkPlayerId)
                 {
-                    PostUpdateCommands.DestroyEntity(e);
-                    // Send command through the network with a packet...
+                    var player = networkPlayerId.player;
+                    
+                    Entities
+                        .WithAll<ClientOnly, PendingPlayerAction>()
+                        .ForEach(delegate (Entity e, ref PendingPlayerAction p)
+                        {
+                            PostUpdateCommands.DestroyEntity(e);
+                            // Send command through the network with a packet...
 
-                    // TODO: send message to the server...
-                    // var writer = network.m_Driver.BeginSend(network.m_Connection);
-                    // writer.WriteUInt(0);
-                    // network.m_Driver.EndSend(writer);
+                            // TODO: send message to the server...
+                            // var writer = network.m_Driver.BeginSend(network.m_Connection);
+                            // writer.WriteUInt(0);
+                            // network.m_Driver.EndSend(writer);
 
-                    var serverCommand = PostUpdateCommands.CreateEntity();
-                    PostUpdateCommands.AddComponent(serverCommand, p);
+                            var serverCommand = PostUpdateCommands.CreateEntity();
+                            PostUpdateCommands.AddComponent(serverCommand, p);
+                        });
                 });
+            
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Server;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
@@ -9,6 +10,7 @@ namespace Client
 {
     public class ClientNetworkManager
     {
+        public int networkPlayerId = -1;
         public NetworkDriver m_Driver;
         public NetworkConnection m_Connection;
     }
@@ -90,6 +92,8 @@ namespace Client
             DataStreamReader stream;
             NetworkEvent.Type cmd;
 
+            // var connecting = false;
+
             while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
             {
                 if (cmd == NetworkEvent.Type.Connect)
@@ -125,20 +129,43 @@ namespace Client
                 
                     if (packet.type == GamePacket.SERVER_CONNECTION_COMPLETED)
                     {
-                        clientId = packet.clientId;
+                        clientId = packet.networkPlayerId;
                         clientObjectCreated = true;
                     
                         Debug.Log("Got clientid from server");
+
+                        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                        var query = entityManager.CreateEntityQuery(
+                            ComponentType.ReadOnly<ClientOnly>(),
+                            ComponentType.ReadWrite<ClientNetworkComponent>()
+                        );
+                        
+                        var clientManagerEntities = query.ToEntityArray(Allocator.TempJob);
+                        // query.to<ClientNetworkComponent>(Allocator.Temp);
+                        foreach (var clientManagerEntity in clientManagerEntities)
+                        {
+                            var networkComponent = entityManager.GetSharedComponentData<ClientNetworkComponent>(clientManagerEntity);
+                            if (networkComponent.networkManager == clientNetworkManager)
+                            {
+                                entityManager.AddComponentData(clientManagerEntity, new NetworkPlayerId
+                                {
+                                    player = packet.networkPlayerId
+                                });
+                            }
+                        }
+
+                        clientManagerEntities.Dispose();
+
                     }
                     else if (packet.type == GamePacket.SERVER_GAMESTATE_UPDATE)
                     {
-                        if (clientObjects[packet.clientId] == null)
+                        if (clientObjects[packet.networkPlayerId] == null)
                         {
-                            clientObjects[packet.clientId] = Instantiate(clientObjectPrefab, transform);
-                            clientObjects[packet.clientId].SetActive(true);
+                            clientObjects[packet.networkPlayerId] = Instantiate(clientObjectPrefab, transform);
+                            clientObjects[packet.networkPlayerId].SetActive(true);
                         }
 
-                        var clientObject = clientObjects[packet.clientId];
+                        var clientObject = clientObjects[packet.networkPlayerId];
                         clientObject.transform.position = new Vector3(packet.mainObjectPosition.x, 
                             packet.mainObjectPosition.y, 0);
                     }
@@ -178,7 +205,7 @@ namespace Client
                     new GamePacket
                     {
                         type = GamePacket.CLIENT_MOVE_COMMAND,
-                        clientId = clientId,
+                        networkPlayerId = clientId,
                         direction = moveVector
                     }.Write(ref writer);
                 
@@ -186,17 +213,17 @@ namespace Client
                 }
             }
 
-            if (m_Connection.IsCreated)
-            {
-                var writer = m_Driver.BeginSend(m_Connection);
-           
-                new GamePacket
-                {
-                    type = GamePacket.CLIENT_KEEP_ALIVE
-                }.Write(ref writer);
-
-                m_Driver.EndSend(writer);
-            }
+            // if (m_Connection.IsCreated)
+            // {
+            //     var writer = m_Driver.BeginSend(m_Connection);
+            //
+            //     new GamePacket
+            //     {
+            //         type = GamePacket.CLIENT_KEEP_ALIVE
+            //     }.Write(ref writer);
+            //
+            //     m_Driver.EndSend(writer);
+            // }
         }
     }
 }

@@ -9,12 +9,12 @@ namespace Server
     [GenerateAuthoringComponent]
     public struct Unit : IComponentData
     {
-        public int player;
+        public uint player;
     }
     
     public struct PendingPlayerAction : IComponentData
     {
-        public int player;
+        public uint player;
         public int command;
         public float2 target;
     }
@@ -22,6 +22,11 @@ namespace Server
     public struct ClientOnly : IComponentData
     {
         
+    }
+
+    public struct NetworkPlayerId : IComponentData
+    {
+        public uint player;
     }
 
     public struct ServerOnly : IComponentData

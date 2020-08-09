@@ -1,3 +1,4 @@
+using Client;
 using Server;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -9,12 +10,17 @@ namespace Scenes
     {
         public Camera camera;
 
-        public int player;
+        // public uint player;
         public int button;
+
+        public ClientBehaviour clientBehaviour;
 
         private void Update()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+            if (clientBehaviour.clientNetworkManager.networkPlayerId == -1)
+                return;
 
             if (Input.GetMouseButtonUp(button))
             {
@@ -24,7 +30,7 @@ namespace Scenes
                 var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
                 entityManager.AddComponentData(entity, new PendingPlayerAction
                 {
-                    player = player,
+                    player = (uint) clientBehaviour.clientNetworkManager.networkPlayerId,
                     command = 0,
                     target = new float2(worldPosition.x, worldPosition.y)
                 });

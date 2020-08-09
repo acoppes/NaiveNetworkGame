@@ -12,7 +12,7 @@ public struct GamePacket
     
     public uint type;
 
-    public uint clientId;
+    public uint networkPlayerId;
     
     public float2 direction;
 
@@ -24,19 +24,19 @@ public struct GamePacket
         
         if (type == SERVER_CONNECTION_COMPLETED)
         {
-            writer.WriteUInt(clientId);
+            writer.WriteUInt(networkPlayerId);
         }
         
         if (type == CLIENT_MOVE_COMMAND)
         {
-            writer.WriteUInt(clientId);
+            writer.WriteUInt(networkPlayerId);
             writer.WriteFloat(direction.x);
             writer.WriteFloat(direction.y);
         }
 
         if (type == SERVER_GAMESTATE_UPDATE)
         {
-            writer.WriteUInt(clientId);
+            writer.WriteUInt(networkPlayerId);
             writer.WriteFloat(mainObjectPosition.x);
             writer.WriteFloat(mainObjectPosition.y);
         }
@@ -48,19 +48,19 @@ public struct GamePacket
 
         if (type == SERVER_CONNECTION_COMPLETED)
         {
-            clientId = reader.ReadUInt();
+            networkPlayerId = reader.ReadUInt();
         }
         
         if (type == CLIENT_MOVE_COMMAND)
         {
-            clientId = reader.ReadUInt();
+            networkPlayerId = reader.ReadUInt();
             direction.x = reader.ReadFloat();
             direction.y = reader.ReadFloat();
         }
 
         if (type == SERVER_GAMESTATE_UPDATE)
         {
-            clientId = reader.ReadUInt();
+            networkPlayerId = reader.ReadUInt();
             mainObjectPosition.x = reader.ReadFloat();
             mainObjectPosition.y = reader.ReadFloat();
         }

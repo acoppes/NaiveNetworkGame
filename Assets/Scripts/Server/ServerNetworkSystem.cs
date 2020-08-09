@@ -1,0 +1,148 @@
+using System;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Networking.Transport;
+using UnityEngine;
+using UnityEngine.Assertions;
+
+namespace Server
+{
+    public class ServerNetworkManager
+    {
+        public NetworkDriver m_Driver;
+        public NativeList<NetworkConnection> m_Connections;
+    }
+
+    public struct ServerManagerComponent : ISharedComponentData, IEquatable<ServerManagerComponent>
+    {
+        public ServerNetworkManager networkManager;
+
+        public bool Equals(ServerManagerComponent other)
+        {
+            return Equals(networkManager, other.networkManager);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ServerManagerComponent other && Equals(other);
+        }
+        
+        public override int GetHashCode()
+        {
+            return (networkManager != null ? networkManager.GetHashCode() : 0);
+        }
+    }
+
+    public struct ServerStartComponent : IComponentData
+    {
+        
+    }
+
+    public struct ServerComponent : IComponentData
+    {
+        
+    }
+    
+    public class ServerNetworkSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            // create server
+            Entities
+                .WithAll<ServerStartComponent, ServerManagerComponent>()
+                .ForEach(delegate(Entity e, ServerManagerComponent networkManager, ref ServerStartComponent s)
+                {
+                    PostUpdateCommands.RemoveComponent<ServerStartComponent>(e);
+
+                    networkManager.networkManager = new ServerNetworkManager
+                    {
+                        m_Driver = NetworkDriver.Create(),
+                        m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
+                    };
+
+                    var endpoint = NetworkEndPoint.AnyIpv4;
+                    endpoint.Port = 9000;
+                    
+                    if (networkManager.networkManager.m_Driver.Bind(endpoint) != 0)
+                        Debug.Log("Failed to bind to port 9000");
+                    else
+                        networkManager.networkManager.m_Driver.Listen();
+
+                    PostUpdateCommands.SetSharedComponent(e, networkManager);
+                    PostUpdateCommands.AddComponent(e, new ServerComponent());
+                });
+            
+            Entities
+                .WithAll<ServerComponent, ServerManagerComponent>()
+                .ForEach(delegate(Entity e, ServerManagerComponent serverManagerComponent)
+                {
+                    var networkManager = serverManagerComponent.networkManager;
+                    
+                    networkManager.m_Driver.ScheduleUpdate().Complete();
+
+                    // CleanUpConnections
+                    for (var i = 0; i < networkManager.m_Connections.Length; i++)
+                    {
+                        if (!networkManager.m_Connections[i].IsCreated)
+                        {
+                            networkManager.m_Connections.RemoveAtSwapBack(i);
+                            --i;
+                        }
+                    }
+                    
+                    // process pending connections....
+                    NetworkConnection c;
+                    while ((c = networkManager.m_Driver.Accept()) != default)
+                    {
+                        networkManager.m_Connections.Add(c);
+                        Debug.Log("Accepted a connection");
+                        
+                        // create a new player connected command internally
+                    }
+                    
+                    DataStreamReader stream;
+                    for (var i = 0; i < networkManager.m_Connections.Length; i++)
+                    {
+                        Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
+
+                        NetworkEvent.Type cmd;
+                        while ((cmd = networkManager.m_Driver
+                            .PopEventForConnection(networkManager.m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
+                        {
+                            if (cmd == NetworkEvent.Type.Data)
+                            {
+                                // process different data packets and create commands to be processed in server...       
+                            }
+                            else if (cmd == NetworkEvent.Type.Disconnect)
+                            {
+                                // do something to player stuff? 
+                                
+                                Debug.Log("Client disconnected from server");
+                                networkManager.m_Connections[i] = default(NetworkConnection);
+                            }
+                        }
+                    }
+                    
+                });
+        }
+
+        protected override void OnDestroy()
+        {
+            Entities
+                .WithAll<ServerManagerComponent>()
+                .ForEach(delegate(ServerManagerComponent networkManager)
+                {
+                    var manager = networkManager.networkManager;
+
+                    if (manager == null) 
+                        return;
+                    
+                    manager.m_Connections.Dispose();
+                    manager.m_Driver.Dispose();
+                });
+            
+            
+            base.OnDestroy();
+        }
+    }
+}
