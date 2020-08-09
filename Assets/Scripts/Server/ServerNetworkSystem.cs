@@ -7,24 +7,24 @@ using UnityEngine.Assertions;
 
 namespace Server
 {
-    public class ServerNetworkManager
+    public class NetworkManager
     {
         public NetworkDriver m_Driver;
         public NativeList<NetworkConnection> m_Connections;
     }
 
-    public struct ServerManagerComponent : ISharedComponentData, IEquatable<ServerManagerComponent>
+    public struct NetworkManagerSharedComponent : ISharedComponentData, IEquatable<NetworkManagerSharedComponent>
     {
-        public ServerNetworkManager networkManager;
+        public NetworkManager networkManager;
 
-        public bool Equals(ServerManagerComponent other)
+        public bool Equals(NetworkManagerSharedComponent other)
         {
             return Equals(networkManager, other.networkManager);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is ServerManagerComponent other && Equals(other);
+            return obj is NetworkManagerSharedComponent other && Equals(other);
         }
         
         public override int GetHashCode()
@@ -38,7 +38,7 @@ namespace Server
         
     }
 
-    public struct ServerComponent : IComponentData
+    public struct ServerRunningComponent : IComponentData
     {
         
     }
@@ -49,12 +49,15 @@ namespace Server
         {
             // create server
             Entities
-                .WithAll<ServerStartComponent, ServerManagerComponent>()
-                .ForEach(delegate(Entity e, ServerManagerComponent networkManager, ref ServerStartComponent s)
+                .WithNone<ClientOnly>()
+                .WithAll<ServerStartComponent, NetworkManagerSharedComponent>()
+                .ForEach(delegate(Entity e, NetworkManagerSharedComponent networkManager, ref ServerStartComponent s)
                 {
+                    Debug.Log("Starting Server");
+                    
                     PostUpdateCommands.RemoveComponent<ServerStartComponent>(e);
 
-                    networkManager.networkManager = new ServerNetworkManager
+                    networkManager.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(),
                         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
@@ -69,12 +72,13 @@ namespace Server
                         networkManager.networkManager.m_Driver.Listen();
 
                     PostUpdateCommands.SetSharedComponent(e, networkManager);
-                    PostUpdateCommands.AddComponent(e, new ServerComponent());
+                    PostUpdateCommands.AddComponent(e, new ServerRunningComponent());
                 });
             
             Entities
-                .WithAll<ServerComponent, ServerManagerComponent>()
-                .ForEach(delegate(Entity e, ServerManagerComponent serverManagerComponent)
+                .WithNone<ClientOnly>()
+                .WithAll<ServerRunningComponent, NetworkManagerSharedComponent>()
+                .ForEach(delegate(Entity e, NetworkManagerSharedComponent serverManagerComponent)
                 {
                     var networkManager = serverManagerComponent.networkManager;
                     
@@ -129,8 +133,9 @@ namespace Server
         protected override void OnDestroy()
         {
             Entities
-                .WithAll<ServerManagerComponent>()
-                .ForEach(delegate(ServerManagerComponent networkManager)
+                .WithNone<ClientOnly>()
+                .WithAll<NetworkManagerSharedComponent>()
+                .ForEach(delegate(NetworkManagerSharedComponent networkManager)
                 {
                     var manager = networkManager.networkManager;
 

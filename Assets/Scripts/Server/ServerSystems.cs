@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Server
 {
@@ -11,14 +10,14 @@ namespace Server
         {
             Entities
                 .WithNone<ClientOnly>()
-                .WithAll<ServerManagerComponent>()
-                .ForEach(delegate(Entity e, ServerManagerComponent s)
+                .WithAll<ServerOnly, NetworkManagerSharedComponent, ServerRunningComponent>()
+                .ForEach(delegate(Entity e, NetworkManagerSharedComponent s)
             {
                 var manager = s.networkManager;
 
                 var connectionCount = manager.m_Connections.Length;
                 
-                Debug.Log($"Connections: {connectionCount}");
+                // Debug.Log($"Connections: {connectionCount}");
                 
                 // manager.connections....
 
@@ -45,7 +44,7 @@ namespace Server
     {
         protected override void OnUpdate()
         {
-            Entities.WithAll<ServerManagerComponent>().ForEach(delegate(Entity e, ServerManagerComponent s)
+            Entities.WithAll<NetworkManagerSharedComponent>().ForEach(delegate(Entity e, NetworkManagerSharedComponent s)
             {
                 var manager = s.networkManager;
                 // manager.connections....

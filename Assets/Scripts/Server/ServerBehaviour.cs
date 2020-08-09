@@ -11,7 +11,7 @@ namespace Server
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             var serverEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ServerOnly>());
-            entityManager.AddSharedComponentData(serverEntity, new ServerManagerComponent());
+            entityManager.AddSharedComponentData(serverEntity, new NetworkManagerSharedComponent());
             entityManager.AddComponentData(serverEntity, new ServerStartComponent());
         }
 

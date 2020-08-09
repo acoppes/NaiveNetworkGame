@@ -10,17 +10,15 @@ namespace Scenes
     {
         public Camera camera;
 
-        // public uint player;
+        public uint networkPlayerId;
         public int button;
-
-        public ClientBehaviour clientBehaviour;
 
         private void Update()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            if (clientBehaviour.clientNetworkManager.networkPlayerId == -1)
-                return;
+            // if (clientBehaviour.clientNetworkManager.networkPlayerId == -1)
+            //     return;
 
             if (Input.GetMouseButtonUp(button))
             {
@@ -30,7 +28,7 @@ namespace Scenes
                 var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
                 entityManager.AddComponentData(entity, new PendingPlayerAction
                 {
-                    player = (uint) clientBehaviour.clientNetworkManager.networkPlayerId,
+                    player = networkPlayerId,
                     command = 0,
                     target = new float2(worldPosition.x, worldPosition.y)
                 });

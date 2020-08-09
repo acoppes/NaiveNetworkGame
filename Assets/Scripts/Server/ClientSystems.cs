@@ -19,8 +19,8 @@ namespace Server
             // Debug.Log(network.m_Connection.ToString());
             
             Entities
-                .WithAll<ClientOnly, ClientNetworkComponent, NetworkPlayerId>()
-                .ForEach(delegate(ClientNetworkComponent c, ref NetworkPlayerId networkPlayerId)
+                .WithAll<ClientOnly, NetworkManagerSharedComponent, NetworkPlayerId>()
+                .ForEach(delegate(NetworkManagerSharedComponent c, ref NetworkPlayerId networkPlayerId)
                 {
                     var player = networkPlayerId.player;
                     
