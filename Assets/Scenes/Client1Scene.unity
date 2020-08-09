@@ -282,6 +282,8 @@ MonoBehaviour:
   camera: {fileID: 1990033516}
   networkPlayerId: 0
   button: 0
+  prefab: {fileID: 442152132}
+  parent: {fileID: 1633604428}
 --- !u!114 &1633604427
 MonoBehaviour:
   m_ObjectHideFlags: 0

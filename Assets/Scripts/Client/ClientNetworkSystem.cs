@@ -1,6 +1,8 @@
+using Scenes;
 using Server;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -79,7 +81,22 @@ namespace Client
                         }
                         else if (cmd == NetworkEvent.Type.Data)
                         {
-                            
+                            var type = stream.ReadUInt();
+                            if (type == 50)
+                            {
+                                var unitId = stream.ReadUInt();
+                                var player = stream.ReadUInt();
+                                var x = stream.ReadFloat();
+                                var y = stream.ReadFloat();
+                                
+                                // read unit info...
+                                var clientViewUpdate = PostUpdateCommands.CreateEntity();
+                                PostUpdateCommands.AddComponent(clientViewUpdate, new ClientViewUpdate
+                                {
+                                    unitId = unitId,
+                                    position = new float2(x, y)
+                                });
+                            }
                         }
                         else if (cmd == NetworkEvent.Type.Disconnect)
                         {
