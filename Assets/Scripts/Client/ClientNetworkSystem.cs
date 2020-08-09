@@ -24,13 +24,13 @@ namespace Client
             Entities
                 .WithNone<ServerOnly>()
                 .WithAll<ClientStartComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(Entity e, NetworkManagerSharedComponent networkManager, ref ClientStartComponent s)
+                .ForEach(delegate(Entity e, NetworkManagerSharedComponent managerSharedComponent, ref ClientStartComponent s)
                 {
                     Debug.Log("Starting Client");
                     
                     PostUpdateCommands.RemoveComponent<ClientStartComponent>(e);
 
-                    networkManager.networkManager = new NetworkManager
+                    managerSharedComponent.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(),
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
@@ -38,12 +38,13 @@ namespace Client
                     
                     var endpoint = NetworkEndPoint.LoopbackIpv4;
                     endpoint.Port = 9000;
+
+                    var networkManager = managerSharedComponent.networkManager;
                     
+                    networkManager.m_Connections
+                        .Add(networkManager.m_Driver.Connect(endpoint));
                     
-                    networkManager.networkManager.m_Connections
-                        .Add(networkManager.networkManager.m_Driver.Connect(endpoint));
-                    
-                    PostUpdateCommands.SetSharedComponent(e, networkManager);
+                    PostUpdateCommands.SetSharedComponent(e, managerSharedComponent);
                     PostUpdateCommands.AddComponent(e, new ClientRunningComponent());
                 });
             
@@ -58,6 +59,14 @@ namespace Client
                     // var connecting = false;
                     var m_Connection = networkManager.networkManager.m_Connections[0];
                     var m_Driver = networkManager.networkManager.m_Driver;
+                    
+                    if (!m_Connection.IsCreated)
+                    {
+                        Debug.Log("Something went wrong during connect");
+                        return;
+                    }
+                    
+                    m_Driver.ScheduleUpdate().Complete();
 
                     while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
                     {

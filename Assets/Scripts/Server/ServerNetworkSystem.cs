@@ -77,15 +77,17 @@ namespace Server
             
             Entities
                 .WithNone<ClientOnly>()
-                .WithAll<ServerRunningComponent, NetworkManagerSharedComponent>()
+                .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
                 .ForEach(delegate(Entity e, NetworkManagerSharedComponent serverManagerComponent)
                 {
                     var networkManager = serverManagerComponent.networkManager;
+
+                    var m_Driver = networkManager.m_Driver;
                     
-                    networkManager.m_Driver.ScheduleUpdate().Complete();
+                    m_Driver.ScheduleUpdate().Complete();
                     
-                    Assert.IsTrue(networkManager.m_Driver.IsCreated);
-                    Assert.IsTrue(networkManager.m_Driver.Listening);
+                    Assert.IsTrue(m_Driver.IsCreated);
+                    Assert.IsTrue(m_Driver.Listening);
                     
                     // CleanUpConnections
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
@@ -99,7 +101,7 @@ namespace Server
                     
                     // process pending connections....
                     NetworkConnection c;
-                    while ((c = networkManager.m_Driver.Accept()) != default(NetworkConnection))
+                    while ((c = m_Driver.Accept()) != default(NetworkConnection))
                     {
                         networkManager.m_Connections.Add(c);
                         Debug.Log("Accepted a connection");
@@ -113,7 +115,7 @@ namespace Server
                         Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
 
                         NetworkEvent.Type cmd;
-                        while ((cmd = networkManager.m_Driver
+                        while ((cmd = m_Driver
                             .PopEventForConnection(networkManager.m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
                         {
                             if (cmd == NetworkEvent.Type.Data)
