@@ -62,7 +62,7 @@ namespace Server
             // process all player pending actions
             Entities
                 .WithNone<ClientOnly>()
-                .WithAll<PendingPlayerAction>()
+                .WithAll<ServerOnly, PendingPlayerAction>()
                 .ForEach(delegate (Entity e, ref PendingPlayerAction p)
             {
                 PostUpdateCommands.DestroyEntity(e);

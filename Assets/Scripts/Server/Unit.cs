@@ -1,8 +1,5 @@
-using System;
-using Scenes;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Networking.Transport;
 
 namespace Server
 {
@@ -15,7 +12,7 @@ namespace Server
     public struct PendingPlayerAction : IComponentData
     {
         public uint player;
-        public int command;
+        public uint command;
         public float2 target;
     }
 

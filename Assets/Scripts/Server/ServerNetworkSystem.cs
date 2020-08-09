@@ -83,7 +83,10 @@ namespace Server
                     var networkManager = serverManagerComponent.networkManager;
                     
                     networkManager.m_Driver.ScheduleUpdate().Complete();
-
+                    
+                    Assert.IsTrue(networkManager.m_Driver.IsCreated);
+                    Assert.IsTrue(networkManager.m_Driver.Listening);
+                    
                     // CleanUpConnections
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
                     {
@@ -96,7 +99,7 @@ namespace Server
                     
                     // process pending connections....
                     NetworkConnection c;
-                    while ((c = networkManager.m_Driver.Accept()) != default)
+                    while ((c = networkManager.m_Driver.Accept()) != default(NetworkConnection))
                     {
                         networkManager.m_Connections.Add(c);
                         Debug.Log("Accepted a connection");
@@ -115,7 +118,28 @@ namespace Server
                         {
                             if (cmd == NetworkEvent.Type.Data)
                             {
-                                // process different data packets and create commands to be processed in server...       
+                                // process different data packets and create commands to be processed in server...      
+
+                                var packet = stream.ReadUInt();
+
+                                if (packet == 99)
+                                {
+                                    var pendingPlayerAction = new PendingPlayerAction
+                                    {
+                                        player = stream.ReadUInt(),
+                                        command = stream.ReadUInt(),
+                                        target = {
+                                            x = stream.ReadFloat(), 
+                                            y = stream.ReadFloat()
+                                        }
+                                    };
+
+
+                                    var pendingActionEntity = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
+                                    PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
+                                }
+
                             }
                             else if (cmd == NetworkEvent.Type.Disconnect)
                             {

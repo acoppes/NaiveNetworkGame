@@ -274,14 +274,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1633604425}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a5929705433d33498fe4254f1568e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 1990033516}
+  networkPlayerId: 0
   button: 0
-  clientBehaviour: {fileID: 1633604427}
 --- !u!114 &1633604427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,8 +294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5028d9dd75d68bc4e9c72cf8032f751f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Done: 0
-  clientObjectPrefab: {fileID: 442152132}
 --- !u!4 &1633604428
 Transform:
   m_ObjectHideFlags: 0

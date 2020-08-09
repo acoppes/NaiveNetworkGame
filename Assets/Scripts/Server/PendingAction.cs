@@ -6,7 +6,7 @@ namespace Server
     [GenerateAuthoringComponent]
     public struct PendingAction : IComponentData
     {
-        public int command;
+        public uint command;
         public float2 target;
     }
 

@@ -39,6 +39,7 @@ namespace Client
                     var endpoint = NetworkEndPoint.LoopbackIpv4;
                     endpoint.Port = 9000;
                     
+                    
                     networkManager.networkManager.m_Connections
                         .Add(networkManager.networkManager.m_Driver.Connect(endpoint));
                     
@@ -48,7 +49,7 @@ namespace Client
             
             Entities
                 .WithNone<ServerOnly>()
-                .WithAll<ClientRunningComponent, NetworkManagerSharedComponent>()
+                .WithAll<ClientOnly, ClientRunningComponent, NetworkManagerSharedComponent>()
                 .ForEach(delegate(Entity e, NetworkManagerSharedComponent networkManager)
                 {
                     DataStreamReader stream;
@@ -77,6 +78,26 @@ namespace Client
                             networkManager.networkManager.m_Connections[0] = default;
                         }
                     }
+                    
+                    // TODO: check the connection wasn't destroyed...
+                    
+                    Entities.WithNone<ServerOnly>()
+                        .WithAll<ClientOnly, PendingPlayerAction>()
+                        .ForEach(delegate(Entity e, ref PendingPlayerAction p)
+                        {
+                            PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                            
+                            var writer = m_Driver.BeginSend(m_Connection);
+                            
+                            // just a number to identify the packet for now...
+                            writer.WriteUInt(99);
+                            writer.WriteUInt(p.player);
+                            writer.WriteUInt(p.command);
+                            writer.WriteFloat(p.target.x);
+                            writer.WriteFloat(p.target.y);
+                            
+                            m_Driver.EndSend(writer);
+                        });
                 });
         }
 
