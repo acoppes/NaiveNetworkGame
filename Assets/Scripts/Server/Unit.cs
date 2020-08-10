@@ -22,11 +22,6 @@ namespace Server
         
     }
 
-    public struct NetworkPlayerId : IComponentData
-    {
-        public uint player;
-    }
-
     public struct ServerOnly : IComponentData
     {
         
