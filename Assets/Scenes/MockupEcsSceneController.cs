@@ -85,7 +85,7 @@ namespace Mockups
     
     public class MockupEcsSceneController : MonoBehaviour
     {
-        public GameObject prefab;
+        public GameObject[] prefabs;
 
         // Update is called once per frame
         private void Update()
@@ -99,7 +99,7 @@ namespace Mockups
                 var entity = manager.CreateEntity();
                 manager.AddSharedComponentData(entity, new ModelPrefabComponent
                 {
-                    prefab = prefab
+                    prefab = prefabs[UnityEngine.Random.Range(0, prefabs.Length)]
                 });
                 manager.AddComponentData(entity, new Translation
                 {
