@@ -111,7 +111,8 @@ namespace Client
                         .WithAll<ClientOnly, PendingPlayerAction>()
                         .ForEach(delegate(Entity e, ref PendingPlayerAction p)
                         {
-                            PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                            PostUpdateCommands.DestroyEntity(e);
+                            // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
                             
                             var writer = m_Driver.BeginSend(m_Connection);
                             

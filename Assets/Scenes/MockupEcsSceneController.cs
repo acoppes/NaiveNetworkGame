@@ -82,7 +82,7 @@ namespace Mockups
                 });
         }
     }
-    
+
     public class MockupEcsSceneController : MonoBehaviour
     {
         public GameObject[] prefabs;
