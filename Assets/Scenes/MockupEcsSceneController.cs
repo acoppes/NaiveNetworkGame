@@ -5,11 +5,6 @@ using UnityEngine;
 
 namespace Mockups
 {
-    // public struct UnitComponent : IComponentData
-    // {
-    //     
-    // }
-    
     public struct ModelPrefabComponent : ISharedComponentData, IEquatable<ModelPrefabComponent>
     {
         public GameObject prefab;
@@ -54,24 +49,19 @@ namespace Mockups
     {
         protected override void OnUpdate()
         {
+            var modelProvider = ModelProviderSingleton.Instance;
+            
             Entities
                 .WithAll<ModelPrefabComponent>()
                 .WithNone<ModelInstanceComponent>()
                 .ForEach(delegate(Entity e, ModelPrefabComponent m)
                 {
-                    PostUpdateCommands.AddSharedComponent(e, new ModelInstanceComponent()
+                    PostUpdateCommands.AddSharedComponent(e, new ModelInstanceComponent
                     {
-                        instance = GameObject.Instantiate(m.prefab)
+                        instance = GameObject.Instantiate(m.prefab, modelProvider.parent)
                     });
                 });
-            
-            Entities
-                .WithAll<ModelPrefabComponent, ModelInstanceComponent, Translation>()
-                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Translation t)
-                {
-                    m.instance.transform.position = t.Value;
-                });
-            
+
             Entities
                 .WithNone<ModelPrefabComponent>()
                 .WithAll<ModelInstanceComponent>()
@@ -82,16 +72,30 @@ namespace Mockups
                 });
         }
     }
+    
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    public class VisualModelUpdatePositionSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+                .WithAll<ModelPrefabComponent, ModelInstanceComponent, Translation>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Translation t)
+                {
+                    m.instance.transform.position = t.Value;
+                });
+        }
+    }
 
     public class MockupEcsSceneController : MonoBehaviour
     {
-        public GameObject[] prefabs;
-
         // Update is called once per frame
         private void Update()
         {
             if (Input.GetMouseButtonUp(1))
             {
+                var modelProvider = ModelProviderSingleton.Instance;
+                
                 var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 position.z = 0;
                 
@@ -99,7 +103,7 @@ namespace Mockups
                 var entity = manager.CreateEntity();
                 manager.AddSharedComponentData(entity, new ModelPrefabComponent
                 {
-                    prefab = prefabs[UnityEngine.Random.Range(0, prefabs.Length)]
+                    prefab = modelProvider.prefabs[UnityEngine.Random.Range(0, modelProvider.prefabs.Length)]
                 });
                 manager.AddComponentData(entity, new Translation
                 {
