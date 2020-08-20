@@ -184,11 +184,13 @@ namespace Server
         {
             var unitsQuery = EntityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<Unit>(),
-                ComponentType.ReadWrite<Translation>()
+                ComponentType.ReadWrite<Translation>(),
+                ComponentType.ReadWrite<UnitState>()
                 );
 
             var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
             var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            var states = unitsQuery.ToComponentDataArray<UnitState>(Allocator.TempJob);
             
             Entities
                 .WithNone<ClientOnly>()
@@ -214,6 +216,7 @@ namespace Server
                             writer.WriteUInt(units[j].player);
                             writer.WriteFloat(translations[j].Value.x);
                             writer.WriteFloat(translations[j].Value.y);
+                            writer.WriteInt(states[j].state);
                             m_Driver.EndSend(writer);
                         }
 
@@ -222,6 +225,7 @@ namespace Server
 
             units.Dispose();
             translations.Dispose();
+            states.Dispose();
         }
     }
 }

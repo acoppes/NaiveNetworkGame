@@ -14,6 +14,7 @@ namespace Scenes
     public struct ClientViewUpdate : IComponentData
     {
         public uint unitId;
+        public int state;
         public float2 position;
     }
 
@@ -55,6 +56,11 @@ namespace Scenes
                         {
                             Value = new float3(update.position.x, update.position.y, 0)
                         });
+
+                        PostUpdateCommands.SetComponent(unitEntities[i], new UnitState
+                        {
+                            state = update.state
+                        });
                         
                         updated = true;
                         break;
@@ -79,6 +85,10 @@ namespace Scenes
                 PostUpdateCommands.AddComponent(entity, new Translation
                 {
                     Value = new float3(update.position.x, update.position.y, 0)
+                });
+                PostUpdateCommands.AddComponent(entity, new UnitState
+                {
+                    state = update.state
                 });
             }
 

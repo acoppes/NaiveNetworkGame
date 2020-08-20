@@ -88,12 +88,14 @@ namespace Client
                                 var player = stream.ReadUInt();
                                 var x = stream.ReadFloat();
                                 var y = stream.ReadFloat();
+                                var state = stream.ReadUInt();
 
                                 // read unit info...
                                 var clientViewUpdate = PostUpdateCommands.CreateEntity();
                                 PostUpdateCommands.AddComponent(clientViewUpdate, new ClientViewUpdate
                                 {
                                     unitId = unitId,
+                                    state = (int) state,
                                     position = new float2(x, y)
                                 });
                             }

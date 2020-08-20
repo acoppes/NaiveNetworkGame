@@ -1,4 +1,5 @@
 using System;
+using Server;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -83,6 +84,14 @@ namespace Mockups
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Translation t)
                 {
                     m.instance.transform.position = t.Value;
+                });
+            
+            Entities
+                .WithAll<ModelPrefabComponent, ModelInstanceComponent, UnitState>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref UnitState state)
+                {
+                    var animator = m.instance.GetComponent<Animator>();
+                    animator.SetInteger("state", state.state);
                 });
         }
     }

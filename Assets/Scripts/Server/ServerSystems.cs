@@ -128,9 +128,32 @@ namespace Server
                     {
                         newpos = p1;
                         PostUpdateCommands.RemoveComponent<MovementAction>(e);
+                        PostUpdateCommands.SetComponent(e, new UnitState
+                        {
+                            state = 1,
+                            time = 2
+                        });
                     }
 
                     t.Value = new float3(newpos.x, newpos.y, t.Value.z);
+                });
+        }
+    }
+    
+    public class ServerUnitStateComponent : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            var dt = Time.DeltaTime;
+            
+            Entities
+                .ForEach(delegate(Entity e, ref UnitState unitState)
+                {
+                    unitState.time -= dt;
+                    if (unitState.time < 0)
+                    {
+                        unitState.state = 0;
+                    }
                 });
         }
     }
