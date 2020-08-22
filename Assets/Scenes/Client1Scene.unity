@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 8333285873719266699, guid: 1d5d4684909d4514a831609a2869c7b7, type: 3}
+  - {fileID: 1318132579616523738, guid: 5bfeb814a7e0bd34ebbae70bf306b5d3, type: 3}
   parent: {fileID: 1633604428}
 --- !u!1 &1990033513
 GameObject:
