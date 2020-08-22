@@ -4,8 +4,8 @@ using Unity.Mathematics;
 namespace Server
 {
     [GenerateAuthoringComponent]
-    public struct Movement : IComponentData
+    public struct LookingDirection : IComponentData
     {
-        public float speed;
+        public float2 direction;
     }
 }

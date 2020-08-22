@@ -88,6 +88,8 @@ namespace Client
                                 var player = stream.ReadUInt();
                                 var x = stream.ReadFloat();
                                 var y = stream.ReadFloat();
+                                var lookingDirectionX = stream.ReadFloat();
+                                var lookingDirectionY = stream.ReadFloat();
                                 var state = stream.ReadUInt();
 
                                 // read unit info...
@@ -96,7 +98,8 @@ namespace Client
                                 {
                                     unitId = unitId,
                                     state = (int) state,
-                                    position = new float2(x, y)
+                                    position = new float2(x, y),
+                                    lookingDirection = new float2(lookingDirectionX, lookingDirectionY)
                                 });
                             }
                         }

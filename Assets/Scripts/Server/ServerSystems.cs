@@ -120,41 +120,62 @@ namespace Server
                     var p0 = t.Value.xy;
                     var p1 = m.target;
 
-                    var direction = math.normalize(p1 - p0);
+                    m.direction = math.normalize(p1 - p0);
                     
-                    var newpos = p0 +  direction * movement.speed * dt;
+                    var newpos = p0 + m.direction * movement.speed * dt;
 
                     if (math.distancesq(p1, p0) < math.distancesq(newpos, p0))
                     {
                         newpos = p1;
                         PostUpdateCommands.RemoveComponent<MovementAction>(e);
-                        PostUpdateCommands.SetComponent(e, new UnitState
-                        {
-                            state = 1,
-                            time = 2
-                        });
                     }
 
                     t.Value = new float3(newpos.x, newpos.y, t.Value.z);
+                    
+                    PostUpdateCommands.SetComponent(e, new UnitState
+                    {
+                        state = 1
+                    });
                 });
+
+            Entities.WithAll<LookingDirection, MovementAction>()
+                .ForEach(delegate(Entity e, ref LookingDirection d, ref MovementAction m)
+                {
+                    d.direction = m.direction;
+                });
+
         }
     }
     
+    // [UpdateBefore(typeof(ServerMovementSystem))]
     public class ServerUnitStateComponent : ComponentSystem
     {
+        // Recover unit idle state system...
+        
         protected override void OnUpdate()
         {
-            var dt = Time.DeltaTime;
+            // var dt = Time.DeltaTime;
             
             Entities
-                .ForEach(delegate(Entity e, ref UnitState unitState)
+                .WithAll<MovementAction, UnitState>()
+                .ForEach(delegate(Entity e, ref UnitState u)
                 {
-                    unitState.time -= dt;
-                    if (unitState.time < 0)
-                    {
-                        unitState.state = 0;
-                    }
+                    u.state = 1;
                 });
+            
+            Entities
+                .WithNone<MovementAction>()
+                .WithAll<UnitState>()
+                .ForEach(delegate(Entity e, ref UnitState u)
+                {
+                    u.state = 0;
+                });
+            
+            // Entities
+            //     .ForEach(delegate(Entity e, ref UnitState unitState)
+            //     {
+            //         unitState.state = 0;
+            //     });
         }
     }
 }

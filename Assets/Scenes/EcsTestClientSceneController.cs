@@ -16,6 +16,7 @@ namespace Scenes
         public uint unitId;
         public int state;
         public float2 position;
+        public float2 lookingDirection;
     }
 
     public struct ClientUnitComponent : IComponentData
@@ -56,10 +57,13 @@ namespace Scenes
                         {
                             Value = new float3(update.position.x, update.position.y, 0)
                         });
-
                         PostUpdateCommands.SetComponent(unitEntities[i], new UnitState
                         {
                             state = update.state
+                        });
+                        PostUpdateCommands.SetComponent(unitEntities[i], new LookingDirection
+                        {
+                            direction = update.lookingDirection
                         });
                         
                         updated = true;
@@ -89,6 +93,10 @@ namespace Scenes
                 PostUpdateCommands.AddComponent(entity, new UnitState
                 {
                     state = update.state
+                });
+                PostUpdateCommands.AddComponent(entity, new LookingDirection
+                {
+                    direction = update.lookingDirection
                 });
             }
 

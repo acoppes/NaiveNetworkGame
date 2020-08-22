@@ -185,11 +185,15 @@ namespace Server
             var unitsQuery = EntityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<Unit>(),
                 ComponentType.ReadWrite<Translation>(),
-                ComponentType.ReadWrite<UnitState>()
+                ComponentType.ReadWrite<UnitState>(),
+                ComponentType.ReadWrite<LookingDirection>()
                 );
 
             var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
             var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            //LookingDirection
+            var lookingDirections = unitsQuery.ToComponentDataArray<LookingDirection>(Allocator.TempJob);
+
             var states = unitsQuery.ToComponentDataArray<UnitState>(Allocator.TempJob);
             
             Entities
@@ -216,6 +220,8 @@ namespace Server
                             writer.WriteUInt(units[j].player);
                             writer.WriteFloat(translations[j].Value.x);
                             writer.WriteFloat(translations[j].Value.y);
+                            writer.WriteFloat(lookingDirections[j].direction.x);
+                            writer.WriteFloat(lookingDirections[j].direction.y);
                             writer.WriteInt(states[j].state);
                             m_Driver.EndSend(writer);
                         }
@@ -223,6 +229,7 @@ namespace Server
                     }
                 });
 
+            lookingDirections.Dispose();
             units.Dispose();
             translations.Dispose();
             states.Dispose();

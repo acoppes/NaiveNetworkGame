@@ -93,6 +93,13 @@ namespace Mockups
                     var animator = m.instance.GetComponent<Animator>();
                     animator.SetInteger("state", state.state);
                 });
+            
+            Entities
+                .WithAll<ModelInstanceComponent, LookingDirection>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref LookingDirection lookingDirection)
+                {
+                    m.instance.transform.localScale = new Vector3(lookingDirection.direction.x >= 0 ? 1: -1, 1, 1);
+                });
         }
     }
 

@@ -6,6 +6,6 @@ namespace Server
     public struct UnitState : IComponentData
     {
         public int state;
-        public float time;
+        // public float time;
     }
 }
