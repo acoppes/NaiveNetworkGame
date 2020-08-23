@@ -49,6 +49,7 @@ namespace Server
         public NetworkConnection connection;
         public int player;
         public bool synchronized;
+        public bool initialized;
     }
     
     public class ServerNetworkSystem : ComponentSystem
@@ -130,6 +131,8 @@ namespace Server
                             player = currentConnectionPlayer++,
                             connection = c,
                         });
+                        
+                        // create unit here too?
                     }
                     
                     DataStreamReader stream;
@@ -200,6 +203,41 @@ namespace Server
         }
     }
 
+    public class ServerCreatePlayerController : ComponentSystem
+    {
+        private uint lastUnitId;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            lastUnitId = 0;
+        }
+
+        protected override void OnUpdate()
+        {
+            var playerControllerPrefabEntity = 
+                Entities.WithAll<PlayerControllerSharedComponent>().ToEntityQuery().GetSingletonEntity();
+
+            var playerControllerPrefab = 
+                EntityManager.GetSharedComponentData<PlayerControllerSharedComponent>(playerControllerPrefabEntity);
+            
+            Entities.ForEach(delegate(ref PlayerConnectionId p)
+            {
+                if (p.initialized)
+                    return;
+                
+                var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.prefab);
+                PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
+                {
+                    id = lastUnitId++,
+                    player = (uint) p.player
+                });
+                
+                p.initialized = true;
+            });
+        }
+    }
+
     public class ServerSendGameStateSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -259,7 +297,7 @@ namespace Server
 
                     var m_Driver = networkManager.m_Driver;
                     
-                    DataStreamReader stream;
+                    // DataStreamReader stream;
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
                     {
                         Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
