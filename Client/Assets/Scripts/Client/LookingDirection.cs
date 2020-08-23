@@ -1,9 +1,8 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Server
+namespace Client
 {
-    [GenerateAuthoringComponent]
     public struct LookingDirection : IComponentData
     {
         public float2 direction;

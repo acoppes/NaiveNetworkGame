@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Client;
 using Mockups;
-using Server;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;

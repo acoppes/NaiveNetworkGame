@@ -1,5 +1,4 @@
 using Scenes;
-using Server;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -18,7 +17,6 @@ namespace Client
         
     }
     
-    [UpdateAfter(typeof(ServerNetworkSystem))]
     public class ClientNetworkSystem : ComponentSystem
     {
         protected override void OnUpdate()

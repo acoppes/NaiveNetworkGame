@@ -1,15 +1,8 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Server
+namespace Client
 {
-    [GenerateAuthoringComponent]
-    public struct Unit : IComponentData
-    {
-        public uint id;
-        public uint player;
-    }
-    
     public struct PendingPlayerAction : IComponentData
     {
         public uint player;
@@ -27,4 +20,9 @@ namespace Server
         
     }
     
+    public struct UnitState : IComponentData
+    {
+        public int state;
+        // public float time;
+    }
 }
