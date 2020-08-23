@@ -81,6 +81,21 @@ namespace Client
                             else if (cmd == NetworkEvent.Type.Data)
                             {
                                 var type = stream.ReadUInt();
+
+                                if (type == 0)
+                                {
+                                    // this is my player id!!
+                                    var networkPlayerId = stream.ReadUInt();
+                                    
+                                    // We are assuming this message is not going to be received again...
+                                    var networkPlayer = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent(networkPlayer, new NetworkPlayerId
+                                    {
+                                        player = networkPlayerId,
+                                        connection = m_Connection
+                                    });
+                                }
+                                
                                 if (type == 50)
                                 {
                                     var unitId = stream.ReadUInt();

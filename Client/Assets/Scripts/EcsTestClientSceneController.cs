@@ -5,6 +5,7 @@ using Mockups;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Networking.Transport;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -136,42 +137,63 @@ namespace Scenes
         }
     }
 
+    public struct NetworkPlayerId : IComponentData
+    {
+        public uint player;
+        public NetworkConnection connection;
+    }
+
     public class ClientInputSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach(delegate(Entity _, NetworkManagerSharedComponent manager)
+            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId)
             {
-                if (manager.networkManager == null)
+                if (!networkPlayerId.connection.IsCreated)
                     return;
                 
-                if (!manager.networkManager.m_Driver.IsCreated)
-                    return;
+                // if (!networkPlayerId.assigned)
+                //     return;
+                
+                // TODO: better controls...
 
-                var connections = manager.networkManager.m_Connections;
-
-                for (var i = 0; i < connections.Length; i++)
+                if (Input.GetMouseButtonUp(0))
                 {
-                    if (!connections[i].IsCreated)
-                        continue;
-                    
-                    if (Input.GetMouseButtonUp(i))
+                    var mousePosition = Input.mousePosition;
+                    var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+                    var e = PostUpdateCommands.CreateEntity();
+                    PostUpdateCommands.AddComponent(e, new ClientOnly());
+                    PostUpdateCommands.AddComponent(e, new PendingPlayerAction
                     {
-                        var mousePosition = Input.mousePosition;
-                        var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-                        var e = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(e, new ClientOnly());
-                        PostUpdateCommands.AddComponent(e, new PendingPlayerAction
-                        {
-                            player = (uint) i,
-                            command = 0,
-                            target = new float2(worldPosition.x, worldPosition.y)
-                        });
-                    }
+                        player = networkPlayerId.player,
+                        command = 0,
+                        target = new float2(worldPosition.x, worldPosition.y)
+                    });
                 }
-
+                
+                // Entities.ForEach(delegate(NetworkManagerSharedComponent manager)
+                // {
+                //     if (manager.networkManager == null)
+                //         return;
+                //
+                //     if (!manager.networkManager.m_Driver.IsCreated)
+                //         return;
+                //
+                //
+                //     var connections = manager.networkManager.m_Connections;
+                //
+                //     for (var i = 0; i < connections.Length; i++)
+                //     {
+                //         if (!connections[i].IsCreated)
+                //             continue;
+                //  
+                //   }
+                //
+                // });
             });
+            
+           
         }
     }
     
@@ -194,6 +216,15 @@ namespace Scenes
                 networkPlayerId = networkPlayerId,
                 parent = parent
             });
+
+            // var networkPlayer = entityManager.CreateEntity();
+            // entityManager.AddComponentData(networkPlayer, new NetworkPlayerId
+            // {
+            //     // assigned = false,
+            //     player = 0,
+            //     connection = default(NetworkConnection)
+            // });
+
         }
 
         // private void Update()

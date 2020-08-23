@@ -43,9 +43,24 @@ namespace Server
     {
         
     }
+
+    public struct PlayerConnectionId : IComponentData
+    {
+        public NetworkConnection connection;
+        public int player;
+        public bool synchronized;
+    }
     
     public class ServerNetworkSystem : ComponentSystem
     {
+        private int currentConnectionPlayer;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            currentConnectionPlayer = 0;
+        }
+
         protected override void OnUpdate()
         {
             // create server
@@ -108,6 +123,13 @@ namespace Server
                         Debug.Log("Accepted a connection");
                         
                         // create a new player connected command internally
+
+                        var playerEntity = PostUpdateCommands.CreateEntity();
+                        PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId
+                        {
+                            player = currentConnectionPlayer++,
+                            connection = c,
+                        });
                     }
                     
                     DataStreamReader stream;
@@ -182,6 +204,38 @@ namespace Server
     {
         protected override void OnUpdate()
         {
+            Entities
+                .WithAll<ServerRunningComponent, NetworkManagerSharedComponent>()
+                .ForEach(delegate(NetworkManagerSharedComponent serverManagerComponent)
+                {
+                    var networkManager = serverManagerComponent.networkManager;
+                    var m_Driver = networkManager.m_Driver;
+                    
+                    for (var i = 0; i < networkManager.m_Connections.Length; i++)
+                    {
+                        var connection = networkManager.m_Connections[i];
+                        
+                        Assert.IsTrue(connection.IsCreated);
+
+                        Entities.ForEach(delegate(ref PlayerConnectionId p)
+                        {
+                            if (p.synchronized)
+                                return;
+                            
+                            // Send player id to player given a connection
+                            if (p.connection == connection)
+                            {
+                                var writer = m_Driver.BeginSend(connection);
+                                writer.WriteUInt(0);
+                                writer.WriteUInt((uint)p.player);
+                                m_Driver.EndSend(writer);
+
+                                p.synchronized = true;
+                            }
+                        });
+                    }
+                });
+            
             var unitsQuery = EntityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<Unit>(),
                 ComponentType.ReadWrite<Translation>(),
