@@ -41,6 +41,8 @@ namespace Scenes
             var unitsQuery = Entities.WithAll<ClientUnitComponent, Translation>().ToEntityQuery();
             var units = unitsQuery.ToComponentDataArray<ClientUnitComponent>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
+            
+            var createdUnitsInThisUpdate = new List<uint>();
 
             for (var j = 0; j < updates.Length; j++)
             {
@@ -48,6 +50,9 @@ namespace Scenes
                 
                 var update = updates[j];
                 var updated = false;
+
+                if (createdUnitsInThisUpdate.Contains(update.unitId))
+                    continue;
 
                 for (var i = 0; i < units.Length; i++)
                 {
@@ -100,10 +105,12 @@ namespace Scenes
                 {
                     direction = update.lookingDirection
                 });
-                PostUpdateCommands.AddComponent(entity, new ClientConnectionId
-                {
-                    id = update.connectionId
-                });
+                // PostUpdateCommands.AddComponent(entity, new ClientConnectionId
+                // {
+                //     id = update.connectionId
+                // });
+                
+                createdUnitsInThisUpdate.Add(update.unitId);
             }
 
             unitEntities.Dispose();
@@ -171,26 +178,6 @@ namespace Scenes
                         target = new float2(worldPosition.x, worldPosition.y)
                     });
                 }
-                
-                // Entities.ForEach(delegate(NetworkManagerSharedComponent manager)
-                // {
-                //     if (manager.networkManager == null)
-                //         return;
-                //
-                //     if (!manager.networkManager.m_Driver.IsCreated)
-                //         return;
-                //
-                //
-                //     var connections = manager.networkManager.m_Connections;
-                //
-                //     for (var i = 0; i < connections.Length; i++)
-                //     {
-                //         if (!connections[i].IsCreated)
-                //             continue;
-                //  
-                //   }
-                //
-                // });
             });
             
            
@@ -217,36 +204,7 @@ namespace Scenes
                 parent = parent
             });
 
-            // var networkPlayer = entityManager.CreateEntity();
-            // entityManager.AddComponentData(networkPlayer, new NetworkPlayerId
-            // {
-            //     // assigned = false,
-            //     player = 0,
-            //     connection = default(NetworkConnection)
-            // });
-
+            ModelProviderSingleton.Instance.SetRoot(parent);
         }
-
-        // private void Update()
-        // {
-        //     var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        //
-        //     // if (clientBehaviour.clientNetworkManager.networkPlayerId == -1)
-        //     //     return;
-        //
-        //     if (Input.GetMouseButtonUp(button))
-        //     {
-        //         var mousePosition = Input.mousePosition;
-        //         var worldPosition = camera.ScreenToWorldPoint(mousePosition);
-        //
-        //         var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
-        //         entityManager.AddComponentData(entity, new PendingPlayerAction
-        //         {
-        //             player = networkPlayerId,
-        //             command = 0,
-        //             target = new float2(worldPosition.x, worldPosition.y)
-        //         });
-        //     }
-        // }
     }
 }

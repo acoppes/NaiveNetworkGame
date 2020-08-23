@@ -56,21 +56,21 @@ namespace Mockups
             // var clientModelRootQuery = Entities.WithAll<ClientModelRootSharedComponent>().ToEntityQuery();
 
             Entities
-                .WithAll<ModelPrefabComponent, ClientConnectionId>()
+                .WithAll<ModelPrefabComponent>()
                 .WithNone<ModelInstanceComponent>()
-                .ForEach(delegate(Entity e, ModelPrefabComponent m, ref ClientConnectionId c)
+                .ForEach(delegate(Entity e, ModelPrefabComponent m)
                 {
-                    var clientInstanceId = c.id;
+                    // var clientInstanceId = c.id;
 
-                    Transform modelRoot = null;
+                    var modelRoot = ModelProviderSingleton.Instance.root;
 
-                    Entities.ForEach(delegate(Entity e, ClientModelRootSharedComponent clientModelRoot)
-                    {
-                        if (clientModelRoot.networkPlayerId == clientInstanceId)
-                        {
-                            modelRoot = clientModelRoot.parent;
-                        }
-                    });
+                    // Entities.ForEach(delegate(Entity e, ClientModelRootSharedComponent clientModelRoot)
+                    // {
+                    //     if (clientModelRoot.networkPlayerId == clientInstanceId)
+                    //     {
+                    //         modelRoot = clientModelRoot.parent;
+                    //     }
+                    // });
 
                     PostUpdateCommands.AddSharedComponent(e, new ModelInstanceComponent
                     {

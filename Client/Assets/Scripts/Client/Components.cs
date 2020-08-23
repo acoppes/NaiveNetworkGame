@@ -3,10 +3,10 @@ using Unity.Mathematics;
 
 namespace Client
 {
-    public struct ClientConnectionId : IComponentData
-    {
-        public uint id;
-    }
+    // public struct ClientConnectionId : IComponentData
+    // {
+    //     public uint id;
+    // }
     
     public struct PendingPlayerAction : IComponentData
     {
