@@ -1,5 +1,7 @@
 using System;
 using Client;
+using Scenes;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -50,16 +52,29 @@ namespace Mockups
     {
         protected override void OnUpdate()
         {
-            var modelProvider = ModelProviderSingleton.Instance;
-            
+            // var modelProvider = ModelProviderSingleton.Instance;
+            // var clientModelRootQuery = Entities.WithAll<ClientModelRootSharedComponent>().ToEntityQuery();
+
             Entities
-                .WithAll<ModelPrefabComponent>()
+                .WithAll<ModelPrefabComponent, ClientConnectionId>()
                 .WithNone<ModelInstanceComponent>()
-                .ForEach(delegate(Entity e, ModelPrefabComponent m)
+                .ForEach(delegate(Entity e, ModelPrefabComponent m, ref ClientConnectionId c)
                 {
+                    var clientInstanceId = c.id;
+
+                    Transform modelRoot = null;
+
+                    Entities.ForEach(delegate(Entity e, ClientModelRootSharedComponent clientModelRoot)
+                    {
+                        if (clientModelRoot.networkPlayerId == clientInstanceId)
+                        {
+                            modelRoot = clientModelRoot.parent;
+                        }
+                    });
+
                     PostUpdateCommands.AddSharedComponent(e, new ModelInstanceComponent
                     {
-                        instance = GameObject.Instantiate(m.prefab, modelProvider.parent)
+                        instance = GameObject.Instantiate(m.prefab, modelRoot)
                     });
                 });
 

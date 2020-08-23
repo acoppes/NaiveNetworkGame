@@ -56,78 +56,81 @@ namespace Client
                     DataStreamReader stream;
                     NetworkEvent.Type cmd;
 
-                    // var connecting = false;
-                    var m_Connection = networkManager.networkManager.m_Connections[0];
-                    var m_Driver = networkManager.networkManager.m_Driver;
-                    
-                    if (!m_Connection.IsCreated)
+                    for (var i = 0; i < networkManager.networkManager.m_Connections.Length; i++)
                     {
-                        Debug.Log("Something went wrong during connect");
-                        return;
-                    }
-                    
-                    m_Driver.ScheduleUpdate().Complete();
-
-                    while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
-                    {
-                        if (cmd == NetworkEvent.Type.Connect)
+                        var m_Connection = networkManager.networkManager.m_Connections[i];
+                        var m_Driver = networkManager.networkManager.m_Driver;
+                        
+                        if (!m_Connection.IsCreated)
                         {
-                            Debug.Log("We are now connected to the server");
-                            var writer = m_Driver.BeginSend(m_Connection);
-                            writer.WriteUInt(0);
-                            m_Driver.EndSend(writer);
+                            Debug.Log("Something went wrong during connect");
+                            return;
                         }
-                        else if (cmd == NetworkEvent.Type.Data)
-                        {
-                            var type = stream.ReadUInt();
-                            if (type == 50)
-                            {
-                                var unitId = stream.ReadUInt();
-                                var player = stream.ReadUInt();
-                                var x = stream.ReadFloat();
-                                var y = stream.ReadFloat();
-                                var lookingDirectionX = stream.ReadFloat();
-                                var lookingDirectionY = stream.ReadFloat();
-                                var state = stream.ReadUInt();
+                        
+                        m_Driver.ScheduleUpdate().Complete();
 
-                                // read unit info...
-                                var clientViewUpdate = PostUpdateCommands.CreateEntity();
-                                PostUpdateCommands.AddComponent(clientViewUpdate, new ClientViewUpdate
+                        while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
+                        {
+                            if (cmd == NetworkEvent.Type.Connect)
+                            {
+                                Debug.Log("We are now connected to the server");
+                                var writer = m_Driver.BeginSend(m_Connection);
+                                writer.WriteUInt(0);
+                                m_Driver.EndSend(writer);
+                            }
+                            else if (cmd == NetworkEvent.Type.Data)
+                            {
+                                var type = stream.ReadUInt();
+                                if (type == 50)
                                 {
-                                    unitId = unitId,
-                                    state = (int) state,
-                                    position = new float2(x, y),
-                                    lookingDirection = new float2(lookingDirectionX, lookingDirectionY)
-                                });
+                                    var unitId = stream.ReadUInt();
+                                    var player = stream.ReadUInt();
+                                    var x = stream.ReadFloat();
+                                    var y = stream.ReadFloat();
+                                    var lookingDirectionX = stream.ReadFloat();
+                                    var lookingDirectionY = stream.ReadFloat();
+                                    var state = stream.ReadUInt();
+
+                                    // read unit info...
+                                    var clientViewUpdate = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent(clientViewUpdate, new ClientViewUpdate
+                                    {
+                                        connectionId = (uint) i,
+                                        unitId = unitId,
+                                        state = (int) state,
+                                        position = new float2(x, y),
+                                        lookingDirection = new float2(lookingDirectionX, lookingDirectionY)
+                                    });
+                                }
+                            }
+                            else if (cmd == NetworkEvent.Type.Disconnect)
+                            {
+                                Debug.Log("Client got disconnected from server");
+                                networkManager.networkManager.m_Connections[i] = default;
                             }
                         }
-                        else if (cmd == NetworkEvent.Type.Disconnect)
-                        {
-                            Debug.Log("Client got disconnected from server");
-                            networkManager.networkManager.m_Connections[0] = default;
+                        
+                        // TODO: check the connection wasn't destroyed...
+                        
+                        Entities.WithNone<ServerOnly>()
+                            .WithAll<ClientOnly, PendingPlayerAction>()
+                            .ForEach(delegate(Entity e, ref PendingPlayerAction p)
+                            {
+                                PostUpdateCommands.DestroyEntity(e);
+                                // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                                
+                                var writer = m_Driver.BeginSend(m_Connection);
+                                
+                                // just a number to identify the packet for now...
+                                writer.WriteUInt(99);
+                                writer.WriteUInt(p.player);
+                                writer.WriteUInt(p.command);
+                                writer.WriteFloat(p.target.x);
+                                writer.WriteFloat(p.target.y);
+                                
+                                m_Driver.EndSend(writer);
+                            });
                         }
-                    }
-                    
-                    // TODO: check the connection wasn't destroyed...
-                    
-                    Entities.WithNone<ServerOnly>()
-                        .WithAll<ClientOnly, PendingPlayerAction>()
-                        .ForEach(delegate(Entity e, ref PendingPlayerAction p)
-                        {
-                            PostUpdateCommands.DestroyEntity(e);
-                            // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
-                            
-                            var writer = m_Driver.BeginSend(m_Connection);
-                            
-                            // just a number to identify the packet for now...
-                            writer.WriteUInt(99);
-                            writer.WriteUInt(p.player);
-                            writer.WriteUInt(p.command);
-                            writer.WriteFloat(p.target.x);
-                            writer.WriteFloat(p.target.y);
-                            
-                            m_Driver.EndSend(writer);
-                        });
                 });
         }
 

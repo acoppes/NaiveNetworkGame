@@ -13,6 +13,7 @@ namespace Scenes
     // for when there a unit was updated from the server
     public struct ClientViewUpdate : IComponentData
     {
+        public uint connectionId;
         public uint unitId;
         public int state;
         public float2 position;
@@ -98,12 +99,40 @@ namespace Scenes
                 {
                     direction = update.lookingDirection
                 });
+                PostUpdateCommands.AddComponent(entity, new ClientConnectionId
+                {
+                    id = update.connectionId
+                });
             }
 
             unitEntities.Dispose();
             updateEntities.Dispose();
             units.Dispose();
             updates.Dispose();
+        }
+    }
+
+    public struct ClientModelRootSharedComponent : ISharedComponentData, IEquatable<ClientModelRootSharedComponent>
+    {
+        public uint networkPlayerId;
+        public Transform parent;
+
+        public bool Equals(ClientModelRootSharedComponent other)
+        {
+            return networkPlayerId == other.networkPlayerId && Equals(parent, other.parent);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ClientModelRootSharedComponent other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((int) networkPlayerId * 397) ^ (parent != null ? parent.GetHashCode() : 0);
+            }
         }
     }
     
@@ -116,6 +145,17 @@ namespace Scenes
 
         // public GameObject prefab;
         public Transform parent;
+
+        private void Start()
+        {
+            var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            var clientModelRoot = entityManager.CreateEntity();
+            entityManager.AddSharedComponentData(clientModelRoot, new ClientModelRootSharedComponent
+            {
+                networkPlayerId = networkPlayerId,
+                parent = parent
+            });
+        }
 
         private void Update()
         {
