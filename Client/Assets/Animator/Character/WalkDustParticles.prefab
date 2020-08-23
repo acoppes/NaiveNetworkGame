@@ -115,7 +115,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.46666667
+      scalar: 0.23333333
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1364,7 +1364,7 @@ ParticleSystem:
     enabled: 1
     mode: 1
     timeMode: 2
-    fps: 15
+    fps: 30
     frameOverTime:
       serializedVersion: 2
       minMaxState: 1
