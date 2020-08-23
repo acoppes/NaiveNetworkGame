@@ -135,6 +135,45 @@ namespace Scenes
             }
         }
     }
+
+    public class ClientInputSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach(delegate(Entity _, NetworkManagerSharedComponent manager)
+            {
+                if (manager.networkManager == null)
+                    return;
+                
+                if (!manager.networkManager.m_Driver.IsCreated)
+                    return;
+
+                var connections = manager.networkManager.m_Connections;
+
+                for (var i = 0; i < connections.Length; i++)
+                {
+                    if (!connections[i].IsCreated)
+                        continue;
+                    
+                    if (Input.GetMouseButtonUp(i))
+                    {
+                        var mousePosition = Input.mousePosition;
+                        var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+                        var e = PostUpdateCommands.CreateEntity();
+                        PostUpdateCommands.AddComponent(e, new ClientOnly());
+                        PostUpdateCommands.AddComponent(e, new PendingPlayerAction
+                        {
+                            player = (uint) i,
+                            command = 0,
+                            target = new float2(worldPosition.x, worldPosition.y)
+                        });
+                    }
+                }
+
+            });
+        }
+    }
     
     public class EcsTestClientSceneController : MonoBehaviour
     {
@@ -157,26 +196,26 @@ namespace Scenes
             });
         }
 
-        private void Update()
-        {
-            var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-
-            // if (clientBehaviour.clientNetworkManager.networkPlayerId == -1)
-            //     return;
-
-            if (Input.GetMouseButtonUp(button))
-            {
-                var mousePosition = Input.mousePosition;
-                var worldPosition = camera.ScreenToWorldPoint(mousePosition);
-
-                var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
-                entityManager.AddComponentData(entity, new PendingPlayerAction
-                {
-                    player = networkPlayerId,
-                    command = 0,
-                    target = new float2(worldPosition.x, worldPosition.y)
-                });
-            }
-        }
+        // private void Update()
+        // {
+        //     var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        //
+        //     // if (clientBehaviour.clientNetworkManager.networkPlayerId == -1)
+        //     //     return;
+        //
+        //     if (Input.GetMouseButtonUp(button))
+        //     {
+        //         var mousePosition = Input.mousePosition;
+        //         var worldPosition = camera.ScreenToWorldPoint(mousePosition);
+        //
+        //         var entity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
+        //         entityManager.AddComponentData(entity, new PendingPlayerAction
+        //         {
+        //             player = networkPlayerId,
+        //             command = 0,
+        //             target = new float2(worldPosition.x, worldPosition.y)
+        //         });
+        //     }
+        // }
     }
 }
