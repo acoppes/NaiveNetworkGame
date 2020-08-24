@@ -98,6 +98,9 @@ namespace Client
                                 
                                 if (type == 50)
                                 {
+                                    // network game state... 
+                                    
+                                    var frame = stream.ReadInt();
                                     var unitId = stream.ReadUInt();
                                     var player = stream.ReadUInt();
                                     var x = stream.ReadFloat();

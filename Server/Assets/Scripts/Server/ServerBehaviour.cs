@@ -14,6 +14,8 @@ namespace Server
         
         private void Start ()
         {
+            Application.targetFrameRate = 60;
+            
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             var serverEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ServerOnly>());

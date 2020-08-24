@@ -1,6 +1,7 @@
 using System;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Networking.Transport;
 using Unity.Transforms;
 using UnityEngine;
@@ -50,6 +51,16 @@ namespace Server
         public int player;
         public bool synchronized;
         public bool initialized;
+    }
+
+    public struct NetworkGameState : IComponentData
+    {
+        public int frame;
+        public int unitId;
+        public int playerId;
+        public float2 translation;
+        public float2 lookingDirection;
+        public int state;
     }
     
     public class ServerNetworkSystem : ComponentSystem
@@ -232,8 +243,57 @@ namespace Server
                     id = lastUnitId++,
                     player = (uint) p.player
                 });
+                PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState());
                 
                 p.initialized = true;
+            });
+        }
+    }
+
+    public class NetworkGameStateSystem : ComponentSystem
+    {
+        private int frame;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            frame = 0;
+            
+            // TODO: store frame in an entity + singleton component
+        }
+
+        protected override void OnUpdate()
+        {
+            frame++;
+            
+            Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
+            {
+                n.frame = frame;
+            });
+            
+            Entities.WithAll<Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
+                ref NetworkGameState n)
+            {
+                n.unitId = (int) u.id;
+                n.playerId = (int) u.player;
+            });
+            
+            Entities.WithAll<Translation, NetworkGameState>().ForEach(delegate(ref Translation t, 
+                ref NetworkGameState n)
+            {
+                n.translation = new float2(t.Value.x, t.Value.y);
+            });
+            
+            Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
+                ref NetworkGameState n)
+            {
+                n.lookingDirection = l.direction;
+            });
+            
+            Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
+                ref NetworkGameState n)
+            {
+                n.state = state.state;
             });
         }
     }
@@ -274,20 +334,6 @@ namespace Server
                     }
                 });
             
-            var unitsQuery = EntityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<Unit>(),
-                ComponentType.ReadWrite<Translation>(),
-                ComponentType.ReadWrite<UnitState>(),
-                ComponentType.ReadWrite<LookingDirection>()
-                );
-
-            var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
-            var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
-            //LookingDirection
-            var lookingDirections = unitsQuery.ToComponentDataArray<LookingDirection>(Allocator.TempJob);
-
-            var states = unitsQuery.ToComponentDataArray<UnitState>(Allocator.TempJob);
-            
             Entities
                 .WithNone<ClientOnly>()
                 .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
@@ -302,29 +348,74 @@ namespace Server
                     {
                         Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
 
-                        // send game state....   
-                        for (var j = 0; j < units.Length; j++)
+                        Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
                         {
-                            // for now, I will send different packets for each unit, for each connection
                             var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
                             writer.WriteUInt(50);
-                            writer.WriteUInt(units[j].id);
-                            writer.WriteUInt(units[j].player);
-                            writer.WriteFloat(translations[j].Value.x);
-                            writer.WriteFloat(translations[j].Value.y);
-                            writer.WriteFloat(lookingDirections[j].direction.x);
-                            writer.WriteFloat(lookingDirections[j].direction.y);
-                            writer.WriteInt(states[j].state);
+                            writer.WriteInt(n.frame);
+                            writer.WriteUInt((uint) n.unitId);
+                            writer.WriteUInt((uint) n.playerId);
+                            writer.WriteFloat(n.translation.x);
+                            writer.WriteFloat(n.translation.y);
+                            writer.WriteFloat(n.lookingDirection.x);
+                            writer.WriteFloat(n.lookingDirection.y);
+                            writer.WriteInt(n.state);
                             m_Driver.EndSend(writer);
-                        }
-
+                        });
                     }
                 });
-
-            lookingDirections.Dispose();
-            units.Dispose();
-            translations.Dispose();
-            states.Dispose();
+            
+            // var unitsQuery = EntityManager.CreateEntityQuery(
+            //     ComponentType.ReadWrite<Unit>(),
+            //     ComponentType.ReadWrite<Translation>(),
+            //     ComponentType.ReadWrite<UnitState>(),
+            //     ComponentType.ReadWrite<LookingDirection>()
+            //     );
+            //
+            // var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
+            // var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            // //LookingDirection
+            // var lookingDirections = unitsQuery.ToComponentDataArray<LookingDirection>(Allocator.TempJob);
+            //
+            // var states = unitsQuery.ToComponentDataArray<UnitState>(Allocator.TempJob);
+            //
+            // Entities
+            //     .WithNone<ClientOnly>()
+            //     .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
+            //     .ForEach(delegate(Entity e, NetworkManagerSharedComponent serverManagerComponent)
+            //     {
+            //         var networkManager = serverManagerComponent.networkManager;
+            //
+            //         var m_Driver = networkManager.m_Driver;
+            //         
+            //         // DataStreamReader stream;
+            //         for (var i = 0; i < networkManager.m_Connections.Length; i++)
+            //         {
+            //             Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
+            //
+            //             // send game state....   
+            //             for (var j = 0; j < units.Length; j++)
+            //             {
+            //                 // for now, I will send different packets for each unit, for each connection
+            //                 var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
+            //                 writer.WriteUInt(50);
+            //                 writer.WriteUInt(units[j].id);
+            //                 writer.WriteUInt(units[j].player);
+            //                 writer.WriteFloat(translations[j].Value.x);
+            //                 writer.WriteFloat(translations[j].Value.y);
+            //                 writer.WriteFloat(lookingDirections[j].direction.x);
+            //                 writer.WriteFloat(lookingDirections[j].direction.y);
+            //                 writer.WriteInt(states[j].state);
+            //                 m_Driver.EndSend(writer);
+            //             }
+            //
+            //         }
+            //     });
+            //
+            // lookingDirections.Dispose();
+            // units.Dispose();
+            // translations.Dispose();
+            // states.Dispose();
         }
     }
 }
