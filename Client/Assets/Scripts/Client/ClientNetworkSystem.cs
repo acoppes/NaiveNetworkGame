@@ -35,9 +35,15 @@ namespace Client
                         m_Driver = NetworkDriver.Create(),
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
                     };
+
+                    var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
                     
-                    var endpoint = NetworkEndPoint.LoopbackIpv4;
-                    endpoint.Port = 9000;
+                    // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
+                    // Debug.Log(endpoint.Address);
+                    // Debug.Log($"isValid: {endpoint.IsValid}");
+                    
+                    // endpoint.Address = "167.57.86.221";
+                    // endpoint.Port = 9000;
 
                     var networkManager = managerSharedComponent.networkManager;
                     

@@ -91,8 +91,10 @@ namespace Server
                         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
                     };
 
-                    var endpoint = NetworkEndPoint.AnyIpv4;
-                    endpoint.Port = 9000;
+                    var endpoint = NetworkEndPoint.AnyIpv4.WithPort(9000);
+                    
+                    // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
+                    // endpoint.Port = 9000;
                     
                     if (networkManager.networkManager.m_Driver.Bind(endpoint) != 0)
                         Debug.Log("Failed to bind to port 9000");
@@ -146,14 +148,13 @@ namespace Server
                         // create unit here too?
                     }
                     
-                    DataStreamReader stream;
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
                     {
                         Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
 
                         NetworkEvent.Type cmd;
                         while ((cmd = m_Driver
-                            .PopEventForConnection(networkManager.m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
+                            .PopEventForConnection(networkManager.m_Connections[i], out var stream)) != NetworkEvent.Type.Empty)
                         {
                             if (cmd == NetworkEvent.Type.Data)
                             {
@@ -312,9 +313,14 @@ namespace Server
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
                     {
                         var connection = networkManager.m_Connections[i];
-                        
-                        Assert.IsTrue(connection.IsCreated);
 
+                        if (!connection.IsCreated)
+                        {
+                            // should we destroy player controller?
+                            // how to send that with gamestate, maybe mark as destroyed...
+                            continue;
+                        }
+                        
                         Entities.ForEach(delegate(ref PlayerConnectionId p)
                         {
                             if (p.synchronized)
@@ -346,11 +352,18 @@ namespace Server
                     // DataStreamReader stream;
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
                     {
-                        Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
+                        var connection = networkManager.m_Connections[i];
+                        
+                        if (!connection.IsCreated)
+                        {
+                            // should we destroy player controller?
+                            // how to send that with gamestate, maybe mark as destroyed...
+                            continue;
+                        }
 
                         Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
                         {
-                            var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
+                            var writer = m_Driver.BeginSend(connection);
                             writer.WriteUInt(50);
                             writer.WriteInt(n.frame);
                             writer.WriteUInt((uint) n.unitId);
@@ -364,58 +377,6 @@ namespace Server
                         });
                     }
                 });
-            
-            // var unitsQuery = EntityManager.CreateEntityQuery(
-            //     ComponentType.ReadWrite<Unit>(),
-            //     ComponentType.ReadWrite<Translation>(),
-            //     ComponentType.ReadWrite<UnitState>(),
-            //     ComponentType.ReadWrite<LookingDirection>()
-            //     );
-            //
-            // var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
-            // var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
-            // //LookingDirection
-            // var lookingDirections = unitsQuery.ToComponentDataArray<LookingDirection>(Allocator.TempJob);
-            //
-            // var states = unitsQuery.ToComponentDataArray<UnitState>(Allocator.TempJob);
-            //
-            // Entities
-            //     .WithNone<ClientOnly>()
-            //     .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
-            //     .ForEach(delegate(Entity e, NetworkManagerSharedComponent serverManagerComponent)
-            //     {
-            //         var networkManager = serverManagerComponent.networkManager;
-            //
-            //         var m_Driver = networkManager.m_Driver;
-            //         
-            //         // DataStreamReader stream;
-            //         for (var i = 0; i < networkManager.m_Connections.Length; i++)
-            //         {
-            //             Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
-            //
-            //             // send game state....   
-            //             for (var j = 0; j < units.Length; j++)
-            //             {
-            //                 // for now, I will send different packets for each unit, for each connection
-            //                 var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
-            //                 writer.WriteUInt(50);
-            //                 writer.WriteUInt(units[j].id);
-            //                 writer.WriteUInt(units[j].player);
-            //                 writer.WriteFloat(translations[j].Value.x);
-            //                 writer.WriteFloat(translations[j].Value.y);
-            //                 writer.WriteFloat(lookingDirections[j].direction.x);
-            //                 writer.WriteFloat(lookingDirections[j].direction.y);
-            //                 writer.WriteInt(states[j].state);
-            //                 m_Driver.EndSend(writer);
-            //             }
-            //
-            //         }
-            //     });
-            //
-            // lookingDirections.Dispose();
-            // units.Dispose();
-            // translations.Dispose();
-            // states.Dispose();
         }
     }
 }
