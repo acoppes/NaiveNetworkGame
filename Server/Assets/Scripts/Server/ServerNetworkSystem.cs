@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -87,9 +88,16 @@ namespace Server
 
                     networkManager.networkManager = new NetworkManager
                     {
-                        m_Driver = NetworkDriver.Create(),
+                        // m_Driver = NetworkDriver.Create(),
+                        m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
+                        {
+                            MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
+                        }),
                         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
                     };
+                    
+                    var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
+                        typeof(SimulatorPipelineStage));
 
                     var endpoint = NetworkEndPoint.AnyIpv4.WithPort(9000);
                     

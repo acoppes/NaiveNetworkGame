@@ -136,28 +136,58 @@ namespace Client
                             }
                         }
                         
-                        // TODO: check the connection wasn't destroyed...
                         
-                        Entities.WithNone<ServerOnly>()
-                            .WithAll<ClientOnly, PendingPlayerAction>()
-                            .ForEach(delegate(Entity e, ref PendingPlayerAction p)
-                            {
-                                PostUpdateCommands.DestroyEntity(e);
-                                // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
-                                
-                                var writer = m_Driver.BeginSend(m_Connection);
-                                
-                                // just a number to identify the packet for now...
-                                writer.WriteUInt(99);
-                                writer.WriteUInt(p.player);
-                                writer.WriteUInt(p.command);
-                                writer.WriteFloat(p.target.x);
-                                writer.WriteFloat(p.target.y);
-                                
-                                m_Driver.EndSend(writer);
-                            });
-                        }
+                    }
                 });
+
+            var query = Entities.WithAll<NetworkManagerSharedComponent>().ToEntityQuery();
+            if (query.CalculateEntityCount() == 0)
+                return;
+            
+            var networkManagerEntity = Entities.WithAll<NetworkManagerSharedComponent>().ToEntityQuery()
+                .GetSingletonEntity();
+            var networkManager = EntityManager.GetSharedComponentData<NetworkManagerSharedComponent>(networkManagerEntity);
+            
+            Entities.WithAll<NetworkPlayerId>().ForEach(delegate(ref NetworkPlayerId networkPlayer)
+            {
+                var m_Driver = networkManager.networkManager.m_Driver;
+                var m_Connection = networkPlayer.connection;
+                
+                // TODO: check the connection wasn't destroyed...
+                var pendingActionSent = false;
+
+                Entities.WithNone<ServerOnly>()
+                    .WithAll<ClientOnly, PendingPlayerAction>()
+                    .ForEach(delegate(Entity e, ref PendingPlayerAction p)
+                    {
+                        PostUpdateCommands.DestroyEntity(e);
+                        // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                                
+                        var writer = m_Driver.BeginSend(m_Connection);
+                                
+                        // just a number to identify the packet for now...
+                        writer.WriteUInt(99);
+                        writer.WriteUInt(p.player);
+                        writer.WriteUInt(p.command);
+                        writer.WriteFloat(p.target.x);
+                        writer.WriteFloat(p.target.y);
+                                
+                        m_Driver.EndSend(writer);
+
+                        pendingActionSent = true;
+                    });
+
+                if (!pendingActionSent)
+                {
+                    // send keep alive packet! 
+                    if (m_Driver.IsCreated && m_Connection.IsCreated)
+                    {
+                        var writer = m_Driver.BeginSend(m_Connection);
+                        writer.WriteUInt(1);
+                        m_Driver.EndSend(writer);    
+                    }
+                }
+            });
         }
 
         protected override void OnDestroy()
