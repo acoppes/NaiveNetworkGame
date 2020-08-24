@@ -51,7 +51,7 @@ namespace Client
             Entities
                 .WithNone<ServerOnly>()
                 .WithAll<ClientOnly, ClientRunningComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(Entity e, NetworkManagerSharedComponent networkManager)
+                .ForEach(delegate(NetworkManagerSharedComponent networkManager)
                 {
                     DataStreamReader stream;
                     NetworkEvent.Type cmd;
@@ -102,7 +102,7 @@ namespace Client
                                     
                                     var frame = stream.ReadInt();
                                     var unitId = stream.ReadUInt();
-                                    var player = stream.ReadUInt();
+                                    var playerId = stream.ReadUInt();
                                     var x = stream.ReadFloat();
                                     var y = stream.ReadFloat();
                                     var lookingDirectionX = stream.ReadFloat();
@@ -110,14 +110,16 @@ namespace Client
                                     var state = stream.ReadUInt();
 
                                     // read unit info...
-                                    var clientViewUpdate = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent(clientViewUpdate, new ClientViewUpdate
+                                    var e = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent(e, new NetworkGameStateUpdate
                                     {
-                                        connectionId = (uint) i,
-                                        unitId = unitId,
+                                        // connectionId = (uint) i,
+                                        frame = frame,
+                                        unitId = (int) unitId,
+                                        playerId = (int) playerId,
+                                        translation = new float2(x, y),
+                                        lookingDirection = new float2(lookingDirectionX, lookingDirectionY),
                                         state = (int) state,
-                                        position = new float2(x, y),
-                                        lookingDirection = new float2(lookingDirectionX, lookingDirectionY)
                                     });
                                 }
                             }

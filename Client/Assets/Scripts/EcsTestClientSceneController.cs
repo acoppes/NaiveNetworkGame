@@ -12,16 +12,18 @@ using UnityEngine;
 namespace Scenes
 {
     // for when there a unit was updated from the server
-    public struct ClientViewUpdate : IComponentData
+    public struct NetworkGameStateUpdate : IComponentData
     {
-        public uint connectionId;
-        public uint unitId;
-        public int state;
-        public float2 position;
+        // public uint connectionId;
+        public int frame;
+        public int unitId;
+        public int playerId;
+        public float2 translation;
         public float2 lookingDirection;
+        public int state;
     }
 
-    public struct ClientUnitComponent : IComponentData
+    public struct UnitComponent : IComponentData
     {
         public uint unitId;
     }
@@ -33,16 +35,16 @@ namespace Scenes
         {
             // iterate over client view updates...
 
-            var query = Entities.WithAll<ClientViewUpdate>().ToEntityQuery();
+            var query = Entities.WithAll<NetworkGameStateUpdate>().ToEntityQuery();
             
-            var updates = query.ToComponentDataArray<ClientViewUpdate>(Allocator.TempJob);
+            var updates = query.ToComponentDataArray<NetworkGameStateUpdate>(Allocator.TempJob);
             var updateEntities = query.ToEntityArray(Allocator.TempJob);
 
-            var unitsQuery = Entities.WithAll<ClientUnitComponent, Translation>().ToEntityQuery();
-            var units = unitsQuery.ToComponentDataArray<ClientUnitComponent>(Allocator.TempJob);
+            var unitsQuery = Entities.WithAll<UnitComponent, Translation>().ToEntityQuery();
+            var units = unitsQuery.ToComponentDataArray<UnitComponent>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
             
-            var createdUnitsInThisUpdate = new List<uint>();
+            var createdUnitsInThisUpdate = new List<int>();
 
             for (var j = 0; j < updates.Length; j++)
             {
@@ -62,7 +64,7 @@ namespace Scenes
                     {
                         PostUpdateCommands.SetComponent(unitEntities[i], new Translation
                         {
-                            Value = new float3(update.position.x, update.position.y, 0)
+                            Value = new float3(update.translation.x, update.translation.y, 0)
                         });
                         PostUpdateCommands.SetComponent(unitEntities[i], new UnitState
                         {
@@ -85,9 +87,9 @@ namespace Scenes
                     
                 // create visual model for this unit
                 var entity = PostUpdateCommands.CreateEntity();
-                PostUpdateCommands.AddComponent(entity, new ClientUnitComponent
+                PostUpdateCommands.AddComponent(entity, new UnitComponent
                 {
-                    unitId = update.unitId
+                    unitId = (uint) update.unitId
                 });
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {
@@ -95,7 +97,7 @@ namespace Scenes
                 });
                 PostUpdateCommands.AddComponent(entity, new Translation
                 {
-                    Value = new float3(update.position.x, update.position.y, 0)
+                    Value = new float3(update.translation.x, update.translation.y, 0)
                 });
                 PostUpdateCommands.AddComponent(entity, new UnitState
                 {

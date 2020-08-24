@@ -10,11 +10,12 @@ namespace Server
     
     public class ServerBehaviour : MonoBehaviour
     {
+        public int targetFrameRate = 60;
         public GameObject go;
-        
+
         private void Start ()
         {
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = targetFrameRate;
             
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
