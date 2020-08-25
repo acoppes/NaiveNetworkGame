@@ -32,26 +32,28 @@ namespace Client
 
         public Button deleteServersButton;
         
-        private ServerList serverList = new ServerList();
+        private ServerList serverList;
         
         // Start is called before the first frame update
         private void Start()
         {
             // do stuff....
+            
+            serverList = new ServerList();
 
             var savedServersJson = PlayerPrefs.GetString("SavedServers", null);
 
             try
             {
-                if (savedServersJson != null)
+                if (!string.IsNullOrEmpty(savedServersJson))
                 {
                     serverList = JsonUtility.FromJson<ServerList>(savedServersJson);
                 }
             }
             catch
             {
-                
-            }
+                  
+            } 
             
             if (savedServersJson == null || serverList.severs.Count == 0)
             {
