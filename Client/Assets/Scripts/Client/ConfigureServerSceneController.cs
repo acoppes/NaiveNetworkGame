@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Client
@@ -114,7 +115,10 @@ namespace Client
             PlayerPrefs.SetString("LastSelectedServer", selectedServer);
 
             // launch...
-            
+
+            ServerConnectionParameters.ip = selectedServer;
+
+            SceneManager.LoadScene("ClientScene");
         }
 
         private void OnNewServerAdded()

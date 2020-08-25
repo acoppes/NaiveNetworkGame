@@ -7,6 +7,11 @@ using UnityEngine;
 
 namespace Client
 {
+    public static class ServerConnectionParameters
+    {
+        public static string ip;
+    }
+
     public struct ClientStartComponent : IComponentData
     {
         
@@ -36,11 +41,17 @@ namespace Client
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
                     };
 
+                                        
                     var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
-                    
+
+                    if (!string.IsNullOrEmpty(ServerConnectionParameters.ip))
+                    {
+                        endpoint = NetworkEndPoint.Parse(ServerConnectionParameters.ip, 9000, NetworkFamily.Ipv4);
+                    }
+
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
-                    // Debug.Log(endpoint.Address);
-                    // Debug.Log($"isValid: {endpoint.IsValid}");
+                    
+                    Debug.Log($"Connecting to {endpoint.Address}, {endpoint.IsValid}");
                     
                     // endpoint.Address = "167.57.86.221";
                     // endpoint.Port = 9000;

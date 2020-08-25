@@ -44,7 +44,7 @@ namespace Server
 
     public struct ServerStartComponent : IComponentData
     {
-        
+        public ushort port;
     }
 
     public struct ServerRunningComponent : IComponentData
@@ -93,8 +93,6 @@ namespace Server
                 .WithAll<ServerStartComponent, NetworkManagerSharedComponent>()
                 .ForEach(delegate(Entity e, NetworkManagerSharedComponent networkManager, ref ServerStartComponent s)
                 {
-                    Debug.Log("Starting Server");
-                    
                     PostUpdateCommands.RemoveComponent<ServerStartComponent>(e);
 
                     networkManager.networkManager = new NetworkManager
@@ -110,13 +108,15 @@ namespace Server
                     var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
                         typeof(SimulatorPipelineStage));
 
-                    var endpoint = NetworkEndPoint.AnyIpv4.WithPort(9000);
+                    var endpoint = NetworkEndPoint.AnyIpv4.WithPort(s.port);
                     
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
                     // endpoint.Port = 9000;
                     
+                    Debug.Log($"Starting Server at port: {s.port}");
+                    
                     if (networkManager.networkManager.m_Driver.Bind(endpoint) != 0)
-                        Debug.Log("Failed to bind to port 9000");
+                        Debug.Log($"Failed to bind to port {s.port}");
                     else
                         networkManager.networkManager.m_Driver.Listen();
 

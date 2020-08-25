@@ -1,8 +1,4 @@
 ﻿using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
-using Unity.Mathematics;
-using Unity.Networking.Transport;
-using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 
 namespace Server
@@ -11,6 +7,23 @@ namespace Server
     {
         public Entity prefab;
     }
+
+    public static class CommandLineArguments
+    {
+        public static string GetArgument(string name)
+        {
+            var args = System.Environment.GetCommandLineArgs();
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (args[i] == name && args.Length > i + 1)
+                {
+                    return args[i + 1];
+                }
+            }
+            return null;
+        }
+    }
+
     
     public class ServerBehaviour : MonoBehaviour
     {
@@ -29,13 +42,41 @@ namespace Server
         
         private void Start ()
         {
+            // set default port
+            ushort port = 9000;
+            // default framerate
             Application.targetFrameRate = targetFrameRate;
+
+            var targetFrameRateArgument = CommandLineArguments.GetArgument("-targetFrameRate");
+            
+            if (!string.IsNullOrEmpty(targetFrameRateArgument))
+            {
+                if (int.TryParse(targetFrameRateArgument, out var customFrameRate))
+                {
+                    Debug.Log($"Override framerate with custom value: {customFrameRate}");
+                    Application.targetFrameRate = customFrameRate;
+                }
+            }
+            
+            var portArgument = CommandLineArguments.GetArgument("-port");
+
+            if (!string.IsNullOrEmpty(portArgument))
+            {
+                if (ushort.TryParse(portArgument, out var portOverride))
+                {
+                    Debug.Log($"Override port with custom value: {portOverride}");
+                    port = portOverride;
+                }
+            }
             
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             var serverEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ServerOnly>());
             entityManager.AddSharedComponentData(serverEntity, new NetworkManagerSharedComponent());
-            entityManager.AddComponentData(serverEntity, new ServerStartComponent());
+            entityManager.AddComponentData(serverEntity, new ServerStartComponent
+            {
+                port = port
+            });
             
             // create multiple player controllers, all disabled....
             // with each connection, remove disabled component.
