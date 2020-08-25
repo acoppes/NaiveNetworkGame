@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,9 +68,26 @@ namespace Client
                 text = s.ip
             }).ToList();
 
+            var lastSelectedServer = PlayerPrefs.GetString("LastSelectedServer", null);
+
+            var index = serverConnectDropdown.options.FindIndex(o => o.text.Equals(lastSelectedServer));
+            if (index >= 0)
+                serverConnectDropdown.value = index;
+
             newServerButton.onClick.AddListener(OnNewServerAdded);
             serverConnectButton.onClick.AddListener(OnServerConnect);
             deleteServersButton.onClick.AddListener(OnDeleteServers);
+
+            newServerInput.contentType = InputField.ContentType.Custom;
+            newServerInput.onValidateInput += OnValidateValidIpAddress;
+        }
+
+        private char OnValidateValidIpAddress(string text, int charindex, char addedchar)
+        {
+            if (!Regex.IsMatch(addedchar.ToString(), "[0-9|\\.]+"))
+                return '\0';
+
+            return addedchar;
         }
 
         private void OnDeleteServers()
@@ -90,6 +108,13 @@ namespace Client
         private void OnServerConnect()
         {
             // load the other scene with parameters...
+
+            var selectedServer = serverConnectDropdown.options[serverConnectDropdown.value].text;
+            
+            PlayerPrefs.SetString("LastSelectedServer", selectedServer);
+
+            // launch...
+            
         }
 
         private void OnNewServerAdded()
