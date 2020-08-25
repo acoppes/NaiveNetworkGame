@@ -117,6 +117,7 @@ namespace Client
             // launch...
 
             ServerConnectionParameters.ip = selectedServer;
+            ServerConnectionParameters.port = 9000;
 
             SceneManager.LoadScene("ClientScene");
         }

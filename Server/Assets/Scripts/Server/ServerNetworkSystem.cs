@@ -97,11 +97,11 @@ namespace Server
 
                     networkManager.networkManager = new NetworkManager
                     {
-                        // m_Driver = NetworkDriver.Create(),
-                        m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
-                        {
-                            MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
-                        }),
+                        m_Driver = NetworkDriver.Create(),
+                        // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
+                        // {
+                        //     MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
+                        // }),
                         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
                     };
                     
@@ -153,7 +153,6 @@ namespace Server
                     while ((c = m_Driver.Accept()) != default(NetworkConnection))
                     {
                         networkManager.m_Connections.Add(c);
-                        Debug.Log("Accepted a connection");
                         
                         // create a new player connected command internally
 
@@ -164,7 +163,7 @@ namespace Server
                             connection = c,
                         });
                         
-                        // create unit here too?
+                        Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
                     }
                     
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
@@ -192,7 +191,6 @@ namespace Server
                                             y = stream.ReadFloat()
                                         }
                                     };
-
 
                                     var pendingActionEntity = PostUpdateCommands.CreateEntity();
                                     PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);

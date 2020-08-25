@@ -10,6 +10,7 @@ namespace Client
     public static class ServerConnectionParameters
     {
         public static string ip;
+        public static ushort port;
     }
 
     public struct ClientStartComponent : IComponentData
@@ -41,12 +42,11 @@ namespace Client
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
                     };
 
-                                        
                     var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
 
                     if (!string.IsNullOrEmpty(ServerConnectionParameters.ip))
                     {
-                        endpoint = NetworkEndPoint.Parse(ServerConnectionParameters.ip, 9000, NetworkFamily.Ipv4);
+                        endpoint = NetworkEndPoint.Parse(ServerConnectionParameters.ip, ServerConnectionParameters.port, NetworkFamily.Ipv4);
                     }
 
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
@@ -57,9 +57,16 @@ namespace Client
                     // endpoint.Port = 9000;
 
                     var networkManager = managerSharedComponent.networkManager;
+
+                   // networkManager.m_Driver.
                     
+                    var connection = networkManager.m_Driver.Connect(endpoint);
+
                     networkManager.m_Connections
-                        .Add(networkManager.m_Driver.Connect(endpoint));
+                        .Add(connection);
+                    
+                    Debug.Log($"{networkManager.m_Driver.LocalEndPoint().Address}");
+                    // Debug.Log($"{networkManager.m_Driver.RemoteEndPoint(connection).Address}:{networkManager.m_Driver.RemoteEndPoint(connection).Port}");
                     
                     PostUpdateCommands.SetSharedComponent(e, managerSharedComponent);
                     PostUpdateCommands.AddComponent(e, new ClientRunningComponent());
@@ -94,6 +101,7 @@ namespace Client
                                 var writer = m_Driver.BeginSend(m_Connection);
                                 writer.WriteByte(0);
                                 m_Driver.EndSend(writer);
+
                             }
                             else if (cmd == NetworkEvent.Type.Data)
                             {
