@@ -418,8 +418,8 @@ namespace Server
 
                         Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
                         {
-                            if (n.version == n.syncVersion)
-                                return;
+                            // if (n.version == n.syncVersion)
+                            //     return;
                             
                             var writer = m_Driver.BeginSend(connection);
                             writer.WriteByte(50);

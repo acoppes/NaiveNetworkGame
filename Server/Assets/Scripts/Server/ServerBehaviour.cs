@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
+using Unity.Mathematics;
 using Unity.Networking.Transport;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
@@ -19,6 +20,13 @@ namespace Server
         public int totalOutputInBytes;
         public int lastFrameOutputInBytes;
 
+        public double totalOutputInKB;
+        public double totalOutputInMB;
+
+        public double bytesPerSecond;
+        public double kbPerSecond;
+        public double mbPerSecond;
+        
         private void Start ()
         {
             Application.targetFrameRate = targetFrameRate;
@@ -46,6 +54,14 @@ namespace Server
         {
             totalOutputInBytes = ServerNetworkStatistics.outputBytesTotal;
             lastFrameOutputInBytes = ServerNetworkStatistics.outputBytesLastFrame;
+
+            totalOutputInKB = System.Math.Round(ServerNetworkStatistics.outputBytesTotal / 1024.0f, 3);
+            totalOutputInMB = System.Math.Round(totalOutputInKB / 1024.0f, 3);
+
+            bytesPerSecond = System.Math.Round(ServerNetworkStatistics.outputBytesTotal / Time.realtimeSinceStartup, 3);
+            kbPerSecond = System.Math.Round(totalOutputInKB / Time.realtimeSinceStartup, 3);
+            mbPerSecond = System.Math.Round(totalOutputInMB / Time.realtimeSinceStartup, 3);
+
         }
         
     }
