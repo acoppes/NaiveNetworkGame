@@ -108,12 +108,12 @@ namespace Client
                                     
                                     var frame = stream.ReadInt();
                                     var unitId = stream.ReadUInt();
-                                    var playerId = stream.ReadUInt();
+                                    var playerId = stream.ReadByte();
                                     var x = stream.ReadFloat();
                                     var y = stream.ReadFloat();
                                     var lookingDirectionX = stream.ReadFloat();
                                     var lookingDirectionY = stream.ReadFloat();
-                                    var state = stream.ReadUInt();
+                                    var state = stream.ReadByte();
 
                                     // read unit info...
                                     var e = PostUpdateCommands.CreateEntity();
@@ -122,10 +122,10 @@ namespace Client
                                         // connectionId = (uint) i,
                                         frame = frame,
                                         unitId = (int) unitId,
-                                        playerId = (int) playerId,
+                                        playerId = playerId,
                                         translation = new float2(x, y),
                                         lookingDirection = new float2(lookingDirectionX, lookingDirectionY),
-                                        state = (int) state,
+                                        state = state,
                                     });
                                 }
                             }

@@ -1,4 +1,7 @@
 ﻿using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
+using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 
 namespace Server
@@ -12,6 +15,9 @@ namespace Server
     {
         public int targetFrameRate = 60;
         public GameObject go;
+
+        public int totalOutputInBytes;
+        public int lastFrameOutputInBytes;
 
         private void Start ()
         {
@@ -34,6 +40,12 @@ namespace Server
             {
                 prefab = prefab
             });
+        }
+
+        private void Update()
+        {
+            totalOutputInBytes = ServerNetworkStatistics.outputBytesTotal;
+            lastFrameOutputInBytes = ServerNetworkStatistics.outputBytesLastFrame;
         }
         
     }
