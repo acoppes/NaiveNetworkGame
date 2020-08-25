@@ -81,17 +81,17 @@ namespace Client
                             {
                                 Debug.Log("We are now connected to the server");
                                 var writer = m_Driver.BeginSend(m_Connection);
-                                writer.WriteUInt(0);
+                                writer.WriteByte(0);
                                 m_Driver.EndSend(writer);
                             }
                             else if (cmd == NetworkEvent.Type.Data)
                             {
-                                var type = stream.ReadUInt();
+                                var type = stream.ReadByte();
 
                                 if (type == 0)
                                 {
                                     // this is my player id!!
-                                    var networkPlayerId = stream.ReadUInt();
+                                    var networkPlayerId = stream.ReadByte();
                                     
                                     // We are assuming this message is not going to be received again...
                                     var networkPlayer = PostUpdateCommands.CreateEntity();
@@ -166,9 +166,9 @@ namespace Client
                         var writer = m_Driver.BeginSend(m_Connection);
                                 
                         // just a number to identify the packet for now...
-                        writer.WriteUInt(99);
-                        writer.WriteUInt(p.player);
-                        writer.WriteUInt(p.command);
+                        writer.WriteByte(99);
+                        writer.WriteByte((byte) p.player);
+                        writer.WriteByte((byte) p.command);
                         writer.WriteFloat(p.target.x);
                         writer.WriteFloat(p.target.y);
                                 
@@ -183,7 +183,7 @@ namespace Client
                     if (m_Driver.IsCreated && m_Connection.IsCreated)
                     {
                         var writer = m_Driver.BeginSend(m_Connection);
-                        writer.WriteUInt(1);
+                        writer.WriteByte(1);
                         m_Driver.EndSend(writer);    
                     }
                 }

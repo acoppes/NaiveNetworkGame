@@ -179,14 +179,14 @@ namespace Server
                             {
                                 // process different data packets and create commands to be processed in server...      
 
-                                var packet = stream.ReadUInt();
+                                var packet = stream.ReadByte();
 
                                 if (packet == 99)
                                 {
                                     var pendingPlayerAction = new PendingPlayerAction
                                     {
-                                        player = stream.ReadUInt(),
-                                        command = stream.ReadUInt(),
+                                        player = stream.ReadByte(),
+                                        command = stream.ReadByte(),
                                         target = {
                                             x = stream.ReadFloat(), 
                                             y = stream.ReadFloat()
@@ -382,8 +382,8 @@ namespace Server
                             if (p.connection == connection)
                             {
                                 var writer = m_Driver.BeginSend(connection);
-                                writer.WriteUInt(0);
-                                writer.WriteUInt((uint)p.player);
+                                writer.WriteByte(0);
+                                writer.WriteByte((byte) p.player);
                                 m_Driver.EndSend(writer);
 
                                 ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
@@ -422,7 +422,7 @@ namespace Server
                                 return;
                             
                             var writer = m_Driver.BeginSend(connection);
-                            writer.WriteUInt(50);
+                            writer.WriteByte(50);
                             writer.WriteInt(n.frame);
                             writer.WriteUInt((uint) n.unitId);
                             writer.WriteByte((byte) n.playerId);
