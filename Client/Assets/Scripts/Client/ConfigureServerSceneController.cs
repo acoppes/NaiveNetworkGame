@@ -62,6 +62,10 @@ namespace Client
                 {
                     ip = "127.0.0.1"
                 });
+                serverList.severs.Add(new ServerConfig
+                {
+                    ip = "209.151.153.172"
+                });
             }
 
             PlayerPrefs.SetString("SavedServers", JsonUtility.ToJson(serverList));
@@ -96,10 +100,16 @@ namespace Client
         private void OnDeleteServers()
         {
             serverList.severs.Clear();
+            
             serverList.severs.Add(new ServerConfig
             {
                 ip = "127.0.0.1"
             });
+            serverList.severs.Add(new ServerConfig
+            {
+                ip = "209.151.153.172"
+            });
+            
             PlayerPrefs.SetString("SavedServers", JsonUtility.ToJson(serverList));
             
             serverConnectDropdown.options = serverList.severs.Select(s => new Dropdown.OptionData
