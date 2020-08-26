@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Client;
 using Mockups;
@@ -188,6 +189,8 @@ namespace Scenes
 
         // public GameObject prefab;
         public Transform parent;
+        
+        public GameObject actionPrefab;
 
         private void Start()
         {
@@ -200,6 +203,38 @@ namespace Scenes
             // });
 
             ModelProviderSingleton.Instance.SetRoot(parent);
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                var mousePosition = Input.mousePosition;
+                var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+                worldPosition.z = 0;
+
+                var actionInstance = Instantiate(actionPrefab, worldPosition, Quaternion.identity);
+                StartCoroutine(DestroyActionOnComplete(actionInstance));
+            }
+        }
+
+        private IEnumerator DestroyActionOnComplete(GameObject actionInstance)
+        {
+            var animator = actionInstance.GetComponent<Animator>();
+            var hiddenState = Animator.StringToHash("Hidden");
+            
+            animator.SetTrigger("Action");
+
+            yield return null;
+            
+            yield return new WaitUntil(delegate
+            {
+                var currentState = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+                return currentState == hiddenState;
+            });
+            
+            Destroy(actionInstance);
         }
     }
 }

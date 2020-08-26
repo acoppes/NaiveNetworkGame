@@ -722,6 +722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 1990033516}
   parent: {fileID: 1633604428}
+  actionPrefab: {fileID: 7091667433302669984, guid: 54f99f49e0358fe499bb61458dedc2c8, type: 3}
 --- !u!114 &1633604427
 MonoBehaviour:
   m_ObjectHideFlags: 0
