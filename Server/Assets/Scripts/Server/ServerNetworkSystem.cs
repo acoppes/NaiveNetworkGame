@@ -3,7 +3,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
-using Unity.Networking.Transport.Utilities;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -14,6 +13,7 @@ namespace Server
     {
         public static int outputBytesTotal;
         public static int outputBytesLastFrame;
+        public static int currentConnections;
     }
     
     public class NetworkManager
@@ -352,6 +352,7 @@ namespace Server
         protected override void OnUpdate()
         {
             ServerNetworkStatistics.outputBytesLastFrame = 0;
+            ServerNetworkStatistics.currentConnections = 0;
             
             Entities
                 .WithAll<ServerRunningComponent, NetworkManagerSharedComponent>()
@@ -370,6 +371,8 @@ namespace Server
                             // how to send that with gamestate, maybe mark as destroyed...
                             continue;
                         }
+
+                        ServerNetworkStatistics.currentConnections++;
                         
                         Entities.ForEach(delegate(ref PlayerConnectionId p)
                         {

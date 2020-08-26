@@ -10,6 +10,19 @@ namespace Server
 
     public static class CommandLineArguments
     {
+        public static bool HasArgument(string name)
+        {
+            var args = System.Environment.GetCommandLineArgs();
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (args[i].Equals(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         public static string GetArgument(string name)
         {
             var args = System.Environment.GetCommandLineArgs();
@@ -39,6 +52,11 @@ namespace Server
         public double bytesPerSecond;
         public double kbPerSecond;
         public double mbPerSecond;
+        
+        private float consoleLogFrequencyInSeconds = 5;
+        private float timeSincelastLog = 0;
+
+        private bool logStatistics = false;
         
         private void Start ()
         {
@@ -89,7 +107,10 @@ namespace Server
             {
                 prefab = prefab
             });
+            
+            logStatistics = CommandLineArguments.HasArgument("-logStatistics");
         }
+
 
         private void Update()
         {
@@ -102,6 +123,19 @@ namespace Server
             bytesPerSecond = System.Math.Round(ServerNetworkStatistics.outputBytesTotal / Time.realtimeSinceStartup, 3);
             kbPerSecond = System.Math.Round(totalOutputInKB / Time.realtimeSinceStartup, 3);
             mbPerSecond = System.Math.Round(totalOutputInMB / Time.realtimeSinceStartup, 3);
+
+            if (logStatistics)
+            {
+                if (Time.realtimeSinceStartup - timeSincelastLog > consoleLogFrequencyInSeconds)
+                {
+                    // log stuff...
+                    
+                    Debug.Log($"Total Output (KB): {totalOutputInKB}");
+                    Debug.Log($"Connected Players: {ServerNetworkStatistics.currentConnections}");
+
+                    timeSincelastLog = Time.realtimeSinceStartup;
+                }
+            }
 
         }
         
