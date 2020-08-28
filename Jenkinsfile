@@ -56,7 +56,8 @@ pipeline {
                         }*/
                         stage('Build') {
                             steps {
-                                sh "${UNITY_EXECUTABLE_PATH} -buildTarget Linux64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\" -executeMethod BuildScript.BuildLinux"
+                                // -executeMethod BuildScript.BuildLinux
+                                sh "${UNITY_EXECUTABLE_PATH} -buildLinux64Player Builds/Linux -buildTarget Linux64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\""
                             }
                             post {
                                 always {
@@ -98,7 +99,7 @@ pipeline {
                         } */
                         stage('Build') {
                             steps {
-                                sh "${UNITY_EXECUTABLE_PATH} -buildTarget Win64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\" -executeMethod BuildScript.BuildWindows"
+                                sh "${UNITY_EXECUTABLE_PATH} -buildWindows64Player Builds/Windows -buildTarget Win64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\""
                             }
                             post {
                                 always {
