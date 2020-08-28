@@ -109,6 +109,8 @@ namespace Server
             });
             
             logStatistics = CommandLineArguments.HasArgument("-logStatistics");
+            
+            Debug.Log("Starting server instance");
         }
 
 
