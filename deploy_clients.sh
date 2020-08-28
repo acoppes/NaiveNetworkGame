@@ -3,4 +3,8 @@
 export SERVER=gemserk.com
 export USER=acoppes
 
-scp Client/Builds/NaiveNetworkGame.Client.zip $USER@$SERVER:NaiveNetworkGame/
+cd Client/Builds/Windows
+rm ../NaiveNetworkGame-Windows.zip
+zip -r ../NaiveNetworkGame-Windows.zip .
+cd -
+scp Client/Builds/NaiveNetworkGame-Windows.zip $USER@$SERVER:NaiveNetworkGame/
