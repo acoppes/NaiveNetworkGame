@@ -56,8 +56,9 @@ pipeline {
                         }*/
                         stage('Build') {
                             steps {
-                                // -executeMethod BuildScript.BuildLinux
-                                sh "build-server-linux.sh"                            }
+                                sh "build-server-linux.sh" 
+                                sh "../deploy_server.sh"                           
+                            }
                             post {
                                 always {
                                     archiveArtifacts artifacts: "${LOG_FILE}"
@@ -99,7 +100,7 @@ pipeline {
                         stage('Build') {
                             steps {
                                 sh "build-client-windows.sh"
-                                // sh "${UNITY_EXECUTABLE_PATH} -buildWindows64Player Builds/Windows -buildTarget Win64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\""
+                                sh "../deploy_clients.sh"
                             }
                             post {
                                 always {
