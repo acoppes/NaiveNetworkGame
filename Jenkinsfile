@@ -40,7 +40,7 @@ pipeline {
                         stage('Build') {
                             steps {
                                 sh "./build-server-linux.sh" 
-                                // sh "./deploy_server.sh"                           
+                                sh "./deploy_server.sh"                           
                             }
                             post {
                                 always {
