@@ -42,11 +42,11 @@ pipeline {
                                 sh "./build-server-linux.sh" 
                                 sh "./deploy_server.sh"                           
                             }
-                            post {
+                            /* post {
                                 always {
-                                   // archiveArtifacts artifacts: "${LOG_FILE}"
+                                   archiveArtifacts artifacts: "${LOG_FILE}"
                                 }
-                            }                            
+                            }     */                       
                         }
                     }
                 }  
@@ -73,11 +73,11 @@ pipeline {
                                 sh "./build-client-windows.sh"
                                 sh "./deploy_clients.sh"
                             }
-                            post {
+                            /* post {
                                 always {
-                                    // archiveArtifacts artifacts: "${LOG_FILE}"
+                                    archiveArtifacts artifacts: "${LOG_FILE}"
                                 }
-                            }                            
+                            }  */                          
                         }
                     }
                 }         
