@@ -27,8 +27,8 @@ pipeline {
                         }
                     }
                     environment {
-                        LOG_FILE = "Logs/build-linux.log"
-                        PROJECT_PATH = "${WORKSPACE}/Server"
+                        LOG_FILE = "Server/Logs/build-linux.log"
+                        // PROJECT_PATH = "${WORKSPACE}/Server"
                     }
                     stages {
                         stage('Checkout') {
@@ -39,8 +39,8 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                sh "build-server-linux.sh" 
-                                sh "../deploy_server.sh"                           
+                                sh "${WORKSPACE}/build-server-linux.sh" 
+                                sh "${WORKSPACE}/deploy_server.sh"                           
                             }
                             post {
                                 always {
@@ -58,8 +58,8 @@ pipeline {
                         }
                     }
                     environment {
-                        LOG_FILE = "Logs/build-windows.log"
-                        PROJECT_PATH = "${WORKSPACE}/Client"
+                        LOG_FILE = "Client/Logs/build-windows.log"
+                        // PROJECT_PATH = "${WORKSPACE}/Client"
                     }
                     stages {
                         stage('Checkout') {
@@ -70,8 +70,8 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                sh "build-client-windows.sh"
-                                sh "../deploy_clients.sh"
+                                sh "${WORKSPACE}/build-client-windows.sh"
+                                sh "${WORKSPACE}/deploy_clients.sh"
                             }
                             post {
                                 always {
