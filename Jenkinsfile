@@ -26,10 +26,10 @@ pipeline {
                             customWorkspace "${env.WORKSPACE_SERVER}"
                         }
                     }
-                    environment {
+                    /* environment {
                         // LOG_FILE = "Server/Logs/build-linux.log"
                         // PROJECT_PATH = "${WORKSPACE}/Server"
-                    }
+                    } */
                     stages {
                         stage('Checkout') {
                             steps {
@@ -57,10 +57,10 @@ pipeline {
                             customWorkspace "${env.WORKSPACE_CLIENT}"
                         }
                     }
-                    environment {
+                    /* environment {
                         // LOG_FILE = "Client/Logs/build-windows.log"
                         // PROJECT_PATH = "${WORKSPACE}/Client"
-                    }
+                    } */
                     stages {
                         stage('Checkout') {
                             steps {
