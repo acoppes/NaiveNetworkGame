@@ -26,10 +26,10 @@ pipeline {
                             customWorkspace "${env.WORKSPACE_SERVER}"
                         }
                     }
-                    /* environment {
-                        // LOG_FILE = "Server/Logs/build-linux.log"
+                    environment {
+                        LOG_FILE = "Server/Logs/build-server-linux.log"
                         // PROJECT_PATH = "${WORKSPACE}/Server"
-                    } */
+                    } 
                     stages {
                         stage('Checkout') {
                             steps {
@@ -40,13 +40,13 @@ pipeline {
                         stage('Build') {
                             steps {
                                 sh "./build-server-linux.sh" 
-                                sh "./deploy_server.sh"                           
+                                // sh "./deploy_server.sh"                           
                             }
-                            /* post {
+                            post {
                                 always {
                                    archiveArtifacts artifacts: "${LOG_FILE}"
                                 }
-                            }     */                       
+                            }                          
                         }
                     }
                 }  
@@ -57,10 +57,10 @@ pipeline {
                             customWorkspace "${env.WORKSPACE_CLIENT}"
                         }
                     }
-                    /* environment {
-                        // LOG_FILE = "Client/Logs/build-windows.log"
+                    environment {
+                        LOG_FILE = "Client/Logs/build-client-windows.log"
                         // PROJECT_PATH = "${WORKSPACE}/Client"
-                    } */
+                    }
                     stages {
                         stage('Checkout') {
                             steps {
@@ -73,11 +73,11 @@ pipeline {
                                 sh "./build-client-windows.sh"
                                 sh "./deploy_clients.sh"
                             }
-                            /* post {
+                            post {
                                 always {
                                     archiveArtifacts artifacts: "${LOG_FILE}"
                                 }
-                            }  */                          
+                            }                           
                         }
                     }
                 }         
