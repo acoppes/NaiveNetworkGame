@@ -27,7 +27,7 @@ pipeline {
                         }
                     }
                     environment {
-                        LOG_FILE = "Server/Logs/build-linux.log"
+                        // LOG_FILE = "Server/Logs/build-linux.log"
                         // PROJECT_PATH = "${WORKSPACE}/Server"
                     }
                     stages {
@@ -44,7 +44,7 @@ pipeline {
                             }
                             post {
                                 always {
-                                    archiveArtifacts artifacts: "${LOG_FILE}"
+                                   // archiveArtifacts artifacts: "${LOG_FILE}"
                                 }
                             }                            
                         }
@@ -58,7 +58,7 @@ pipeline {
                         }
                     }
                     environment {
-                        LOG_FILE = "Client/Logs/build-windows.log"
+                        // LOG_FILE = "Client/Logs/build-windows.log"
                         // PROJECT_PATH = "${WORKSPACE}/Client"
                     }
                     stages {
@@ -75,7 +75,7 @@ pipeline {
                             }
                             post {
                                 always {
-                                    archiveArtifacts artifacts: "${LOG_FILE}"
+                                    // archiveArtifacts artifacts: "${LOG_FILE}"
                                 }
                             }                            
                         }
