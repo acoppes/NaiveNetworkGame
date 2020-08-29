@@ -39,8 +39,8 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                sh "${WORKSPACE}/build-server-linux.sh" 
-                                sh "${WORKSPACE}/deploy_server.sh"                           
+                                sh "./build-server-linux.sh" 
+                                sh "./deploy_server.sh"                           
                             }
                             post {
                                 always {
@@ -70,8 +70,8 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                sh "${WORKSPACE}/build-client-windows.sh"
-                                sh "${WORKSPACE}/deploy_clients.sh"
+                                sh "./build-client-windows.sh"
+                                sh "./deploy_clients.sh"
                             }
                             post {
                                 always {
