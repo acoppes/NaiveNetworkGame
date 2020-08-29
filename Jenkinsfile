@@ -32,7 +32,7 @@ pipeline {
                         }
                     }
                     environment {
-                        LOG_FILE = "build-server-linux.log"
+                        LOG_FILE = "Logs/build-linux.log"
                         // TESTS_LOG_FILE = "tests-android.xml"
                         PROJECT_PATH = "${WORKSPACE}/Server"
                     }
@@ -57,8 +57,7 @@ pipeline {
                         stage('Build') {
                             steps {
                                 // -executeMethod BuildScript.BuildLinux
-                                sh "${UNITY_EXECUTABLE_PATH} -buildLinux64Player Builds/Linux -buildTarget Linux64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\""
-                            }
+                                sh "build-server-linux.sh"                            }
                             post {
                                 always {
                                     archiveArtifacts artifacts: "${LOG_FILE}"
@@ -75,8 +74,8 @@ pipeline {
                         }
                     }
                     environment {
-                        LOG_FILE = "build-client-windows.log"
-                        TESTS_LOG_FILE = "tests-android.xml"
+                        LOG_FILE = "Logs/build-windows.log"
+                        // TESTS_LOG_FILE = "tests-android.xml"
                         PROJECT_PATH = "${WORKSPACE}/Client"
                     }
                     stages {
@@ -99,7 +98,8 @@ pipeline {
                         } */
                         stage('Build') {
                             steps {
-                                sh "${UNITY_EXECUTABLE_PATH} -buildWindows64Player Builds/Windows -buildTarget Win64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\""
+                                sh "build-client-windows.sh"
+                                // sh "${UNITY_EXECUTABLE_PATH} -buildWindows64Player Builds/Windows -buildTarget Win64 -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -quit -silent-crashes -batchmode -nographics -logfile \"${LOG_FILE}\""
                             }
                             post {
                                 always {

@@ -1,10 +1,6 @@
 #!/bin/sh
 
-UNITY_EXECUTABLE_PATH="/mnt/c/UnityHub/2020.2.0a19/Editor/Unity.exe"
-# PROJECT_PATH=$(pwd)
-# LOG_FILE=Logs/build-linux.txt 
+UNITY_EXECUTABLE_PATH="/c/UnityHub/2020.2.0a19/Editor/Unity.exe"
+PROJECT_PATH=$(pwd)
 
-# -logfile \"${LOG_FILE}\"
-# -projectPath \"${PROJECT_PATH}\"
-
-${UNITY_EXECUTABLE_PATH} -buildLinux64Player Builds/Linux -buildTarget Linux64 -forgetProjectPath -quit -silent-crashes -batchmode -nographics 
+${UNITY_EXECUTABLE_PATH} -buildLinux64Player "${PROJECT_PATH}/Builds/Linux/server.x86_64" -buildTarget Linux64 -forgetProjectPath -projectPath "${PROJECT_PATH}" -quit -silent-crashes -batchmode -nographics -logfile "${PROJECT_PATH}/Logs/build-linux.txt"
