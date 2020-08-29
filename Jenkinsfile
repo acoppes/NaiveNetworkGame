@@ -3,7 +3,6 @@ pipeline {
 
     options { 
         skipDefaultCheckout()
-        // checkoutToSubdirectory('test-code') 
     }
 
     environment {
@@ -12,10 +11,6 @@ pipeline {
         WORKSPACE_CLIENT = "${env.WORKSPACE}/Client"
         WORKSPACE_SERVER = "${env.WORKSPACE}/Server"
     }
-
-    /*parameters {
-        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-    }*/
 
     triggers { 
         pollSCM('H H * * *') 
@@ -33,7 +28,6 @@ pipeline {
                     }
                     environment {
                         LOG_FILE = "Logs/build-linux.log"
-                        // TESTS_LOG_FILE = "tests-android.xml"
                         PROJECT_PATH = "${WORKSPACE}/Server"
                     }
                     stages {
@@ -43,17 +37,6 @@ pipeline {
                                 checkout scm                      
                             }
                         }
-                        /*stage('Test') {
-                            steps {
-                                sh "${UNITY_EXECUTABLE_PATH} -runTests -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -batchmode -testResults \"${TESTS_LOG_FILE}\""
-                            }
-                            post {
-                                always {
-                                    archiveArtifacts artifacts: "MyProject/${TESTS_LOG_FILE}"
-                                    nunit testResultsPattern: "MyProject/${TESTS_LOG_FILE}"
-                                }
-                            }                            
-                        }*/
                         stage('Build') {
                             steps {
                                 sh "build-server-linux.sh" 
@@ -76,7 +59,6 @@ pipeline {
                     }
                     environment {
                         LOG_FILE = "Logs/build-windows.log"
-                        // TESTS_LOG_FILE = "tests-android.xml"
                         PROJECT_PATH = "${WORKSPACE}/Client"
                     }
                     stages {
@@ -86,17 +68,6 @@ pipeline {
                                 checkout scm                      
                             }
                         }
-                        /* stage('Test') {
-                            steps {
-                                sh "${UNITY_EXECUTABLE_PATH} -runTests -forgetProjectPath -projectPath \"${PROJECT_PATH}\" -batchmode -testResults \"${TESTS_LOG_FILE}\""
-                            }
-                            post {
-                                always {
-                                    archiveArtifacts artifacts: "MyProject/${TESTS_LOG_FILE}"
-                                    nunit testResultsPattern: "MyProject/${TESTS_LOG_FILE}"
-                                }
-                            }                            
-                        } */
                         stage('Build') {
                             steps {
                                 sh "build-client-windows.sh"
