@@ -17,12 +17,35 @@ namespace Scenes
     {
         // public uint connectionId;
         public int frame;
+        public float delta;
         public int unitId;
         public int playerId;
         public float2 translation;
         public float2 lookingDirection;
         public int state;
     }
+
+    public struct UnitGameStateInterpolation : IComponentData
+    {
+        // public int currentFrame;
+        // public int nextFrame;
+        
+        public float time;
+        public float alpha;
+
+        public float2 previousTranslation;
+        public float2 currentTranslation;
+
+        public float localDelta;
+        public float remoteDelta;
+    }
+
+    // public struct UnitGameState : IBufferElementData
+    // {
+    //     public int frame;
+    //     public float time;
+    //     public float2 translation;
+    // }
 
     public struct UnitComponent : IComponentData
     {
@@ -43,9 +66,12 @@ namespace Scenes
 
             var unitsQuery = Entities.WithAll<UnitComponent, Translation>().ToEntityQuery();
             var units = unitsQuery.ToComponentDataArray<UnitComponent>(Allocator.TempJob);
+            var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
             
             var createdUnitsInThisUpdate = new List<int>();
+            
+            // first create entities to be updated....
 
             for (var j = 0; j < updates.Length; j++)
             {
@@ -63,10 +89,11 @@ namespace Scenes
                    
                     if (unit.unitId == update.unitId)
                     {
-                        PostUpdateCommands.SetComponent(unitEntities[i], new Translation
-                        {
-                            Value = new float3(update.translation.x, update.translation.y, 0)
-                        });
+                        // PostUpdateCommands.SetComponent(unitEntities[i], new Translation
+                        // {
+                        //     Value = new float3(update.translation.x, update.translation.y, 0)
+                        // });
+                        
                         PostUpdateCommands.SetComponent(unitEntities[i], new UnitState
                         {
                             state = update.state
@@ -75,6 +102,24 @@ namespace Scenes
                         {
                             direction = update.lookingDirection
                         });
+
+                        var currentTranslation = translations[i];
+                        
+                        PostUpdateCommands.SetComponent(unitEntities[i], new UnitGameStateInterpolation
+                        {
+                            previousTranslation = currentTranslation.Value.xy,
+                            currentTranslation = update.translation,
+                            remoteDelta = update.delta,
+                            time = 0
+                        });
+
+                        // var updateBuffer = PostUpdateCommands.SetBuffer<UnitGameState>(unitEntities[i]);
+                        // buffer.Add(new UnitGameState
+                        // {
+                        //     frame = update.frame,
+                        //     time = update.time,
+                        //     translation = update.translation
+                        // });
                         
                         updated = true;
                         break;
@@ -108,6 +153,23 @@ namespace Scenes
                 {
                     direction = update.lookingDirection
                 });
+
+                PostUpdateCommands.AddComponent(entity, new UnitGameStateInterpolation
+                {
+                    previousTranslation = update.translation,
+                    currentTranslation = update.translation,
+                    time = 0,
+                    remoteDelta = update.delta
+                });
+                
+                // var buffer = PostUpdateCommands.AddBuffer<UnitGameState>(entity);
+                // buffer.Add(new UnitGameState
+                // {
+                //     frame = update.frame,
+                //     time = update.time,
+                //     translation = update.translation
+                // });
+                
                 // PostUpdateCommands.AddComponent(entity, new ClientConnectionId
                 // {
                 //     id = update.connectionId
@@ -116,10 +178,41 @@ namespace Scenes
                 createdUnitsInThisUpdate.Add(update.unitId);
             }
 
+            translations.Dispose();
             unitEntities.Dispose();
             updateEntities.Dispose();
             units.Dispose();
             updates.Dispose();
+        }
+    }
+
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateAfter(typeof(ClientViewSystem))]
+    [UpdateBefore(typeof(VisualModelUpdatePositionSystem))]
+    public class UnitGameStateInterpolationSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            var localDeltaTime = Time.DeltaTime;
+            
+            // TODO: interpolate between real values...
+            
+            Entities
+                .WithAll<Translation, UnitGameStateInterpolation>()
+                .ForEach(delegate(ref Translation t, ref UnitGameStateInterpolation interpolation)
+                {
+                    interpolation.time += localDeltaTime;
+                    interpolation.localDelta = localDeltaTime;
+                    
+                    var t0 = interpolation.previousTranslation;
+                    var t1 = interpolation.currentTranslation;
+                    
+                    interpolation.alpha = interpolation.time / interpolation.remoteDelta;
+
+                    var t_current = math.lerp(t0, t1, math.clamp(interpolation.alpha, 0.0f, 1.0f));
+                    
+                    t.Value = new float3(t_current.x, t_current.y, 0);
+                });
         }
     }
 

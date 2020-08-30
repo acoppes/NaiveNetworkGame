@@ -126,6 +126,7 @@ namespace Client
                                     // network game state... 
                                     
                                     var frame = stream.ReadInt();
+                                    var time = stream.ReadFloat();
                                     var unitId = stream.ReadUInt();
                                     var playerId = stream.ReadByte();
                                     var x = stream.ReadFloat();
@@ -140,6 +141,7 @@ namespace Client
                                     {
                                         // connectionId = (uint) i,
                                         frame = frame,
+                                        delta = time,
                                         unitId = (int) unitId,
                                         playerId = playerId,
                                         translation = new float2(x, y),
