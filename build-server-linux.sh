@@ -8,5 +8,3 @@ BUILD_COMMAND="${UNITY_EXECUTABLE_PATH} -buildTarget Linux64 -forgetProjectPath 
 
 echo ${BUILD_COMMAND}
 ${BUILD_COMMAND}
-# tail -f Server/Logs/build-server-linux.log
-
