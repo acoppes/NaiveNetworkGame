@@ -60,6 +60,7 @@ namespace Server
         public int player;
         public bool synchronized;
         public bool initialized;
+        public bool destroyed;
     }
 
     public class ServerNetworkSystem : ComponentSystem
@@ -130,6 +131,16 @@ namespace Server
                     {
                         if (!networkManager.m_Connections[i].IsCreated)
                         {
+                            // client disconnected
+                            // var connection = networkManager.m_Connections[i];
+                            // Entities.ForEach(delegate(ref PlayerConnectionId p)
+                            // {
+                            //     if (p.connection == connection)
+                            //     {
+                            //         p.destroyed = true;
+                            //     }
+                            // });
+                            
                             networkManager.m_Connections.RemoveAtSwapBack(i);
                             --i;
                         }
@@ -188,9 +199,22 @@ namespace Server
                             else if (cmd == NetworkEvent.Type.Disconnect)
                             {
                                 // do something to player stuff? 
+
+                                var connection = networkManager.m_Connections[i];
+                                Entities.ForEach(delegate(ref PlayerConnectionId p)
+                                {
+                                    if (p.connection == connection)
+                                    {
+                                        p.destroyed = true;
+                                    }
+                                });
                                 
                                 Debug.Log("Client disconnected from server");
                                 networkManager.m_Connections[i] = default(NetworkConnection);
+                                
+                                // client disconnected
+                                
+                                
                             }
                         }
                     }
@@ -254,6 +278,32 @@ namespace Server
                 });
                 
                 p.initialized = true;
+            });
+        }
+    }
+    
+    public class ServerDestroyPlayerController : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach(delegate(Entity playerEntity, ref PlayerConnectionId p)
+            {
+                if (!p.destroyed)
+                    return;
+
+                var player = p.player;
+                
+                // destroy all player entities
+                Entities.ForEach(delegate(Entity unitEntity, ref Unit unit)
+                {
+                    if (unit.player == player)
+                    {
+                        PostUpdateCommands.DestroyEntity(unitEntity);
+                    }
+                });
+                
+                // destroy player controller
+                PostUpdateCommands.DestroyEntity(playerEntity);
             });
         }
     }
