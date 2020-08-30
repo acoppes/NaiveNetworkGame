@@ -6,10 +6,11 @@ pipeline {
     }
 
     environment {
-        U3D_EXTRA_PATHS = "/c/UnityHub/"
-        UNITY_EXECUTABLE_PATH = "/c/UnityHub/2020.2.0a19/Editor/Unity.exe"
-        WORKSPACE_CLIENT = "${env.WORKSPACE}/Client"
-        WORKSPACE_SERVER = "${env.WORKSPACE}/Server"
+        U3D_EXTRA_PATHS = "/mnt/c/UnityHub/"
+        UNITY_EXECUTABLE_PATH = "/mnt/c/UnityHub/2020.2.0a19/Editor/Unity.exe"
+        // ${env.WORKSPACE}
+        WORKSPACE_CLIENT = "/mnt/d/Temp/jenkins_tmp_workspace/Client"
+        WORKSPACE_SERVER = "/mnt/d/Temp/jenkins_tmp_workspace/Server"
     }
 
     triggers { 
