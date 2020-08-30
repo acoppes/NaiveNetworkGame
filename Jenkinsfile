@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         U3D_EXTRA_PATHS = "/mnt/c/UnityHub/"
-        UNITY_EXECUTABLE_PATH = "/mnt/c/UnityHub/2020.2.0a19/Editor/Unity.exe"
+        UNITY_EXECUTABLE_PATH = "/mnt/c/UnityHub/2020.2.0a21/Editor/Unity.exe"
         // ${env.WORKSPACE}
         WORKSPACE_CLIENT = "/mnt/d/Temp/jenkins_tmp_workspace/Client"
         WORKSPACE_SERVER = "/mnt/d/Temp/jenkins_tmp_workspace/Server"
