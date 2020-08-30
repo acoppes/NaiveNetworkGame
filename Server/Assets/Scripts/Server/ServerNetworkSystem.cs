@@ -1,13 +1,16 @@
 using System;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Networking.Transport;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Server
 {
+    // public static class ServerNetworkSettings {
+    //     public static float 
+    // }
+    
     public static class ServerNetworkStatistics
     {
         public static int outputBytesTotal;

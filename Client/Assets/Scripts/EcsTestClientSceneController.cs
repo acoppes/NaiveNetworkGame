@@ -25,21 +25,6 @@ namespace Scenes
         public int state;
     }
 
-    public struct UnitGameStateInterpolation : IComponentData
-    {
-        // public int currentFrame;
-        // public int nextFrame;
-        
-        public float time;
-        public float alpha;
-
-        public float2 previousTranslation;
-        public float2 currentTranslation;
-
-        public float localDelta;
-        public float remoteDelta;
-    }
-
     // public struct UnitGameState : IBufferElementData
     // {
     //     public int frame;
@@ -183,36 +168,6 @@ namespace Scenes
             updateEntities.Dispose();
             units.Dispose();
             updates.Dispose();
-        }
-    }
-
-    [UpdateInGroup(typeof(PresentationSystemGroup))]
-    [UpdateAfter(typeof(ClientViewSystem))]
-    [UpdateBefore(typeof(VisualModelUpdatePositionSystem))]
-    public class UnitGameStateInterpolationSystem : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            var localDeltaTime = Time.DeltaTime;
-            
-            // TODO: interpolate between real values...
-            
-            Entities
-                .WithAll<Translation, UnitGameStateInterpolation>()
-                .ForEach(delegate(ref Translation t, ref UnitGameStateInterpolation interpolation)
-                {
-                    interpolation.time += localDeltaTime;
-                    interpolation.localDelta = localDeltaTime;
-                    
-                    var t0 = interpolation.previousTranslation;
-                    var t1 = interpolation.currentTranslation;
-                    
-                    interpolation.alpha = interpolation.time / interpolation.remoteDelta;
-
-                    var t_current = math.lerp(t0, t1, math.clamp(interpolation.alpha, 0.0f, 1.0f));
-                    
-                    t.Value = new float3(t_current.x, t_current.y, 0);
-                });
         }
     }
 
