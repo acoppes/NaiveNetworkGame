@@ -1,5 +1,6 @@
 using System;
 using Client;
+using Scenes;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -64,6 +65,16 @@ namespace Mockups
                 {
                     var animator = m.instance.GetComponent<Animator>();
                     animator.SetInteger("state", state.state);
+                });
+            
+            Entities
+                .WithAll<ModelPrefabComponent, ModelInstanceComponent, UnitComponent>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref UnitComponent unit)
+                {
+                    var model = m.instance.GetComponent<UnitModelBehaviour>();
+                    if (model == null)
+                        return;
+                    model.isActivePlayer = unit.isActivePlayer;
                 });
             
             Entities

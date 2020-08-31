@@ -34,7 +34,9 @@ namespace Scenes
 
     public struct UnitComponent : IComponentData
     {
+        public uint player;
         public uint unitId;
+        public bool isActivePlayer;
     }
     
     [UpdateInGroup(typeof(PresentationSystemGroup))]
@@ -120,11 +122,12 @@ namespace Scenes
                 var entity = PostUpdateCommands.CreateEntity();
                 PostUpdateCommands.AddComponent(entity, new UnitComponent
                 {
-                    unitId = (uint) update.unitId
+                    unitId = (uint) update.unitId,
+                    player = (uint) update.playerId
                 });
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {
-                    prefab = modelProvider.prefabs[UnityEngine.Random.Range(0, modelProvider.prefabs.Length)]
+                    prefab = modelProvider.prefabs[0]
                 });
                 PostUpdateCommands.AddComponent(entity, new Translation
                 {
@@ -168,6 +171,25 @@ namespace Scenes
             updateEntities.Dispose();
             units.Dispose();
             updates.Dispose();
+        }
+    }
+
+    public class UpdateUnitPlayerSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            // NetworkPlayerId
+            
+            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayer)
+            {
+                var player = networkPlayer.player;
+                
+                Entities.ForEach(delegate(ref UnitComponent unit)
+                {
+                    unit.isActivePlayer = unit.player == player;
+                });
+                
+            });
         }
     }
 
