@@ -39,7 +39,8 @@ pipeline {
                             }
                         }
                         stage('Build') {
-                            echo "step"
+                            steps echo "step"
+                            
                             /* steps {
                                 sh "./build-server-linux.sh" 
                                 sh "./stop_remote_server.sh" 
