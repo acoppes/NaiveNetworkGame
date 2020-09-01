@@ -39,17 +39,13 @@ pipeline {
                             }
                         }
                         stage('Build') {
-                            steps {
+                            echo "step"
+                            /* steps {
                                 sh "./build-server-linux.sh" 
                                 sh "./stop_remote_server.sh" 
                                 sh "./deploy_server.sh" 
                                 sh "./start_remote_server.sh"
-                            }
-                            /*post {
-                                always {
-                                   archiveArtifacts artifacts: "${LOG_FILE}"
-                                }
-                            } */                         
+                            }  */                     
                         }
                     }
                 }  
@@ -73,14 +69,16 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                sh "./build-client-windows.sh"
-                                sh "./deploy_clients.sh"
-                            }
-                            /* post {
-                                always {
-                                    archiveArtifacts artifacts: "${LOG_FILE}"
-                                }
-                            }  */                         
+                                echo "Building client..."
+                                //sh "./build-client-windows.sh"
+                                // sh "./deploy_clients.sh"
+                            }                         
+                        }
+                        stage('Deploy') {
+                            steps {
+                                echo "Deploying client"
+                                // sh "./deploy_clients.sh"
+                            }                       
                         }
                     }
                 }         
