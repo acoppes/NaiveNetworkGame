@@ -5,7 +5,8 @@ namespace Server
 {
     public struct PlayerControllerSharedComponent : ISharedComponentData
     {
-        public Entity prefab;
+        public Entity unitPrefab;
+        public Entity treePrefab;
     }
 
     public static class CommandLineArguments
@@ -41,8 +42,10 @@ namespace Server
     public class ServerBehaviour : MonoBehaviour
     {
         public int targetFrameRate = 60;
-        public GameObject go;
-
+        
+        public GameObject unitPrefab;
+        public GameObject treePrefab;
+        
         public int totalOutputInBytes;
         public int lastFrameOutputInBytes;
 
@@ -100,12 +103,18 @@ namespace Server
             // with each connection, remove disabled component.
 
             var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
-            var prefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(go, settings);
-
+            
             var playerControllerPrefabEntity = entityManager.CreateEntity();
             entityManager.AddSharedComponentData(playerControllerPrefabEntity, new PlayerControllerSharedComponent
             {
-                prefab = prefab
+                unitPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings),
+                treePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(treePrefab, settings)
+            });
+
+            var createdUnitsEntity = entityManager.CreateEntity();
+            entityManager.AddComponentData(createdUnitsEntity, new CreatedUnits()
+            {
+                lastCreatedUnitId = 0
             });
             
             logStatistics = CommandLineArguments.HasArgument("-logStatistics");

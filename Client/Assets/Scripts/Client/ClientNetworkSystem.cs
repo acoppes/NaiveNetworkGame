@@ -129,6 +129,7 @@ namespace Client
                                     var time = stream.ReadFloat();
                                     var unitId = stream.ReadUInt();
                                     var playerId = stream.ReadByte();
+                                    var unitType = stream.ReadByte();
                                     var x = stream.ReadFloat();
                                     var y = stream.ReadFloat();
                                     var lookingDirectionX = stream.ReadFloat();
@@ -144,6 +145,7 @@ namespace Client
                                         delta = time,
                                         unitId = (int) unitId,
                                         playerId = playerId,
+                                        unitType = unitType,
                                         translation = new float2(x, y),
                                         lookingDirection = new float2(lookingDirectionX, lookingDirectionY),
                                         state = state,

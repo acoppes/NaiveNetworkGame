@@ -14,6 +14,7 @@ namespace Server
         
         public int unitId;
         public int playerId;
+        public byte unitType;
         
         public float2 translation;
         public float2 lookingDirection;
@@ -63,6 +64,8 @@ namespace Server
                     n.playerId = newPlayerId;
                     n.version++;
                 }
+
+                n.unitType = u.type;
             });
             
             Entities.WithAll<Translation, NetworkGameState>().ForEach(delegate(ref Translation t, 

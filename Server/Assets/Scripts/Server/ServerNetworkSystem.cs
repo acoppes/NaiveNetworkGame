@@ -70,7 +70,7 @@ namespace Server
         protected override void OnCreate()
         {
             base.OnCreate();
-            currentConnectionPlayer = 0;
+            currentConnectionPlayer = 1;
         }
 
         protected override void OnUpdate()
@@ -93,8 +93,8 @@ namespace Server
                         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
                     };
                     
-                    var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
-                        typeof(SimulatorPipelineStage));
+                    // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
+                    //     typeof(SimulatorPipelineStage));
 
                     var endpoint = NetworkEndPoint.AnyIpv4.WithPort(s.port);
                     
@@ -245,14 +245,6 @@ namespace Server
 
     public class ServerCreatePlayerController : ComponentSystem
     {
-        private uint lastUnitId;
-
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            lastUnitId = 0;
-        }
-
         protected override void OnUpdate()
         {
             var playerControllerPrefabEntity = 
@@ -261,15 +253,18 @@ namespace Server
             var playerControllerPrefab = 
                 EntityManager.GetSharedComponentData<PlayerControllerSharedComponent>(playerControllerPrefabEntity);
             
+            var createdUnitsEntity = Entities.WithAll<CreatedUnits>().ToEntityQuery().GetSingletonEntity();
+            var createdUnits = EntityManager.GetComponentData<CreatedUnits>(createdUnitsEntity);
+            
             Entities.ForEach(delegate(ref PlayerConnectionId p)
             {
                 if (p.initialized)
                     return;
                 
-                var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.prefab);
+                var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
                 PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
                 {
-                    id = lastUnitId++,
+                    id = (uint) createdUnits.lastCreatedUnitId++,
                     player = (uint) p.player
                 });
                 PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
@@ -279,6 +274,8 @@ namespace Server
                 
                 p.initialized = true;
             });
+            
+            PostUpdateCommands.SetComponent(createdUnitsEntity, createdUnits);
         }
     }
     
@@ -357,6 +354,10 @@ namespace Server
                     }
                 });
             
+            // iterate between static objects, send state, never again until new connection
+
+            // TODO: dont send static objects here
+            
             Entities
                 .WithNone<ClientOnly>()
                 .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
@@ -389,6 +390,7 @@ namespace Server
                             writer.WriteFloat(n.delta);
                             writer.WriteUInt((uint) n.unitId);
                             writer.WriteByte((byte) n.playerId);
+                            writer.WriteByte(n.unitType);
                             writer.WriteFloat(n.translation.x);
                             writer.WriteFloat(n.translation.y);
                             writer.WriteFloat(n.lookingDirection.x);

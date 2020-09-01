@@ -64,7 +64,8 @@ namespace Mockups
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref UnitState state)
                 {
                     var animator = m.instance.GetComponent<Animator>();
-                    animator.SetInteger("state", state.state);
+                    if (animator != null)
+                        animator.SetInteger("state", state.state);
                 });
             
             Entities

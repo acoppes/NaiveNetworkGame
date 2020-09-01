@@ -20,6 +20,7 @@ namespace Scenes
         public float delta;
         public int unitId;
         public int playerId;
+        public byte unitType;
         public float2 translation;
         public float2 lookingDirection;
         public int state;
@@ -127,7 +128,7 @@ namespace Scenes
                 });
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {
-                    prefab = modelProvider.prefabs[0]
+                    prefab = modelProvider.prefabs[update.unitType]
                 });
                 PostUpdateCommands.AddComponent(entity, new Translation
                 {
