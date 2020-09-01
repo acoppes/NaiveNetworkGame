@@ -40,15 +40,25 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                echo "step"
-                            }
-                            /* steps {
-                                sh "./build-server-linux.sh" 
+                                echo "Building server..."
+                                sh "./build-server-linux.sh"
+                                // sh "./build-server-windows.sh"
+                            }                 
+                        }
+                        stage('Deploy') {
+                            steps {
+                                echo "Deploying server instance..."
                                 sh "./stop_remote_server.sh" 
                                 sh "./deploy_server.sh" 
                                 sh "./start_remote_server.sh"
-                            }  */                     
+                            }                   
                         }
+                        /* stage('Upload') {
+                            steps {
+                                echo "Upload server builds..."
+                                sh "./upload_server_builds.sh"
+                            }                       
+                        } */
                     }
                 }  
                 stage ('Client-Windows') {
@@ -71,15 +81,16 @@ pipeline {
                         }
                         stage('Build') {
                             steps {
-                                echo "Building client..."
-                                //sh "./build-client-windows.sh"
-                                // sh "./deploy_clients.sh"
+                                echo "Building clients..."
+                                sh "./build-client-windows.sh"
+                                // build mac...
+                                // biuld linux...
                             }                         
                         }
-                        stage('Deploy') {
+                        stage('Upload') {
                             steps {
-                                echo "Deploying client"
-                                // sh "./deploy_clients.sh"
+                                echo "Upload client builds..."
+                                sh "./upload_client_builds.sh"
                             }                       
                         }
                     }
