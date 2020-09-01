@@ -42,7 +42,7 @@ pipeline {
                             steps {
                                 echo "Building server..."
                                 sh "./build-server-linux.sh"
-                                // sh "./build-server-windows.sh"
+                                sh "./build-server-windows.sh"
                             }                 
                         }
                         stage('Deploy') {
@@ -53,12 +53,12 @@ pipeline {
                                 sh "./start_remote_server.sh"
                             }                   
                         }
-                        /* stage('Upload') {
+                        stage('Upload') {
                             steps {
                                 echo "Upload server builds..."
                                 sh "./upload_server_builds.sh"
                             }                       
-                        } */
+                        } 
                     }
                 }  
                 stage ('Client-Windows') {
