@@ -7,9 +7,10 @@ using UnityEngine.Assertions;
 
 namespace Server
 {
-    // public static class ServerNetworkSettings {
-    //     public static float 
-    // }
+    public static class ServerNetworkStaticData
+    {
+        public static bool synchronizeStaticObjects;
+    }
     
     public static class ServerNetworkStatistics
     {
@@ -162,6 +163,8 @@ namespace Server
                         });
                         
                         Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                        
+                        ServerNetworkStaticData.synchronizeStaticObjects = true;
                     }
                     
                     for (var i = 0; i < networkManager.m_Connections.Length; i++)
@@ -353,11 +356,7 @@ namespace Server
                         });
                     }
                 });
-            
-            // iterate between static objects, send state, never again until new connection
 
-            // TODO: dont send static objects here
-            
             Entities
                 .WithNone<ClientOnly>()
                 .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
@@ -379,36 +378,42 @@ namespace Server
                             continue;
                         }
 
-                        Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
+                        if (ServerNetworkStaticData.synchronizeStaticObjects)
+                        {
+                            Entities
+                                .WithAll<NetworkGameState, StaticObject>()
+                                .ForEach(delegate(ref NetworkGameState n)
+                                {
+                                    var writer = m_Driver.BeginSend(connection);
+                                    n.Write(ref writer);
+                                    m_Driver.EndSend(writer);
+
+                                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                                });
+                        }
+
+                        Entities
+                            .WithNone<StaticObject>()
+                            .WithAll<NetworkGameState>()
+                            .ForEach(delegate(ref NetworkGameState n)
                         {
                             // if (n.version == n.syncVersion)
                             //     return;
-                            
+
                             var writer = m_Driver.BeginSend(connection);
-                            writer.WriteByte(50);
-                            writer.WriteInt(n.frame);
-                            writer.WriteFloat(n.delta);
-                            writer.WriteUInt((uint) n.unitId);
-                            writer.WriteByte((byte) n.playerId);
-                            writer.WriteByte(n.unitType);
-                            writer.WriteFloat(n.translation.x);
-                            writer.WriteFloat(n.translation.y);
-                            writer.WriteFloat(n.lookingDirection.x);
-                            writer.WriteFloat(n.lookingDirection.y);
-                            writer.WriteByte((byte) n.state);
+                            n.Write(ref writer);
                             m_Driver.EndSend(writer);
                             
                             ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
                             ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-                            
-                            // Debug.Log($"State length: {writer.Length}");
-                            // Debug.Log($"State length (bits): {writer.LengthInBits}");
-                            // Debug.Log($"State length (bytes): {writer.LengthInBits / 8}");
 
                             n.syncVersion = n.version;
                         });
                     }
                 });
+            
+            ServerNetworkStaticData.synchronizeStaticObjects = false;
         }
     }
 }

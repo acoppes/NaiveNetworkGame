@@ -1,5 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Networking.Transport;
 using Unity.Transforms;
 
 namespace Server
@@ -19,6 +20,21 @@ namespace Server
         public float2 translation;
         public float2 lookingDirection;
         public int state;
+
+        public void Write(ref DataStreamWriter writer)
+        {
+            writer.WriteByte(50);
+            writer.WriteInt(frame);
+            writer.WriteFloat(delta);
+            writer.WriteUInt((uint) unitId);
+            writer.WriteByte((byte) playerId);
+            writer.WriteByte(unitType);
+            writer.WriteFloat(translation.x);
+            writer.WriteFloat(translation.y);
+            writer.WriteFloat(lookingDirection.x);
+            writer.WriteFloat(lookingDirection.y);
+            writer.WriteByte((byte) state);
+        }
     }
     
     public class NetworkGameStateSystem : ComponentSystem
