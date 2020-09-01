@@ -3,11 +3,13 @@
 export SERVER=gemserk.com
 export USER=acoppes
 
+export WINDOWS_BUILD=NaiveNetworkGameClient-Windows.zip
+
 echo 'Creating zip for build'
 cd Client/Builds/Windows
-rm ../NaiveNetworkGame-Windows.zip
-zip -r ../NaiveNetworkGame-Windows.zip .
+rm ../${WINDOWS_BUILD}
+zip -r ../${WINDOWS_BUILD} .
 cd -
 
 echo 'Uploading build to server'
-scp Client/Builds/NaiveNetworkGame-Windows.zip $USER@$SERVER:NaiveNetworkGame/
+scp Client/Builds/${WINDOWS_BUILD} $USER@$SERVER:NaiveNetworkGame/
