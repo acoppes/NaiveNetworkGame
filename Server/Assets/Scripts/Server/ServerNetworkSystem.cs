@@ -186,6 +186,7 @@ namespace Server
                                     var pendingPlayerAction = new PendingPlayerAction
                                     {
                                         player = stream.ReadByte(),
+                                        unit = stream.ReadUInt(),
                                         command = stream.ReadByte(),
                                         target = {
                                             x = stream.ReadFloat(), 

@@ -191,6 +191,7 @@ namespace Client
                         // just a number to identify the packet for now...
                         writer.WriteByte(99);
                         writer.WriteByte((byte) p.player);
+                        writer.WriteUInt(p.unit);
                         writer.WriteByte((byte) p.command);
                         writer.WriteFloat(p.target.x);
                         writer.WriteFloat(p.target.y);

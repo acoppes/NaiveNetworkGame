@@ -290,14 +290,24 @@ namespace Scenes
                 {
                     var mousePosition = Input.mousePosition;
                     var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-                    var e = PostUpdateCommands.CreateEntity();
-                    PostUpdateCommands.AddComponent(e, new ClientOnly());
-                    PostUpdateCommands.AddComponent(e, new PendingPlayerAction
+                    var player = networkPlayerId.player;
+                    
+                    Entities.WithAll<UnitComponent, Selectable>().ForEach(delegate(ref UnitComponent unit)
                     {
-                        player = networkPlayerId.player,
-                        command = 0,
-                        target = new float2(worldPosition.x, worldPosition.y)
+                        if (unit.isSelected)
+                        {
+                            var e = PostUpdateCommands.CreateEntity();
+                            PostUpdateCommands.AddComponent(e, new ClientOnly());
+                            PostUpdateCommands.AddComponent(e, new PendingPlayerAction
+                            {
+                                player = player,
+                                unit = unit.unitId,
+                                command = 0,
+                                target = new float2(worldPosition.x, worldPosition.y)
+                            });
+                        }
+                        
+                        unit.isSelected = false;
                     });
                 }
             });
@@ -332,7 +342,7 @@ namespace Scenes
 
         private void Update()
         {
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(1))
             {
                 var mousePosition = Input.mousePosition;
                 var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);

@@ -68,6 +68,7 @@ namespace Server
                 PostUpdateCommands.DestroyEntity(e);
 
                 var player = p.player;
+                var unitId = p.unit;
                 
                 var pendingAction = new PendingAction
                 {
@@ -78,6 +79,9 @@ namespace Server
                 Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unitEntity, ref Unit unit)
                 {
                     if (unit.player != player) 
+                        return;
+
+                    if (unit.id != unitId)
                         return;
                     
                     PostUpdateCommands.RemoveComponent<PendingAction>(unitEntity);
