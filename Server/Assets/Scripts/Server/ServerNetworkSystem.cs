@@ -12,6 +12,7 @@ namespace Server
     public static class ServerNetworkStaticData
     {
         public static bool synchronizeStaticObjects;
+        public static int startingUnitsPerPlayer = 2;
     }
     
     public static class ServerNetworkStatistics
@@ -268,9 +269,8 @@ namespace Server
                     return;
 
                 // Just for testing purposes...
-                const int unitsPerPlayer = 2;
                 
-                for (var i = 0; i < unitsPerPlayer; i++)
+                for (var i = 0; i < ServerNetworkStaticData.startingUnitsPerPlayer; i++)
                 {
                     var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
                     PostUpdateCommands.SetComponent(playerControllerEntity, new Unit

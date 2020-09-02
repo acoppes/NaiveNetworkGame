@@ -42,6 +42,7 @@ namespace Server
     public class ServerBehaviour : MonoBehaviour
     {
         public int targetFrameRate = 60;
+        public int unitsPerPlayer = 2;
         
         public GameObject unitPrefab;
         public GameObject treePrefab;
@@ -63,6 +64,8 @@ namespace Server
         
         private void Start ()
         {
+            ServerNetworkStaticData.startingUnitsPerPlayer = unitsPerPlayer;
+            
             // set default port
             ushort port = 9000;
             // default framerate
