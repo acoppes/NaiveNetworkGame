@@ -253,6 +253,7 @@ namespace Scenes
                     worldPosition.z = 0;
                     
                     var bestSelectable = -1;
+                    var bestDistance = 99999.0f;
                     
                     for (var i = 0; i < selectables.Length; i++)
                     {
@@ -262,10 +263,13 @@ namespace Scenes
                         
                         var selectable = selectables[i];
                         var bounds = selectable.bounds;
-                        if (bounds.Contains(worldPosition))
+
+                        var distance = Vector3.SqrMagnitude(bounds.center - worldPosition);
+                        
+                        if (bounds.Contains(worldPosition) && distance < bestDistance)
                         {
+                            bestDistance = distance;
                             bestSelectable = i;
-                            break;
                         }
                     }
 
