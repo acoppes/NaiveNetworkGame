@@ -35,9 +35,10 @@ namespace Scenes
 
     public struct UnitComponent : IComponentData
     {
-        public uint player;
         public uint unitId;
+        public uint player;
         public bool isActivePlayer;
+        public bool isSelected;
     }
     
     [UpdateInGroup(typeof(PresentationSystemGroup))]
@@ -150,6 +151,11 @@ namespace Scenes
                     time = 0,
                     remoteDelta = update.delta
                 });
+
+                if (update.unitType == 0)
+                {
+                    PostUpdateCommands.AddComponent(entity, new Selectable());
+                }
                 
                 // var buffer = PostUpdateCommands.AddBuffer<UnitGameState>(entity);
                 // buffer.Add(new UnitGameState
@@ -224,6 +230,12 @@ namespace Scenes
     {
         protected override void OnUpdate()
         {
+            var query = Entities.WithAll<Selectable, UnitComponent>().ToEntityQuery();
+
+            var entities = query.ToEntityArray(Allocator.TempJob);
+            var selectables = query.ToComponentDataArray<Selectable>(Allocator.TempJob);
+            var units = query.ToComponentDataArray<UnitComponent>(Allocator.TempJob);
+            
             Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId)
             {
                 if (!networkPlayerId.connection.IsCreated)
@@ -233,8 +245,48 @@ namespace Scenes
                 //     return;
                 
                 // TODO: better controls...
-
+                
                 if (Input.GetMouseButtonUp(0))
+                {
+                    var mousePosition = Input.mousePosition;
+                    var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                    worldPosition.z = 0;
+                    
+                    var bestSelectable = -1;
+                    
+                    for (var i = 0; i < selectables.Length; i++)
+                    {
+                        var unit = units[i];
+                        if (!unit.isActivePlayer)
+                            continue;
+                        
+                        var selectable = selectables[i];
+                        var bounds = selectable.bounds;
+                        if (bounds.Contains(worldPosition))
+                        {
+                            bestSelectable = i;
+                            break;
+                        }
+                    }
+
+                    if (bestSelectable != -1)
+                    {
+                        var entity = entities[bestSelectable];
+                        var unit = units[bestSelectable];
+                        unit.isSelected = !unit.isSelected;
+                        
+                        PostUpdateCommands.SetComponent(entity, unit);
+                    }
+                    else
+                    {
+                        Entities.WithAll<UnitComponent, Selectable>().ForEach(delegate(ref UnitComponent unit)
+                        {
+                            unit.isSelected = false;
+                        });
+                    }
+                }
+
+                if (Input.GetMouseButtonUp(1))
                 {
                     var mousePosition = Input.mousePosition;
                     var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -250,7 +302,9 @@ namespace Scenes
                 }
             });
             
-           
+            entities.Dispose();
+            selectables.Dispose();
+            units.Dispose();
         }
     }
     

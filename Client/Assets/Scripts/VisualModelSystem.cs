@@ -7,7 +7,12 @@ using UnityEngine;
 
 namespace Mockups
 {
-     public struct ModelPrefabComponent : ISharedComponentData, IEquatable<ModelPrefabComponent>
+    public struct Selectable : IComponentData
+    {
+        public Bounds bounds;
+    }
+    
+    public struct ModelPrefabComponent : ISharedComponentData, IEquatable<ModelPrefabComponent>
     {
         public GameObject prefab;
 
@@ -76,6 +81,7 @@ namespace Mockups
                     if (model == null)
                         return;
                     model.isActivePlayer = unit.isActivePlayer;
+                    model.isSelected = unit.isSelected;
                 });
             
             Entities
@@ -83,6 +89,15 @@ namespace Mockups
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref LookingDirection lookingDirection)
                 {
                     m.instance.transform.localScale = new Vector3(lookingDirection.direction.x >= 0 ? 1: -1, 1, 1);
+                });
+            
+            Entities
+                .WithAllReadOnly<ModelInstanceComponent>()
+                .WithAll<Selectable>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Selectable selectable)
+                {
+                    selectable.bounds = m.instance.GetComponentInChildren<SpriteRenderer>().bounds;
+                    // m.instance.transform.localScale = new Vector3(lookingDirection.direction.x >= 0 ? 1: -1, 1, 1);
                 });
         }
     }
@@ -115,6 +130,7 @@ namespace Mockups
                     {
                         instance = GameObject.Instantiate(m.prefab, modelRoot)
                     });
+                    // PostUpdateCommands.AddComponent(e, new Selectable());
                 });
 
             Entities
