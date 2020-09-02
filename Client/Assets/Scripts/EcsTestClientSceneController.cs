@@ -275,6 +275,11 @@ namespace Scenes
                         var unit = units[bestSelectable];
                         unit.isSelected = !unit.isSelected;
                         
+                        Entities.WithAll<UnitComponent, Selectable>().ForEach(delegate(ref UnitComponent unit)
+                        {
+                            unit.isSelected = false;
+                        });
+                        
                         PostUpdateCommands.SetComponent(entity, unit);
                     }
                     else
@@ -307,7 +312,7 @@ namespace Scenes
                             });
                         }
                         
-                        unit.isSelected = false;
+                        // unit.isSelected = false;
                     });
                 }
             });
