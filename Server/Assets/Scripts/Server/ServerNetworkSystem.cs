@@ -1,7 +1,9 @@
 using System;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Networking.Transport;
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -264,18 +266,29 @@ namespace Server
             {
                 if (p.initialized)
                     return;
+
+                // Just for testing purposes...
+                const int unitsPerPlayer = 2;
                 
-                var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
-                PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
+                for (var i = 0; i < unitsPerPlayer; i++)
                 {
-                    id = (uint) createdUnits.lastCreatedUnitId++,
-                    player = (uint) p.player
-                });
-                PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
-                {
-                    syncVersion = -1
-                });
-                
+                    var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
+                    PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
+                    {
+                        id = (uint) createdUnits.lastCreatedUnitId++,
+                        player = (uint) p.player
+                    });
+                    var v = UnityEngine.Random.insideUnitCircle * 0.5f;
+                    PostUpdateCommands.SetComponent(playerControllerEntity, new Translation
+                    {
+                        Value = new float3(v.x, v.y, 0)
+                    });
+                    PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
+                    {
+                        syncVersion = -1
+                    });
+                }
+
                 p.initialized = true;
             });
             

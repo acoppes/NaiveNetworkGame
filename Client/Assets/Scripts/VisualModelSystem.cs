@@ -96,7 +96,7 @@ namespace Mockups
                 .WithAll<Selectable>()
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Selectable selectable)
                 {
-                    selectable.bounds = m.instance.GetComponentInChildren<SpriteRenderer>().bounds;
+                    selectable.bounds = m.instance.GetComponentInChildren<BoxCollider2D>().bounds;
                     // m.instance.transform.localScale = new Vector3(lookingDirection.direction.x >= 0 ? 1: -1, 1, 1);
                 });
         }
