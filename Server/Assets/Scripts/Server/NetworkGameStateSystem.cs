@@ -1,43 +1,10 @@
 using NaiveNetworkGame.Common;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Networking.Transport;
 using Unity.Transforms;
 
 namespace Server
 {
-    public struct NetworkGameState : IComponentData
-    {
-        public int frame;
-        public float delta;
-
-        public int syncVersion;
-        public int version;
-        
-        public int unitId;
-        public int playerId;
-        public byte unitType;
-        
-        public float2 translation;
-        public float2 lookingDirection;
-        public int state;
-
-        public void Write(ref DataStreamWriter writer)
-        {
-            writer.WriteByte(PacketType.ServerGameState);
-            writer.WriteInt(frame);
-            writer.WriteFloat(delta);
-            writer.WriteUInt((uint) unitId);
-            writer.WriteByte((byte) playerId);
-            writer.WriteByte(unitType);
-            writer.WriteFloat(translation.x);
-            writer.WriteFloat(translation.y);
-            writer.WriteFloat(lookingDirection.x);
-            writer.WriteFloat(lookingDirection.y);
-            writer.WriteByte((byte) state);
-        }
-    }
-    
     public class NetworkGameStateSystem : ComponentSystem
     {
         private int frame;
@@ -61,7 +28,7 @@ namespace Server
             {
                 n.frame = frame;
                 n.delta = delta;
-                n.syncVersion = n.version;
+                // n.syncVersion = n.version;
             });
             
             Entities.WithAll<Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
@@ -70,18 +37,8 @@ namespace Server
                 var newUnitId = (int) u.id;
                 var newPlayerId = (int) u.player;
                 
-                if (newUnitId != n.unitId)
-                {
-                    n.unitId = newUnitId;
-                    n.version++;
-                }
-
-                if (newPlayerId != n.playerId)
-                {
-                    n.playerId = newPlayerId;
-                    n.version++;
-                }
-
+                n.unitId = newUnitId;
+                n.playerId = newPlayerId;
                 n.unitType = u.type;
             });
             
@@ -89,33 +46,37 @@ namespace Server
                 ref NetworkGameState n)
             {
                 var newTranslation = new float2(t.Value.x, t.Value.y);
+                n.translation = newTranslation;
                 
-                if (math.abs(n.translation.x - newTranslation.x) > 0.001f || 
-                    math.abs(n.translation.y - newTranslation.y) > 0.001f)
-                {
-                    n.translation = newTranslation;
-                    n.version++;
-                }
+                // if (math.abs(n.translation.x - newTranslation.x) > 0.001f || 
+                //     math.abs(n.translation.y - newTranslation.y) > 0.001f)
+                // {
+                //     n.translation = newTranslation;
+                //     // n.version++;
+                // }
             });
             
             Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
                 ref NetworkGameState n)
             {
-                if (math.distancesq(n.lookingDirection, l.direction) > 0.001f)
-                {
-                    n.lookingDirection = l.direction;
-                    n.version++;
-                }
+                n.lookingDirection = l.direction;
+                
+                // if (math.distancesq(n.lookingDirection, l.direction) > 0.001f)
+                // {
+                //     n.lookingDirection = l.direction;
+                //     // n.version++;
+                // }
             });
             
             Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
                 ref NetworkGameState n)
             {
-                if (n.state != state.state)
-                {
-                    n.state = state.state;
-                    n.version++;
-                }
+                n.state = state.state;
+                // if (n.state != state.state)
+                // {
+                //     n.state = state.state;
+                //     // n.version++;
+                // }
             });
         }
     }

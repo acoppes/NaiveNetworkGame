@@ -125,32 +125,10 @@ namespace Client
                                 if (type == PacketType.ServerGameState)
                                 {
                                     // network game state... 
-                                    
-                                    var frame = stream.ReadInt();
-                                    var time = stream.ReadFloat();
-                                    var unitId = stream.ReadUInt();
-                                    var playerId = stream.ReadByte();
-                                    var unitType = stream.ReadByte();
-                                    var x = stream.ReadFloat();
-                                    var y = stream.ReadFloat();
-                                    var lookingDirectionX = stream.ReadFloat();
-                                    var lookingDirectionY = stream.ReadFloat();
-                                    var state = stream.ReadByte();
-
                                     // read unit info...
+                                    
                                     var e = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent(e, new NetworkGameState
-                                    {
-                                        // connectionId = (uint) i,
-                                        frame = frame,
-                                        delta = time,
-                                        unitId = (int) unitId,
-                                        playerId = playerId,
-                                        unitType = unitType,
-                                        translation = new float2(x, y),
-                                        lookingDirection = new float2(lookingDirectionX, lookingDirectionY),
-                                        state = state,
-                                    });
+                                    PostUpdateCommands.AddComponent(e, new NetworkGameState().Read(ref stream));
                                 }
                             }
                             else if (cmd == NetworkEvent.Type.Disconnect)

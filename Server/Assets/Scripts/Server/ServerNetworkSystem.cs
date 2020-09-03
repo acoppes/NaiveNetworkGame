@@ -286,7 +286,7 @@ namespace Server
                     });
                     PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
                     {
-                        syncVersion = -1
+                        // syncVersion = -1
                     });
                 }
 
@@ -423,7 +423,7 @@ namespace Server
                             ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
                             ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
 
-                            n.syncVersion = n.version;
+                            // n.syncVersion = n.version;
                         });
                     }
                 });

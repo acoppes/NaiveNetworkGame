@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -47,7 +48,7 @@ namespace Server
                 });
                 PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
                 {
-                    syncVersion = -1
+                    // syncVersion = -1
                 });
             }
             
