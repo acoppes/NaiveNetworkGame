@@ -1,0 +1,8 @@
+{
+    "name": "naivenetworkgame.common",
+    "displayName": "NaiveNetworkGameCommon",
+    "version": "0.0.1",
+    "unity": "2020.2",
+    "description": "Common",
+    "category": "Unity"
+}

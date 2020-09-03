@@ -19,6 +19,8 @@ namespace Client
             var clientEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
             entityManager.AddSharedComponentData(clientEntity, new NetworkManagerSharedComponent());
             entityManager.AddComponentData(clientEntity, new ClientStartComponent());
+
+            new NaiveNetworkGame.Common.MyCommonClass().MyMethod();
         }
     }
 }
