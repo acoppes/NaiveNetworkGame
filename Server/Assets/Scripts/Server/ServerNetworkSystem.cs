@@ -185,7 +185,7 @@ namespace Server
 
                                 var packet = stream.ReadByte();
 
-                                if (packet == PacketType.PlayerAction)
+                                if (packet == PacketType.ClientPlayerAction)
                                 {
                                     var pendingPlayerAction = new PendingPlayerAction
                                     {
@@ -359,7 +359,7 @@ namespace Server
                             if (p.connection == connection)
                             {
                                 var writer = m_Driver.BeginSend(connection);
-                                writer.WriteByte(0);
+                                writer.WriteByte(PacketType.ServerSendPlayerId);
                                 writer.WriteByte((byte) p.player);
                                 m_Driver.EndSend(writer);
 

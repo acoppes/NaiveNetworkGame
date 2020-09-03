@@ -100,7 +100,7 @@ namespace Client
                             {
                                 Debug.Log("We are now connected to the server");
                                 var writer = m_Driver.BeginSend(m_Connection);
-                                writer.WriteByte(0);
+                                writer.WriteByte(PacketType.ClientKeepAlive);
                                 m_Driver.EndSend(writer);
 
                             }
@@ -108,7 +108,7 @@ namespace Client
                             {
                                 var type = stream.ReadByte();
 
-                                if (type == 0)
+                                if (type == PacketType.ServerSendPlayerId)
                                 {
                                     // this is my player id!!
                                     var networkPlayerId = stream.ReadByte();
@@ -168,7 +168,7 @@ namespace Client
                         var writer = m_Driver.BeginSend(m_Connection);
                                 
                         // just a number to identify the packet for now...
-                        writer.WriteByte(PacketType.PlayerAction);
+                        writer.WriteByte(PacketType.ClientPlayerAction);
                         writer.WriteByte((byte) p.player);
                         writer.WriteUInt(p.unit);
                         writer.WriteByte((byte) p.command);
@@ -186,7 +186,7 @@ namespace Client
                     if (m_Driver.IsCreated && m_Connection.IsCreated)
                     {
                         var writer = m_Driver.BeginSend(m_Connection);
-                        writer.WriteByte(1);
+                        writer.WriteByte(PacketType.ClientKeepAlive);
                         m_Driver.EndSend(writer);    
                     }
                 }
