@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
@@ -23,7 +24,7 @@ namespace Server
 
         public void Write(ref DataStreamWriter writer)
         {
-            writer.WriteByte(50);
+            writer.WriteByte(PacketType.ServerGameState);
             writer.WriteInt(frame);
             writer.WriteFloat(delta);
             writer.WriteUInt((uint) unitId);

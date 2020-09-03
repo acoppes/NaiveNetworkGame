@@ -92,7 +92,7 @@ namespace Server
                     port = portOverride;
                 }
             }
-            
+
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             var serverEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ServerOnly>());

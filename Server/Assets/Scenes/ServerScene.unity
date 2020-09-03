@@ -428,7 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c68657874c3e46a958949de13f335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetFrameRate: 15
+  targetFrameRate: 60
   unitsPerPlayer: 4
   unitPrefab: {fileID: 5135555761720755020, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
   treePrefab: {fileID: 5135555761720755020, guid: 3d7a84c67fbf1a844bc6e7f442565583, type: 3}

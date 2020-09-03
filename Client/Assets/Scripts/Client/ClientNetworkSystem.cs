@@ -122,7 +122,7 @@ namespace Client
                                     });
                                 }
                                 
-                                if (type == 50)
+                                if (type == PacketType.ServerGameState)
                                 {
                                     // network game state... 
                                     
