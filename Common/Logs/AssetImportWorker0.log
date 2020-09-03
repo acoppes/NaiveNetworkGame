@@ -340,3 +340,4 @@ Received Import Request.
 Start importing Assets/Common/MyCommonClass.cs using Guid(37d05516e37fbc54ba6227d38193ac52) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1e4bc8b6d6c41e50f5c3a35a8eff5b58') in 0.028046 seconds
   Import took 0.045989 seconds .
 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

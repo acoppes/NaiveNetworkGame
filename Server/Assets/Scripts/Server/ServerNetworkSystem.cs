@@ -1,4 +1,5 @@
 using System;
+using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -184,7 +185,7 @@ namespace Server
 
                                 var packet = stream.ReadByte();
 
-                                if (packet == 99)
+                                if (packet == PacketType.PlayerAction)
                                 {
                                     var pendingPlayerAction = new PendingPlayerAction
                                     {

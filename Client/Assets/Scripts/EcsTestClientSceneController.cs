@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Client;
 using Mockups;
+using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -13,18 +14,18 @@ using UnityEngine;
 namespace Scenes
 {
     // for when there a unit was updated from the server
-    public struct NetworkGameStateUpdate : IComponentData
-    {
-        // public uint connectionId;
-        public int frame;
-        public float delta;
-        public int unitId;
-        public int playerId;
-        public byte unitType;
-        public float2 translation;
-        public float2 lookingDirection;
-        public int state;
-    }
+    // public struct NetworkGameState : IComponentData
+    // {
+    //     // public uint connectionId;
+    //     public int frame;
+    //     public float delta;
+    //     public int unitId;
+    //     public int playerId;
+    //     public byte unitType;
+    //     public float2 translation;
+    //     public float2 lookingDirection;
+    //     public int state;
+    // }
 
     // public struct UnitGameState : IBufferElementData
     // {
@@ -48,9 +49,9 @@ namespace Scenes
         {
             // iterate over client view updates...
 
-            var query = Entities.WithAll<NetworkGameStateUpdate>().ToEntityQuery();
+            var query = Entities.WithAll<NetworkGameState>().ToEntityQuery();
             
-            var updates = query.ToComponentDataArray<NetworkGameStateUpdate>(Allocator.TempJob);
+            var updates = query.ToComponentDataArray<NetworkGameState>(Allocator.TempJob);
             var updateEntities = query.ToEntityArray(Allocator.TempJob);
 
             var unitsQuery = Entities.WithAll<UnitComponent, Translation>().ToEntityQuery();

@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using Scenes;
 using Unity.Collections;
 using Unity.Entities;
@@ -138,7 +139,7 @@ namespace Client
 
                                     // read unit info...
                                     var e = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent(e, new NetworkGameStateUpdate
+                                    PostUpdateCommands.AddComponent(e, new NetworkGameState
                                     {
                                         // connectionId = (uint) i,
                                         frame = frame,
@@ -189,7 +190,7 @@ namespace Client
                         var writer = m_Driver.BeginSend(m_Connection);
                                 
                         // just a number to identify the packet for now...
-                        writer.WriteByte(99);
+                        writer.WriteByte(PacketType.PlayerAction);
                         writer.WriteByte((byte) p.player);
                         writer.WriteUInt(p.unit);
                         writer.WriteByte((byte) p.command);
