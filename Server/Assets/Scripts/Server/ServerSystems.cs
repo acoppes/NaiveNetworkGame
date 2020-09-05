@@ -112,7 +112,8 @@ namespace Server
                     });
                     PostUpdateCommands.SetComponent(playerControllerEntity, new Translation
                     {
-                        Value = new float3(p.target.x, p.target.y, 0)
+                        Value = new float3(0, 0, 0)
+                        // Value = new float3(p.target.x, p.target.y, 0)
                     });
                     PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
                     {
