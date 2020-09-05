@@ -159,22 +159,15 @@ namespace Client
                 var pendingActionSent = false;
 
                 Entities.WithNone<ServerOnly>()
-                    .WithAll<ClientOnly, PendingPlayerAction>()
-                    .ForEach(delegate(Entity e, ref PendingPlayerAction p)
+                    .WithAll<ClientOnly, ClientPlayerAction>()
+                    .ForEach(delegate(Entity e, ref ClientPlayerAction p)
                     {
                         PostUpdateCommands.DestroyEntity(e);
                         // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
                                 
                         var writer = m_Driver.BeginSend(m_Connection);
-                                
-                        // just a number to identify the packet for now...
-                        writer.WriteByte(PacketType.ClientPlayerAction);
-                        writer.WriteByte((byte) p.player);
-                        writer.WriteUInt(p.unit);
-                        writer.WriteByte((byte) p.command);
-                        writer.WriteFloat(p.target.x);
-                        writer.WriteFloat(p.target.y);
-                                
+
+                        p.Write(ref writer);
                         m_Driver.EndSend(writer);
 
                         pendingActionSent = true;

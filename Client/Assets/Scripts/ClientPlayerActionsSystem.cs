@@ -1,5 +1,6 @@
 using Client;
 using Mockups;
+using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -141,11 +142,11 @@ namespace Scenes
                             {
                                 var e = PostUpdateCommands.CreateEntity();
                                 PostUpdateCommands.AddComponent(e, new ClientOnly());
-                                PostUpdateCommands.AddComponent(e, new PendingPlayerAction
+                                PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                                 {
-                                    player = player,
+                                    player = (byte) player,
                                     unit = unit.unitId,
-                                    command = 0,
+                                    command = ClientPlayerAction.MoveUnitAction,
                                     target = new float2(worldPosition.x, worldPosition.y)
                                 });
                             }

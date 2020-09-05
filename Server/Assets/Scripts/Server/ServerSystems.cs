@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -62,8 +63,8 @@ namespace Server
             // process all player pending actions
             Entities
                 .WithNone<ClientOnly>()
-                .WithAll<ServerOnly, PendingPlayerAction>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p)
+                .WithAll<ServerOnly, ClientPlayerAction>()
+                .ForEach(delegate (Entity e, ref ClientPlayerAction p)
             {
                 PostUpdateCommands.DestroyEntity(e);
 
@@ -101,7 +102,7 @@ namespace Server
                 PostUpdateCommands.RemoveComponent<PendingAction>(e);
                 
                 // movement command
-                if (p.command == 0)
+                if (p.command == ClientPlayerAction.MoveUnitAction)
                 {
                     PostUpdateCommands.AddComponent(e, new MovementAction
                     {

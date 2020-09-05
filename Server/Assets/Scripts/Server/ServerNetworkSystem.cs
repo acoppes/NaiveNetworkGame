@@ -187,16 +187,18 @@ namespace Server
 
                                 if (packet == PacketType.ClientPlayerAction)
                                 {
-                                    var pendingPlayerAction = new PendingPlayerAction
-                                    {
-                                        player = stream.ReadByte(),
-                                        unit = stream.ReadUInt(),
-                                        command = stream.ReadByte(),
-                                        target = {
-                                            x = stream.ReadFloat(), 
-                                            y = stream.ReadFloat()
-                                        }
-                                    };
+                                    var pendingPlayerAction = new ClientPlayerAction().Read(ref stream);
+                                    
+                                    // var pendingPlayerAction = new ClientPlayerAction
+                                    // {
+                                    //     player = stream.ReadByte(),
+                                    //     unit = stream.ReadUInt(),
+                                    //     command = stream.ReadByte(),
+                                    //     target = {
+                                    //         x = stream.ReadFloat(), 
+                                    //         y = stream.ReadFloat()
+                                    //     }
+                                    // };
 
                                     var pendingActionEntity = PostUpdateCommands.CreateEntity();
                                     PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);

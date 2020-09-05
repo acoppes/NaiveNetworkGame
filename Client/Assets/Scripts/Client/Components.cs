@@ -8,14 +8,6 @@ namespace Client
     // {
     //     public uint id;
     // }
-    
-    public struct PendingPlayerAction : IComponentData
-    {
-        public uint player;
-        public uint unit;
-        public uint command;
-        public float2 target;
-    }
 
     public struct ClientOnly : IComponentData
     {
