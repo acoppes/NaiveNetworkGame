@@ -13,9 +13,9 @@ pipeline {
         WORKSPACE_SERVER = "/mnt/d/Temp/jenkins_tmp_workspace/Server"
     }
 
-    triggers { 
-        pollSCM('H/30 * * * *') 
-    }
+    /* triggers { 
+        pollSCM('H H * * *') 
+    } */
 
     stages {
         stage ('Builds') {
