@@ -45,4 +45,9 @@ namespace Client
         public uint player;
         public NetworkConnection connection;
     }
+
+    public struct ConfirmActionFeedback : IComponentData
+    {
+        public float2 position;
+    }
 }

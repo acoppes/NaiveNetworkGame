@@ -3,39 +3,30 @@ using System.Collections;
 using Client;
 using Mockups;
 using Unity.Entities;
-using Unity.Networking.Transport;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Scenes
 {
-    // public struct UnitGameState : IBufferElementData
-    // {
-    //     public int frame;
-    //     public float time;
-    //     public float2 translation;
-    // }
+    public struct ClientPrefabsSharedComponent : ISharedComponentData, IEquatable<ClientPrefabsSharedComponent>
+    {
+        public GameObject confirmActionPrefab;
 
-    // public struct ClientModelRootSharedComponent : ISharedComponentData, IEquatable<ClientModelRootSharedComponent>
-    // {
-    //     public Transform parent;
-    //
-    //     public bool Equals(ClientModelRootSharedComponent other)
-    //     {
-    //         return Equals(parent, other.parent);
-    //     }
-    //
-    //     public override bool Equals(object obj)
-    //     {
-    //         return obj is ClientModelRootSharedComponent other && Equals(other);
-    //     }
-    //
-    //     public override int GetHashCode()
-    //     {
-    //         return (parent != null ? parent.GetHashCode() : 0);
-    //     }
-    // }
+        public bool Equals(ClientPrefabsSharedComponent other)
+        {
+            return Equals(confirmActionPrefab, other.confirmActionPrefab);
+        }
 
+        public override bool Equals(object obj)
+        {
+            return obj is ClientPrefabsSharedComponent other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (confirmActionPrefab != null ? confirmActionPrefab.GetHashCode() : 0);
+        }
+    }
+    
     public class ClientSceneController : MonoBehaviour
     {
         public Camera camera;
@@ -61,81 +52,51 @@ namespace Scenes
             var clientGameState = entityManager.GetComponentData<PlayerInputState>(gameState);
             gameStateQuery.SetSingleton(clientGameState);
             
-            // var clientModelRoot = entityManager.CreateEntity();
-            // entityManager.AddSharedComponentData(clientModelRoot, new ClientModelRootSharedComponent
-            // {
-            //     parent = parent
-            // });
-
             ModelProviderSingleton.Instance.SetRoot(parent);
-            
-            // spawnUnitButton.onClick.AddListener(OnSpawnButtonPressed);
+
+            // var query = entityManager.CreateEntityQuery(
+            //     ComponentType.ReadWrite<ClientPrefabsSharedComponent>());
+            var clientPrefabsEntity = entityManager.CreateEntity();
+            entityManager.AddSharedComponentData(clientPrefabsEntity, new ClientPrefabsSharedComponent
+            {
+                confirmActionPrefab = actionPrefab
+            });
         }
 
-        // private void OnSpawnButtonPressed()
+
+        // private void Update()
         // {
-        //     // change game state to spawning unit...
+        //     // update spawn button state...
         //     
-        //     // with input, send player action spawn
-        //     
-        //     // if pressed again, cancel state
-        //
-        //     var clientGameState = gameStateQuery.GetSingleton<PlayerInputState>();
-        //
-        //     if (clientGameState.spawningUnit)
+        //     if (Input.GetMouseButtonUp(1))
         //     {
-        //         clientGameState.spawningUnit = false;
-        //         // revert visual stuff or update that in update
+        //         var mousePosition = Input.mousePosition;
+        //         var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        //
+        //         worldPosition.z = 0;
+        //
+        //         var actionInstance = Instantiate(actionPrefab, worldPosition, Quaternion.identity);
+        //         StartCoroutine(DestroyActionOnComplete(actionInstance));
         //     }
-        //     else
-        //     {
-        //         clientGameState.spawningUnit = true;
-        //         // set visual stuff??
-        //     }
-        //     
-        //     gameStateQuery.SetSingleton(clientGameState);
         // }
 
-        private void LateUpdate()
-        {
-            var clientGameState = gameStateQuery.GetSingleton<PlayerInputState>();
-            
-            
-        }
-
-        private void Update()
-        {
-            // update spawn button state...
-            
-            if (Input.GetMouseButtonUp(1))
-            {
-                var mousePosition = Input.mousePosition;
-                var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-                worldPosition.z = 0;
-
-                var actionInstance = Instantiate(actionPrefab, worldPosition, Quaternion.identity);
-                StartCoroutine(DestroyActionOnComplete(actionInstance));
-            }
-        }
-
-        private IEnumerator DestroyActionOnComplete(GameObject actionInstance)
-        {
-            var animator = actionInstance.GetComponent<Animator>();
-            var hiddenState = Animator.StringToHash("Hidden");
-            
-            animator.SetTrigger("Action");
-
-            yield return null;
-            
-            yield return new WaitUntil(delegate
-            {
-                var currentState = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
-                return currentState == hiddenState;
-            });
-            
-            Destroy(actionInstance);
-        }
+        // private IEnumerator DestroyActionOnComplete(GameObject actionInstance)
+        // {
+        //     var animator = actionInstance.GetComponent<Animator>();
+        //     var hiddenState = Animator.StringToHash("Hidden");
+        //     
+        //     animator.SetTrigger("Action");
+        //
+        //     yield return null;
+        //     
+        //     yield return new WaitUntil(delegate
+        //     {
+        //         var currentState = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+        //         return currentState == hiddenState;
+        //     });
+        //     
+        //     Destroy(actionInstance);
+        // }
 
         public void ToggleSpawning()
         {

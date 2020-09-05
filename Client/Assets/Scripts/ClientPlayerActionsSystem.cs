@@ -1,4 +1,6 @@
+using System.Collections;
 using Client;
+using Common;
 using Mockups;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
@@ -71,6 +73,12 @@ namespace Scenes
                     {
                         unit.isSelected = false;
                     });
+
+                    if (selectButtonPressed)
+                    {
+                        // send deplyo action...
+                        
+                    }
                 }
                 
                 if (selectButtonPressed && !spawnWaitingForPosition)
@@ -133,6 +141,7 @@ namespace Scenes
                     if (spawnWaitingForPosition)
                     {
                         spawnWaitingForPosition = false;
+                        // dont show feedback!!
                     }
                     else
                     {
@@ -149,7 +158,15 @@ namespace Scenes
                                     command = ClientPlayerAction.MoveUnitAction,
                                     target = new float2(worldPosition.x, worldPosition.y)
                                 });
+
+                                var feedback = PostUpdateCommands.CreateEntity();
+                                PostUpdateCommands.AddComponent(feedback, new ConfirmActionFeedback
+                                {
+                                    position = new float2(worldPosition.x, worldPosition.y)
+                                });
                             }
+                            
+                            // Create Confirm feedback here...
                         
                             // unit.isSelected = false;
                         });   
@@ -163,6 +180,54 @@ namespace Scenes
 
             playerInputState.spawnWaitingForPosition = spawnWaitingForPosition;
             playerInputStateQuery.SetSingleton(playerInputState);
+        }
+    }
+
+    public class ConfirmActionFeedbackSystem : ComponentSystem
+    {
+        private EntityQuery clientPrefabsQuery;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            clientPrefabsQuery = EntityManager.CreateEntityQuery(
+                ComponentType.ReadWrite<ClientPrefabsSharedComponent>());
+        }
+
+        protected override void OnUpdate()
+        {
+            var clientPrefabsEntity = clientPrefabsQuery.GetSingletonEntity();
+            var clientPrefabs = EntityManager.GetSharedComponentData<ClientPrefabsSharedComponent>(clientPrefabsEntity);
+            
+            Entities
+                .WithAll<ConfirmActionFeedback>()
+                .ForEach(delegate(Entity e, ref ConfirmActionFeedback feedback)
+                {
+                    PostUpdateCommands.DestroyEntity(e);
+
+                    var confirmActionFeedback = GameObject.Instantiate(clientPrefabs.confirmActionPrefab);
+                    confirmActionFeedback.transform.position = new Vector3(feedback.position.x, feedback.position.y, 0);
+                    confirmActionFeedback.AddComponent<TempMonobehaviourForCoroutines>()
+                        .StartCoroutine(DestroyActionOnComplete(confirmActionFeedback));
+
+                });
+        }
+        
+        private IEnumerator DestroyActionOnComplete(GameObject actionInstance)
+        {
+            var animator = actionInstance.GetComponent<Animator>();
+            var hiddenState = Animator.StringToHash("Hidden");
+            
+            animator.SetTrigger("Action");
+
+            yield return null;
+            
+            yield return new WaitUntil(delegate
+            {
+                var currentState = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+                return currentState == hiddenState;
+            });
+            
+            GameObject.Destroy(actionInstance);
         }
     }
 }
