@@ -7,6 +7,7 @@ namespace NaiveNetworkGame.Common
     public struct ClientPlayerAction : IComponentData
     {
         public static byte MoveUnitAction = 1;
+        public static byte CreateUnitAction = 2;
 
         public byte player;
         public uint unit;

@@ -60,6 +60,15 @@ namespace Server
     {
         protected override void OnUpdate()
         {
+            var playerControllerPrefabEntity = 
+                Entities.WithAll<PlayerControllerSharedComponent>().ToEntityQuery().GetSingletonEntity();
+
+            var playerControllerPrefab = 
+                EntityManager.GetSharedComponentData<PlayerControllerSharedComponent>(playerControllerPrefabEntity);
+            
+            var createdUnitsEntity = Entities.WithAll<CreatedUnits>().ToEntityQuery().GetSingletonEntity();
+            var createdUnits = EntityManager.GetComponentData<CreatedUnits>(createdUnitsEntity);
+            
             // process all player pending actions
             Entities
                 .WithNone<ClientOnly>()
@@ -71,25 +80,48 @@ namespace Server
                 var player = p.player;
                 var unitId = p.unit;
                 
-                var pendingAction = new PendingAction
+                if (p.command == ClientPlayerAction.MoveUnitAction)
                 {
-                    command = p.command,
-                    target = p.target
-                };
-                
-                Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unitEntity, ref Unit unit)
-                {
-                    if (unit.player != player) 
-                        return;
+                    var pendingAction = new PendingAction
+                    {
+                        command = p.command,
+                        target = p.target
+                    };
 
-                    if (unit.id != unitId)
-                        return;
+                    Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unitEntity, ref Unit unit)
+                    {
+                        if (unit.player != player)
+                            return;
+
+                        if (unit.id != unitId)
+                            return;
+
+                        PostUpdateCommands.RemoveComponent<PendingAction>(unitEntity);
+                        PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
+                        PostUpdateCommands.AddComponent(unitEntity, pendingAction);
+                    });
+                } else if (p.command == ClientPlayerAction.CreateUnitAction)
+                {
+                    // TODO: create but in spawning state...
                     
-                    PostUpdateCommands.RemoveComponent<PendingAction>(unitEntity);
-                    PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
-                    PostUpdateCommands.AddComponent(unitEntity, pendingAction);
-                });
+                    var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
+                    PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
+                    {
+                        id = (uint) createdUnits.lastCreatedUnitId++,
+                        player = p.player
+                    });
+                    PostUpdateCommands.SetComponent(playerControllerEntity, new Translation
+                    {
+                        Value = new float3(p.target.x, p.target.y, 0)
+                    });
+                    PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
+                    {
+                        // syncVersion = -1
+                    });
+                }
             });
+            
+            PostUpdateCommands.SetComponent(createdUnitsEntity, createdUnits);
         }
     }
     

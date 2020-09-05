@@ -62,7 +62,7 @@ namespace Server
     public struct PlayerConnectionId : IComponentData
     {
         public NetworkConnection connection;
-        public int player;
+        public byte player;
         public bool synchronized;
         public bool initialized;
         public bool destroyed;
@@ -70,7 +70,7 @@ namespace Server
 
     public class ServerNetworkSystem : ComponentSystem
     {
-        private int currentConnectionPlayer;
+        private byte currentConnectionPlayer;
 
         protected override void OnCreate()
         {
@@ -188,17 +188,6 @@ namespace Server
                                 if (packet == PacketType.ClientPlayerAction)
                                 {
                                     var pendingPlayerAction = new ClientPlayerAction().Read(ref stream);
-                                    
-                                    // var pendingPlayerAction = new ClientPlayerAction
-                                    // {
-                                    //     player = stream.ReadByte(),
-                                    //     unit = stream.ReadUInt(),
-                                    //     command = stream.ReadByte(),
-                                    //     target = {
-                                    //         x = stream.ReadFloat(), 
-                                    //         y = stream.ReadFloat()
-                                    //     }
-                                    // };
 
                                     var pendingActionEntity = PostUpdateCommands.CreateEntity();
                                     PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
@@ -279,7 +268,7 @@ namespace Server
                     PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
                     {
                         id = (uint) createdUnits.lastCreatedUnitId++,
-                        player = (uint) p.player
+                        player = p.player
                     });
                     var v = UnityEngine.Random.insideUnitCircle * 0.5f;
                     PostUpdateCommands.SetComponent(playerControllerEntity, new Translation

@@ -59,8 +59,14 @@ namespace Scenes
             
             Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId)
             {
+                var player = networkPlayerId.player;
+                
                 if (!networkPlayerId.connection.IsCreated)
                     return;
+                
+                var mousePosition = Input.mousePosition;
+                var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                worldPosition.z = 0;
                 
                 // if (!networkPlayerId.assigned)
                 //     return;
@@ -77,18 +83,25 @@ namespace Scenes
                     if (selectButtonPressed)
                     {
                         // send deplyo action...
-                        
+                        var e = PostUpdateCommands.CreateEntity();
+                        PostUpdateCommands.AddComponent(e, new ClientOnly());
+                        PostUpdateCommands.AddComponent(e, new ClientPlayerAction
+                        {
+                            player = (byte) player,
+                            unit = 0,
+                            command = ClientPlayerAction.CreateUnitAction,
+                            target = new float2(worldPosition.x, worldPosition.y)
+                        });
+
+                        spawnWaitingForPosition = false; 
+
+                        return;
                     }
                 }
                 
                 if (selectButtonPressed && !spawnWaitingForPosition)
                 {
                     // Select a unit...
-                    
-                    var mousePosition = Input.mousePosition;
-                    var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                    worldPosition.z = 0;
-                    
                     var bestSelectable = -1;
                     var bestDistance = 99999.0f;
                     
@@ -134,10 +147,6 @@ namespace Scenes
 
                 if (actionButtonPressed)
                 {
-                    var mousePosition = Input.mousePosition;
-                    var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                    var player = networkPlayerId.player;
-
                     if (spawnWaitingForPosition)
                     {
                         spawnWaitingForPosition = false;
@@ -166,8 +175,6 @@ namespace Scenes
                                 });
                             }
                             
-                            // Create Confirm feedback here...
-                        
                             // unit.isSelected = false;
                         });   
                     }

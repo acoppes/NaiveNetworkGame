@@ -12,7 +12,7 @@ namespace Server
     public struct Unit : IComponentData
     {
         public uint id;
-        public uint player;
+        public byte player;
         public byte type;
     }
 
