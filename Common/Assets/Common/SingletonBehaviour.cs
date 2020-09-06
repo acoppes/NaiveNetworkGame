@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scenes
+namespace NaiveNetworkGame.Common
 {
     public abstract class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {

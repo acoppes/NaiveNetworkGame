@@ -1,5 +1,5 @@
 using System;
-using Scenes;
+using NaiveNetworkGame.Common;
 using UnityEngine;
 
 namespace Mockups
