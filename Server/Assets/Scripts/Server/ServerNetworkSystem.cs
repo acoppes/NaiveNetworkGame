@@ -14,6 +14,7 @@ namespace Server
     {
         public static bool synchronizeStaticObjects;
         public static int startingUnitsPerPlayer = 2;
+        public static float sendGameStateFrequency = 0.1f;
     }
     
     public static class ServerNetworkStatistics
@@ -316,10 +317,14 @@ namespace Server
 
     public class ServerSendGameStateSystem : ComponentSystem
     {
+        private float sendGameStateTime;
+        
         protected override void OnUpdate()
         {
             ServerNetworkStatistics.outputBytesLastFrame = 0;
             ServerNetworkStatistics.currentConnections = 0;
+
+            sendGameStateTime += Time.DeltaTime;
             
             Entities
                 .WithAll<ServerRunningComponent, NetworkManagerSharedComponent>()
@@ -362,6 +367,11 @@ namespace Server
                         });
                     }
                 });
+
+            if (sendGameStateTime < ServerNetworkStaticData.sendGameStateFrequency)
+                return;
+
+            sendGameStateTime -= ServerNetworkStaticData.sendGameStateFrequency;
 
             Entities
                 .WithNone<ClientOnly>()

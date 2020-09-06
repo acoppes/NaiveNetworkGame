@@ -62,7 +62,7 @@ namespace Scenes
 
                         var currentTranslation = translations[i];
                         
-                        PostUpdateCommands.SetComponent(unitEntities[i], new UnitGameStateInterpolation
+                        PostUpdateCommands.SetComponent(unitEntities[i], new TranslationInterpolation
                         {
                             previousTranslation = currentTranslation.Value.xy,
                             currentTranslation = update.translation,
@@ -112,7 +112,7 @@ namespace Scenes
                     direction = update.lookingDirection
                 });
 
-                PostUpdateCommands.AddComponent(entity, new UnitGameStateInterpolation
+                PostUpdateCommands.AddComponent(entity, new TranslationInterpolation
                 {
                     previousTranslation = update.translation,
                     currentTranslation = update.translation,

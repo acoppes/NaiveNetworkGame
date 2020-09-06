@@ -1,4 +1,3 @@
-using System;
 using Mockups;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -6,7 +5,7 @@ using Unity.Transforms;
 
 namespace Scenes
 {
-    public struct UnitGameStateInterpolation : IComponentData
+    public struct TranslationInterpolation : IComponentData
     {
         // public int currentFrame;
         // public int nextFrame;
@@ -24,7 +23,7 @@ namespace Scenes
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateAfter(typeof(ClientViewSystem))]
     [UpdateBefore(typeof(VisualModelUpdatePositionSystem))]
-    public class UnitGameStateInterpolationSystem : ComponentSystem
+    public class TranslationInterpolationSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
@@ -33,8 +32,8 @@ namespace Scenes
             // TODO: interpolate between real values...
             
             Entities
-                .WithAll<Translation, UnitGameStateInterpolation>()
-                .ForEach(delegate(ref Translation t, ref UnitGameStateInterpolation interpolation)
+                .WithAll<Translation, TranslationInterpolation>()
+                .ForEach(delegate(ref Translation t, ref TranslationInterpolation interpolation)
                 {
                     interpolation.time += localDeltaTime;
                     interpolation.localDelta = localDeltaTime;

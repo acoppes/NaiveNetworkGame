@@ -43,6 +43,7 @@ namespace Server
     {
         public int targetFrameRate = 60;
         public int unitsPerPlayer = 2;
+        public float sendGameStateFrequency = 0.1f;
         
         public GameObject unitPrefab;
         public GameObject treePrefab;
@@ -65,6 +66,7 @@ namespace Server
         private void Start ()
         {
             ServerNetworkStaticData.startingUnitsPerPlayer = unitsPerPlayer;
+            ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
             
             // set default port
             ushort port = 9000;
@@ -128,6 +130,9 @@ namespace Server
 
         private void Update()
         {
+            ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
+            Application.targetFrameRate = targetFrameRate;
+            
             totalOutputInBytes = ServerNetworkStatistics.outputBytesTotal;
             lastFrameOutputInBytes = ServerNetworkStatistics.outputBytesLastFrame;
 

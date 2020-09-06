@@ -31,7 +31,7 @@ namespace Scenes
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<UnitGameStateInterpolation>()
+                .WithAll<TranslationInterpolation>()
                 .WithNone<DebugUnitGameStateInterpolationComponent>()
                 .ForEach(delegate(Entity e)
                 {
@@ -47,8 +47,8 @@ namespace Scenes
                 });
             
             Entities
-                .WithAll<UnitGameStateInterpolation, DebugUnitGameStateInterpolationComponent>()
-                .ForEach(delegate(Entity e,  DebugUnitGameStateInterpolationComponent debug, ref UnitGameStateInterpolation interpolation)
+                .WithAll<TranslationInterpolation, DebugUnitGameStateInterpolationComponent>()
+                .ForEach(delegate(Entity e,  DebugUnitGameStateInterpolationComponent debug, ref TranslationInterpolation interpolation)
                 {
                     debug.debugObject.p0 = new Vector3(interpolation.previousTranslation.x, 
                         interpolation.previousTranslation.y, 0);
@@ -57,7 +57,7 @@ namespace Scenes
                 });
 
             Entities
-                .WithNone<UnitGameStateInterpolation>()
+                .WithNone<TranslationInterpolation>()
                 .WithAll<DebugUnitGameStateInterpolationComponent>()
                 .ForEach(delegate(Entity e, DebugUnitGameStateInterpolationComponent debug)
                 {

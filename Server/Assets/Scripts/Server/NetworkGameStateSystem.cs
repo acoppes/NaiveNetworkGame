@@ -27,7 +27,8 @@ namespace Server
             Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
             {
                 n.frame = frame;
-                n.delta = delta;
+                // n.delta = delta;
+                n.delta = ServerNetworkStaticData.sendGameStateFrequency;
                 // n.syncVersion = n.version;
             });
             
