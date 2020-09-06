@@ -12,39 +12,36 @@ namespace Scenes
 {
     public class ClientInputSystem : ComponentSystem
     {
-        private EntityQuery playerInputStateQuery;
-        
         protected override void OnCreate()
         {
             base.OnCreate();
-            playerInputStateQuery = EntityManager.CreateEntityQuery(ComponentType.ReadWrite<PlayerInputState>());
+            RequireSingletonForUpdate<PlayerInputState>();
         }
 
         protected override void OnUpdate()
         {
-            var playerInputState = playerInputStateQuery.GetSingleton<PlayerInputState>();
+            var playerInputStateEntity = GetSingletonEntity<PlayerInputState>();
+            var playerInputState = EntityManager.GetComponentData<PlayerInputState>(playerInputStateEntity);
          
             playerInputState.selectUnitButtonPressed = Input.GetMouseButtonUp(0);
             playerInputState.actionButtonPressed = Input.GetMouseButtonUp(1);
 
-            playerInputStateQuery.SetSingleton(playerInputState);
+            SetSingleton(playerInputState);
         }
     }
     
     public class ClientPlayerActionsSystem : ComponentSystem
     {
-        private EntityQuery playerInputStateQuery;
-        
         protected override void OnCreate()
         {
             base.OnCreate();
-            playerInputStateQuery = 
-                EntityManager.CreateEntityQuery(ComponentType.ReadWrite<PlayerInputState>());
+            RequireSingletonForUpdate<PlayerInputState>();
         }
         
         protected override void OnUpdate()
         {
-            var playerInputState = playerInputStateQuery.GetSingleton<PlayerInputState>();
+            var playerInputStateEntity = GetSingletonEntity<PlayerInputState>();
+            var playerInputState = EntityManager.GetComponentData<PlayerInputState>(playerInputStateEntity);
             
             var query = Entities.WithAll<Selectable, UnitComponent>().ToEntityQuery();
 
@@ -186,24 +183,23 @@ namespace Scenes
             units.Dispose();
 
             playerInputState.spawnWaitingForPosition = spawnWaitingForPosition;
-            playerInputStateQuery.SetSingleton(playerInputState);
+            SetSingleton(playerInputState);
+            // playerInputStateQuery.SetSingleton(playerInputState);
         }
     }
 
     public class ConfirmActionFeedbackSystem : ComponentSystem
     {
-        private EntityQuery clientPrefabsQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
-            clientPrefabsQuery = EntityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<ClientPrefabsSharedComponent>());
+            RequireSingletonForUpdate<ClientPrefabsSharedComponent>();
         }
 
         protected override void OnUpdate()
         {
-            var clientPrefabsEntity = clientPrefabsQuery.GetSingletonEntity();
-            var clientPrefabs = EntityManager.GetSharedComponentData<ClientPrefabsSharedComponent>(clientPrefabsEntity);
+            var singletonEntity = GetSingletonEntity<ClientPrefabsSharedComponent>();
+            var clientPrefabs = EntityManager.GetSharedComponentData<ClientPrefabsSharedComponent>(singletonEntity);
             
             Entities
                 .WithAll<ConfirmActionFeedback>()
