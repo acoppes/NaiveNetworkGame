@@ -8,4 +8,10 @@ namespace Server
         public float2 target;
         public float2 direction;
     }
+
+    public struct SpawningAction : IComponentData
+    {
+        public float duration;
+        public float time;
+    }
 }

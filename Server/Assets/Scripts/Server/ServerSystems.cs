@@ -56,76 +56,6 @@ namespace Server
         }
     }
 
-    public class ServerPendingPlayerActionsSystem : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            var playerControllerPrefabEntity = 
-                Entities.WithAll<PlayerControllerSharedComponent>().ToEntityQuery().GetSingletonEntity();
-
-            var playerControllerPrefab = 
-                EntityManager.GetSharedComponentData<PlayerControllerSharedComponent>(playerControllerPrefabEntity);
-            
-            var createdUnitsEntity = Entities.WithAll<CreatedUnits>().ToEntityQuery().GetSingletonEntity();
-            var createdUnits = EntityManager.GetComponentData<CreatedUnits>(createdUnitsEntity);
-            
-            // process all player pending actions
-            Entities
-                .WithNone<ClientOnly>()
-                .WithAll<ServerOnly, ClientPlayerAction>()
-                .ForEach(delegate (Entity e, ref ClientPlayerAction p)
-            {
-                PostUpdateCommands.DestroyEntity(e);
-
-                var player = p.player;
-                var unitId = p.unit;
-                
-                if (p.command == ClientPlayerAction.MoveUnitAction)
-                {
-                    var pendingAction = new PendingAction
-                    {
-                        command = p.command,
-                        target = p.target
-                    };
-
-                    Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unitEntity, ref Unit unit)
-                    {
-                        if (unit.player != player)
-                            return;
-
-                        if (unit.id != unitId)
-                            return;
-
-                        PostUpdateCommands.RemoveComponent<PendingAction>(unitEntity);
-                        PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
-                        PostUpdateCommands.AddComponent(unitEntity, pendingAction);
-                    });
-                } else if (p.command == ClientPlayerAction.CreateUnitAction)
-                {
-                    // TODO: create but in spawning state...
-                    
-                    var playerControllerEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
-                    PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
-                    {
-                        id = (uint) createdUnits.lastCreatedUnitId++,
-                        player = p.player
-                    });
-                    PostUpdateCommands.SetComponent(playerControllerEntity, new Translation
-                    {
-                        Value = new float3(0, 0, 0)
-                        // Value = new float3(p.target.x, p.target.y, 0)
-                    });
-                    PostUpdateCommands.AddComponent(playerControllerEntity, new NetworkGameState
-                    {
-                        // syncVersion = -1
-                    });
-                }
-            });
-            
-            PostUpdateCommands.SetComponent(createdUnitsEntity, createdUnits);
-        }
-    }
-    
     public class ServerUnitPendingActionsSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -170,10 +100,10 @@ namespace Server
 
                     t.Value = new float3(newpos.x, newpos.y, t.Value.z);
                     
-                    PostUpdateCommands.SetComponent(e, new UnitState
-                    {
-                        state = 1
-                    });
+                    // PostUpdateCommands.SetComponent(e, new UnitState
+                    // {
+                    //     state = 1
+                    // });
                 });
 
             Entities.WithAll<LookingDirection, MovementAction>()
@@ -184,36 +114,59 @@ namespace Server
 
         }
     }
-    
-    // [UpdateBefore(typeof(ServerMovementSystem))]
-    public class ServerUnitStateComponent : ComponentSystem
+
+    [UpdateBefore(typeof(UnitStateSystem))]
+    public class ServerSpawningActionSystem : ComponentSystem
     {
-        // Recover unit idle state system...
-        
         protected override void OnUpdate()
         {
-            // var dt = Time.DeltaTime;
+            var dt = Time.DeltaTime;
+            
+            Entities.WithAll<SpawningAction>()
+                .ForEach(delegate(Entity e, ref SpawningAction s)
+                {
+                    s.time += dt;
+
+                    if (s.time >= s.duration)
+                    {
+                        PostUpdateCommands.RemoveComponent<SpawningAction>(e);
+                    }
+                });
+
+            Entities.WithAll<LookingDirection, MovementAction>()
+                .ForEach(delegate(Entity e, ref LookingDirection d, ref MovementAction m)
+                {
+                    d.direction = m.direction;
+                });
+        }
+    }
+    
+    // [UpdateBefore(typeof(ServerMovementSystem))]
+    public class UnitStateSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+                .WithAll<SpawningAction, UnitState>()
+                .ForEach(delegate(Entity e, ref UnitState u)
+                {
+                    u.state = UnitState.spawningState;
+                });
             
             Entities
                 .WithAll<MovementAction, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
-                    u.state = 1;
+                    u.state = UnitState.walkState;
                 });
             
             Entities
-                .WithNone<MovementAction>()
+                .WithNone<MovementAction, SpawningAction>()
                 .WithAll<UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
-                    u.state = 0;
+                    u.state = UnitState.idleState;
                 });
-            
-            // Entities
-            //     .ForEach(delegate(Entity e, ref UnitState unitState)
-            //     {
-            //         unitState.state = 0;
-            //     });
         }
     }
 }

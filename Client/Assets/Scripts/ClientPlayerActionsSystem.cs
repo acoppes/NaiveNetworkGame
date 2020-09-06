@@ -43,12 +43,13 @@ namespace Scenes
             var playerInputStateEntity = GetSingletonEntity<PlayerInputState>();
             var playerInputState = EntityManager.GetComponentData<PlayerInputState>(playerInputStateEntity);
             
-            var query = Entities.WithAll<Selectable, UnitComponent>().ToEntityQuery();
+            var query = Entities.WithAll<Selectable, UnitComponent, UnitState>().ToEntityQuery();
 
             var entities = query.ToEntityArray(Allocator.TempJob);
             var selectables = query.ToComponentDataArray<Selectable>(Allocator.TempJob);
             var units = query.ToComponentDataArray<UnitComponent>(Allocator.TempJob);
-
+            var states = query.ToComponentDataArray<UnitState>(Allocator.TempJob);
+            
             var selectButtonPressed = playerInputState.selectUnitButtonPressed;
             var actionButtonPressed = playerInputState.actionButtonPressed;
 
@@ -72,7 +73,9 @@ namespace Scenes
 
                 if (spawnWaitingForPosition)
                 {
-                    Entities.WithAll<UnitComponent, Selectable>().ForEach(delegate(ref UnitComponent unit)
+                    Entities
+                        .WithAllReadOnly<Selectable>()
+                        .WithAll<UnitComponent>().ForEach(delegate(ref UnitComponent unit)
                     {
                         unit.isSelected = false;
                     });
@@ -105,7 +108,7 @@ namespace Scenes
                     for (var i = 0; i < selectables.Length; i++)
                     {
                         var unit = units[i];
-                        if (!unit.isActivePlayer)
+                        if (!unit.isActivePlayer || states[i].state == UnitState.spawningState)
                             continue;
                         
                         var selectable = selectables[i];
@@ -181,7 +184,8 @@ namespace Scenes
             entities.Dispose();
             selectables.Dispose();
             units.Dispose();
-
+            states.Dispose();
+            
             playerInputState.spawnWaitingForPosition = spawnWaitingForPosition;
             SetSingleton(playerInputState);
             // playerInputStateQuery.SetSingleton(playerInputState);

@@ -13,7 +13,7 @@ namespace NaiveNetworkGame.Common
         public byte unitType;
         public float2 translation;
         public float2 lookingDirection;
-        public int state;
+        public byte state;
         
         public NetworkGameState Write(ref DataStreamWriter writer)
         {
@@ -27,7 +27,7 @@ namespace NaiveNetworkGame.Common
             writer.WriteFloat(translation.y);
             writer.WriteFloat(lookingDirection.x);
             writer.WriteFloat(lookingDirection.y);
-            writer.WriteByte((byte) state);
+            writer.WriteByte(state);
             return this;
         }
 

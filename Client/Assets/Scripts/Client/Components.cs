@@ -33,13 +33,7 @@ namespace Client
         public bool isActivePlayer;
         public bool isSelected;
     }
-    
-    public struct UnitState : IComponentData
-    {
-        public int state;
-        // public float time;
-    }
-    
+
     public struct NetworkPlayerId : IComponentData
     {
         public uint player;
