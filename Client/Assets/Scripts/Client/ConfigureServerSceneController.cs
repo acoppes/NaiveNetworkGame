@@ -128,8 +128,13 @@ namespace Client
 
             // launch...
 
-            ServerConnectionParameters.ip = selectedServer;
-            ServerConnectionParameters.port = 9000;
+            var parametersObject = ServerConnectionParametersObject.Instance;
+            parametersObject.parameters = new ServerConnectionParameters
+            {
+                ip = selectedServer,
+                port = 9000
+            };
+            DontDestroyOnLoad(parametersObject.gameObject);
 
             SceneManager.LoadScene("ClientScene");
         }

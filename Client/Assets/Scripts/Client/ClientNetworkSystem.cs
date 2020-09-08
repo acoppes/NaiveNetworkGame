@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Client
 {
-    public static class ServerConnectionParameters
+    public struct ServerConnectionParameters
     {
-        public static string ip;
-        public static ushort port;
+        public string ip;
+        public ushort port;
     }
 
     public struct ClientStartComponent : IComponentData
@@ -42,24 +42,33 @@ namespace Client
                     };
 
                     var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
+
+                    var parametersObject = ServerConnectionParametersObject.Instance;
+                    var parameters = new ServerConnectionParameters();
+                    
+                    if (parametersObject != null)
+                    {
+                        parameters = parametersObject.parameters;
+                        GameObject.Destroy(parametersObject.gameObject);
+                    }
                     
 #if UNITY_EDITOR
                     var editorUseRemoteServer =
                         UnityEditor.EditorPrefs.GetBool("Gemserk.NaiveNetworkGame.UseRemoteServerByDefault", false);
 
-                    if (string.IsNullOrEmpty(ServerConnectionParameters.ip) && editorUseRemoteServer)
+                    if (string.IsNullOrEmpty(parameters.ip) && editorUseRemoteServer)
                     {
                         if (editorUseRemoteServer)
                         {
-                            ServerConnectionParameters.ip = "209.151.153.172";
-                            ServerConnectionParameters.port = 9000;
+                            parameters.ip = "209.151.153.172";
+                            parameters.port = 9000;
                         }
                     }
 #endif
 
-                    if (!string.IsNullOrEmpty(ServerConnectionParameters.ip))
+                    if (!string.IsNullOrEmpty(parameters.ip))
                     {
-                        endpoint = NetworkEndPoint.Parse(ServerConnectionParameters.ip, ServerConnectionParameters.port);
+                        endpoint = NetworkEndPoint.Parse(parameters.ip, parameters.port);
                     }
 
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
