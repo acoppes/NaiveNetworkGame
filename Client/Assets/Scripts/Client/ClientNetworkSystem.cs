@@ -1,8 +1,6 @@
 using NaiveNetworkGame.Common;
-using Scenes;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -44,10 +42,24 @@ namespace Client
                     };
 
                     var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
+                    
+#if UNITY_EDITOR
+                    var editorUseRemoteServer =
+                        UnityEditor.EditorPrefs.GetBool("Gemserk.NaiveNetworkGame.UseRemoteServerByDefault", false);
+
+                    if (string.IsNullOrEmpty(ServerConnectionParameters.ip) && editorUseRemoteServer)
+                    {
+                        if (editorUseRemoteServer)
+                        {
+                            ServerConnectionParameters.ip = "209.151.153.172";
+                            ServerConnectionParameters.port = 9000;
+                        }
+                    }
+#endif
 
                     if (!string.IsNullOrEmpty(ServerConnectionParameters.ip))
                     {
-                        endpoint = NetworkEndPoint.Parse(ServerConnectionParameters.ip, ServerConnectionParameters.port, NetworkFamily.Ipv4);
+                        endpoint = NetworkEndPoint.Parse(ServerConnectionParameters.ip, ServerConnectionParameters.port);
                     }
 
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
