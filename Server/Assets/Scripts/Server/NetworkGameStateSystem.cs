@@ -73,6 +73,8 @@ namespace Server
                 ref NetworkGameState n)
             {
                 n.state = state.state;
+                n.statePercentage = state.percentage;
+                
                 // if (n.state != state.state)
                 // {
                 //     n.state = state.state;

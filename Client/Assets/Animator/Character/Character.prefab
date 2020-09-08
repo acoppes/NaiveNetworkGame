@@ -237,6 +237,7 @@ MonoBehaviour:
   playerIndicator: {fileID: 600208461775550357}
   selectorAnimator: {fileID: 4888957796133922084}
   actionDuration: {fileID: 6475625062837350770}
+  interpolationSpeed: 10
 --- !u!61 &7728074612990962427
 BoxCollider2D:
   m_ObjectHideFlags: 0

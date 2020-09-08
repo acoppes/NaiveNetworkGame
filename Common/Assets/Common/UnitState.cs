@@ -10,6 +10,6 @@ namespace NaiveNetworkGame.Common
         public static readonly byte spawningState = 2;
         
         public byte state;
-        // public float time;
+        public byte percentage;
     }
 }

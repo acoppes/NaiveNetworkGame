@@ -25,6 +25,8 @@ namespace Client
 
         public ActionDurationBehaviour actionDuration;
 
+        public float interpolationSpeed = 1.0f;
+
         private void Awake()
         {
             selectedKeyHash = Animator.StringToHash("selected");
@@ -43,7 +45,7 @@ namespace Client
             if (actionDuration != null)
             {
                 actionDuration.visible = isDurationVisible;
-                actionDuration.alpha = durationAlpha;
+                actionDuration.alpha = Mathf.Lerp(actionDuration.alpha, durationAlpha, Time.deltaTime * interpolationSpeed);
             }
         }
     }

@@ -2,6 +2,7 @@ using NaiveNetworkGame.Common;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Server
 {
@@ -148,9 +149,10 @@ namespace Server
         {
             Entities
                 .WithAll<SpawningAction, UnitState>()
-                .ForEach(delegate(Entity e, ref UnitState u)
+                .ForEach(delegate(Entity e, ref UnitState u, ref SpawningAction s)
                 {
                     u.state = UnitState.spawningState;
+                    u.percentage = (byte) Mathf.RoundToInt(100.0f * s.time / s.duration);
                 });
             
             Entities

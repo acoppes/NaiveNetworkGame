@@ -13,7 +13,9 @@ namespace NaiveNetworkGame.Common
         public byte unitType;
         public float2 translation;
         public float2 lookingDirection;
+        
         public byte state;
+        public byte statePercentage;
         
         public NetworkGameState Write(ref DataStreamWriter writer)
         {
@@ -28,6 +30,7 @@ namespace NaiveNetworkGame.Common
             writer.WriteFloat(lookingDirection.x);
             writer.WriteFloat(lookingDirection.y);
             writer.WriteByte(state);
+            writer.WriteByte(statePercentage);
             return this;
         }
 
@@ -43,6 +46,7 @@ namespace NaiveNetworkGame.Common
             lookingDirection.x = stream.ReadFloat();
             lookingDirection.y = stream.ReadFloat();
             state = stream.ReadByte();
+            statePercentage = stream.ReadByte();
             return this;
         }
     }

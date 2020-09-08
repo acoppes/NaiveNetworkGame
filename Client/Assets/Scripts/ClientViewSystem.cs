@@ -34,17 +34,17 @@ namespace Scenes
             {
                 PostUpdateCommands.DestroyEntity(updateEntities[j]);
                 
-                var update = updates[j];
+                var networkGameState = updates[j];
                 var updated = false;
 
-                if (createdUnitsInThisUpdate.Contains(update.unitId))
+                if (createdUnitsInThisUpdate.Contains(networkGameState.unitId))
                     continue;
 
                 for (var i = 0; i < units.Length; i++)
                 {
                     var unit = units[i];
                    
-                    if (unit.unitId == update.unitId)
+                    if (unit.unitId == networkGameState.unitId)
                     {
                         // PostUpdateCommands.SetComponent(unitEntities[i], new Translation
                         // {
@@ -53,11 +53,12 @@ namespace Scenes
                         
                         PostUpdateCommands.SetComponent(unitEntities[i], new UnitState
                         {
-                            state = update.state
+                            state = networkGameState.state, 
+                            percentage = networkGameState.statePercentage
                         });
                         PostUpdateCommands.SetComponent(unitEntities[i], new LookingDirection
                         {
-                            direction = update.lookingDirection
+                            direction = networkGameState.lookingDirection
                         });
 
                         var currentTranslation = translations[i];
@@ -65,8 +66,8 @@ namespace Scenes
                         PostUpdateCommands.SetComponent(unitEntities[i], new TranslationInterpolation
                         {
                             previousTranslation = currentTranslation.Value.xy,
-                            currentTranslation = update.translation,
-                            remoteDelta = update.delta,
+                            currentTranslation = networkGameState.translation,
+                            remoteDelta = networkGameState.delta,
                             time = 0
                         });
 
@@ -92,35 +93,35 @@ namespace Scenes
                 var entity = PostUpdateCommands.CreateEntity();
                 PostUpdateCommands.AddComponent(entity, new UnitComponent
                 {
-                    unitId = (uint) update.unitId,
-                    player = (uint) update.playerId
+                    unitId = (uint) networkGameState.unitId,
+                    player = (uint) networkGameState.playerId
                 });
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {
-                    prefab = modelProvider.prefabs[update.unitType]
+                    prefab = modelProvider.prefabs[networkGameState.unitType]
                 });
                 PostUpdateCommands.AddComponent(entity, new Translation
                 {
-                    Value = new float3(update.translation.x, update.translation.y, 0)
+                    Value = new float3(networkGameState.translation.x, networkGameState.translation.y, 0)
                 });
                 PostUpdateCommands.AddComponent(entity, new UnitState
                 {
-                    state = update.state
+                    state = networkGameState.state
                 });
                 PostUpdateCommands.AddComponent(entity, new LookingDirection
                 {
-                    direction = update.lookingDirection
+                    direction = networkGameState.lookingDirection
                 });
 
                 PostUpdateCommands.AddComponent(entity, new TranslationInterpolation
                 {
-                    previousTranslation = update.translation,
-                    currentTranslation = update.translation,
+                    previousTranslation = networkGameState.translation,
+                    currentTranslation = networkGameState.translation,
                     time = 0,
-                    remoteDelta = update.delta
+                    remoteDelta = networkGameState.delta
                 });
 
-                if (update.unitType == 0)
+                if (networkGameState.unitType == 0)
                 {
                     PostUpdateCommands.AddComponent(entity, new Selectable());
                 }
@@ -138,7 +139,7 @@ namespace Scenes
                 //     id = update.connectionId
                 // });
                 
-                createdUnitsInThisUpdate.Add(update.unitId);
+                createdUnitsInThisUpdate.Add(networkGameState.unitId);
             }
 
             translations.Dispose();
