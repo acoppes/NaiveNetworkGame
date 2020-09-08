@@ -72,6 +72,15 @@ namespace Mockups
                     var animator = m.instance.GetComponent<Animator>();
                     if (animator != null)
                         animator.SetInteger("state", state.state);
+
+                    var model = m.instance.GetComponent<UnitModelBehaviour>();
+                    if (model != null)
+                    {
+                        model.isDurationVisible = state.state == UnitState.spawningState;
+                        // TODO: update with duration alpha from server...
+                        // TODO: duration visible should also be defined in server depending the action if
+                        // it has duration.
+                    }
                 });
             
             Entities

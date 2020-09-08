@@ -15,7 +15,15 @@ namespace Client
         [NonSerialized]
         public bool isSelected;
 
+        [NonSerialized]
+        public bool isDurationVisible;
+
+        [NonSerialized]
+        public float durationAlpha;
+
         private int selectedKeyHash;
+
+        public ActionDurationBehaviour actionDuration;
 
         private void Awake()
         {
@@ -30,6 +38,12 @@ namespace Client
             if (selectorAnimator != null)
             {
                 selectorAnimator.SetBool(selectedKeyHash, isSelected);
+            }
+
+            if (actionDuration != null)
+            {
+                actionDuration.visible = isDurationVisible;
+                actionDuration.alpha = durationAlpha;
             }
         }
     }
