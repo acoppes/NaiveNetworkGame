@@ -21,7 +21,7 @@ namespace Client
 
     public struct PlayerInputState : IComponentData
     {
-        public bool spawnWaitingForPosition;
+        public bool spawnActionPressed;
         public bool selectUnitButtonPressed;
         public bool actionButtonPressed;
     }

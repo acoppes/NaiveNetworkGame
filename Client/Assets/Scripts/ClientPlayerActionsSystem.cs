@@ -10,26 +10,6 @@ using UnityEngine;
 
 namespace Scenes
 {
-    public class ClientInputSystem : ComponentSystem
-    {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            RequireSingletonForUpdate<PlayerInputState>();
-        }
-
-        protected override void OnUpdate()
-        {
-            var playerInputStateEntity = GetSingletonEntity<PlayerInputState>();
-            var playerInputState = EntityManager.GetComponentData<PlayerInputState>(playerInputStateEntity);
-         
-            playerInputState.selectUnitButtonPressed = Input.GetMouseButtonUp(0);
-            playerInputState.actionButtonPressed = Input.GetMouseButtonUp(1);
-
-            SetSingleton(playerInputState);
-        }
-    }
-    
     public class ClientPlayerActionsSystem : ComponentSystem
     {
         protected override void OnCreate()
@@ -53,7 +33,7 @@ namespace Scenes
             var selectButtonPressed = playerInputState.selectUnitButtonPressed;
             var actionButtonPressed = playerInputState.actionButtonPressed;
 
-            var spawnWaitingForPosition = playerInputState.spawnWaitingForPosition;
+            var spawnActionPressed = playerInputState.spawnActionPressed;
             
             Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId)
             {
@@ -71,7 +51,7 @@ namespace Scenes
                 
                 // TODO: better controls...
 
-                if (spawnWaitingForPosition)
+                if (spawnActionPressed)
                 {
                     Entities
                         .WithAllReadOnly<Selectable>()
@@ -79,27 +59,25 @@ namespace Scenes
                     {
                         unit.isSelected = false;
                     });
-
-                    if (selectButtonPressed)
+                    
+                    // send deplyo action...
+                    var e = PostUpdateCommands.CreateEntity();
+                    PostUpdateCommands.AddComponent(e, new ClientOnly());
+                    PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                     {
-                        // send deplyo action...
-                        var e = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(e, new ClientOnly());
-                        PostUpdateCommands.AddComponent(e, new ClientPlayerAction
-                        {
-                            player = player,
-                            unit = 0,
-                            command = ClientPlayerAction.CreateUnitAction,
-                            target = new float2(worldPosition.x, worldPosition.y)
-                        });
+                        player = player,
+                        unit = 0,
+                        command = ClientPlayerAction.CreateUnitAction,
+                        target = new float2(worldPosition.x, worldPosition.y)
+                    });
 
-                        spawnWaitingForPosition = false; 
+                    spawnActionPressed = false; 
 
-                        return;
-                    }
+                    return;
                 }
                 
-                if (selectButtonPressed && !spawnWaitingForPosition)
+                
+                /*if (selectButtonPressed && !spawnActionPressed)
                 {
                     // Select a unit...
                     var bestSelectable = -1;
@@ -147,9 +125,9 @@ namespace Scenes
 
                 if (actionButtonPressed)
                 {
-                    if (spawnWaitingForPosition)
+                    if (spawnActionPressed)
                     {
-                        spawnWaitingForPosition = false;
+                        spawnActionPressed = false;
                         // dont show feedback!!
                     }
                     else
@@ -178,7 +156,7 @@ namespace Scenes
                             // unit.isSelected = false;
                         });   
                     }
-                }
+                }*/
             });
             
             entities.Dispose();
@@ -186,7 +164,7 @@ namespace Scenes
             units.Dispose();
             states.Dispose();
             
-            playerInputState.spawnWaitingForPosition = spawnWaitingForPosition;
+            playerInputState.spawnActionPressed = spawnActionPressed;
             SetSingleton(playerInputState);
             // playerInputStateQuery.SetSingleton(playerInputState);
         }
