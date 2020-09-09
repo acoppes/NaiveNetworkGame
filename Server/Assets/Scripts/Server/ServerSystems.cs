@@ -6,57 +6,27 @@ using UnityEngine;
 
 namespace Server
 {
-    public class ServerIncomingCommandsFromNetworkSystem : ComponentSystem
+    public class UnitBehaviourSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
             Entities
-                .WithNone<ClientOnly>()
-                .WithAll<ServerOnly, NetworkManagerSharedComponent, ServerRunningComponent>()
-                .ForEach(delegate(Entity e, NetworkManagerSharedComponent s)
+                .WithAll<Unit, Movement>()
+                .WithNone<MovementAction, SpawningAction, IdleAction>()
+                .ForEach(delegate (Entity e)
             {
-                var manager = s.networkManager;
-
-                var connectionCount = manager.m_Connections.Length;
-                
-                // Debug.Log($"Connections: {connectionCount}");
-                
-                // manager.connections....
-
-                // create locally interesting commands for the game
+                PostUpdateCommands.AddComponent(e, new MovementAction
+                {
+                    target = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, 1.25f)
+                });
+                PostUpdateCommands.AddComponent(e, new IdleAction
+                {
+                    time = UnityEngine.Random.Range(1.0f, 3.0f)
+                });
             });
         }
     }
     
-    // public class ServerProcessIncomingCommandsSystem : ComponentSystem
-    // {
-    //     protected override void OnUpdate()
-    //     {
-    //         Entities.WithAll<ServerComponent>().ForEach(delegate(Entity e, ServerComponent s)
-    //         {
-    //             var manager = s.manager;
-    //             // manager.connections....
-    //             
-    //             // create pending player action commands...
-    //         });
-    //     }
-    // }
-    
-    public class ServerOutgoingGameStateSystem : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.WithAll<NetworkManagerSharedComponent>().ForEach(delegate(Entity e, NetworkManagerSharedComponent s)
-            {
-                var manager = s.networkManager;
-                // manager.connections....
-                
-                // given the game state (entities with some interesting commands to share)
-                // send packets to each client...
-            });
-        }
-    }
-
     public class ServerUnitPendingActionsSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -77,13 +47,16 @@ namespace Server
         }
     }
 
-    public class ServerMovementSystem : ComponentSystem
+    public class MovementActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
             var dt = Time.DeltaTime;
             
-            Entities.WithAll<Movement, Translation>().WithAllReadOnly<MovementAction>()
+            Entities
+                .WithNone<SpawningAction>()
+                .WithAll<Movement, Translation>()
+                .WithAllReadOnly<MovementAction>()
                 .ForEach(delegate(Entity e, ref Movement movement, ref Translation t, ref MovementAction m)
                 {
                     var p0 = t.Value.xy;
@@ -100,11 +73,6 @@ namespace Server
                     }
 
                     t.Value = new float3(newpos.x, newpos.y, t.Value.z);
-                    
-                    // PostUpdateCommands.SetComponent(e, new UnitState
-                    // {
-                    //     state = 1
-                    // });
                 });
 
             Entities.WithAll<LookingDirection, MovementAction>()
@@ -117,13 +85,14 @@ namespace Server
     }
 
     [UpdateBefore(typeof(UnitStateSystem))]
-    public class ServerSpawningActionSystem : ComponentSystem
+    public class SpawningActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
             var dt = Time.DeltaTime;
             
-            Entities.WithAll<SpawningAction>()
+            Entities
+                .WithAll<SpawningAction>()
                 .ForEach(delegate(Entity e, ref SpawningAction s)
                 {
                     s.time += dt;
@@ -138,6 +107,26 @@ namespace Server
                 .ForEach(delegate(Entity e, ref LookingDirection d, ref MovementAction m)
                 {
                     d.direction = m.direction;
+                });
+        }
+    }
+    
+    public class IdleActionSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            var dt = Time.DeltaTime;
+            
+            Entities
+                .WithNone<MovementAction, SpawningAction>()
+                .ForEach(delegate(Entity e, ref IdleAction idle)
+                {
+                    idle.time -= dt;
+
+                    if (idle.time < 0)
+                    {
+                        PostUpdateCommands.RemoveComponent<IdleAction>(e);
+                    }
                 });
         }
     }
