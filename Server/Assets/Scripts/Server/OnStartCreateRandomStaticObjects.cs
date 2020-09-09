@@ -11,6 +11,9 @@ namespace Server
         
         protected override void OnUpdate()
         {
+            if (!ServerNetworkStaticData.staticObjectsEnabled)
+                return;
+            
             if (staticObjectsCreated)
                 return;
             

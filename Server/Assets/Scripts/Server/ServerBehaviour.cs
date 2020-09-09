@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using System;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Server
@@ -62,7 +63,14 @@ namespace Server
         private float timeSincelastLog = 0;
 
         private bool logStatistics = false;
-        
+
+        public bool staticObjectsEnabled;
+
+        private void Awake()
+        {
+            ServerNetworkStaticData.staticObjectsEnabled = staticObjectsEnabled;
+        }
+
         private void Start ()
         {
             ServerNetworkStaticData.startingUnitsPerPlayer = unitsPerPlayer;

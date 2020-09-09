@@ -15,6 +15,8 @@ namespace Server
         public static bool synchronizeStaticObjects;
         public static int startingUnitsPerPlayer = 2;
         public static float sendGameStateFrequency = 0.1f;
+
+        public static bool staticObjectsEnabled;
     }
     
     public static class ServerNetworkStatistics
