@@ -20,10 +20,10 @@ namespace Server
             staticObjectsCreated = true;
             
             var playerControllerPrefabEntity = 
-                Entities.WithAll<PlayerControllerSharedComponent>().ToEntityQuery().GetSingletonEntity();
+                Entities.WithAll<PrefabsSharedComponent>().ToEntityQuery().GetSingletonEntity();
 
             var prefabsManager = 
-                EntityManager.GetSharedComponentData<PlayerControllerSharedComponent>(playerControllerPrefabEntity);
+                EntityManager.GetSharedComponentData<PrefabsSharedComponent>(playerControllerPrefabEntity);
 
             var createdUnitsEntity = Entities.WithAll<CreatedUnits>().ToEntityQuery().GetSingletonEntity();
             var createdUnits = EntityManager.GetComponentData<CreatedUnits>(createdUnitsEntity);

@@ -5,7 +5,7 @@ using Unity.Transforms;
 
 namespace Server
 {
-    public class NetworkGameStateSystem : ComponentSystem
+    public class UpdateNetworkGameStateSystem : ComponentSystem
     {
         private int frame;
         // private float time;
@@ -35,11 +35,8 @@ namespace Server
             Entities.WithAll<Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
                 ref NetworkGameState n)
             {
-                var newUnitId = (int) u.id;
-                var newPlayerId = (int) u.player;
-                
-                n.unitId = newUnitId;
-                n.playerId = newPlayerId;
+                n.unitId = (int) u.id;
+                n.playerId = u.player;
                 n.unitType = u.type;
             });
             

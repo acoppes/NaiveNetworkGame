@@ -36,7 +36,7 @@ namespace Client
 
     public struct NetworkPlayerId : IComponentData
     {
-        public uint player;
+        public byte player;
         public NetworkConnection connection;
     }
 

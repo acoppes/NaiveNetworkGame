@@ -10,11 +10,11 @@ namespace Server
     {
         protected override void OnUpdate()
         {
-            var playerControllerPrefabEntity = 
-                Entities.WithAll<PlayerControllerSharedComponent>().ToEntityQuery().GetSingletonEntity();
+            var prefabsEntity = 
+                Entities.WithAll<PrefabsSharedComponent>().ToEntityQuery().GetSingletonEntity();
 
-            var playerControllerPrefab = 
-                EntityManager.GetSharedComponentData<PlayerControllerSharedComponent>(playerControllerPrefabEntity);
+            var prefabsSharedComponent = 
+                EntityManager.GetSharedComponentData<PrefabsSharedComponent>(prefabsEntity);
             
             var createdUnitsEntity = Entities.WithAll<CreatedUnits>().ToEntityQuery().GetSingletonEntity();
             var createdUnits = EntityManager.GetComponentData<CreatedUnits>(createdUnitsEntity);
@@ -54,7 +54,7 @@ namespace Server
                     {
                         // TODO: create but in spawning state...
                     
-                        var unitEntity = PostUpdateCommands.Instantiate(playerControllerPrefab.unitPrefab);
+                        var unitEntity = PostUpdateCommands.Instantiate(prefabsSharedComponent.unitPrefab);
                         PostUpdateCommands.SetComponent(unitEntity, new Unit
                         {
                             id = (uint) createdUnits.lastCreatedUnitId++,

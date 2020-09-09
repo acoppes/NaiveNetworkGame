@@ -1,14 +1,9 @@
-﻿using System;
-using Unity.Entities;
+﻿using Unity.Entities;
 using UnityEngine;
 
 namespace Server
 {
-    public struct PlayerControllerSharedComponent : ISharedComponentData
-    {
-        public Entity unitPrefab;
-        public Entity treePrefab;
-    }
+
 
     public static class CommandLineArguments
     {
@@ -43,7 +38,6 @@ namespace Server
     public class ServerBehaviour : MonoBehaviour
     {
         public int targetFrameRate = 60;
-        public int unitsPerPlayer = 2;
         public float sendGameStateFrequency = 0.1f;
         
         public GameObject unitPrefab;
@@ -73,7 +67,6 @@ namespace Server
 
         private void Start ()
         {
-            ServerNetworkStaticData.startingUnitsPerPlayer = unitsPerPlayer;
             ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
             
             // set default port
@@ -117,8 +110,8 @@ namespace Server
 
             var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
             
-            var playerControllerPrefabEntity = entityManager.CreateEntity();
-            entityManager.AddSharedComponentData(playerControllerPrefabEntity, new PlayerControllerSharedComponent
+            var prefabsEntity = entityManager.CreateEntity();
+            entityManager.AddSharedComponentData(prefabsEntity, new PrefabsSharedComponent
             {
                 unitPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings),
                 treePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(treePrefab, settings)

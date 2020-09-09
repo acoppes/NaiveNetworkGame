@@ -87,7 +87,7 @@ namespace Scenes
                         PostUpdateCommands.AddComponent(e, new ClientOnly());
                         PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                         {
-                            player = (byte) player,
+                            player = player,
                             unit = 0,
                             command = ClientPlayerAction.CreateUnitAction,
                             target = new float2(worldPosition.x, worldPosition.y)
@@ -162,7 +162,7 @@ namespace Scenes
                                 PostUpdateCommands.AddComponent(e, new ClientOnly());
                                 PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                                 {
-                                    player = (byte) player,
+                                    player = player,
                                     unit = unit.unitId,
                                     command = ClientPlayerAction.MoveUnitAction,
                                     target = new float2(worldPosition.x, worldPosition.y)
