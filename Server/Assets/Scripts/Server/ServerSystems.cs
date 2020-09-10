@@ -137,6 +137,7 @@ namespace Server
         protected override void OnUpdate()
         {
             Entities
+                .WithNone<MovementAction>()
                 .WithAll<SpawningAction, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref SpawningAction s)
                 {
@@ -145,6 +146,7 @@ namespace Server
                 });
             
             Entities
+                .WithNone<SpawningAction>()
                 .WithAll<MovementAction, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
