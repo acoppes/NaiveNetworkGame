@@ -34,6 +34,11 @@ namespace Client
         public bool isSelected;
     }
 
+    public struct PlayerController : IComponentData
+    {
+        public ushort gold;
+    }
+
     public struct NetworkPlayerId : IComponentData
     {
         public byte player;

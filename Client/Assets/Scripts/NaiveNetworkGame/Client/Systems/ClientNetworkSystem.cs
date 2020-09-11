@@ -1,10 +1,11 @@
+using Client;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
 using UnityEngine;
 
-namespace Client
+namespace NaiveNetworkGame.Client.Systems
 {
     public struct ServerConnectionParameters
     {
@@ -134,13 +135,17 @@ namespace Client
                                     // this is my player id!!
                                     var networkPlayerId = stream.ReadByte();
                                     
+                                    // TODO: local player controller entity should already be created and
+                                    // here we just add the component to that entity...
+                                    
                                     // We are assuming this message is not going to be received again...
-                                    var networkPlayer = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent(networkPlayer, new NetworkPlayerId
+                                    var localPlayer = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent(localPlayer, new NetworkPlayerId
                                     {
                                         player = networkPlayerId,
                                         connection = m_Connection
                                     });
+                                    PostUpdateCommands.AddComponent(localPlayer, new PlayerController());
                                 }
                                 
                                 if (type == PacketType.ServerGameState)
@@ -150,6 +155,15 @@ namespace Client
                                     
                                     var e = PostUpdateCommands.CreateEntity();
                                     PostUpdateCommands.AddComponent(e, new NetworkGameState().Read(ref stream));
+                                }
+                                
+                                if (type == PacketType.ServerPlayerState)
+                                {
+                                    // network game state... 
+                                    // read unit info...
+                                    
+                                    var e = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent(e, new NetworkPlayerState().Read(ref stream));
                                 }
                             }
                             else if (cmd == NetworkEvent.Type.Disconnect)
