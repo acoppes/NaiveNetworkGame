@@ -18,11 +18,17 @@ namespace NaiveNetworkGame.Client.Systems
             
             Entities.ForEach(delegate(Entity e, ref NetworkPlayerState p)
             {
-                PostUpdateCommands.DestroyEntity(e);
-
                 // we normally don't get other players state...
-                var controller = GetSingleton<PlayerController>();
+                // var controller = GetSingleton<PlayerController>();
+                var controllerEntity = GetSingletonEntity<PlayerController>();
+
+                var controller = EntityManager.GetComponentData<PlayerController>(controllerEntity);
                 controller.gold = p.gold;
+                PostUpdateCommands.SetComponent(controllerEntity, controller);
+                
+                // SetSingleton(controller);
+                
+                PostUpdateCommands.DestroyEntity(e);
             });
         }
     }

@@ -205,9 +205,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numbers:
-  - {fileID: 6132628370611929832}
-  - {fileID: 6132628369657200567}
   - {fileID: 6132628371135346950}
+  - {fileID: 6132628369657200567}
+  - {fileID: 6132628370611929832}
   numberSprites:
   - {fileID: 21300030, guid: 5b82c1bb88187084a95c179aef99cc72, type: 3}
   - {fileID: 21300032, guid: 5b82c1bb88187084a95c179aef99cc72, type: 3}
@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 6132628370611929831}
   - component: {fileID: 6132628370611929832}
   m_Layer: 5
-  m_Name: Hundreds
+  m_Name: Ones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 6132628371135346949}
   - component: {fileID: 6132628371135346950}
   m_Layer: 5
-  m_Name: Ones
+  m_Name: Hundreds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

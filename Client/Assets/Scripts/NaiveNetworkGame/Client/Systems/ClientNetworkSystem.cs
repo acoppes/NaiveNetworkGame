@@ -139,13 +139,14 @@ namespace NaiveNetworkGame.Client.Systems
                                     // here we just add the component to that entity...
                                     
                                     // We are assuming this message is not going to be received again...
-                                    var localPlayer = PostUpdateCommands.CreateEntity();
+                                    // var localPlayer = PostUpdateCommands.CreateEntity();
+                                    var localPlayer = GetSingletonEntity<PlayerController>();
                                     PostUpdateCommands.AddComponent(localPlayer, new NetworkPlayerId
                                     {
                                         player = networkPlayerId,
                                         connection = m_Connection
                                     });
-                                    PostUpdateCommands.AddComponent(localPlayer, new PlayerController());
+                                    // PostUpdateCommands.AddComponent(localPlayer, new PlayerController());
                                 }
                                 
                                 if (type == PacketType.ServerGameState)

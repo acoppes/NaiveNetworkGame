@@ -1,4 +1,5 @@
 using Client;
+using Scenes;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
@@ -15,10 +16,14 @@ namespace NaiveNetworkGame.Client.Systems
         {
             // get ui from shared component, singleton or not...
 
-            var player = GetSingleton<PlayerController>();
+            var playerEntity = GetSingletonEntity<PlayerController>();
+            var player = EntityManager.GetComponentData<PlayerController>(playerEntity);
+            var ui = EntityManager.GetSharedComponentData<UserInterfaceComponent>(playerEntity);
             
+            ui.goldLabel.SetNumber(player.gold);
+
             // set the ui.gold from player gold...
-            
+
             // update the player input state given the ui state too?
         }
     }

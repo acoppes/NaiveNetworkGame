@@ -1,11 +1,32 @@
 using System;
 using Client;
 using Mockups;
+using NaiveNetworkGame.Common;
 using Unity.Entities;
 using UnityEngine;
 
 namespace Scenes
 {
+    public struct UserInterfaceComponent : ISharedComponentData, IEquatable<UserInterfaceComponent>
+    {
+        public FixedNumbersLabel goldLabel;
+
+        public bool Equals(UserInterfaceComponent other)
+        {
+            return Equals(goldLabel, other.goldLabel);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is UserInterfaceComponent other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (goldLabel != null ? goldLabel.GetHashCode() : 0);
+        }
+    }
+    
     public struct ClientPrefabsSharedComponent : ISharedComponentData, IEquatable<ClientPrefabsSharedComponent>
     {
         public GameObject confirmActionPrefab;
@@ -34,6 +55,8 @@ namespace Scenes
         public Transform parent;
         
         public GameObject actionPrefab;
+        
+        public FixedNumbersLabel goldLabel;
 
         // public PlayerButton playerButton;
 
@@ -44,12 +67,21 @@ namespace Scenes
         private void Start()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            
+            gameStateQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadWrite<PlayerInputState>());
+            
+            var playerEntity = entityManager.CreateEntity();
 
-            gameStateQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<PlayerInputState>());
-            var gameState = entityManager.CreateEntity(ComponentType.ReadWrite<PlayerInputState>());
-
-            var clientGameState = entityManager.GetComponentData<PlayerInputState>(gameState);
-            gameStateQuery.SetSingleton(clientGameState);
+            entityManager.AddComponentData(playerEntity, new PlayerInputState());
+            entityManager.AddComponentData(playerEntity, new PlayerController());
+            entityManager.AddSharedComponentData(playerEntity, new UserInterfaceComponent
+            {
+                goldLabel = goldLabel
+            });
+            
+            // var playerInputState = entityManager.GetComponentData<PlayerInputState>(gameState);
+            // gameStateQuery.SetSingleton(playerInputState);
             
             ModelProviderSingleton.Instance.SetRoot(parent);
 
@@ -60,19 +92,20 @@ namespace Scenes
             {
                 confirmActionPrefab = actionPrefab
             });
+            
         }
 
         public void ToggleSpawning()
         {
-            var clientGameState = gameStateQuery.GetSingleton<PlayerInputState>();
-            clientGameState.spawnActionPressed = !clientGameState.spawnActionPressed;
-            gameStateQuery.SetSingleton(clientGameState);
+            var playerInputState = gameStateQuery.GetSingleton<PlayerInputState>();
+            playerInputState.spawnActionPressed = !playerInputState.spawnActionPressed;
+            gameStateQuery.SetSingleton(playerInputState);
         }
 
         public bool IsWaitingForSpawing()
         {
-            var clientGameState = gameStateQuery.GetSingleton<PlayerInputState>();
-            return clientGameState.spawnActionPressed;
+            var playerInputState = gameStateQuery.GetSingleton<PlayerInputState>();
+            return playerInputState.spawnActionPressed;
         }
     }
 }

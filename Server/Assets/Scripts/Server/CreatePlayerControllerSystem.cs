@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using Unity.Entities;
 
 namespace Server
@@ -17,6 +18,7 @@ namespace Server
                 {
                     gold = 100
                 });
+                PostUpdateCommands.AddComponent(e, new NetworkPlayerState());
             });
             
             PostUpdateCommands.SetComponent(createdUnitsEntity, createdUnits);
