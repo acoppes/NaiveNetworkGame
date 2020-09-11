@@ -96,6 +96,22 @@ namespace Server
                                     ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                                 });
                         }
+                        
+                        Entities
+                            .WithAll<NetworkPlayerState>()
+                            .ForEach(delegate(ref NetworkPlayerState n, ref PlayerConnectionId p)
+                            {
+                                // only send player state to each player...
+                                if (p.connection == connection)
+                                {
+                                    var writer = m_Driver.BeginSend(connection);
+                                    n.Write(ref writer);
+                                    m_Driver.EndSend(writer);
+
+                                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                                }
+                            });
 
                         Entities
                             .WithNone<StaticObject>()

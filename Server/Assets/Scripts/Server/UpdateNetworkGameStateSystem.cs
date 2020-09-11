@@ -22,7 +22,8 @@ namespace Server
         protected override void OnUpdate()
         {
             frame++;
-            var delta = Time.DeltaTime;
+            
+            // var delta = Time.DeltaTime;
             
             Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
             {
@@ -45,25 +46,12 @@ namespace Server
             {
                 var newTranslation = new float2(t.Value.x, t.Value.y);
                 n.translation = newTranslation;
-                
-                // if (math.abs(n.translation.x - newTranslation.x) > 0.001f || 
-                //     math.abs(n.translation.y - newTranslation.y) > 0.001f)
-                // {
-                //     n.translation = newTranslation;
-                //     // n.version++;
-                // }
             });
             
             Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
                 ref NetworkGameState n)
             {
                 n.lookingDirection = l.direction;
-                
-                // if (math.distancesq(n.lookingDirection, l.direction) > 0.001f)
-                // {
-                //     n.lookingDirection = l.direction;
-                //     // n.version++;
-                // }
             });
             
             Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
@@ -71,12 +59,14 @@ namespace Server
             {
                 n.state = state.state;
                 n.statePercentage = state.percentage;
-                
-                // if (n.state != state.state)
-                // {
-                //     n.state = state.state;
-                //     // n.version++;
-                // }
+            });
+            
+            Entities
+                .WithAll<PlayerController, NetworkPlayerState, PlayerConnectionId>()
+                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p)
+                {
+                    n.player = p.player;
+                    n.gold = player.gold;
             });
         }
     }

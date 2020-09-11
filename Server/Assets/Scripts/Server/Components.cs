@@ -11,7 +11,7 @@ namespace Server
     
     public struct PlayerController : IComponentData
     {
-        public int gold;
+        public ushort gold;
     }
 
     public struct IdleAction : IComponentData
