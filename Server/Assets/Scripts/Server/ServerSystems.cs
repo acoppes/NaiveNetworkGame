@@ -102,12 +102,6 @@ namespace Server
                         PostUpdateCommands.RemoveComponent<SpawningAction>(e);
                     }
                 });
-
-            Entities.WithAll<LookingDirection, MovementAction>()
-                .ForEach(delegate(Entity e, ref LookingDirection d, ref MovementAction m)
-                {
-                    d.direction = m.direction;
-                });
         }
     }
     
@@ -119,6 +113,7 @@ namespace Server
             
             Entities
                 .WithNone<MovementAction, SpawningAction>()
+                .WithAll<IdleAction>()
                 .ForEach(delegate(Entity e, ref IdleAction idle)
                 {
                     idle.time -= dt;
