@@ -1,5 +1,6 @@
 using System;
 using NaiveNetworkGame.Common;
+using NaiveNetworkGame.Server.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
@@ -57,14 +58,6 @@ namespace Server
     public struct ServerRunningComponent : IComponentData
     {
         
-    }
-
-    public struct PlayerConnectionId : IComponentData
-    {
-        public NetworkConnection connection;
-        public byte player;
-        public bool synchronized;
-        public bool destroyed;
     }
 
     public class ServerNetworkSystem : ComponentSystem
@@ -157,6 +150,8 @@ namespace Server
                         networkManager.m_Connections.Add(c);
                         
                         // create a new player connected command internally
+                        
+                        // find created player controller and assign connection id?
 
                         var playerEntity = PostUpdateCommands.CreateEntity();
                         PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId

@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Common;
+using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -8,16 +9,21 @@ namespace Server
 {
     public class ProcessPendingPlayerActionsSystem : ComponentSystem
     {
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            RequireSingletonForUpdate<CreatedUnits>();
+            RequireSingletonForUpdate<PrefabsSharedComponent>();
+        }
+
         protected override void OnUpdate()
         {
-            var prefabsEntity = 
-                Entities.WithAll<PrefabsSharedComponent>().ToEntityQuery().GetSingletonEntity();
-
+            var prefabsEntity = GetSingletonEntity<PrefabsSharedComponent>();
             var prefabsSharedComponent = 
                 EntityManager.GetSharedComponentData<PrefabsSharedComponent>(prefabsEntity);
-            
-            var createdUnitsEntity = Entities.WithAll<CreatedUnits>().ToEntityQuery().GetSingletonEntity();
-            var createdUnits = EntityManager.GetComponentData<CreatedUnits>(createdUnitsEntity);
+
+            var createdUnitsEntity = GetSingletonEntity<CreatedUnits>();
+            var createdUnits = GetSingleton<CreatedUnits>();
             
             // process all player pending actions
             Entities
@@ -53,16 +59,24 @@ namespace Server
                     } else if (p.command == ClientPlayerAction.CreateUnitAction)
                     {
                         // TODO: create but in spawning state...
+
+                        var spawnPositionEntity = Entities
+                            .WithAll<PlayerSpawnPosition, Translation>()
+                            .ToEntityQuery()
+                            .TryGetFirstReadOnly<PlayerSpawnPosition>(
+                            spawnPosition => spawnPosition.player == player);
+
+                        var spawnPosition = EntityManager.GetComponentData<Translation>(spawnPositionEntity).Value;
                     
                         var unitEntity = PostUpdateCommands.Instantiate(prefabsSharedComponent.unitPrefab);
                         PostUpdateCommands.SetComponent(unitEntity, new Unit
                         {
                             id = (uint) createdUnits.lastCreatedUnitId++,
-                            player = p.player
+                            player = player
                         });
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
-                            Value = new float3(0, 0, 0)
+                            Value = spawnPosition
                             // Value = new float3(p.target.x, p.target.y, 0)
                         });
                         PostUpdateCommands.SetComponent(unitEntity, new UnitState

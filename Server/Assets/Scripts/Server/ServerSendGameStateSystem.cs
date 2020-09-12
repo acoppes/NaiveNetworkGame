@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Common;
+using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 
 namespace Server

@@ -6,7 +6,7 @@ namespace Server
     {
         public int lastCreatedUnitId;
     }
-    
+
     [GenerateAuthoringComponent]
     public struct Unit : IComponentData
     {
