@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ServerScene.unity
     guid: 54ce42aaeb833024595d736ca061ece9
+  - enabled: 1
+    path: Assets/Scenes/ReloadScene.unity
+    guid: 1423b2800e58c3a448f6faf3ecd2a3d1
   m_configObjects: {}

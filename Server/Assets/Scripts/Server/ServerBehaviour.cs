@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Server
 {
@@ -157,6 +158,10 @@ namespace Server
                 }
             }
 
+            if (Input.GetKeyUp(KeyCode.R))
+            {
+                SceneManager.LoadScene("ReloadScene");
+            }
         }
         
     }
