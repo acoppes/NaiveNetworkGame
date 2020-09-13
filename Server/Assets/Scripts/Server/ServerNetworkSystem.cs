@@ -33,6 +33,7 @@ namespace Server
     public struct NetworkManagerSharedComponent : ISharedComponentData, IEquatable<NetworkManagerSharedComponent>
     {
         public NetworkManager networkManager;
+        public bool running;
 
         public bool Equals(NetworkManagerSharedComponent other)
         {
@@ -50,14 +51,9 @@ namespace Server
         }
     }
 
-    public struct ServerStartComponent : IComponentData
+    public struct StartServerComponent : IComponentData
     {
         public ushort port;
-    }
-
-    public struct ServerRunningComponent : IComponentData
-    {
-        
     }
 
     public class ServerNetworkSystem : ComponentSystem
@@ -68,19 +64,21 @@ namespace Server
         {
             base.OnCreate();
             currentConnectionPlayer = 1;
+            RequireSingletonForUpdate<NetworkManagerSharedComponent>();
         }
 
         protected override void OnUpdate()
         {
+            var serverEntity = GetSingletonEntity<NetworkManagerSharedComponent>();
+            var server =
+                EntityManager.GetSharedComponentData<NetworkManagerSharedComponent>(serverEntity);
+            
             // create server
             Entities
-                .WithNone<ClientOnly>()
-                .WithAll<ServerStartComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(Entity e, NetworkManagerSharedComponent networkManager, ref ServerStartComponent s)
+                .WithAll<StartServerComponent>()
+                .ForEach(delegate(Entity e, ref StartServerComponent s)
                 {
-                    PostUpdateCommands.RemoveComponent<ServerStartComponent>(e);
-
-                    networkManager.networkManager = new NetworkManager
+                    server.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(),
                         // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
@@ -100,138 +98,121 @@ namespace Server
                     
                     Debug.Log($"Starting Server at port: {s.port}");
                     
-                    if (networkManager.networkManager.m_Driver.Bind(endpoint) != 0)
+                    if (server.networkManager.m_Driver.Bind(endpoint) != 0)
                         Debug.Log($"Failed to bind to port {s.port}");
                     else
-                        networkManager.networkManager.m_Driver.Listen();
+                        server.networkManager.m_Driver.Listen();
 
-                    PostUpdateCommands.SetSharedComponent(e, networkManager);
-                    PostUpdateCommands.AddComponent(e, new ServerRunningComponent());
+                    server.running = true;
+                    
+                    PostUpdateCommands.SetSharedComponent(serverEntity, server);
+                    
+                    PostUpdateCommands.DestroyEntity(e);
                 });
             
-            Entities
-                .WithNone<ClientOnly>()
-                .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(Entity e, NetworkManagerSharedComponent serverManagerComponent)
+            var networkManager = server.networkManager;
+
+            if (networkManager == null)
+                return;
+
+            var m_Driver = networkManager.m_Driver;
+            
+            m_Driver.ScheduleUpdate().Complete();
+            
+            Assert.IsTrue(m_Driver.IsCreated);
+            Assert.IsTrue(m_Driver.Listening);
+            
+            // CleanUpConnections
+            for (var i = 0; i < networkManager.m_Connections.Length; i++)
+            {
+                if (!networkManager.m_Connections[i].IsCreated)
                 {
-                    var networkManager = serverManagerComponent.networkManager;
+                    networkManager.m_Connections.RemoveAtSwapBack(i);
+                    --i;
+                }
+            }
+            
+            // process pending connections....
+            NetworkConnection c;
+            while ((c = m_Driver.Accept()) != default(NetworkConnection))
+            {
+                networkManager.m_Connections.Add(c);
+                
+                // create a new player connected command internally
+                
+                // find created player controller and assign connection id?
 
-                    var m_Driver = networkManager.m_Driver;
-                    
-                    m_Driver.ScheduleUpdate().Complete();
-                    
-                    Assert.IsTrue(m_Driver.IsCreated);
-                    Assert.IsTrue(m_Driver.Listening);
-                    
-                    // CleanUpConnections
-                    for (var i = 0; i < networkManager.m_Connections.Length; i++)
+                var playerEntity = PostUpdateCommands.CreateEntity();
+                PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId
+                {
+                    player = currentConnectionPlayer++,
+                    connection = c,
+                });
+                
+                Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                
+                ServerNetworkStaticData.synchronizeStaticObjects = true;
+            }
+            
+            for (var i = 0; i < networkManager.m_Connections.Length; i++)
+            {
+                Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
+
+                NetworkEvent.Type cmd;
+                while ((cmd = m_Driver
+                    .PopEventForConnection(networkManager.m_Connections[i], out var stream)) != NetworkEvent.Type.Empty)
+                {
+                    if (cmd == NetworkEvent.Type.Data)
                     {
-                        if (!networkManager.m_Connections[i].IsCreated)
+                        // process different data packets and create commands to be processed in server...      
+
+                        var packet = stream.ReadByte();
+
+                        if (packet == PacketType.ClientPlayerAction)
                         {
-                            // client disconnected
-                            // var connection = networkManager.m_Connections[i];
-                            // Entities.ForEach(delegate(ref PlayerConnectionId p)
-                            // {
-                            //     if (p.connection == connection)
-                            //     {
-                            //         p.destroyed = true;
-                            //     }
-                            // });
-                            
-                            networkManager.m_Connections.RemoveAtSwapBack(i);
-                            --i;
+                            var pendingPlayerAction = new ClientPlayerAction().Read(ref stream);
+
+                            var pendingActionEntity = PostUpdateCommands.CreateEntity();
+                            // PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
+                            PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
                         }
-                    }
-                    
-                    // process pending connections....
-                    NetworkConnection c;
-                    while ((c = m_Driver.Accept()) != default(NetworkConnection))
-                    {
-                        networkManager.m_Connections.Add(c);
-                        
-                        // create a new player connected command internally
-                        
-                        // find created player controller and assign connection id?
 
-                        var playerEntity = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId
+                    }
+                    else if (cmd == NetworkEvent.Type.Disconnect)
+                    {
+                        // do something to player stuff? 
+
+                        var connection = networkManager.m_Connections[i];
+                        Entities.ForEach(delegate(ref PlayerConnectionId p)
                         {
-                            player = currentConnectionPlayer++,
-                            connection = c,
+                            if (p.connection == connection)
+                            {
+                                p.destroyed = true;
+                            }
                         });
                         
-                        Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                        Debug.Log("Client disconnected from server");
+                        networkManager.m_Connections[i] = default(NetworkConnection);
                         
-                        ServerNetworkStaticData.synchronizeStaticObjects = true;
                     }
-                    
-                    for (var i = 0; i < networkManager.m_Connections.Length; i++)
-                    {
-                        Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
-
-                        NetworkEvent.Type cmd;
-                        while ((cmd = m_Driver
-                            .PopEventForConnection(networkManager.m_Connections[i], out var stream)) != NetworkEvent.Type.Empty)
-                        {
-                            if (cmd == NetworkEvent.Type.Data)
-                            {
-                                // process different data packets and create commands to be processed in server...      
-
-                                var packet = stream.ReadByte();
-
-                                if (packet == PacketType.ClientPlayerAction)
-                                {
-                                    var pendingPlayerAction = new ClientPlayerAction().Read(ref stream);
-
-                                    var pendingActionEntity = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
-                                    PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
-                                }
-
-                            }
-                            else if (cmd == NetworkEvent.Type.Disconnect)
-                            {
-                                // do something to player stuff? 
-
-                                var connection = networkManager.m_Connections[i];
-                                Entities.ForEach(delegate(ref PlayerConnectionId p)
-                                {
-                                    if (p.connection == connection)
-                                    {
-                                        p.destroyed = true;
-                                    }
-                                });
-                                
-                                Debug.Log("Client disconnected from server");
-                                networkManager.m_Connections[i] = default(NetworkConnection);
-                                
-                                // client disconnected
-                                
-                                
-                            }
-                        }
-                    }
-                    
-                });
+                }
+            }
         }
 
         protected override void OnDestroy()
         {
-            Entities
-                .WithNone<ClientOnly>()
-                .WithAll<NetworkManagerSharedComponent>()
-                .ForEach(delegate(NetworkManagerSharedComponent networkManager)
-                {
-                    var manager = networkManager.networkManager;
+            var serverEntity = GetSingletonEntity<NetworkManagerSharedComponent>();
+            var server =
+                EntityManager.GetSharedComponentData<NetworkManagerSharedComponent>(serverEntity);
+            
+            var networkManager = server.networkManager;
 
-                    if (manager == null) 
-                        return;
+            if (networkManager == null) 
+                return;
                     
-                    manager.m_Connections.Dispose();
-                    manager.m_Driver.Dispose();
-                });
-            
-            
+            networkManager.m_Connections.Dispose();
+            networkManager.m_Driver.Dispose();
+
             base.OnDestroy();
         }
     }

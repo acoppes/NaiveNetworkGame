@@ -1,10 +1,31 @@
-﻿using Unity.Entities;
+﻿using System;
+using Unity.Collections;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Server
 {
-
+    public struct RestartServerCommand : IComponentData
+    {
+        
+    }
+    
+    public class RestartServerSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+     
+            Entities
+            .WithAll<RestartServerCommand>()
+            .ForEach(delegate(Entity e)
+            {
+                PostUpdateCommands.DestroyEntity(e);
+                // PostUpdateCommands.DestroyEntity(EntityManager.UniversalQuery);
+                SceneManager.LoadScene("ReloadScene");
+            });
+        }
+    }
 
     public static class CommandLineArguments
     {
@@ -99,9 +120,12 @@ namespace Server
 
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            var serverEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ServerOnly>());
+            var serverEntity = entityManager.CreateEntity();
+            entityManager.SetName(serverEntity, "ServerSingleton");
             entityManager.AddSharedComponentData(serverEntity, new NetworkManagerSharedComponent());
-            entityManager.AddComponentData(serverEntity, new ServerStartComponent
+
+            var startServerCommand = entityManager.CreateEntity();
+            entityManager.AddComponentData(startServerCommand, new StartServerComponent
             {
                 port = port
             });
@@ -129,6 +153,19 @@ namespace Server
             Debug.Log("Starting server instance");
         }
 
+        // private void OnDestroy()
+        // {
+        //     // TODO: destroy all entities and singletons...
+        //     // var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        //     // entityManager.DestroyEntity(entityManager.UniversalQuery);
+        //     
+        //     // var entities = entityManager.GetAllEntities(Allocator.TempJob);
+        //     // for (var i = 0; i < entities.Length; i++)
+        //     // {
+        //     //     entityManager.DestroyEntity(entities[i]);
+        //     // }
+        //     // entities.Dispose();
+        // }
 
         private void Update()
         {
@@ -158,10 +195,13 @@ namespace Server
                 }
             }
 
-            if (Input.GetKeyUp(KeyCode.R))
-            {
-                SceneManager.LoadScene("ReloadScene");
-            }
+            // if (Input.GetKeyUp(KeyCode.R))
+            // {
+            //     var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            //     entityManager.CreateEntity(ComponentType.ReadOnly<RestartServerCommand>());
+            //     // RestartServerCommand
+            //     // SceneManager.LoadScene("ReloadScene");
+            // }
         }
         
     }

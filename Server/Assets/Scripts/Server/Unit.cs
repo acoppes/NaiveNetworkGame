@@ -14,15 +14,5 @@ namespace Server
         public byte player;
         public byte type;
     }
-
-    public struct ClientOnly : IComponentData
-    {
-        
-    }
-
-    public struct ServerOnly : IComponentData
-    {
-        
-    }
     
 }

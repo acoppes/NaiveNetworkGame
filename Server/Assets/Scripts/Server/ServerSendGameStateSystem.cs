@@ -15,8 +15,10 @@ namespace Server
 
             sendGameStateTime += Time.DeltaTime;
             
+            // TODO: use server singleton here...
+            
             Entities
-                .WithAll<ServerRunningComponent, NetworkManagerSharedComponent>()
+                .WithAll<NetworkManagerSharedComponent>()
                 .ForEach(delegate(NetworkManagerSharedComponent serverManagerComponent)
                 {
                     var networkManager = serverManagerComponent.networkManager;
@@ -62,9 +64,10 @@ namespace Server
 
             sendGameStateTime -= ServerNetworkStaticData.sendGameStateFrequency;
 
+            // TODO: use server singleton here...
+            
             Entities
-                .WithNone<ClientOnly>()
-                .WithAll<ServerOnly, ServerRunningComponent, NetworkManagerSharedComponent>()
+                .WithAll<NetworkManagerSharedComponent>()
                 .ForEach(delegate(Entity e, NetworkManagerSharedComponent serverManagerComponent)
                 {
                     var networkManager = serverManagerComponent.networkManager;
