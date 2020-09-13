@@ -1,9 +1,7 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine.Events;
 
 namespace Server
 {
@@ -60,10 +58,10 @@ namespace Server
                         // TODO: create but in spawning state...
 
                         var spawnPositionEntity = Entities
-                            .WithAll<PlayerSpawnPosition, Translation>()
+                            .WithAll<PlayerController, Translation>()
                             .ToEntityQuery()
-                            .TryGetFirstReadOnly<PlayerSpawnPosition>(
-                            spawnPosition => spawnPosition.player == player);
+                            .TryGetFirstReadOnly<PlayerController>(
+                            p => p.player == player);
 
                         var spawnPosition = EntityManager.GetComponentData<Translation>(spawnPositionEntity).Value;
                     

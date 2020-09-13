@@ -15,6 +15,8 @@ namespace Server
         public static float sendGameStateFrequency = 0.1f;
 
         public static bool staticObjectsEnabled;
+
+        public static readonly byte totalPlayers = 2;
     }
     
     public static class ServerNetworkStatistics
@@ -50,19 +52,17 @@ namespace Server
         }
     }
 
-    public struct StartServerComponent : IComponentData
+    public struct StartServerCommand : IComponentData
     {
         public ushort port;
     }
 
     public class ServerNetworkSystem : ComponentSystem
     {
-        private byte currentConnectionPlayer;
-
         protected override void OnCreate()
         {
             base.OnCreate();
-            currentConnectionPlayer = 1;
+
             RequireSingletonForUpdate<ServerSingleton>();
             
             // now server network system is in charge of creating server singleton...
@@ -79,8 +79,7 @@ namespace Server
             
             // create server
             Entities
-                .WithAll<StartServerComponent>()
-                .ForEach(delegate(Entity e, ref StartServerComponent s)
+                .ForEach(delegate(Entity e, ref StartServerCommand s)
                 {
                     server.networkManager = new NetworkManager
                     {
@@ -137,20 +136,53 @@ namespace Server
             NetworkConnection c;
             while ((c = m_Driver.Accept()) != default(NetworkConnection))
             {
-                networkManager.m_Connections.Add(c);
+                // if we are at maximum players
+                // send disconnected or something...
+
+                var connectionProcessed = false;
                 
+                Entities
+                        .WithNone<PlayerConnectionId>()
+                        .WithAll<PlayerController>()
+                        .ForEach(delegate(Entity e, ref PlayerController p)
+                        {
+                            if (connectionProcessed)
+                                return;
+                            
+                            PostUpdateCommands.AddComponent(e, new PlayerConnectionId
+                            {
+                                // player = p.player,
+                                connection = c,
+                            });
+                            PostUpdateCommands.AddComponent(e, new NetworkPlayerState());
+
+                            connectionProcessed = true;
+                        });
+
+                if (connectionProcessed)
+                {
+                    // otherwise, assign player and continue...
+                    networkManager.m_Connections.Add(c);
+                    Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                }
+                else
+                {
+                    // send disconnect... 
+                    
+                    Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                }
+                    
                 // create a new player connected command internally
                 
                 // find created player controller and assign connection id?
 
-                var playerEntity = PostUpdateCommands.CreateEntity();
-                PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId
-                {
-                    player = currentConnectionPlayer++,
-                    connection = c,
-                });
+                // var playerEntity = PostUpdateCommands.CreateEntity();
+                // PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId
+                // {
+                //     player = currentConnectionPlayer++,
+                //     connection = c,
+                // });
                 
-                Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
                 
                 ServerNetworkStaticData.synchronizeStaticObjects = true;
             }
@@ -184,11 +216,15 @@ namespace Server
                         // do something to player stuff? 
 
                         var connection = networkManager.m_Connections[i];
-                        Entities.ForEach(delegate(ref PlayerConnectionId p)
+                        Entities
+                            .WithAll<PlayerController, PlayerConnectionId, NetworkPlayerState>()
+                            .ForEach(delegate(Entity e, ref PlayerConnectionId p)
                         {
                             if (p.connection == connection)
                             {
-                                p.destroyed = true;
+                                // p.destroyed = true;
+                                PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
+                                PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
                             }
                         });
                         

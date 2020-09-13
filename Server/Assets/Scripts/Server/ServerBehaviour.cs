@@ -121,7 +121,7 @@ namespace Server
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             var startServerCommand = entityManager.CreateEntity();
-            entityManager.AddComponentData(startServerCommand, new StartServerComponent
+            entityManager.AddComponentData(startServerCommand, new StartServerCommand
             {
                 port = port
             });

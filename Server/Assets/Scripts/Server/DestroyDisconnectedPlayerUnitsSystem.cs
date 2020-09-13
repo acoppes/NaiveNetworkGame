@@ -3,20 +3,18 @@ using Unity.Entities;
 
 namespace Server
 {
-    public class DestroyPlayerControllerSystem : ComponentSystem
+    public class DestroyDisconnectedPlayerUnitsSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<PlayerController, PlayerConnectionId>()
-                .ForEach(delegate(Entity playerEntity, ref PlayerConnectionId p)
+                .WithNone<PlayerConnectionId>()
+                .WithAll<PlayerController>()
+                .ForEach(delegate(Entity playerEntity, ref PlayerController pc)
             {
-                if (!p.destroyed)
-                    return;
-
-                var player = p.player;
+                var player = pc.player;
                 
-                // destroy all player entities
+                // destroy all player units if no connection
                 Entities.ForEach(delegate(Entity unitEntity, ref Unit unit)
                 {
                     if (unit.player == player)
@@ -24,9 +22,6 @@ namespace Server
                         PostUpdateCommands.DestroyEntity(unitEntity);
                     }
                 });
-                
-                // destroy player controller
-                PostUpdateCommands.DestroyEntity(playerEntity);
             });
         }
     }

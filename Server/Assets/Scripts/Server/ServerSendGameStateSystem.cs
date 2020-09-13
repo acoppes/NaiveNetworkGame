@@ -43,23 +43,25 @@ namespace Server
 
                 ServerNetworkStatistics.currentConnections++;
                         
-                Entities.ForEach(delegate(ref PlayerConnectionId p)
+                Entities
+                    .WithAll<PlayerController, PlayerConnectionId>()
+                    .ForEach(delegate(ref PlayerConnectionId p, ref PlayerController playerController)
                 {
-                    if (p.synchronized)
-                        return;
-                            
+                    // if (p.synchronized)
+                    //     return;
+
                     // Send player id to player given a connection
                     if (p.connection == connection)
                     {
                         var writer = m_Driver.BeginSend(connection);
                         writer.WriteByte(PacketType.ServerSendPlayerId);
-                        writer.WriteByte(p.player);
+                        writer.WriteByte(playerController.player);
                         m_Driver.EndSend(writer);
 
                         ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
                         ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
 
-                        p.synchronized = true;
+                        // p.synchronized = true;
                     }
                 });
             }

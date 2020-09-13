@@ -66,7 +66,7 @@ namespace Server
                 .WithAll<PlayerController, NetworkPlayerState, PlayerConnectionId>()
                 .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p)
                 {
-                    n.player = p.player;
+                    n.player = player.player;
                     n.gold = player.gold;
             });
         }

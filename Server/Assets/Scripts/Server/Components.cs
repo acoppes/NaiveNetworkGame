@@ -9,11 +9,6 @@ namespace Server
         public Entity treePrefab;
     }
     
-    public struct PlayerController : IComponentData
-    {
-        public ushort gold;
-    }
-
     public struct IdleAction : IComponentData
     {
         public float time;

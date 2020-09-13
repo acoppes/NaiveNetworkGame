@@ -322,6 +322,14 @@ PrefabInstance:
       propertyPath: player
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: gold
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: player
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_Name
       value: P1
@@ -416,6 +424,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 542104055}
     m_Modifications:
     - target: {fileID: -7854975245377551966, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: player
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: gold
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: player
       value: 4
       objectReference: {fileID: 0}
@@ -753,6 +769,14 @@ PrefabInstance:
       propertyPath: player
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: gold
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: player
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_Name
       value: P3
@@ -883,6 +907,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 542104055}
     m_Modifications:
     - target: {fileID: -7854975245377551966, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: player
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: gold
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: player
       value: 2
       objectReference: {fileID: 0}
