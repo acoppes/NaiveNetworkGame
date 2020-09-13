@@ -120,10 +120,6 @@ namespace Server
 
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            var serverEntity = entityManager.CreateEntity();
-            entityManager.SetName(serverEntity, "ServerSingleton");
-            entityManager.AddSharedComponentData(serverEntity, new NetworkManagerSharedComponent());
-
             var startServerCommand = entityManager.CreateEntity();
             entityManager.AddComponentData(startServerCommand, new StartServerComponent
             {

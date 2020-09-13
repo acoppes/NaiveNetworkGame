@@ -30,19 +30,18 @@ namespace Server
         public NativeList<NetworkConnection> m_Connections;
     }
 
-    public struct NetworkManagerSharedComponent : ISharedComponentData, IEquatable<NetworkManagerSharedComponent>
+    public struct ServerSingleton : ISharedComponentData, IEquatable<ServerSingleton>
     {
         public NetworkManager networkManager;
-        public bool running;
 
-        public bool Equals(NetworkManagerSharedComponent other)
+        public bool Equals(ServerSingleton other)
         {
             return Equals(networkManager, other.networkManager);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is NetworkManagerSharedComponent other && Equals(other);
+            return obj is ServerSingleton other && Equals(other);
         }
         
         public override int GetHashCode()
@@ -64,14 +63,19 @@ namespace Server
         {
             base.OnCreate();
             currentConnectionPlayer = 1;
-            RequireSingletonForUpdate<NetworkManagerSharedComponent>();
+            RequireSingletonForUpdate<ServerSingleton>();
+            
+            // now server network system is in charge of creating server singleton...
+            var serverEntity = EntityManager.CreateEntity();
+            EntityManager.SetName(serverEntity, "ServerSingleton");
+            EntityManager.AddSharedComponentData(serverEntity, new ServerSingleton());
         }
 
         protected override void OnUpdate()
         {
-            var serverEntity = GetSingletonEntity<NetworkManagerSharedComponent>();
+            var serverEntity = GetSingletonEntity<ServerSingleton>();
             var server =
-                EntityManager.GetSharedComponentData<NetworkManagerSharedComponent>(serverEntity);
+                EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
             
             // create server
             Entities
@@ -103,10 +107,7 @@ namespace Server
                     else
                         server.networkManager.m_Driver.Listen();
 
-                    server.running = true;
-                    
                     PostUpdateCommands.SetSharedComponent(serverEntity, server);
-                    
                     PostUpdateCommands.DestroyEntity(e);
                 });
             
@@ -201,9 +202,9 @@ namespace Server
 
         protected override void OnDestroy()
         {
-            var serverEntity = GetSingletonEntity<NetworkManagerSharedComponent>();
+            var serverEntity = GetSingletonEntity<ServerSingleton>();
             var server =
-                EntityManager.GetSharedComponentData<NetworkManagerSharedComponent>(serverEntity);
+                EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
             
             var networkManager = server.networkManager;
 
