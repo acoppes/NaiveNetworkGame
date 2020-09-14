@@ -98,7 +98,7 @@ namespace NaiveNetworkGame.Client.Systems
             Entities
                 .WithNone<ServerOnly>()
                 .WithAll<ClientOnly, ClientRunningComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(NetworkManagerSharedComponent networkManager)
+                .ForEach(delegate(Entity clientEntity, NetworkManagerSharedComponent networkManager)
                 {
                     DataStreamReader stream;
                     NetworkEvent.Type cmd;
@@ -166,11 +166,19 @@ namespace NaiveNetworkGame.Client.Systems
                                     var e = PostUpdateCommands.CreateEntity();
                                     PostUpdateCommands.AddComponent(e, new NetworkPlayerState().Read(ref stream));
                                 }
+                                
+                                if (type == PacketType.ServerDeniedConnectionMaxPlayers)
+                                {
+                                    // TODO: show it in the UI
+                                    Debug.Log("Server reached max players");
+                                }
                             }
                             else if (cmd == NetworkEvent.Type.Disconnect)
                             {
                                 Debug.Log("Client got disconnected from server");
                                 networkManager.networkManager.m_Connections[i] = default;
+                                
+                                PostUpdateCommands.RemoveComponent<ClientRunningComponent>(clientEntity);
                             }
                         }
                         

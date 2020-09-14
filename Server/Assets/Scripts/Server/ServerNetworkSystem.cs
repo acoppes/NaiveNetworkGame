@@ -168,8 +168,13 @@ namespace Server
                 else
                 {
                     // send disconnect... 
+                    var writer = m_Driver.BeginSend(c);
+                    writer.WriteByte(PacketType.ServerDeniedConnectionMaxPlayers);
+                    m_Driver.EndSend(writer);
                     
                     Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                    
+                    m_Driver.Disconnect(c);
                 }
                     
                 // create a new player connected command internally
