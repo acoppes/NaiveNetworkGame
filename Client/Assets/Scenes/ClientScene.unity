@@ -3687,6 +3687,7 @@ MonoBehaviour:
   actionPrefab: {fileID: 7091667433302669984, guid: 54f99f49e0358fe499bb61458dedc2c8, type: 3}
   goldLabel: {fileID: 1712392759}
   uiGroup: {fileID: 252646860}
+  disconnectButton: {fileID: 324908927}
   connectionStateText: {fileID: 2037450794}
 --- !u!114 &1633604427
 MonoBehaviour:
