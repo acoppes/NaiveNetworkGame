@@ -8,17 +8,7 @@ namespace Client
     // {
     //     public uint id;
     // }
-
-    public struct ClientOnly : IComponentData
-    {
-        
-    }
-
-    public struct ServerOnly : IComponentData
-    {
-        
-    }
-
+    
     public struct PlayerInputState : IComponentData
     {
         public bool spawnActionPressed;

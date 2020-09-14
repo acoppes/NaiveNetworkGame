@@ -28,7 +28,6 @@ namespace NaiveNetworkGame.Client.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithNone<ServerOnly>()
                 .WithAll<ClientStartComponent, NetworkManagerSharedComponent>()
                 .ForEach(delegate(Entity e, NetworkManagerSharedComponent managerSharedComponent, ref ClientStartComponent s)
                 {
@@ -96,8 +95,7 @@ namespace NaiveNetworkGame.Client.Systems
                 });
             
             Entities
-                .WithNone<ServerOnly>()
-                .WithAll<ClientOnly, ClientRunningComponent, NetworkManagerSharedComponent>()
+                .WithAll<ClientRunningComponent, NetworkManagerSharedComponent>()
                 .ForEach(delegate(Entity clientEntity, NetworkManagerSharedComponent networkManager)
                 {
                     DataStreamReader stream;
@@ -202,8 +200,8 @@ namespace NaiveNetworkGame.Client.Systems
                 // TODO: check the connection wasn't destroyed...
                 var pendingActionSent = false;
 
-                Entities.WithNone<ServerOnly>()
-                    .WithAll<ClientOnly, ClientPlayerAction>()
+                Entities
+                    .WithAll<ClientPlayerAction>()
                     .ForEach(delegate(Entity e, ref ClientPlayerAction p)
                     {
                         PostUpdateCommands.DestroyEntity(e);
@@ -233,7 +231,6 @@ namespace NaiveNetworkGame.Client.Systems
         protected override void OnDestroy()
         {
             Entities
-                .WithNone<ServerOnly>()
                 .WithAll<NetworkManagerSharedComponent>()
                 .ForEach(delegate(NetworkManagerSharedComponent networkManager)
                 {

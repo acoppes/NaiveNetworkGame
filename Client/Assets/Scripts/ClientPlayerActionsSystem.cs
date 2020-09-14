@@ -62,7 +62,6 @@ namespace Scenes
                     
                     // send deplyo action...
                     var e = PostUpdateCommands.CreateEntity();
-                    PostUpdateCommands.AddComponent(e, new ClientOnly());
                     PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                     {
                         player = player,

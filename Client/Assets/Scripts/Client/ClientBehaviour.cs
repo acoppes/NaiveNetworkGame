@@ -17,7 +17,7 @@ namespace Client
             yield return new WaitForSeconds(1);
             
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            var clientEntity = entityManager.CreateEntity(ComponentType.ReadOnly<ClientOnly>());
+            var clientEntity = entityManager.CreateEntity();
             entityManager.AddSharedComponentData(clientEntity, new NetworkManagerSharedComponent());
             entityManager.AddComponentData(clientEntity, new ClientStartComponent());
         }
