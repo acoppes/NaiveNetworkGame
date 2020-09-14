@@ -26,12 +26,6 @@ namespace Server
         public static int currentConnections;
     }
     
-    public class NetworkManager
-    {
-        public NetworkDriver m_Driver;
-        public NativeList<NetworkConnection> m_Connections;
-    }
-
     public struct ServerSingleton : ISharedComponentData, IEquatable<ServerSingleton>
     {
         public NetworkManager networkManager;

@@ -1,7 +1,7 @@
 using Unity.Collections;
 using Unity.Networking.Transport;
 
-namespace Client
+namespace NaiveNetworkGame.Common
 {
     public class NetworkManager
     {

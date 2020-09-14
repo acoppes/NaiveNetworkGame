@@ -1,4 +1,5 @@
 using System;
+using NaiveNetworkGame.Common;
 using Unity.Entities;
 
 namespace Client
