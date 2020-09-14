@@ -256,8 +256,13 @@ namespace NaiveNetworkGame.Client.Systems
                         var connection = client.networkManager.m_Connections[i];
                         if (connection.IsCreated)
                         {
-                            client.networkManager.m_Driver.Disconnect(connection);
-                            client.networkManager.m_Connections[i] = default;
+                            // Send player manual disconnection
+                            var writer = client.networkManager.m_Driver.BeginSend(connection);
+                            writer.WriteByte(PacketType.ClientDisconnect);
+                            client.networkManager.m_Driver.EndSend(writer);    
+                            
+                            // client.networkManager.m_Driver.Disconnect(connection);
+                            // client.networkManager.m_Connections[i] = default;
                         }
                     }
 
@@ -267,9 +272,8 @@ namespace NaiveNetworkGame.Client.Systems
                     
                     PostUpdateCommands.SetSharedComponent(clientEntity, client);
                     
-                    DestroyManager(client.networkManager);
-                    
-                    PostUpdateCommands.DestroyEntity(clientEntity);
+                    // DestroyManager(client.networkManager);
+                    // PostUpdateCommands.DestroyEntity(clientEntity);
                 });
         }
 

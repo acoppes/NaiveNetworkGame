@@ -211,6 +211,25 @@ namespace Server
                             PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
                         }
 
+                        if (packet == PacketType.ClientDisconnect)
+                        {
+                            var connection = networkManager.m_Connections[i];
+                            Entities
+                                .WithAll<PlayerController, PlayerConnectionId, NetworkPlayerState>()
+                                .ForEach(delegate(Entity e, ref PlayerConnectionId p)
+                                {
+                                    if (p.connection == connection)
+                                    {
+                                        // p.destroyed = true;
+                                        PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
+                                        PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
+                                    }
+                                });
+                        
+                            Debug.Log("Client disconnected from server");
+                            // networkManager.m_Connections[i] = default;
+                        }
+
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
                     {
@@ -230,8 +249,7 @@ namespace Server
                         });
                         
                         Debug.Log("Client disconnected from server");
-                        networkManager.m_Connections[i] = default(NetworkConnection);
-                        
+                        networkManager.m_Connections[i] = default;
                     }
                 }
             }
