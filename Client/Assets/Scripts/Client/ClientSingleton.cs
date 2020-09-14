@@ -4,6 +4,18 @@ using Unity.Entities;
 
 namespace Client
 {
+    public class ConnectionState
+    {
+        public enum State
+        {
+            Connecting, 
+            Connected,
+            Disconnected
+        }
+
+        public static State currentState = State.Connecting;
+    }
+    
     public struct ClientSingleton : ISharedComponentData, IEquatable<ClientSingleton>
     {
         public NetworkManager networkManager;

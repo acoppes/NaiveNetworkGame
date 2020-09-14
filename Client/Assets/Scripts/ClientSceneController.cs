@@ -4,6 +4,7 @@ using Mockups;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Scenes
 {
@@ -64,6 +65,10 @@ namespace Scenes
 
         private EntityQuery gameStateQuery;
 
+        public CanvasGroup uiGroup;
+
+        public Text connectionStateText;
+
         private void Start()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -93,6 +98,37 @@ namespace Scenes
                 confirmActionPrefab = actionPrefab
             });
             
+        }
+
+        private ConnectionState.State previousState = ConnectionState.State.Disconnected;
+
+        private void LateUpdate()
+        {
+            uiGroup.interactable = ConnectionState.currentState == ConnectionState.State.Connected;
+            uiGroup.alpha = uiGroup.interactable ? 1.0f : 0.0f;
+            
+            if (connectionStateText != null)
+            {
+                if (previousState != ConnectionState.currentState)
+                {
+                    previousState = ConnectionState.currentState;
+
+                    switch (ConnectionState.currentState)
+                    {
+                        case ConnectionState.State.Connected:
+                            connectionStateText.text = "Connected";
+                            break;
+                        case ConnectionState.State.Connecting:
+                            connectionStateText.text = "Connecting to server...";
+                            break;
+                        case ConnectionState.State.Disconnected:
+                            connectionStateText.text = "Disconnected from server...";
+                            break;
+                    }
+                    
+                    
+                }
+            }
         }
 
         public void ToggleSpawning()

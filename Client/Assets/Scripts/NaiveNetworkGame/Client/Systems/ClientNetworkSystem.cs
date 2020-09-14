@@ -138,6 +138,8 @@ namespace NaiveNetworkGame.Client.Systems
                         writer.WriteByte(PacketType.ClientKeepAlive);
                         m_Driver.EndSend(writer);
 
+                        ConnectionState.currentState = ConnectionState.State.Connected;
+
                     }
                     else if (cmd == NetworkEvent.Type.Data)
                     {
@@ -195,6 +197,8 @@ namespace NaiveNetworkGame.Client.Systems
                         client.connectionInitialized = false;
                         
                         PostUpdateCommands.SetSharedComponent(clientEntity, client);
+
+                        ConnectionState.currentState = ConnectionState.State.Disconnected;
                     }
                 }
             }
