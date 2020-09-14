@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using Client;
 using Mockups;
+using NaiveNetworkGame.Client.Systems;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
 using UnityEngine;
@@ -67,6 +69,8 @@ namespace Scenes
 
         public CanvasGroup uiGroup;
 
+        public Button disconnectButton;
+
         public Text connectionStateText;
 
         private void Start()
@@ -98,6 +102,30 @@ namespace Scenes
                 confirmActionPrefab = actionPrefab
             });
             
+            disconnectButton.onClick.AddListener(OnDisconnectButtonPressed);
+            
+        }
+
+        private void OnDisconnectButtonPressed()
+        {
+            StartCoroutine(DisconnectAndCloseApplication());
+        }
+
+        private IEnumerator DisconnectAndCloseApplication()
+        {
+            disconnectButton.enabled = false;
+            
+            var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            var clientEntity = entityManager.CreateEntity();
+            entityManager.AddComponentData(clientEntity, new DisconnectClientCommand());
+
+            yield return new WaitForSeconds(1.0f);
+            
+            Application.Quit(0);
+            
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode();
+            #endif
         }
 
         private ConnectionState.State previousState = ConnectionState.State.Disconnected;

@@ -18,6 +18,11 @@ namespace NaiveNetworkGame.Client.Systems
         
     }
     
+    public struct DisconnectClientCommand : IComponentData
+    {
+        
+    }
+    
     public class ClientNetworkSystem : ComponentSystem
     {
         protected override void OnCreate()
@@ -112,7 +117,7 @@ namespace NaiveNetworkGame.Client.Systems
 
             if (client.networkManager == null || !client.connectionInitialized)
                 return;
-            
+
             DataStreamReader stream;
             NetworkEvent.Type cmd;
 
@@ -239,22 +244,50 @@ namespace NaiveNetworkGame.Client.Systems
                     }
                 }
             });
+            
+            Entities
+                .WithAll<DisconnectClientCommand>()
+                .ForEach(delegate(Entity e)
+                {
+                    PostUpdateCommands.DestroyEntity(e);
+                    
+                    for (var i = 0; i < client.networkManager.m_Connections.Length; i++)
+                    {
+                        var connection = client.networkManager.m_Connections[i];
+                        if (connection.IsCreated)
+                        {
+                            client.networkManager.m_Driver.Disconnect(connection);
+                            client.networkManager.m_Connections[i] = default;
+                        }
+                    }
+
+                    ConnectionState.currentState = ConnectionState.State.Disconnected;
+                    
+                    client.connectionInitialized = false;
+                    
+                    PostUpdateCommands.SetSharedComponent(clientEntity, client);
+                    
+                    DestroyManager(client.networkManager);
+                    
+                    PostUpdateCommands.DestroyEntity(clientEntity);
+                });
         }
 
-        protected override void OnDestroy()
+        private void DestroyManager(NetworkManager manager)
         {
-            var clientEntity = GetSingletonEntity<ClientSingleton>();
-            var client =
-                EntityManager.GetSharedComponentData<ClientSingleton>(clientEntity);
-
-            var manager = client.networkManager;
-
             if (manager == null) 
                 return;
                     
             manager.m_Connections.Dispose();
             manager.m_Driver.Dispose();
+        }
 
+        protected override void OnDestroy()
+        {
+            Entities.ForEach(delegate(ClientSingleton c)
+            {
+                DestroyManager(c.networkManager);
+            });
             base.OnDestroy();
         }
     }
