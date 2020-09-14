@@ -67,7 +67,9 @@ namespace Server
             
             // now server network system is in charge of creating server singleton...
             var serverEntity = EntityManager.CreateEntity();
+            #if UNITY_EDITOR
             EntityManager.SetName(serverEntity, "ServerSingleton");
+            #endif
             EntityManager.AddSharedComponentData(serverEntity, new ServerSingleton());
         }
 
