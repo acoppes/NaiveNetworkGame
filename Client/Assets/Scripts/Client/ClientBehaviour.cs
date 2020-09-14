@@ -18,8 +18,8 @@ namespace Client
             
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             var clientEntity = entityManager.CreateEntity();
-            entityManager.AddSharedComponentData(clientEntity, new NetworkManagerSharedComponent());
-            entityManager.AddComponentData(clientEntity, new ClientStartComponent());
+            // entityManager.AddSharedComponentData(clientEntity, new ClientSingleton());
+            entityManager.AddComponentData(clientEntity, new StartClientCommand());
         }
     }
 }

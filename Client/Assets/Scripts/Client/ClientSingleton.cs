@@ -3,18 +3,19 @@ using Unity.Entities;
 
 namespace Client
 {
-    public struct NetworkManagerSharedComponent : ISharedComponentData, IEquatable<NetworkManagerSharedComponent>
+    public struct ClientSingleton : ISharedComponentData, IEquatable<ClientSingleton>
     {
         public NetworkManager networkManager;
+        public bool connectionInitialized;
 
-        public bool Equals(NetworkManagerSharedComponent other)
+        public bool Equals(ClientSingleton other)
         {
             return Equals(networkManager, other.networkManager);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is NetworkManagerSharedComponent other && Equals(other);
+            return obj is ClientSingleton other && Equals(other);
         }
         
         public override int GetHashCode()

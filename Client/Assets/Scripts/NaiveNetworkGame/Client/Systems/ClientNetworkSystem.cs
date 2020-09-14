@@ -13,29 +13,44 @@ namespace NaiveNetworkGame.Client.Systems
         public ushort port;
     }
 
-    public struct ClientStartComponent : IComponentData
-    {
-        
-    }
-
-    public struct ClientRunningComponent : IComponentData
+    public struct StartClientCommand : IComponentData
     {
         
     }
     
     public class ClientNetworkSystem : ComponentSystem
     {
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+
+            RequireSingletonForUpdate<ClientSingleton>();
+            
+            // now server network system is in charge of creating server singleton...
+            var clientEntity = EntityManager.CreateEntity();
+#if UNITY_EDITOR
+            EntityManager.SetName(clientEntity, "ClientSingleton");
+#endif
+            EntityManager.AddSharedComponentData(clientEntity, new ClientSingleton());
+        }
+
         protected override void OnUpdate()
         {
+            var clientEntity = GetSingletonEntity<ClientSingleton>();
+            var client =
+                EntityManager.GetSharedComponentData<ClientSingleton>(clientEntity);
+            
             Entities
-                .WithAll<ClientStartComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(Entity e, NetworkManagerSharedComponent managerSharedComponent, ref ClientStartComponent s)
+                .WithAll<StartClientCommand>()
+                .ForEach(delegate(Entity e, ref StartClientCommand s)
                 {
                     Debug.Log("Starting Client");
-                    
-                    PostUpdateCommands.RemoveComponent<ClientStartComponent>(e);
 
-                    managerSharedComponent.networkManager = new NetworkManager
+                    PostUpdateCommands.DestroyEntity(e);
+                    
+                    // PostUpdateCommands.RemoveComponent<StartClientCommand>(e);
+
+                    client.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(),
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
@@ -78,7 +93,7 @@ namespace NaiveNetworkGame.Client.Systems
                     // endpoint.Address = "167.57.86.221";
                     // endpoint.Port = 9000;
 
-                    var networkManager = managerSharedComponent.networkManager;
+                    var networkManager = client.networkManager;
 
                    // networkManager.m_Driver.
                     
@@ -89,112 +104,106 @@ namespace NaiveNetworkGame.Client.Systems
                     
                     Debug.Log($"{networkManager.m_Driver.LocalEndPoint().Address}");
                     // Debug.Log($"{networkManager.m_Driver.RemoteEndPoint(connection).Address}:{networkManager.m_Driver.RemoteEndPoint(connection).Port}");
-                    
-                    PostUpdateCommands.SetSharedComponent(e, managerSharedComponent);
-                    PostUpdateCommands.AddComponent(e, new ClientRunningComponent());
-                });
-            
-            Entities
-                .WithAll<ClientRunningComponent, NetworkManagerSharedComponent>()
-                .ForEach(delegate(Entity clientEntity, NetworkManagerSharedComponent networkManager)
-                {
-                    DataStreamReader stream;
-                    NetworkEvent.Type cmd;
 
-                    for (var i = 0; i < networkManager.networkManager.m_Connections.Length; i++)
-                    {
-                        var m_Connection = networkManager.networkManager.m_Connections[i];
-                        var m_Driver = networkManager.networkManager.m_Driver;
-                        
-                        if (!m_Connection.IsCreated)
-                        {
-                            Debug.Log("Something went wrong during connect");
-                            return;
-                        }
-                        
-                        m_Driver.ScheduleUpdate().Complete();
-
-                        while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
-                        {
-                            if (cmd == NetworkEvent.Type.Connect)
-                            {
-                                Debug.Log("We are now connected to the server");
-                                var writer = m_Driver.BeginSend(m_Connection);
-                                writer.WriteByte(PacketType.ClientKeepAlive);
-                                m_Driver.EndSend(writer);
-
-                            }
-                            else if (cmd == NetworkEvent.Type.Data)
-                            {
-                                var type = stream.ReadByte();
-
-                                if (type == PacketType.ServerSendPlayerId)
-                                {
-                                    // this is my player id!!
-                                    var networkPlayerId = stream.ReadByte();
-                                    
-                                    // TODO: local player controller entity should already be created and
-                                    // here we just add the component to that entity...
-                                    
-                                    // We are assuming this message is not going to be received again...
-                                    // var localPlayer = PostUpdateCommands.CreateEntity();
-                                    var localPlayer = GetSingletonEntity<PlayerController>();
-                                    PostUpdateCommands.AddComponent(localPlayer, new NetworkPlayerId
-                                    {
-                                        player = networkPlayerId,
-                                        connection = m_Connection
-                                    });
-                                    // PostUpdateCommands.AddComponent(localPlayer, new PlayerController());
-                                }
-                                
-                                if (type == PacketType.ServerGameState)
-                                {
-                                    // network game state... 
-                                    // read unit info...
-                                    
-                                    var e = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent(e, new NetworkGameState().Read(ref stream));
-                                }
-                                
-                                if (type == PacketType.ServerPlayerState)
-                                {
-                                    // network game state... 
-                                    // read unit info...
-                                    
-                                    var e = PostUpdateCommands.CreateEntity();
-                                    PostUpdateCommands.AddComponent(e, new NetworkPlayerState().Read(ref stream));
-                                }
-                                
-                                if (type == PacketType.ServerDeniedConnectionMaxPlayers)
-                                {
-                                    // TODO: show it in the UI
-                                    Debug.Log("Server reached max players");
-                                }
-                            }
-                            else if (cmd == NetworkEvent.Type.Disconnect)
-                            {
-                                Debug.Log("Client got disconnected from server");
-                                networkManager.networkManager.m_Connections[i] = default;
-                                
-                                PostUpdateCommands.RemoveComponent<ClientRunningComponent>(clientEntity);
-                            }
-                        }
-                        
-                        
-                    }
+                    client.connectionInitialized = true;
+                    PostUpdateCommands.SetSharedComponent(clientEntity, client);
                 });
 
-            var query = Entities.WithAll<NetworkManagerSharedComponent>().ToEntityQuery();
-            if (query.CalculateEntityCount() == 0)
+
+            if (client.networkManager == null || !client.connectionInitialized)
                 return;
             
-            var networkManagerEntity = Entities.WithAll<NetworkManagerSharedComponent>().ToEntityQuery()
-                .GetSingletonEntity();
-            var networkManager = EntityManager.GetSharedComponentData<NetworkManagerSharedComponent>(networkManagerEntity);
-            
-            Entities.WithAll<NetworkPlayerId>().ForEach(delegate(ref NetworkPlayerId networkPlayer)
+            DataStreamReader stream;
+            NetworkEvent.Type cmd;
+
+            for (var i = 0; i < client.networkManager.m_Connections.Length; i++)
             {
-                var m_Driver = networkManager.networkManager.m_Driver;
+                var m_Connection = client.networkManager.m_Connections[i];
+                var m_Driver = client.networkManager.m_Driver;
+                
+                if (!m_Connection.IsCreated)
+                {
+                    Debug.Log("Something went wrong during connect");
+                    return;
+                }
+                
+                m_Driver.ScheduleUpdate().Complete();
+
+                while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
+                {
+                    if (cmd == NetworkEvent.Type.Connect)
+                    {
+                        Debug.Log("We are now connected to the server");
+                        var writer = m_Driver.BeginSend(m_Connection);
+                        writer.WriteByte(PacketType.ClientKeepAlive);
+                        m_Driver.EndSend(writer);
+
+                    }
+                    else if (cmd == NetworkEvent.Type.Data)
+                    {
+                        var type = stream.ReadByte();
+
+                        if (type == PacketType.ServerSendPlayerId)
+                        {
+                            // this is my player id!!
+                            var networkPlayerId = stream.ReadByte();
+                            
+                            // TODO: local player controller entity should already be created and
+                            // here we just add the component to that entity...
+                            
+                            // We are assuming this message is not going to be received again...
+                            // var localPlayer = PostUpdateCommands.CreateEntity();
+                            var localPlayer = GetSingletonEntity<PlayerController>();
+                            PostUpdateCommands.AddComponent(localPlayer, new NetworkPlayerId
+                            {
+                                player = networkPlayerId,
+                                connection = m_Connection
+                            });
+                            // PostUpdateCommands.AddComponent(localPlayer, new PlayerController());
+                        }
+                        
+                        if (type == PacketType.ServerGameState)
+                        {
+                            // network game state... 
+                            // read unit info...
+                            
+                            var e = PostUpdateCommands.CreateEntity();
+                            PostUpdateCommands.AddComponent(e, new NetworkGameState().Read(ref stream));
+                        }
+                        
+                        if (type == PacketType.ServerPlayerState)
+                        {
+                            // network game state... 
+                            // read unit info...
+                            
+                            var e = PostUpdateCommands.CreateEntity();
+                            PostUpdateCommands.AddComponent(e, new NetworkPlayerState().Read(ref stream));
+                        }
+                        
+                        if (type == PacketType.ServerDeniedConnectionMaxPlayers)
+                        {
+                            // TODO: show it in the UI
+                            Debug.Log("Server reached max players");
+                        }
+                    }
+                    else if (cmd == NetworkEvent.Type.Disconnect)
+                    {
+                        Debug.Log("Client got disconnected from server");
+                        client.networkManager.m_Connections[i] = default;
+                        
+                        // PostUpdateCommands.RemoveComponent<ClientRunningComponent>(clientEntity);
+                        client.connectionInitialized = false;
+                        
+                        PostUpdateCommands.SetSharedComponent(clientEntity, client);
+                    }
+                }
+            }
+            
+            Entities
+                .WithAll<NetworkPlayerId>()
+                .ForEach(delegate(ref NetworkPlayerId networkPlayer)
+            {
+                var m_Driver = client.networkManager.m_Driver;
                 var m_Connection = networkPlayer.connection;
                 
                 // TODO: check the connection wasn't destroyed...
@@ -230,20 +239,18 @@ namespace NaiveNetworkGame.Client.Systems
 
         protected override void OnDestroy()
         {
-            Entities
-                .WithAll<NetworkManagerSharedComponent>()
-                .ForEach(delegate(NetworkManagerSharedComponent networkManager)
-                {
-                    var manager = networkManager.networkManager;
+            var clientEntity = GetSingletonEntity<ClientSingleton>();
+            var client =
+                EntityManager.GetSharedComponentData<ClientSingleton>(clientEntity);
 
-                    if (manager == null) 
-                        return;
+            var manager = client.networkManager;
+
+            if (manager == null) 
+                return;
                     
-                    manager.m_Connections.Dispose();
-                    manager.m_Driver.Dispose();
-                });
-            
-            
+            manager.m_Connections.Dispose();
+            manager.m_Driver.Dispose();
+
             base.OnDestroy();
         }
     }
