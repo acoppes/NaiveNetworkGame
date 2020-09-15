@@ -30,14 +30,14 @@ namespace Server
             {
                 n.frame = frame;
                 // n.delta = delta;
-                n.delta = ServerNetworkStaticData.sendGameStateFrequency;
+                // n.delta = ServerNetworkStaticData.sendGameStateFrequency;
                 // n.syncVersion = n.version;
             });
             
             Entities.WithAll<Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
                 ref NetworkGameState n)
             {
-                n.unitId = (int) u.id;
+                n.unitId = u.id;
                 n.playerId = u.player;
                 n.unitType = u.type;
             });
@@ -45,17 +45,17 @@ namespace Server
             Entities
                 .WithAll<Unit, Translation, NetworkTranslationSync>()
                 .ForEach(delegate(ref Unit unit, ref Translation t, ref NetworkTranslationSync n)
-            {
-                var newTranslation = new float2(t.Value.x, t.Value.y);
-                n.translation = newTranslation;
-                n.delta = ServerNetworkStaticData.sendTranslationStateFrequency;
+                {
+                    n.unitId = unit.id;
+                    n.translation = t.Value.xy;
+                    n.delta = ServerNetworkStaticData.sendTranslationStateFrequency;
             });
             
-            // Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
-            //     ref NetworkGameState n)
-            // {
-            //     n.lookingDirection = l.direction;
-            // });
+            Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
+                ref NetworkGameState n)
+            {
+                n.lookingDirection = l.direction;
+            });
             
             Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
                 ref NetworkGameState n)

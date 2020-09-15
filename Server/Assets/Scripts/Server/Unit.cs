@@ -10,7 +10,7 @@ namespace Server
     [GenerateAuthoringComponent]
     public struct Unit : IComponentData
     {
-        public uint id;
+        public ushort id;
         public byte player;
         public byte type;
     }

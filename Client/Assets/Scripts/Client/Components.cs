@@ -18,8 +18,8 @@ namespace Client
     
     public struct Unit : IComponentData
     {
-        public uint unitId;
-        public uint player;
+        public ushort unitId;
+        public byte player;
         public bool isActivePlayer;
         public bool isSelected;
     }

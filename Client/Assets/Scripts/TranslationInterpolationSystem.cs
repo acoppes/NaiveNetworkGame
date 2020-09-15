@@ -1,3 +1,4 @@
+using Client;
 using Mockups;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -47,6 +48,15 @@ namespace Scenes
                     
                     t.Value = new float3(t_current.x, t_current.y, 0);
                 });
+            
+            // Entities
+            //     .WithAll<LookingDirection, TranslationInterpolation>()
+            //     .ForEach(delegate(ref LookingDirection l, ref TranslationInterpolation interpolation)
+            //     {
+            //         var distance = math.distancesq(interpolation.previousTranslation, interpolation.currentTranslation);
+            //         if (distance > 0.01f)
+            //             l.direction = interpolation.previousTranslation - interpolation.currentTranslation;
+            //     });
         }
     }
 }

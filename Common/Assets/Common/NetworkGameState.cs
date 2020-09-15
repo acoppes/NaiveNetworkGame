@@ -54,13 +54,13 @@ namespace NaiveNetworkGame.Common
     public struct NetworkGameState : IComponentData
     {
         public int frame;
-        public float delta;
-        public int unitId;
-        public int playerId;
+        
+        public ushort unitId;
+        public byte playerId;
         public byte unitType;
         
         // public float2 translation;
-        // public float2 lookingDirection;
+        public float2 lookingDirection;
         
         public byte state;
         public byte statePercentage;
@@ -69,14 +69,14 @@ namespace NaiveNetworkGame.Common
         {
             writer.WriteByte(PacketType.ServerGameState);
             writer.WriteInt(frame);
-            writer.WriteFloat(delta);
-            writer.WriteUInt((uint) unitId);
-            writer.WriteByte((byte) playerId);
+            // writer.WriteFloat(delta);
+            writer.WriteUShort(unitId);
+            writer.WriteByte(playerId);
             writer.WriteByte(unitType);
             // writer.WriteFloat(translation.x);
             // writer.WriteFloat(translation.y);
-            // writer.WriteFloat(lookingDirection.x);
-            // writer.WriteFloat(lookingDirection.y);
+            writer.WriteFloat(lookingDirection.x);
+            writer.WriteFloat(lookingDirection.y);
             writer.WriteByte(state);
             writer.WriteByte(statePercentage);
             return this;
@@ -85,14 +85,14 @@ namespace NaiveNetworkGame.Common
         public NetworkGameState Read(ref DataStreamReader stream)
         {
             frame = stream.ReadInt();
-            delta = stream.ReadFloat();
-            unitId = (int) stream.ReadUInt();
+            // delta = stream.ReadFloat();
+            unitId = stream.ReadUShort();
             playerId = stream.ReadByte();
             unitType = stream.ReadByte();
             // translation.x = stream.ReadFloat();
             // translation.y = stream.ReadFloat();
-            // lookingDirection.x = stream.ReadFloat();
-            // lookingDirection.y = stream.ReadFloat();
+            lookingDirection.x = stream.ReadFloat();
+            lookingDirection.y = stream.ReadFloat();
             state = stream.ReadByte();
             statePercentage = stream.ReadByte();
             return this;

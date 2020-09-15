@@ -45,7 +45,7 @@ namespace Server
                 });
                 PostUpdateCommands.SetComponent(playerControllerEntity, new Unit
                 {
-                    id = (uint) createdUnits.lastCreatedUnitId++,
+                    id = (ushort) createdUnits.lastCreatedUnitId++,
                     player = 0,
                     type = 1
                 });

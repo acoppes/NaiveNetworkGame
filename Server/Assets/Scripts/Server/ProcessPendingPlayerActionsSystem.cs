@@ -68,7 +68,7 @@ namespace Server
                         var unitEntity = PostUpdateCommands.Instantiate(prefabsSharedComponent.unitPrefab);
                         PostUpdateCommands.SetComponent(unitEntity, new Unit
                         {
-                            id = (uint) createdUnits.lastCreatedUnitId++,
+                            id = (ushort) createdUnits.lastCreatedUnitId++,
                             player = player
                         });
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
