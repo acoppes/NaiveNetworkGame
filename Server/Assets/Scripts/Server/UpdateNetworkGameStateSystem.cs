@@ -42,18 +42,20 @@ namespace Server
                 n.unitType = u.type;
             });
             
-            Entities.WithAll<Translation, NetworkGameState>().ForEach(delegate(ref Translation t, 
-                ref NetworkGameState n)
+            Entities
+                .WithAll<Unit, Translation, NetworkTranslationSync>()
+                .ForEach(delegate(ref Unit unit, ref Translation t, ref NetworkTranslationSync n)
             {
                 var newTranslation = new float2(t.Value.x, t.Value.y);
                 n.translation = newTranslation;
+                n.delta = ServerNetworkStaticData.sendTranslationStateFrequency;
             });
             
-            Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
-                ref NetworkGameState n)
-            {
-                n.lookingDirection = l.direction;
-            });
+            // Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
+            //     ref NetworkGameState n)
+            // {
+            //     n.lookingDirection = l.direction;
+            // });
             
             Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
                 ref NetworkGameState n)

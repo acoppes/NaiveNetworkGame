@@ -16,7 +16,7 @@ namespace Client
         public bool actionButtonPressed;
     }
     
-    public struct UnitComponent : IComponentData
+    public struct Unit : IComponentData
     {
         public uint unitId;
         public uint player;

@@ -7,6 +7,7 @@ namespace Server
     public class ServerSendGameStateSystem : ComponentSystem
     {
         private float sendGameStateTime;
+        private float sendTranslationStateTime;
 
         protected override void OnCreate()
         {
@@ -24,6 +25,7 @@ namespace Server
             ServerNetworkStatistics.currentConnections = 0;
 
             sendGameStateTime += Time.DeltaTime;
+            sendTranslationStateTime += Time.DeltaTime;
             
             // First, for each connection, send player id
             
@@ -66,10 +68,20 @@ namespace Server
                 });
             }
 
-            if (sendGameStateTime < ServerNetworkStaticData.sendGameStateFrequency)
-                return;
+            var sendTranslation = false;
+            var sendOtherState = false;
 
-            sendGameStateTime -= ServerNetworkStaticData.sendGameStateFrequency;
+            if (sendTranslationStateTime > ServerNetworkStaticData.sendTranslationStateFrequency)
+            {
+                sendTranslationStateTime -= ServerNetworkStaticData.sendTranslationStateFrequency;
+                sendTranslation = true;
+            }
+
+            if (sendGameStateTime > ServerNetworkStaticData.sendGameStateFrequency)
+            {
+                sendGameStateTime -= ServerNetworkStaticData.sendGameStateFrequency;
+                sendOtherState = true;
+            }
             
             for (var i = 0; i < networkManager.m_Connections.Length; i++)
             {
@@ -96,13 +108,49 @@ namespace Server
                             ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                         });
                 }
-                
-                Entities
-                    .WithAll<NetworkPlayerState>()
-                    .ForEach(delegate(ref NetworkPlayerState n, ref PlayerConnectionId p)
-                    {
-                        // only send player state to each player...
-                        if (p.connection == connection)
+
+                if (sendOtherState)
+                {
+                    Entities
+                        .WithAll<NetworkPlayerState>()
+                        .ForEach(delegate(ref NetworkPlayerState n, ref PlayerConnectionId p)
+                        {
+                            // only send player state to each player...
+                            if (p.connection == connection)
+                            {
+                                var writer = m_Driver.BeginSend(connection);
+                                n.Write(ref writer);
+                                m_Driver.EndSend(writer);
+
+                                ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                                ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                            }
+                        });
+
+                    Entities
+                        .WithNone<StaticObject>()
+                        .WithAll<NetworkGameState>()
+                        .ForEach(delegate(ref NetworkGameState n)
+                        {
+                            // if (n.version == n.syncVersion)
+                            //     return;
+
+                            var writer = m_Driver.BeginSend(connection);
+                            n.Write(ref writer);
+                            m_Driver.EndSend(writer);
+
+                            ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                            ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+
+                            // n.syncVersion = n.version;
+                        });
+                }
+
+                if (sendTranslation)
+                {
+                    Entities
+                        .WithAll<NetworkTranslationSync>()
+                        .ForEach(delegate(ref NetworkTranslationSync n)
                         {
                             var writer = m_Driver.BeginSend(connection);
                             n.Write(ref writer);
@@ -110,26 +158,8 @@ namespace Server
 
                             ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
                             ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-                        }
-                    });
-
-                Entities
-                    .WithNone<StaticObject>()
-                    .WithAll<NetworkGameState>()
-                    .ForEach(delegate(ref NetworkGameState n)
-                    {
-                        // if (n.version == n.syncVersion)
-                        //     return;
-
-                        var writer = m_Driver.BeginSend(connection);
-                        n.Write(ref writer);
-                        m_Driver.EndSend(writer);
-                    
-                        ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                        ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-
-                        // n.syncVersion = n.version;
-                    });
+                        });
+                }
             }
             
             ServerNetworkStaticData.synchronizeStaticObjects = false;

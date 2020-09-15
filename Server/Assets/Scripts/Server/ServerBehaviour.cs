@@ -60,6 +60,8 @@ namespace Server
     public class ServerBehaviour : MonoBehaviour
     {
         public int targetFrameRate = 60;
+
+        public float sendTranslationStateFrequency = 0.1f;
         public float sendGameStateFrequency = 0.1f;
         
         public GameObject unitPrefab;
@@ -90,6 +92,7 @@ namespace Server
         private void Start ()
         {
             ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
+            ServerNetworkStaticData.sendTranslationStateFrequency = sendTranslationStateFrequency;
             
             // set default port
             ushort port = 9000;

@@ -85,8 +85,8 @@ namespace Mockups
                 });
             
             Entities
-                .WithAll<ModelPrefabComponent, ModelInstanceComponent, UnitComponent>()
-                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref UnitComponent unit)
+                .WithAll<ModelPrefabComponent, ModelInstanceComponent, Unit>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Unit unit)
                 {
                     var model = m.instance.GetComponent<UnitModelBehaviour>();
                     if (model == null)

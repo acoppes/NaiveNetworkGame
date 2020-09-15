@@ -23,11 +23,11 @@ namespace Scenes
             var playerInputStateEntity = GetSingletonEntity<PlayerInputState>();
             var playerInputState = EntityManager.GetComponentData<PlayerInputState>(playerInputStateEntity);
             
-            var query = Entities.WithAll<Selectable, UnitComponent, UnitState>().ToEntityQuery();
+            var query = Entities.WithAll<Selectable, Unit, UnitState>().ToEntityQuery();
 
             var entities = query.ToEntityArray(Allocator.TempJob);
             var selectables = query.ToComponentDataArray<Selectable>(Allocator.TempJob);
-            var units = query.ToComponentDataArray<UnitComponent>(Allocator.TempJob);
+            var units = query.ToComponentDataArray<Unit>(Allocator.TempJob);
             var states = query.ToComponentDataArray<UnitState>(Allocator.TempJob);
             
             var selectButtonPressed = playerInputState.selectUnitButtonPressed;
@@ -55,7 +55,7 @@ namespace Scenes
                 {
                     Entities
                         .WithAllReadOnly<Selectable>()
-                        .WithAll<UnitComponent>().ForEach(delegate(ref UnitComponent unit)
+                        .WithAll<Unit>().ForEach(delegate(ref Unit unit)
                     {
                         unit.isSelected = false;
                     });

@@ -84,10 +84,8 @@ namespace Server
                         {
                             duration = 1.0f
                         });
-                        PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState
-                        {
-                            // syncVersion = -1
-                        });
+                        PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
+                        PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());
                     }
                 });
             

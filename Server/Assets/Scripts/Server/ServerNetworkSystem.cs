@@ -12,6 +12,8 @@ namespace Server
     public static class ServerNetworkStaticData
     {
         public static bool synchronizeStaticObjects;
+
+        public static float sendTranslationStateFrequency = 0.1f;
         public static float sendGameStateFrequency = 0.1f;
 
         public static bool staticObjectsEnabled;

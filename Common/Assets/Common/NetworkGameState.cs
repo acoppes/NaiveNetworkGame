@@ -25,6 +25,32 @@ namespace NaiveNetworkGame.Common
         }
     }
     
+    public struct NetworkTranslationSync : IComponentData
+    {
+        public ushort unitId;
+        public float delta;
+        public float2 translation;
+
+        public NetworkTranslationSync Write(ref DataStreamWriter writer)
+        {
+            writer.WriteByte(PacketType.ServerTranslationSync);
+            writer.WriteUShort(unitId);
+            writer.WriteFloat(delta);
+            writer.WriteFloat(translation.x);
+            writer.WriteFloat(translation.y);
+            return this;
+        }
+
+        public NetworkTranslationSync Read(ref DataStreamReader stream)
+        {;
+            unitId = stream.ReadUShort();
+            delta = stream.ReadFloat();
+            translation.x = stream.ReadFloat();
+            translation.y = stream.ReadFloat();
+            return this;
+        }
+    }
+    
     public struct NetworkGameState : IComponentData
     {
         public int frame;
@@ -32,8 +58,9 @@ namespace NaiveNetworkGame.Common
         public int unitId;
         public int playerId;
         public byte unitType;
-        public float2 translation;
-        public float2 lookingDirection;
+        
+        // public float2 translation;
+        // public float2 lookingDirection;
         
         public byte state;
         public byte statePercentage;
@@ -46,10 +73,10 @@ namespace NaiveNetworkGame.Common
             writer.WriteUInt((uint) unitId);
             writer.WriteByte((byte) playerId);
             writer.WriteByte(unitType);
-            writer.WriteFloat(translation.x);
-            writer.WriteFloat(translation.y);
-            writer.WriteFloat(lookingDirection.x);
-            writer.WriteFloat(lookingDirection.y);
+            // writer.WriteFloat(translation.x);
+            // writer.WriteFloat(translation.y);
+            // writer.WriteFloat(lookingDirection.x);
+            // writer.WriteFloat(lookingDirection.y);
             writer.WriteByte(state);
             writer.WriteByte(statePercentage);
             return this;
@@ -62,10 +89,10 @@ namespace NaiveNetworkGame.Common
             unitId = (int) stream.ReadUInt();
             playerId = stream.ReadByte();
             unitType = stream.ReadByte();
-            translation.x = stream.ReadFloat();
-            translation.y = stream.ReadFloat();
-            lookingDirection.x = stream.ReadFloat();
-            lookingDirection.y = stream.ReadFloat();
+            // translation.x = stream.ReadFloat();
+            // translation.y = stream.ReadFloat();
+            // lookingDirection.x = stream.ReadFloat();
+            // lookingDirection.y = stream.ReadFloat();
             state = stream.ReadByte();
             statePercentage = stream.ReadByte();
             return this;

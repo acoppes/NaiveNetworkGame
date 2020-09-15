@@ -9,6 +9,56 @@ using Unity.Transforms;
 
 namespace Scenes
 {
+    public class CopyTranslationSyncToUnit : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+                .WithNone<Unit>()
+                .WithAll<NetworkTranslationSync>()
+                .ForEach(delegate(Entity e, ref NetworkTranslationSync n)
+                {
+                    var unitId = n.unitId;
+                    var networkTranslationSync = n;
+                    
+                    Entities
+                        .WithNone<NetworkTranslationSync>()
+                        .WithAll<Unit, Translation>()
+                        .ForEach(delegate(Entity unitEntity, ref Unit unit, ref Translation t)
+                        {
+                            if (unit.unitId == unitId)
+                            {
+                                PostUpdateCommands.AddComponent(unitEntity, networkTranslationSync);
+                            }        
+                        });
+                    
+                    PostUpdateCommands.DestroyEntity(e);
+                });
+        }
+    }
+    
+    [UpdateAfter(typeof(CopyTranslationSyncToUnit))]
+    public class CreateInterpolationFromTranslationSync : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+                .WithAll<Unit, Translation, NetworkTranslationSync>()
+                .ForEach(delegate(Entity e, ref Translation t, ref NetworkTranslationSync n,
+                    ref TranslationInterpolation interpolation)
+                {
+                    // interpolation component was created with unit the first time...
+
+                    interpolation.previousTranslation = t.Value.xy;
+                    interpolation.currentTranslation = n.translation;
+                    interpolation.remoteDelta = n.delta;
+                    interpolation.time = 0;
+                    
+                    PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
+                });
+        }
+    }
+    
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class ClientViewSystem : ComponentSystem
     {
@@ -21,8 +71,8 @@ namespace Scenes
             var updates = query.ToComponentDataArray<NetworkGameState>(Allocator.TempJob);
             var updateEntities = query.ToEntityArray(Allocator.TempJob);
 
-            var unitsQuery = Entities.WithAll<UnitComponent, Translation>().ToEntityQuery();
-            var units = unitsQuery.ToComponentDataArray<UnitComponent>(Allocator.TempJob);
+            var unitsQuery = Entities.WithAll<Unit, Translation>().ToEntityQuery();
+            var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
             var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
             
@@ -56,20 +106,21 @@ namespace Scenes
                             state = networkGameState.state, 
                             percentage = networkGameState.statePercentage
                         });
-                        PostUpdateCommands.SetComponent(unitEntities[i], new LookingDirection
-                        {
-                            direction = networkGameState.lookingDirection
-                        });
-
-                        var currentTranslation = translations[i];
                         
-                        PostUpdateCommands.SetComponent(unitEntities[i], new TranslationInterpolation
-                        {
-                            previousTranslation = currentTranslation.Value.xy,
-                            currentTranslation = networkGameState.translation,
-                            remoteDelta = networkGameState.delta,
-                            time = 0
-                        });
+                        // PostUpdateCommands.SetComponent(unitEntities[i], new LookingDirection
+                        // {
+                        //     direction = networkGameState.lookingDirection
+                        // });
+
+                        // var currentTranslation = translations[i];
+                        //
+                        // PostUpdateCommands.SetComponent(unitEntities[i], new TranslationInterpolation
+                        // {
+                        //     previousTranslation = currentTranslation.Value.xy,
+                        //     currentTranslation = networkGameState.translation,
+                        //     remoteDelta = networkGameState.delta,
+                        //     time = 0
+                        // });
 
                         // var updateBuffer = PostUpdateCommands.SetBuffer<UnitGameState>(unitEntities[i]);
                         // buffer.Add(new UnitGameState
@@ -91,7 +142,7 @@ namespace Scenes
                     
                 // create visual model for this unit
                 var entity = PostUpdateCommands.CreateEntity();
-                PostUpdateCommands.AddComponent(entity, new UnitComponent
+                PostUpdateCommands.AddComponent(entity, new Unit
                 {
                     unitId = (uint) networkGameState.unitId,
                     player = (uint) networkGameState.playerId
@@ -100,23 +151,24 @@ namespace Scenes
                 {
                     prefab = modelProvider.prefabs[networkGameState.unitType]
                 });
-                PostUpdateCommands.AddComponent(entity, new Translation
-                {
-                    Value = new float3(networkGameState.translation.x, networkGameState.translation.y, 0)
-                });
+                PostUpdateCommands.AddComponent(entity, new Translation());
+                // PostUpdateCommands.AddComponent(entity, new Translation
+                // {
+                //     Value = new float3(networkGameState.translation.x, networkGameState.translation.y, 0)
+                // });
                 PostUpdateCommands.AddComponent(entity, new UnitState
                 {
                     state = networkGameState.state
                 });
-                PostUpdateCommands.AddComponent(entity, new LookingDirection
-                {
-                    direction = networkGameState.lookingDirection
-                });
+                // PostUpdateCommands.AddComponent(entity, new LookingDirection
+                // {
+                //     direction = networkGameState.lookingDirection
+                // });
 
                 PostUpdateCommands.AddComponent(entity, new TranslationInterpolation
                 {
-                    previousTranslation = networkGameState.translation,
-                    currentTranslation = networkGameState.translation,
+                    previousTranslation = float2.zero,
+                    currentTranslation = float2.zero,
                     time = 0,
                     remoteDelta = networkGameState.delta
                 });

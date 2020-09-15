@@ -188,6 +188,14 @@ namespace NaiveNetworkGame.Client.Systems
                             var e = PostUpdateCommands.CreateEntity();
                             PostUpdateCommands.AddComponent(e, new NetworkPlayerState().Read(ref stream));
                         }
+
+                        if (type == PacketType.ServerTranslationSync)
+                        {
+                            var e = PostUpdateCommands.CreateEntity();
+                            var translationSync = new NetworkTranslationSync().Read(ref stream);
+                            PostUpdateCommands.AddComponent(e, translationSync);
+                            // find unit and sync translation??
+                        }
                         
                         if (type == PacketType.ServerDeniedConnectionMaxPlayers)
                         {

@@ -13,7 +13,7 @@ namespace Scenes
             {
                 var player = networkPlayer.player;
                 
-                Entities.ForEach(delegate(ref UnitComponent unit)
+                Entities.ForEach(delegate(ref Unit unit)
                 {
                     unit.isActivePlayer = unit.player == player;
                 });
