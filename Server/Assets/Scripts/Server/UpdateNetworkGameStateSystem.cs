@@ -26,13 +26,13 @@ namespace Server
             
             // var delta = Time.DeltaTime;
             
-            Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
-            {
-                n.frame = frame;
-                // n.delta = delta;
-                // n.delta = ServerNetworkStaticData.sendGameStateFrequency;
-                // n.syncVersion = n.version;
-            });
+            // Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
+            // {
+            //     n.frame = frame;
+            //     // n.delta = delta;
+            //     // n.delta = ServerNetworkStaticData.sendGameStateFrequency;
+            //     // n.syncVersion = n.version;
+            // });
             
             Entities.WithAll<Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
                 ref NetworkGameState n)

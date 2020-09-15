@@ -619,6 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFrameRate: 30
+  sendTranslationStateFrequency: 0.1
   sendGameStateFrequency: 0.2
   unitPrefab: {fileID: 5135555761720755020, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
   treePrefab: {fileID: 5135555761720755020, guid: 3d7a84c67fbf1a844bc6e7f442565583, type: 3}

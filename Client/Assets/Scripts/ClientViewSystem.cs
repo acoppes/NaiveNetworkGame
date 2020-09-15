@@ -31,18 +31,6 @@ namespace Scenes
                             PostUpdateCommands.AddComponent(unitEntities[i], n);
                         }
                     }
-
-                    // Entities
-                    //     .WithNone<NetworkTranslationSync>()
-                    //     .WithAll<Unit, Translation>()
-                    //     .ForEach(delegate(Entity unitEntity, ref Unit unit)
-                    //     {
-                    //         if (unit.unitId == networkTranslationSync.unitId)
-                    //         {
-                    //             PostUpdateCommands.AddComponent(unitEntity, networkTranslationSync);
-                    //         }        
-                    //     });
-                    
                     PostUpdateCommands.DestroyEntity(e);
                 });
 
@@ -70,15 +58,6 @@ namespace Scenes
                     
                     PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
                 });
-            
-            // Entities
-            //     .WithAll<Translation, NetworkTranslationSync>()
-            //     .ForEach(delegate(Entity e, ref Translation t, ref NetworkTranslationSync n)
-            //     {
-            //         // Debug.Log("UPDATING TRANSLATION!!");
-            //         t.Value = new float3(n.translation.x, n.translation.y, 0);
-            //         PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
-            //     });
         }
     }
     
