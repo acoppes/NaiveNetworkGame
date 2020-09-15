@@ -57,7 +57,9 @@ namespace NaiveNetworkGame.Client.Systems
 
                     client.networkManager = new NetworkManager
                     {
-                        m_Driver = NetworkDriver.Create(),
+                        m_Driver = NetworkDriver.Create(
+                            new NetworkDataStreamParameter { size = 0 }
+                            ),
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
                     };
 

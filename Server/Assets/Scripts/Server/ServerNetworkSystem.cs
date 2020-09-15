@@ -1,9 +1,9 @@
-using System;
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -24,26 +24,6 @@ namespace Server
         public static int outputBytesTotal;
         public static int outputBytesLastFrame;
         public static int currentConnections;
-    }
-    
-    public struct ServerSingleton : ISharedComponentData, IEquatable<ServerSingleton>
-    {
-        public NetworkManager networkManager;
-
-        public bool Equals(ServerSingleton other)
-        {
-            return Equals(networkManager, other.networkManager);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ServerSingleton other && Equals(other);
-        }
-        
-        public override int GetHashCode()
-        {
-            return (networkManager != null ? networkManager.GetHashCode() : 0);
-        }
     }
 
     public struct StartServerCommand : IComponentData
@@ -79,7 +59,12 @@ namespace Server
                 {
                     server.networkManager = new NetworkManager
                     {
-                        m_Driver = NetworkDriver.Create(),
+                        m_Driver = NetworkDriver.Create(
+                            new NetworkDataStreamParameter { size = 0 },
+                            new FragmentationUtility.Parameters
+                        {
+                            PayloadCapacity = 16 * 1024
+                        }),
                         // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
                         // {
                         //     MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
@@ -89,6 +74,9 @@ namespace Server
                     
                     // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
                     //     typeof(SimulatorPipelineStage));
+
+                    // server.testPipeline = 
+                    //     server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
 
                     var endpoint = NetworkEndPoint.AnyIpv4.WithPort(s.port);
                     
