@@ -3,6 +3,7 @@ using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 
 namespace NaiveNetworkGame.Client.Systems
@@ -58,10 +59,17 @@ namespace NaiveNetworkGame.Client.Systems
                     client.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(
-                            new NetworkDataStreamParameter { size = 0 }
-                            ),
+                            new NetworkDataStreamParameter { size = 0 },
+                            new FragmentationUtility.Parameters
+                            {
+                                PayloadCapacity = 16 * 1024
+                            }
+                        ),
                         m_Connections = new NativeList<NetworkConnection>(1, Allocator.Persistent)
                     };
+                    
+                    client.framentationPipeline = 
+                        client.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
 
                     var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
 

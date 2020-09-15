@@ -1,6 +1,7 @@
 using System;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
+using Unity.Networking.Transport;
 
 namespace Client
 {
@@ -19,8 +20,10 @@ namespace Client
     public struct ClientSingleton : ISharedComponentData, IEquatable<ClientSingleton>
     {
         public NetworkManager networkManager;
+        public NetworkPipeline framentationPipeline;
+        
         public bool connectionInitialized;
-
+        
         public bool Equals(ClientSingleton other)
         {
             return Equals(networkManager, other.networkManager);

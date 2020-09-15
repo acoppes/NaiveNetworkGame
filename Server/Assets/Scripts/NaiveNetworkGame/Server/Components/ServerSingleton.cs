@@ -8,7 +8,7 @@ namespace NaiveNetworkGame.Server.Components
     public struct ServerSingleton : ISharedComponentData, IEquatable<ServerSingleton>
     {
         public NetworkManager networkManager;
-        // public NetworkPipeline testPipeline;
+        public NetworkPipeline framentationPipeline;
 
         public bool Equals(ServerSingleton other)
         {

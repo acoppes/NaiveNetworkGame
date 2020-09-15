@@ -77,8 +77,8 @@ namespace Server
                     // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
                     //     typeof(SimulatorPipelineStage));
 
-                    // server.testPipeline = 
-                    //     server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+                    server.framentationPipeline = 
+                        server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
 
                     var endpoint = NetworkEndPoint.AnyIpv4.WithPort(s.port);
                     

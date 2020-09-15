@@ -135,7 +135,7 @@ namespace Server
                             // if (n.version == n.syncVersion)
                             //     return;
 
-                            var writer = m_Driver.BeginSend(connection);
+                            var writer = m_Driver.BeginSend(server.framentationPipeline, connection);
                             n.Write(ref writer);
                             m_Driver.EndSend(writer);
 
@@ -152,7 +152,7 @@ namespace Server
                         .WithAll<NetworkTranslationSync>()
                         .ForEach(delegate(ref NetworkTranslationSync n)
                         {
-                            var writer = m_Driver.BeginSend(connection);
+                            var writer = m_Driver.BeginSend(server.framentationPipeline, connection);
                             n.Write(ref writer);
                             m_Driver.EndSend(writer);
 
