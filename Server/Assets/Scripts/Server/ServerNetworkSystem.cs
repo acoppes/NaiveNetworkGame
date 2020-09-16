@@ -213,6 +213,7 @@ namespace Server
                                         // p.destroyed = true;
                                         PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
                                         PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
+                                        PostUpdateCommands.RemoveComponent<PlayerConnectionSynchronized>(e);
                                     }
                                 });
                         
@@ -235,6 +236,7 @@ namespace Server
                                 // p.destroyed = true;
                                 PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
                                 PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
+                                PostUpdateCommands.RemoveComponent<PlayerConnectionSynchronized>(e);
                             }
                         });
                         
