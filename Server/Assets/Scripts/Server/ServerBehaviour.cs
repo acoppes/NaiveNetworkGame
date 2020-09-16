@@ -70,6 +70,8 @@ namespace Server
         public int totalOutputInBytes;
         public int lastFrameOutputInBytes;
 
+        public int lastSecondOutputInBytes;
+
         public double totalOutputInKB;
         public double totalOutputInMB;
 
@@ -166,6 +168,9 @@ namespace Server
         //     // entities.Dispose();
         // }
 
+        private float timeSinceLastSecondUpdate;
+        private int previousTotalBytes;
+        
         private void Update()
         {
             ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
@@ -181,6 +186,18 @@ namespace Server
             kbPerSecond = System.Math.Round(totalOutputInKB / Time.realtimeSinceStartup, 3);
             mbPerSecond = System.Math.Round(totalOutputInMB / Time.realtimeSinceStartup, 3);
 
+            timeSinceLastSecondUpdate += Time.deltaTime;
+            
+            if (timeSinceLastSecondUpdate > 1)
+            {
+                timeSinceLastSecondUpdate -= 1;
+
+                lastSecondOutputInBytes = ServerNetworkStatistics.outputBytesTotal - previousTotalBytes;
+                previousTotalBytes = ServerNetworkStatistics.outputBytesTotal;
+                
+                Debug.Log($"Last Second Output (Bytes): {lastSecondOutputInBytes}");
+            }
+            
             if (logStatistics)
             {
                 if (Time.realtimeSinceStartup - timeSincelastLog > consoleLogFrequencyInSeconds)
