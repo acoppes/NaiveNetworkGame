@@ -56,8 +56,10 @@ namespace NaiveNetworkGame.Common
         public ushort unitId;
         public byte playerId;
         public byte unitType;
+
+        public ushort lookingDirectionAngleInDegrees;
         
-        public float2 lookingDirection;
+        // public float2 lookingDirection;
         
         public byte state;
         public byte statePercentage;
@@ -68,8 +70,12 @@ namespace NaiveNetworkGame.Common
             writer.WriteUShort(unitId);
             writer.WriteByte(playerId);
             writer.WriteByte(unitType);
-            writer.WriteFloat(lookingDirection.x);
-            writer.WriteFloat(lookingDirection.y);
+            
+            // writer.WriteFloat(lookingDirection.x);
+            // writer.WriteFloat(lookingDirection.y);
+
+            writer.WriteUShort(lookingDirectionAngleInDegrees);
+            
             writer.WriteByte(state);
             writer.WriteByte(statePercentage);
             return this;
@@ -80,8 +86,9 @@ namespace NaiveNetworkGame.Common
             unitId = stream.ReadUShort();
             playerId = stream.ReadByte();
             unitType = stream.ReadByte();
-            lookingDirection.x = stream.ReadFloat();
-            lookingDirection.y = stream.ReadFloat();
+            // lookingDirection.x = stream.ReadFloat();
+            // lookingDirection.y = stream.ReadFloat();
+            lookingDirectionAngleInDegrees = stream.ReadUShort();
             state = stream.ReadByte();
             statePercentage = stream.ReadByte();
             return this;

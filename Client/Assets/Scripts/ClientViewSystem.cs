@@ -64,6 +64,12 @@ namespace Scenes
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class ClientViewSystem : ComponentSystem
     {
+        private Vector2 Vector2FromAngle(float a)
+        {
+            a *= Mathf.Deg2Rad;
+            return new Vector2(Mathf.Cos(a), Mathf.Sin(a));
+        }
+        
         protected override void OnUpdate()
         {
             // iterate over client view updates...
@@ -92,6 +98,8 @@ namespace Scenes
                 if (createdUnitsInThisUpdate.Contains(networkGameState.unitId))
                     continue;
 
+                var direction = Vector2FromAngle(networkGameState.lookingDirectionAngleInDegrees);
+
                 for (var i = 0; i < units.Length; i++)
                 {
                     var unit = units[i];
@@ -111,7 +119,7 @@ namespace Scenes
                         
                         PostUpdateCommands.SetComponent(unitEntities[i], new LookingDirection
                         {
-                            direction = networkGameState.lookingDirection
+                            direction = direction
                         });
 
                         // var currentTranslation = translations[i];
@@ -164,7 +172,7 @@ namespace Scenes
                 });
                 PostUpdateCommands.AddComponent(entity, new LookingDirection
                 {
-                    direction = networkGameState.lookingDirection
+                    direction = direction
                 });
 
                 PostUpdateCommands.AddComponent(entity, new TranslationInterpolation

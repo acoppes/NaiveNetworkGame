@@ -1,8 +1,10 @@
+using System;
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Server
 {
@@ -54,7 +56,9 @@ namespace Server
             Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
                 ref NetworkGameState n)
             {
-                n.lookingDirection = l.direction;
+                n.lookingDirectionAngleInDegrees = (ushort) 
+                    Mathf.RoundToInt(Vector2.Angle(Vector2.right, l.direction));
+                // n.lookingDirection = l.direction;
             });
             
             Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
