@@ -31,42 +31,22 @@ namespace Server
             
             var networkManager = server.networkManager;
             var m_Driver = networkManager.m_Driver;
-                    
-            for (var i = 0; i < networkManager.m_Connections.Length; i++)
-            {
-                var connection = networkManager.m_Connections[i];
-
-                if (!connection.IsCreated)
+            
+            Entities
+                .WithNone<PlayerConnectionSynchronized>()
+                .WithAll<PlayerController, PlayerConnectionId>()
+                .ForEach(delegate(Entity pe, ref PlayerConnectionId p, ref PlayerController playerController)
                 {
-                    // should we destroy player controller?
-                    // how to send that with gamestate, maybe mark as destroyed...
-                    continue;
-                }
+                    var writer = m_Driver.BeginSend(p.connection);
+                    writer.WriteByte(PacketType.ServerSendPlayerId);
+                    writer.WriteByte(playerController.player);
+                    m_Driver.EndSend(writer);
 
-                ServerNetworkStatistics.currentConnections++;
-                        
-                Entities
-                    .WithAll<PlayerController, PlayerConnectionId>()
-                    .ForEach(delegate(ref PlayerConnectionId p, ref PlayerController playerController)
-                {
-                    // if (p.synchronized)
-                    //     return;
+                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
 
-                    // Send player id to player given a connection
-                    if (p.connection == connection)
-                    {
-                        var writer = m_Driver.BeginSend(connection);
-                        writer.WriteByte(PacketType.ServerSendPlayerId);
-                        writer.WriteByte(playerController.player);
-                        m_Driver.EndSend(writer);
-
-                        ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                        ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-
-                        // p.synchronized = true;
-                    }
+                    PostUpdateCommands.AddComponent<PlayerConnectionSynchronized>(pe);
                 });
-            }
 
             var sendTranslation = false;
             var sendOtherState = false;

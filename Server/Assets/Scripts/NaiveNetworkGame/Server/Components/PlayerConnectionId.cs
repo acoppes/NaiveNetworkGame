@@ -10,4 +10,9 @@ namespace NaiveNetworkGame.Server.Components
         // public bool synchronized;
         // public bool destroyed;
     }
+
+    public struct PlayerConnectionSynchronized : IComponentData
+    {
+        
+    }
 }
