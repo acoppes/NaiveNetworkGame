@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ namespace Scenes.Tests
         public NetworkConnection m_Connection;
         public bool m_Done;
 
+        private NetworkPipeline pipeline;
+        
         public uint testLength;
 
         [TextArea(5, 15)]
@@ -19,7 +22,17 @@ namespace Scenes.Tests
 
         void Start ()
         {
-            m_Driver = NetworkDriver.Create();
+            m_Driver = NetworkDriver.Create(new NetworkDataStreamParameter
+            {
+                size = 30000
+            },   new FragmentationUtility.Parameters
+            {
+                PayloadCapacity = 16 * 1024
+            });
+            
+            // pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+            pipeline = NetworkPipeline.Null;
+            
             m_Connection = default(NetworkConnection);
 
             var endpoint = NetworkEndPoint.LoopbackIpv4;
@@ -52,7 +65,7 @@ namespace Scenes.Tests
                 {
                     // Debug.Log("We are now connected to the server");
 
-                    var writer = m_Driver.BeginSend(m_Connection);
+                    var writer = m_Driver.BeginSend(pipeline, m_Connection);
                     writer.WriteUInt(testLength);
                     m_Driver.EndSend(writer);
                 }
