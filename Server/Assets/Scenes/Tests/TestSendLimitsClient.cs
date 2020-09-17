@@ -1,5 +1,8 @@
+using System;
+using System.Text;
 using Unity.Networking.Transport;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Scenes.Tests
 {
@@ -8,6 +11,11 @@ namespace Scenes.Tests
         public NetworkDriver m_Driver;
         public NetworkConnection m_Connection;
         public bool m_Done;
+
+        public uint testLength;
+
+        [TextArea(5, 15)]
+        public string receivedText;
 
         void Start ()
         {
@@ -42,24 +50,37 @@ namespace Scenes.Tests
             {
                 if (cmd == NetworkEvent.Type.Connect)
                 {
-                    Debug.Log("We are now connected to the server");
+                    // Debug.Log("We are now connected to the server");
 
-                    uint value = 1;
                     var writer = m_Driver.BeginSend(m_Connection);
-                    writer.WriteUInt(value);
+                    writer.WriteUInt(testLength);
                     m_Driver.EndSend(writer);
                 }
                 else if (cmd == NetworkEvent.Type.Data)
                 {
-                    uint value = stream.ReadUInt();
-                    Debug.Log("Got the value = " + value + " back from the server");
+                    // first ushort is data length
+                    var streamLength = stream.Length;
+                    var receivedLength = stream.ReadUShort();
+                    var str = new StringBuilder();
+                 
+                    Debug.Log($"Got stream from server: {streamLength}, {receivedLength}");
+                    
+                    for (var i = 0; i < receivedLength; i++)
+                    {
+                        var b = stream.ReadByte();
+                        str.Append(Convert.ToChar(b));
+                    }
+
+                    Debug.Log(str.ToString());
+                    receivedText = str.ToString();
+                    
                     m_Done = true;
                     m_Connection.Disconnect(m_Driver);
                     m_Connection = default(NetworkConnection);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
-                    Debug.Log("Client got disconnected from server");
+                    // Debug.Log("Client got disconnected from server");
                     m_Connection = default(NetworkConnection);
                 }
             }

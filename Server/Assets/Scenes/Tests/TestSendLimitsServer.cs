@@ -1,6 +1,9 @@
+using System;
 using Unity.Collections;
+using Unity.Mathematics;
 using Unity.Networking.Transport;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Scenes.Tests
 {
@@ -8,6 +11,9 @@ namespace Scenes.Tests
     {
         private NativeList<NetworkConnection> m_Connections;
         public NetworkDriver m_Driver;
+
+        [TextArea(5, 15)]
+        public string textToSend;
 
         void Start()
         {
@@ -41,7 +47,7 @@ namespace Scenes.Tests
             while ((c = m_Driver.Accept()) != default(NetworkConnection))
             {
                 m_Connections.Add(c);
-                Debug.Log("Accepted a connection");
+                // Debug.Log("Accepted a connection");
             }
 
             DataStreamReader stream;
@@ -54,18 +60,27 @@ namespace Scenes.Tests
                 {
                     if (cmd == NetworkEvent.Type.Data)
                     {
-                        uint number = stream.ReadUInt();
+                        var length = stream.ReadUInt();
+                        
+                        Debug.Log($"Client wants {length} size.");
 
-                        Debug.Log("Got " + number + " from the Client adding + 2 to it.");
-                        number += 2;
-
+                        var charArray = textToSend.ToCharArray();
+                        
                         var writer = m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i]);
-                        writer.WriteUInt(number);
+                        var min = math.min(length, charArray.Length);
+
+                        writer.WriteUShort((ushort) min);
+                        
+                        for (var j = 0; j < min; j++)
+                        {
+                            writer.WriteByte(Convert.ToByte(charArray[j]));
+                        }
+                        
                         m_Driver.EndSend(writer);
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
                     {
-                        Debug.Log("Client disconnected from server");
+                        // Debug.Log("Client disconnected from server");
                         m_Connections[i] = default(NetworkConnection);
                     }
                 }
