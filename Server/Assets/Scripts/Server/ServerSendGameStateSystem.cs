@@ -21,6 +21,11 @@ namespace Server
             var server =
                 EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
             
+            var networkManager = server.networkManager;
+
+            if (networkManager == null)
+                return;
+            
             ServerNetworkStatistics.outputBytesLastFrame = 0;
             ServerNetworkStatistics.currentConnections = 0;
 
@@ -28,8 +33,6 @@ namespace Server
             sendTranslationStateTime += Time.DeltaTime;
             
             // First, for each connection, send player id
-            
-            var networkManager = server.networkManager;
             var m_Driver = networkManager.m_Driver;
             
             Entities
