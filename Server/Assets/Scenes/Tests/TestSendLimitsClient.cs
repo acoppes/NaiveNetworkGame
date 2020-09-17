@@ -16,10 +16,15 @@ namespace Scenes.Tests
         private NetworkPipeline pipeline;
         
         public uint testLength;
+        public int receivedLength;
 
         [TextArea(5, 15)]
         public string receivedText;
-
+        
+        public bool separatedPackets;
+        
+        private StringBuilder longTermStr = new StringBuilder();
+        
         void Start ()
         {
             m_Driver = NetworkDriver.Create(new NetworkDataStreamParameter
@@ -72,24 +77,34 @@ namespace Scenes.Tests
                 else if (cmd == NetworkEvent.Type.Data)
                 {
                     // first ushort is data length
-                    var streamLength = stream.Length;
-                    var receivedLength = stream.ReadUShort();
-                    var str = new StringBuilder();
-                 
-                    Debug.Log($"Got stream from server: {streamLength}, {receivedLength}");
+                    if (!separatedPackets)
+                    {
+                        var str = new StringBuilder();
+                        var streamLength = stream.Length;
+                        var receivedLength = stream.ReadUShort();
+
+                        Debug.Log($"Got stream from server: {streamLength}, {receivedLength}");
+
+                        for (var i = 0; i < receivedLength; i++)
+                        {
+                            var b = stream.ReadByte();
+                            str.Append(Convert.ToChar(b));
+                        }
+                        
+                        Debug.Log(str.ToString());
+                        receivedText = str.ToString();
                     
-                    for (var i = 0; i < receivedLength; i++)
+                        m_Done = true;
+                        m_Connection.Disconnect(m_Driver);
+                        m_Connection = default(NetworkConnection);
+                    }
+                    else
                     {
                         var b = stream.ReadByte();
-                        str.Append(Convert.ToChar(b));
+                        longTermStr.Append(Convert.ToChar(b));
+                        receivedText = longTermStr.ToString();
+                        receivedLength = longTermStr.Length;
                     }
-
-                    Debug.Log(str.ToString());
-                    receivedText = str.ToString();
-                    
-                    m_Done = true;
-                    m_Connection.Disconnect(m_Driver);
-                    m_Connection = default(NetworkConnection);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {

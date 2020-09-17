@@ -18,6 +18,8 @@ namespace Scenes.Tests
         [TextArea(5, 15)]
         public string textToSend;
 
+        public bool separatedPackets;
+
         void Start()
         {
             m_Driver = NetworkDriver.Create(new NetworkDataStreamParameter
@@ -78,19 +80,29 @@ namespace Scenes.Tests
                         Debug.Log($"Client wants {length} size.");
 
                         var charArray = textToSend.ToCharArray();
-                        
+
                         var min = math.min(length, charArray.Length);
                         
-                        var writer = m_Driver.BeginSend(pipeline, m_Connections[i], (int) (min + 2));
-
-                        writer.WriteUShort((ushort) min);
-                        
-                        for (var j = 0; j < min; j++)
+                        if (separatedPackets)
                         {
-                            writer.WriteByte(Convert.ToByte(charArray[j]));
+                            for (var j = 0; j < min; j++)
+                            {
+                                var writer = m_Driver.BeginSend(pipeline, m_Connections[i], 1);
+                                writer.WriteByte(Convert.ToByte(charArray[j]));
+                                m_Driver.EndSend(writer);
+                            }
+                        } else {
+                            var writer = m_Driver.BeginSend(pipeline, m_Connections[i], (int) (min + 2));
+
+                            writer.WriteUShort((ushort) min);
+
+                            for (var j = 0; j < min; j++)
+                            {
+                                writer.WriteByte(Convert.ToByte(charArray[j]));
+                            }
+
+                            m_Driver.EndSend(writer);
                         }
-                        
-                        m_Driver.EndSend(writer);
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
                     {
