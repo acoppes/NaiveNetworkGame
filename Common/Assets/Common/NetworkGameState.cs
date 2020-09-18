@@ -1,64 +1,8 @@
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Networking.Transport;
 
 namespace NaiveNetworkGame.Common
 {
-    public struct NetworkPlayerState : IComponentData
-    {
-        public byte player;
-        public ushort gold;
-        
-        public NetworkPlayerState Write(ref DataStreamWriter writer)
-        {
-            writer.WriteByte(PacketType.ServerPlayerState);
-            writer.WriteByte(player);
-            writer.WriteUShort(gold);
-            return this;
-        }
-
-        public NetworkPlayerState Read(ref DataStreamReader stream)
-        {
-            player = stream.ReadByte();
-            gold = stream.ReadUShort();
-            return this;
-        }
-    }
-    
-    public struct NetworkTranslationSync : IComponentData
-    {
-        public ushort unitId;
-        public float delta;
-        public float2 translation;
-
-        public static int GetSize()
-        {
-            unsafe
-            {
-                return sizeof(NetworkTranslationSync);
-            }
-        }
-
-        public NetworkTranslationSync Write(ref DataStreamWriter writer)
-        {
-            // writer.WriteByte(PacketType.ServerTranslationSync);
-            writer.WriteUShort(unitId);
-            writer.WriteFloat(delta);
-            writer.WriteFloat(translation.x);
-            writer.WriteFloat(translation.y);
-            return this;
-        }
-
-        public NetworkTranslationSync Read(ref DataStreamReader stream)
-        {;
-            unitId = stream.ReadUShort();
-            delta = stream.ReadFloat();
-            translation.x = stream.ReadFloat();
-            translation.y = stream.ReadFloat();
-            return this;
-        }
-    }
-    
     public struct NetworkGameState : IComponentData
     {
         public ushort unitId;
