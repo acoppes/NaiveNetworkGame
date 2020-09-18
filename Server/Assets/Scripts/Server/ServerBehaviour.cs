@@ -65,7 +65,6 @@ namespace Server
         public float sendGameStateFrequency = 0.1f;
         
         public GameObject unitPrefab;
-        public GameObject treePrefab;
         
         public int totalOutputInBytes;
         public int lastFrameOutputInBytes;
@@ -83,13 +82,6 @@ namespace Server
         private float timeSincelastLog = 0;
 
         private bool logStatistics = false;
-
-        public bool staticObjectsEnabled;
-
-        private void Awake()
-        {
-            ServerNetworkStaticData.staticObjectsEnabled = staticObjectsEnabled;
-        }
 
         private void Start ()
         {
@@ -139,8 +131,7 @@ namespace Server
             var prefabsEntity = entityManager.CreateEntity();
             entityManager.AddSharedComponentData(prefabsEntity, new PrefabsSharedComponent
             {
-                unitPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings),
-                treePrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(treePrefab, settings)
+                unitPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings)
             });
 
             var createdUnitsEntity = entityManager.CreateEntity();

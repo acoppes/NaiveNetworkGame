@@ -181,11 +181,14 @@ namespace NaiveNetworkGame.Client.Systems
                         
                         if (type == PacketType.ServerGameState)
                         {
-                            // network game state... 
-                            // read unit info...
-                            
-                            var e = PostUpdateCommands.CreateEntity();
-                            PostUpdateCommands.AddComponent(e, new NetworkGameState().Read(ref stream));
+                            // get total data
+                            var count = stream.ReadUShort();
+
+                            for (var j = 0; j < count; j++)
+                            {
+                                var e = PostUpdateCommands.CreateEntity();
+                                PostUpdateCommands.AddComponent(e, new NetworkGameState().Read(ref stream));
+                            }
                         }
                         
                         if (type == PacketType.ServerPlayerState)

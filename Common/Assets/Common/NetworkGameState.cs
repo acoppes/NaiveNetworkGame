@@ -35,7 +35,7 @@ namespace NaiveNetworkGame.Common
         {
             unsafe
             {
-                return sizeof(ushort) + sizeof(float) + sizeof(float2);
+                return sizeof(NetworkTranslationSync);
             }
         }
 
@@ -72,9 +72,18 @@ namespace NaiveNetworkGame.Common
         public byte state;
         public byte statePercentage;
         
+        public static int GetSize()
+        {
+            unsafe
+            {
+                return sizeof(NetworkGameState);
+            }
+        }
+        
         public NetworkGameState Write(ref DataStreamWriter writer)
         {
-            writer.WriteByte(PacketType.ServerGameState);
+            // writer.WriteByte(PacketType.ServerGameState);
+            
             writer.WriteUShort(unitId);
             writer.WriteByte(playerId);
             writer.WriteByte(unitType);

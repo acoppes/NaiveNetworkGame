@@ -6,7 +6,6 @@ namespace Server
     public struct PrefabsSharedComponent : ISharedComponentData
     {
         public Entity unitPrefab;
-        public Entity treePrefab;
     }
     
     public struct IdleAction : IComponentData

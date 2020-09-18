@@ -77,21 +77,6 @@ namespace Server
                     continue;
                 }
 
-                if (ServerNetworkStaticData.synchronizeStaticObjects)
-                {
-                    Entities
-                        .WithAll<NetworkGameState, StaticObject>()
-                        .ForEach(delegate(ref NetworkGameState n)
-                        {
-                            var writer = m_Driver.BeginSend(connection);
-                            n.Write(ref writer);
-                            m_Driver.EndSend(writer);
-
-                            ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                            ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-                        });
-                }
-
                 if (sendOtherState)
                 {
                     Entities
@@ -110,23 +95,27 @@ namespace Server
                             }
                         });
 
+                    var count = Entities
+                        .WithAll<NetworkGameState>().ToEntityQuery().CalculateEntityCount();
+                    
+                    var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
+                        sizeof(byte) + sizeof(ushort) +
+                        NetworkGameState.GetSize() * count);
+                    
+                    writer.WriteByte(PacketType.ServerGameState);
+                    writer.WriteUShort((ushort) count);
+
                     Entities
-                        .WithNone<StaticObject>()
                         .WithAll<NetworkGameState>()
                         .ForEach(delegate(ref NetworkGameState n)
                         {
-                            // if (n.version == n.syncVersion)
-                            //     return;
-
-                            var writer = m_Driver.BeginSend(server.framentationPipeline, connection);
                             n.Write(ref writer);
-                            m_Driver.EndSend(writer);
-
-                            ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                            ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-
-                            // n.syncVersion = n.version;
                         });
+                    
+                    m_Driver.EndSend(writer);
+                    
+                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                 }
 
                 if (sendTranslation)
@@ -135,7 +124,7 @@ namespace Server
                         .WithAll<NetworkTranslationSync>().ToEntityQuery().CalculateEntityCount();
                     
                     var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
-                        sizeof(ushort) + sizeof(byte) +
+                        sizeof(byte) + sizeof(ushort) +
                         NetworkTranslationSync.GetSize() * count);
                     
                     writer.WriteByte(PacketType.ServerTranslationSync);
@@ -154,8 +143,6 @@ namespace Server
                     ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                 }
             }
-            
-            ServerNetworkStaticData.synchronizeStaticObjects = false;
         }
     }
 }
