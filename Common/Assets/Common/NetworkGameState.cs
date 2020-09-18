@@ -31,9 +31,17 @@ namespace NaiveNetworkGame.Common
         public float delta;
         public float2 translation;
 
+        public static int GetSize()
+        {
+            unsafe
+            {
+                return sizeof(ushort) + sizeof(float) + sizeof(float2);
+            }
+        }
+
         public NetworkTranslationSync Write(ref DataStreamWriter writer)
         {
-            writer.WriteByte(PacketType.ServerTranslationSync);
+            // writer.WriteByte(PacketType.ServerTranslationSync);
             writer.WriteUShort(unitId);
             writer.WriteFloat(delta);
             writer.WriteFloat(translation.x);

@@ -131,17 +131,27 @@ namespace Server
 
                 if (sendTranslation)
                 {
+                    var count = Entities
+                        .WithAll<NetworkTranslationSync>().ToEntityQuery().CalculateEntityCount();
+                    
+                    var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
+                        sizeof(ushort) + sizeof(byte) +
+                        NetworkTranslationSync.GetSize() * count);
+                    
+                    writer.WriteByte(PacketType.ServerTranslationSync);
+                    writer.WriteUShort((ushort) count);
+                    
                     Entities
                         .WithAll<NetworkTranslationSync>()
                         .ForEach(delegate(ref NetworkTranslationSync n)
                         {
-                            var writer = m_Driver.BeginSend(server.framentationPipeline, connection);
                             n.Write(ref writer);
-                            m_Driver.EndSend(writer);
-
-                            ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                            ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                         });
+                    
+                    m_Driver.EndSend(writer);
+                    
+                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                 }
             }
             

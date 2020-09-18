@@ -199,9 +199,17 @@ namespace NaiveNetworkGame.Client.Systems
 
                         if (type == PacketType.ServerTranslationSync)
                         {
-                            var e = PostUpdateCommands.CreateEntity();
-                            var translationSync = new NetworkTranslationSync().Read(ref stream);
-                            PostUpdateCommands.AddComponent(e, translationSync);
+                            var count = stream.ReadUShort();
+
+                            for (var j = 0; j < count; j++)
+                            {
+                                var e = PostUpdateCommands.CreateEntity();
+                                var translationSync = new NetworkTranslationSync().Read(ref stream);
+                                PostUpdateCommands.AddComponent(e, translationSync);   
+                            }
+
+                            // read all packets~!!!
+                            
                             // find unit and sync translation??
                         }
                         
