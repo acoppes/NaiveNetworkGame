@@ -23,7 +23,7 @@ namespace Scenes
     }
     
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    [UpdateAfter(typeof(ClientViewSystem))]
+    [UpdateAfter(typeof(CreateUnitVisualModelFromNetworkGameStateSystem))]
     [UpdateBefore(typeof(VisualModelUpdatePositionSystem))]
     public class TranslationInterpolationSystem : ComponentSystem
     {

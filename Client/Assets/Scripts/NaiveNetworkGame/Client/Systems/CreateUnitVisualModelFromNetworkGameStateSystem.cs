@@ -11,8 +11,10 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public class ClientViewSystem : ComponentSystem
+    // TODO: separate in system to create models for units that don't have one
+    // TODO: and system to update unit game state from network (like the other system for translation sync)
+    
+    public class CreateUnitVisualModelFromNetworkGameStateSystem : ComponentSystem
     {
         private Vector2 Vector2FromAngle(float a)
         {
@@ -111,27 +113,30 @@ namespace NaiveNetworkGame.Client.Systems
                 {
                     prefab = modelProvider.prefabs[networkGameState.unitType]
                 });
-                PostUpdateCommands.AddComponent(entity, new Translation());
-                // PostUpdateCommands.AddComponent(entity, new Translation
-                // {
-                //     Value = new float3(networkGameState.translation.x, networkGameState.translation.y, 0)
-                // });
+                
+                // create it far away first time...
+                PostUpdateCommands.AddComponent(entity, new Translation()
+                {
+                    Value = new float3(100, 100, 0)
+                });
+                
                 PostUpdateCommands.AddComponent(entity, new UnitState
                 {
                     state = networkGameState.state
                 });
+                
                 PostUpdateCommands.AddComponent(entity, new LookingDirection
                 {
                     direction = direction
                 });
 
-                PostUpdateCommands.AddComponent(entity, new TranslationInterpolation
-                {
-                    previousTranslation = float2.zero,
-                    currentTranslation = float2.zero,
-                    time = 0,
-                    remoteDelta = 0
-                });
+                // PostUpdateCommands.AddComponent(entity, new TranslationInterpolation
+                // {
+                //     previousTranslation = float2.zero,
+                //     currentTranslation = float2.zero,
+                //     time = 0,
+                //     remoteDelta = 0
+                // });
 
                 if (networkGameState.unitType == 0)
                 {
