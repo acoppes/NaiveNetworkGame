@@ -165,6 +165,8 @@ namespace Server
         private void Update()
         {
             ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
+            ServerNetworkStaticData.sendTranslationStateFrequency = sendTranslationStateFrequency;
+            
             Application.targetFrameRate = targetFrameRate;
             
             totalOutputInBytes = ServerNetworkStatistics.outputBytesTotal;

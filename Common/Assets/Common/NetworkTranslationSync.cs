@@ -23,7 +23,8 @@ namespace NaiveNetworkGame.Common
         {
             // writer.WriteByte(PacketType.ServerTranslationSync);
             writer.WriteUShort(unitId);
-            writer.WriteFloat(delta);
+            // writer.WriteFloat(delta);
+            writer.WriteShort((short) Mathf.RoundToInt(delta * 100.0f));
             writer.WriteShort((short) Mathf.RoundToInt(translation.x * 100.0f));
             writer.WriteShort((short) Mathf.RoundToInt(translation.y * 100.0f));
             // writer.WriteFloat(translation.x);
@@ -34,7 +35,8 @@ namespace NaiveNetworkGame.Common
         public NetworkTranslationSync Read(ref DataStreamReader stream)
         {;
             unitId = stream.ReadUShort();
-            delta = stream.ReadFloat();
+            // delta = stream.ReadFloat();
+            delta = stream.ReadShort() / 100.0f;
             // translation.x = stream.ReadFloat();
             // translation.y = stream.ReadFloat();
             translation.x = stream.ReadShort() / 100.0f;
