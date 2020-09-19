@@ -2,65 +2,15 @@ using System.Collections.Generic;
 using Client;
 using Mockups;
 using NaiveNetworkGame.Common;
+using Scenes;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client.Systems
 {
-    public class CopyTranslationSyncToUnit : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            var unitsQuery = Entities.WithAll<Unit, Translation>().ToEntityQuery();
-            var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
-            var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
-
-            Entities
-                .WithNone<Unit>()
-                .WithAll<NetworkTranslationSync>()
-                .ForEach(delegate(Entity e, ref NetworkTranslationSync n)
-                {
-                    for (var i = 0; i < units.Length; i++)
-                    {
-                        var unit = units[i];
-                        if (unit.unitId == n.unitId)
-                        {
-                            PostUpdateCommands.AddComponent(unitEntities[i], n);
-                        }
-                    }
-                    PostUpdateCommands.DestroyEntity(e);
-                });
-
-            units.Dispose();
-            unitEntities.Dispose();
-        }
-    }
-    
-    [UpdateAfter(typeof(CopyTranslationSyncToUnit))]
-    public class CreateInterpolationFromTranslationSync : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities
-                .WithAll<Unit, Translation, NetworkTranslationSync>()
-                .ForEach(delegate(Entity e, ref Translation t, ref NetworkTranslationSync n,
-                    ref TranslationInterpolation interpolation)
-                {
-                    // interpolation component was created with unit the first time...
-            
-                    interpolation.previousTranslation = t.Value.xy;
-                    interpolation.currentTranslation = n.translation;
-                    interpolation.remoteDelta = n.delta;
-                    interpolation.time = 0;
-                    
-                    PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
-                });
-        }
-    }
-    
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     public class ClientViewSystem : ComponentSystem
     {
