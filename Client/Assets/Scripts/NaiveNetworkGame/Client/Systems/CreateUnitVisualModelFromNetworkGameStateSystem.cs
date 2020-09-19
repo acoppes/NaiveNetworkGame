@@ -31,9 +31,9 @@ namespace NaiveNetworkGame.Client.Systems
             var updates = query.ToComponentDataArray<NetworkGameState>(Allocator.TempJob);
             var updateEntities = query.ToEntityArray(Allocator.TempJob);
 
-            var unitsQuery = Entities.WithAll<Unit, Translation>().ToEntityQuery();
+            var unitsQuery = Entities.WithAll<Unit>().ToEntityQuery();
             var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
-            var translations = unitsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
             
             var createdUnitsInThisUpdate = new List<int>();
@@ -58,11 +58,6 @@ namespace NaiveNetworkGame.Client.Systems
                    
                     if (unit.unitId == networkGameState.unitId)
                     {
-                        // PostUpdateCommands.SetComponent(unitEntities[i], new Translation
-                        // {
-                        //     Value = new float3(update.translation.x, update.translation.y, 0)
-                        // });
-                        
                         PostUpdateCommands.SetComponent(unitEntities[i], new UnitState
                         {
                             state = networkGameState.state, 
@@ -74,24 +69,6 @@ namespace NaiveNetworkGame.Client.Systems
                             direction = direction
                         });
 
-                        // var currentTranslation = translations[i];
-                        //
-                        // PostUpdateCommands.SetComponent(unitEntities[i], new TranslationInterpolation
-                        // {
-                        //     previousTranslation = currentTranslation.Value.xy,
-                        //     currentTranslation = networkGameState.translation,
-                        //     remoteDelta = networkGameState.delta,
-                        //     time = 0
-                        // });
-
-                        // var updateBuffer = PostUpdateCommands.SetBuffer<UnitGameState>(unitEntities[i]);
-                        // buffer.Add(new UnitGameState
-                        // {
-                        //     frame = update.frame,
-                        //     time = update.time,
-                        //     translation = update.translation
-                        // });
-                        
                         updated = true;
                         break;
                     }
@@ -129,37 +106,15 @@ namespace NaiveNetworkGame.Client.Systems
                 {
                     direction = direction
                 });
-
-                // PostUpdateCommands.AddComponent(entity, new TranslationInterpolation
-                // {
-                //     previousTranslation = float2.zero,
-                //     currentTranslation = float2.zero,
-                //     time = 0,
-                //     remoteDelta = 0
-                // });
-
+                
                 if (networkGameState.unitType == 0)
                 {
                     PostUpdateCommands.AddComponent(entity, new Selectable());
                 }
                 
-                // var buffer = PostUpdateCommands.AddBuffer<UnitGameState>(entity);
-                // buffer.Add(new UnitGameState
-                // {
-                //     frame = update.frame,
-                //     time = update.time,
-                //     translation = update.translation
-                // });
-                
-                // PostUpdateCommands.AddComponent(entity, new ClientConnectionId
-                // {
-                //     id = update.connectionId
-                // });
-                
                 createdUnitsInThisUpdate.Add(networkGameState.unitId);
             }
 
-            translations.Dispose();
             unitEntities.Dispose();
             updateEntities.Dispose();
             units.Dispose();
