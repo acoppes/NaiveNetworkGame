@@ -1,9 +1,10 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
+using Server;
 using Unity.Entities;
 using Unity.Transforms;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Systems
 {
     public class ProcessPendingPlayerActionsSystem : ComponentSystem
     {

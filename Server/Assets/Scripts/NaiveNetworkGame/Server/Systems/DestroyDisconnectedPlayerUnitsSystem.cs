@@ -1,7 +1,8 @@
 using NaiveNetworkGame.Server.Components;
+using Server;
 using Unity.Entities;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Systems
 {
     public class DestroyDisconnectedPlayerUnitsSystem : ComponentSystem
     {

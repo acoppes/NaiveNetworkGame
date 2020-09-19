@@ -7,7 +7,7 @@ using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Systems
 {
     public static class ServerNetworkStaticData
     {

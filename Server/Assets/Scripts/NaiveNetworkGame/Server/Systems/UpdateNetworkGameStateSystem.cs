@@ -1,12 +1,11 @@
-using System;
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
+using Server;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Systems
 {
     public class UpdateNetworkGameStateSystem : ComponentSystem
     {

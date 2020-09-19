@@ -2,7 +2,7 @@ using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Systems
 {
     public class ServerSendGameStateSystem : ComponentSystem
     {
