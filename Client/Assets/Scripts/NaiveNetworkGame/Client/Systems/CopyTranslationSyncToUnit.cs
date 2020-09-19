@@ -1,4 +1,3 @@
-using Client;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;

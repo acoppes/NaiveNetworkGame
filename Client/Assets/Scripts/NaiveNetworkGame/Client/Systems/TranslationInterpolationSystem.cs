@@ -1,27 +1,9 @@
-using Client;
-using Mockups;
-using NaiveNetworkGame.Client.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client.Systems
 {
-    public struct TranslationInterpolation : IComponentData
-    {
-        // public int currentFrame;
-        // public int nextFrame;
-        
-        public float time;
-        public float alpha;
-
-        public float2 previousTranslation;
-        public float2 currentTranslation;
-
-        public float localDelta;
-        public float remoteDelta;
-    }
-    
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateAfter(typeof(CreateUnitFromNetworkGameStateSystem))]
     [UpdateBefore(typeof(VisualModelUpdatePositionSystem))]
@@ -38,7 +20,6 @@ namespace Scenes
                 .ForEach(delegate(ref Translation t, ref TranslationInterpolation interpolation)
                 {
                     interpolation.time += localDeltaTime;
-                    interpolation.localDelta = localDeltaTime;
                     
                     var t0 = interpolation.previousTranslation;
                     var t1 = interpolation.currentTranslation;
@@ -49,15 +30,6 @@ namespace Scenes
                     
                     t.Value = new float3(t_current.x, t_current.y, 0);
                 });
-            
-            // Entities
-            //     .WithAll<LookingDirection, TranslationInterpolation>()
-            //     .ForEach(delegate(ref LookingDirection l, ref TranslationInterpolation interpolation)
-            //     {
-            //         var distance = math.distancesq(interpolation.previousTranslation, interpolation.currentTranslation);
-            //         if (distance > 0.01f)
-            //             l.direction = interpolation.previousTranslation - interpolation.currentTranslation;
-            //     });
         }
     }
 }

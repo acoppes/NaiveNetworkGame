@@ -1,16 +1,12 @@
-using System.Collections;
-using Client;
-using Common;
-using Mockups;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client.Systems
 {
-    public class ClientPlayerActionsSystem : ComponentSystem
+    public class CreatePlayerActionsFromInputSystem : ComponentSystem
     {
         protected override void OnCreate()
         {
@@ -30,10 +26,12 @@ namespace Scenes
             var units = query.ToComponentDataArray<Unit>(Allocator.TempJob);
             var states = query.ToComponentDataArray<UnitState>(Allocator.TempJob);
             
-            var selectButtonPressed = playerInputState.selectUnitButtonPressed;
-            var actionButtonPressed = playerInputState.actionButtonPressed;
+            // var selectButtonPressed = playerInputState.selectUnitButtonPressed;
+            // var actionButtonPressed = playerInputState.actionButtonPressed;
 
             var spawnActionPressed = playerInputState.spawnActionPressed;
+            
+            // TODO: player input, player and networkplayer could be the same entity...
             
             Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId)
             {
@@ -41,11 +39,7 @@ namespace Scenes
                 
                 if (!networkPlayerId.connection.IsCreated)
                     return;
-                
-                var mousePosition = Input.mousePosition;
-                var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                worldPosition.z = 0;
-                
+
                 // if (!networkPlayerId.assigned)
                 //     return;
                 
@@ -66,8 +60,7 @@ namespace Scenes
                     {
                         player = player,
                         unit = 0,
-                        command = ClientPlayerAction.CreateUnitAction,
-                        target = new float2(worldPosition.x, worldPosition.y)
+                        command = ClientPlayerAction.CreateUnitAction
                     });
 
                     spawnActionPressed = false; 
@@ -166,52 +159,6 @@ namespace Scenes
             playerInputState.spawnActionPressed = spawnActionPressed;
             SetSingleton(playerInputState);
             // playerInputStateQuery.SetSingleton(playerInputState);
-        }
-    }
-
-    public class ConfirmActionFeedbackSystem : ComponentSystem
-    {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            RequireSingletonForUpdate<ClientPrefabsSharedComponent>();
-        }
-
-        protected override void OnUpdate()
-        {
-            var singletonEntity = GetSingletonEntity<ClientPrefabsSharedComponent>();
-            var clientPrefabs = EntityManager.GetSharedComponentData<ClientPrefabsSharedComponent>(singletonEntity);
-            
-            Entities
-                .WithAll<ConfirmActionFeedback>()
-                .ForEach(delegate(Entity e, ref ConfirmActionFeedback feedback)
-                {
-                    PostUpdateCommands.DestroyEntity(e);
-
-                    var confirmActionFeedback = GameObject.Instantiate(clientPrefabs.confirmActionPrefab);
-                    confirmActionFeedback.transform.position = new Vector3(feedback.position.x, feedback.position.y, 0);
-                    confirmActionFeedback.AddComponent<TempMonobehaviourForCoroutines>()
-                        .StartCoroutine(DestroyActionOnComplete(confirmActionFeedback));
-
-                });
-        }
-        
-        private IEnumerator DestroyActionOnComplete(GameObject actionInstance)
-        {
-            var animator = actionInstance.GetComponent<Animator>();
-            var hiddenState = Animator.StringToHash("Hidden");
-            
-            animator.SetTrigger("Action");
-
-            yield return null;
-            
-            yield return new WaitUntil(delegate
-            {
-                var currentState = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
-                return currentState == hiddenState;
-            });
-            
-            GameObject.Destroy(actionInstance);
         }
     }
 }

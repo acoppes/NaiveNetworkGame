@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client
 {
     public class DebugInterpolationMonoBehaviour : MonoBehaviour
     {

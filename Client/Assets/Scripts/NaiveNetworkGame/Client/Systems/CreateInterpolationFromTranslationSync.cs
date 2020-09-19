@@ -1,6 +1,4 @@
-using Client;
 using NaiveNetworkGame.Common;
-using Scenes;
 using Unity.Entities;
 using Unity.Transforms;
 

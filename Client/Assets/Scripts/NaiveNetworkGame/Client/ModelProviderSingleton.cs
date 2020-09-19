@@ -2,7 +2,7 @@ using System;
 using NaiveNetworkGame.Common;
 using UnityEngine;
 
-namespace Mockups
+namespace NaiveNetworkGame.Client
 {
     public class ModelProviderSingleton : SingletonBehaviour<ModelProviderSingleton>
     {

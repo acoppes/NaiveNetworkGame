@@ -1,21 +1,19 @@
-using Client;
 using Unity.Entities;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client.Systems
 {
+    // for each unit, it updates if the unit is owned by local player
     public class UpdateUnitActivePlayerSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
-            // NetworkPlayerId
-            
             Entities.ForEach(delegate(ref NetworkPlayerId networkPlayer)
             {
                 var player = networkPlayer.player;
                 
                 Entities.ForEach(delegate(ref Unit unit)
                 {
-                    unit.isActivePlayer = unit.player == player;
+                    unit.isLocalPlayer = unit.player == player;
                 });
                 
             });

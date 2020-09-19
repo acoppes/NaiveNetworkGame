@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Client;
 using Mockups;
 using NaiveNetworkGame.Common;
-using Scenes;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;

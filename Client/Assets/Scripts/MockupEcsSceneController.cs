@@ -1,3 +1,5 @@
+using NaiveNetworkGame.Client;
+using NaiveNetworkGame.Client.Systems;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;

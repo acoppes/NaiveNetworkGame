@@ -1,8 +1,9 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
+using UnityEngine;
 
-namespace Client
+namespace NaiveNetworkGame.Client
 {
     // public struct ClientConnectionId : IComponentData
     // {
@@ -14,13 +15,14 @@ namespace Client
         public bool spawnActionPressed;
         public bool selectUnitButtonPressed;
         public bool actionButtonPressed;
+        public float2 position;
     }
     
     public struct Unit : IComponentData
     {
         public ushort unitId;
         public byte player;
-        public bool isActivePlayer;
+        public bool isLocalPlayer;
         public bool isSelected;
     }
 
@@ -39,4 +41,21 @@ namespace Client
     {
         public float2 position;
     }
+    
+    public struct TranslationInterpolation : IComponentData
+    {
+        public float time;
+        public float alpha;
+
+        public float2 previousTranslation;
+        public float2 currentTranslation;
+
+        public float remoteDelta;
+    }
+    
+    public struct Selectable : IComponentData
+    {
+        public Bounds bounds;
+    }
+
 }

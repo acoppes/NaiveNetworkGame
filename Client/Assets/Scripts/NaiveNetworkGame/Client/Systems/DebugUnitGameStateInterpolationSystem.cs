@@ -2,7 +2,7 @@ using System;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client.Systems
 {
 #if UNITY_EDITOR
     public struct DebugUnitGameStateInterpolationComponent : ISystemStateSharedComponentData, IEquatable<DebugUnitGameStateInterpolationComponent>

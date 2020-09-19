@@ -1,10 +1,11 @@
-using Client;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
-namespace Scenes
+namespace NaiveNetworkGame.Client.Systems
 {
-    public class ClientInputSystem : ComponentSystem
+    // Given mouse state, updates player input state.
+    public class UpdatePlayerInputSystem : ComponentSystem
     {
         protected override void OnCreate()
         {
@@ -19,6 +20,11 @@ namespace Scenes
          
             playerInputState.selectUnitButtonPressed = Input.GetMouseButtonUp(0);
             playerInputState.actionButtonPressed = Input.GetMouseButtonUp(1);
+            
+            var mousePosition = Input.mousePosition;
+            var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+            playerInputState.position = new float2(worldPosition.x, worldPosition.y);
 
             SetSingleton(playerInputState);
         }

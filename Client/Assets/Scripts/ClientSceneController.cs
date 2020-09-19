@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Client;
 using Mockups;
+using NaiveNetworkGame.Client;
 using NaiveNetworkGame.Client.Systems;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
