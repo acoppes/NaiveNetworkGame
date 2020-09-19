@@ -7,11 +7,10 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public class CreateUnitVisualModelFromNetworkGameStateSystem : ComponentSystem
+    public class CreateUnitFromNetworkGameStateSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
@@ -68,46 +67,6 @@ namespace NaiveNetworkGame.Client.Systems
             });
             
             units.Dispose();
-        }
-    }
-    
-    [UpdateAfter(typeof(CreateUnitVisualModelFromNetworkGameStateSystem))]
-    public class UpdateUnitFromNetworkGameStateSystem : ComponentSystem
-    {
-        private Vector2 Vector2FromAngle(float a)
-        {
-            a *= Mathf.Deg2Rad;
-            return new Vector2(Mathf.Cos(a), Mathf.Sin(a));
-        }
-        
-        protected override void OnUpdate()
-        {
-            // TODO: separate in different network state syncs too
-
-            // updates all created units with network state...
-            
-            Entities
-                .WithAll<NetworkGameState>()
-                .ForEach(delegate(Entity e, ref NetworkGameState n)
-                {
-                    // var uid = n.unitId;
-                    var ngs = n;
-                    
-                    Entities
-                        .WithAll<Unit, LookingDirection>()
-                        .ForEach(delegate(ref Unit u, ref UnitState us, ref LookingDirection l)
-                        {
-                            if (u.unitId != ngs.unitId)
-                                return;
-
-                            us.state = ngs.state;
-                            us.percentage = ngs.statePercentage;
-                            
-                            l.direction = Vector2FromAngle(ngs.lookingDirectionAngleInDegrees);
-                        });
-                
-                PostUpdateCommands.DestroyEntity(e);
-            });
         }
     }
 }
