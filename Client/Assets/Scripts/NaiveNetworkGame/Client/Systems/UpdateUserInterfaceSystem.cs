@@ -21,6 +21,9 @@ namespace NaiveNetworkGame.Client.Systems
             
             ui.goldLabel.SetNumber(player.gold);
 
+            ui.playerStats.currentUnits = player.currentUnits;
+            ui.playerStats.maxUnits = player.maxUnits;
+
             // set the ui.gold from player gold...
 
             // update the player input state given the ui state too?

@@ -14,6 +14,7 @@ namespace Scenes
     public struct UserInterfaceComponent : ISharedComponentData, IEquatable<UserInterfaceComponent>
     {
         public FixedNumbersLabel goldLabel;
+        public PlayerStatsUI playerStats;
 
         public bool Equals(UserInterfaceComponent other)
         {
@@ -61,7 +62,8 @@ namespace Scenes
         public GameObject actionPrefab;
         
         public FixedNumbersLabel goldLabel;
-
+        public PlayerStatsUI playerStats;
+        
         // public PlayerButton playerButton;
 
         // public Button spawnUnitButton;
@@ -91,7 +93,8 @@ namespace Scenes
             entityManager.AddComponentData(playerEntity, new PlayerController());
             entityManager.AddSharedComponentData(playerEntity, new UserInterfaceComponent
             {
-                goldLabel = goldLabel
+                goldLabel = goldLabel,
+                playerStats = playerStats
             });
             
             // var playerInputState = entityManager.GetComponentData<PlayerInputState>(gameState);
