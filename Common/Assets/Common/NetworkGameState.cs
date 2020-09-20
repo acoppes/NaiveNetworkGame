@@ -26,8 +26,6 @@ namespace NaiveNetworkGame.Common
         
         public NetworkGameState Write(ref DataStreamWriter writer)
         {
-            // writer.WriteByte(PacketType.ServerGameState);
-            
             writer.WriteUShort(unitId);
             writer.WriteByte(playerId);
             writer.WriteByte(unitType);

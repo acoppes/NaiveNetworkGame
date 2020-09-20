@@ -12,7 +12,6 @@ namespace NaiveNetworkGame.Common
         
         public NetworkPlayerState Write(ref DataStreamWriter writer)
         {
-            writer.WriteByte(PacketType.ServerPlayerState);
             writer.WriteByte(player);
             writer.WriteByte(maxUnits);
             writer.WriteByte(currentUnits);

@@ -87,6 +87,7 @@ namespace NaiveNetworkGame.Server.Systems
                             if (p.connection == connection)
                             {
                                 var writer = m_Driver.BeginSend(connection);
+                                writer.WriteByte(PacketType.ServerPlayerState);
                                 n.Write(ref writer);
                                 m_Driver.EndSend(writer);
 
