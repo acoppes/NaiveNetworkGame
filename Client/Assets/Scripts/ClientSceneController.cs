@@ -67,6 +67,7 @@ namespace Scenes
         // public Button spawnUnitButton;
 
         private EntityQuery gameStateQuery;
+        private EntityQuery playerControllerQuery;
 
         public CanvasGroup uiGroup;
 
@@ -80,6 +81,9 @@ namespace Scenes
             
             gameStateQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<PlayerInputState>());
+            
+            playerControllerQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadWrite<PlayerController>());
             
             var playerEntity = entityManager.CreateEntity();
 
@@ -167,10 +171,10 @@ namespace Scenes
             gameStateQuery.SetSingleton(playerInputState);
         }
 
-        public bool IsWaitingForSpawing()
+        public bool IsSpawnEnabled()
         {
-            var playerInputState = gameStateQuery.GetSingleton<PlayerInputState>();
-            return playerInputState.spawnActionPressed;
+            var playerController = playerControllerQuery.GetSingleton<PlayerController>();
+            return playerController.currentUnits < playerController.maxUnits;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace NaiveNetworkGame.Common
         {
             writer.WriteByte(PacketType.ServerPlayerState);
             writer.WriteByte(player);
+            writer.WriteByte(maxUnits);
+            writer.WriteByte(currentUnits);
             writer.WriteUShort(gold);
             return this;
         }
@@ -21,6 +23,8 @@ namespace NaiveNetworkGame.Common
         public NetworkPlayerState Read(ref DataStreamReader stream)
         {
             player = stream.ReadByte();
+            maxUnits = stream.ReadByte();
+            currentUnits = stream.ReadByte();
             gold = stream.ReadUShort();
             return this;
         }

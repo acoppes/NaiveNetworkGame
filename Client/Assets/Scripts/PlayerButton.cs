@@ -9,13 +9,19 @@ namespace Scenes
         [SerializeField]
         protected Button button;
 
+        // [SerializeField]
+        // protected Image background;
+        
         [SerializeField]
-        protected Image background;
+        protected Animator animator;
 
         public ClientSceneController controller;
 
+        private int activeHash;
+
         private void Start()
         {
+            activeHash = Animator.StringToHash("active");
             button.onClick.AddListener(OnPressed);
         }
 
@@ -26,14 +32,7 @@ namespace Scenes
 
         private void LateUpdate()
         {
-            if (controller.IsWaitingForSpawing())
-            {
-                background.color = Color.red;
-            }
-            else
-            {
-                background.color = Color.white;
-            }
+            animator.SetBool(activeHash, controller.IsSpawnEnabled());
         }
     }
 }
