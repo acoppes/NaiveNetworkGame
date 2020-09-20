@@ -15,6 +15,8 @@ namespace Client
         }
 
         public static State currentState = State.Connecting;
+        public static int totalReceivedBytes;
+        public static float connectedTime;
     }
     
     public struct ClientSingleton : ISharedComponentData, IEquatable<ClientSingleton>

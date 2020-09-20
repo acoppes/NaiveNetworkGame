@@ -79,6 +79,9 @@ namespace Scenes
 
         public GameObject receivedBytesObject;
         public Text receivedBytesText;
+        
+        public GameObject connectedTimeObject;
+        public Text connectedTimeText;
 
         private void Start()
         {
@@ -143,6 +146,9 @@ namespace Scenes
 
         private void LateUpdate()
         {
+            if (ConnectionState.currentState == ConnectionState.State.Connected)
+                ConnectionState.connectedTime += Time.deltaTime;
+            
             uiGroup.interactable = ConnectionState.currentState == ConnectionState.State.Connected;
             uiGroup.alpha = uiGroup.interactable ? 1.0f : 0.0f;
             
@@ -155,22 +161,28 @@ namespace Scenes
                     switch (ConnectionState.currentState)
                     {
                         case ConnectionState.State.Connected:
-                            connectionStateText.text = "Connected";
+                            // connectionStateText.text = "Connected";
+                            connectionStateText.gameObject.SetActive(false);
                             receivedBytesObject.SetActive(true);
+                            connectedTimeObject.SetActive(true);
                             break;
                         case ConnectionState.State.Connecting:
+                            connectionStateText.gameObject.SetActive(true);
                             connectionStateText.text = "Connecting to server...";
                             receivedBytesObject.SetActive(false);
+                            connectedTimeObject.SetActive(false);
                             break;
                         case ConnectionState.State.Disconnected:
+                            connectionStateText.gameObject.SetActive(true);
                             connectionStateText.text = "Disconnected from server...";
-                            receivedBytesObject.SetActive(false);
+                            // receivedBytesObject.SetActive(false);
                             break;
                     }
                 }
             }
 
-            receivedBytesText.text = $"{ConnectionStatistics.totalReceivedBytes / 1024} KB";
+            receivedBytesText.text = $"{ConnectionState.totalReceivedBytes / 1024} KB";
+            connectedTimeText.text = $"{ConnectionState.connectedTime:0.}s";
         }
 
         public void ToggleSpawning()
