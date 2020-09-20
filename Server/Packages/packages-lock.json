@@ -20,7 +20,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.entities": {
-      "version": "0.14.0-preview.18",
+      "version": "0.14.0-preview.19",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -168,7 +168,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.transport": {
-      "version": "0.4.0-preview.3",
+      "version": "0.4.1-preview.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {

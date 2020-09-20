@@ -45,7 +45,7 @@ namespace NaiveNetworkGame.Client.Systems
             var clientEntity = GetSingletonEntity<ClientSingleton>();
             var client =
                 EntityManager.GetSharedComponentData<ClientSingleton>(clientEntity);
-            
+
             Entities
                 .WithAll<StartClientCommand>()
                 .ForEach(delegate(Entity e, ref StartClientCommand s)
