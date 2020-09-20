@@ -6,6 +6,8 @@ namespace NaiveNetworkGame.Common
     public struct NetworkPlayerState : IComponentData
     {
         public byte player;
+        public byte maxUnits;
+        public byte currentUnits;
         public ushort gold;
         
         public NetworkPlayerState Write(ref DataStreamWriter writer)

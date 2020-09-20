@@ -187,11 +187,21 @@ namespace NaiveNetworkGame.Server.Systems
 
                         if (packet == PacketType.ClientPlayerAction)
                         {
-                            var pendingPlayerAction = new ClientPlayerAction().Read(ref stream);
+                            var action = new ClientPlayerAction().Read(ref stream);
+                            
+                            Entities
+                                .WithNone<ClientPlayerAction>()
+                                .ForEach(delegate(Entity playerEntity, ref PlayerController p)
+                            {
+                                if (p.player == action.player)
+                                {
+                                    PostUpdateCommands.AddComponent(playerEntity, action);
+                                }
+                            });
 
-                            var pendingActionEntity = PostUpdateCommands.CreateEntity();
-                            // PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
-                            PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
+                            // var pendingActionEntity = PostUpdateCommands.CreateEntity();
+                            // // PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
+                            // PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
                         }
 
                         if (packet == PacketType.ClientDisconnect)

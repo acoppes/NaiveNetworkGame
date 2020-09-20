@@ -69,11 +69,13 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<PlayerController, NetworkPlayerState, PlayerConnectionId>()
-                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p)
+                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p) 
                 {
                     n.player = player.player;
                     n.gold = player.gold;
-            });
+                    n.maxUnits = player.maxUnits;
+                    n.currentUnits = player.currentUnits;
+                });
         }
     }
 }

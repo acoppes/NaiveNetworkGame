@@ -6,6 +6,8 @@ namespace NaiveNetworkGame.Server.Components
     public struct PlayerController : IComponentData
     {
         public byte player;
+        public byte maxUnits;
+        public byte currentUnits;
         public ushort gold;
     }
 }

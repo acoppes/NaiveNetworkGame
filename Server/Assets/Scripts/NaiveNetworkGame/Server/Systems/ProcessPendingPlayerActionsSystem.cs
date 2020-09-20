@@ -26,10 +26,11 @@ namespace NaiveNetworkGame.Server.Systems
             
             // process all player pending actions
             Entities
-                .WithAll<ClientPlayerAction>()
-                .ForEach(delegate (Entity e, ref ClientPlayerAction p)
+                .WithAll<ClientPlayerAction, PlayerController>()
+                .ForEach(delegate (Entity e, ref ClientPlayerAction p, ref PlayerController pc)
                 {
-                    PostUpdateCommands.DestroyEntity(e);
+                    // PostUpdateCommands.DestroyEntity(e);
+                    PostUpdateCommands.RemoveComponent<ClientPlayerAction>(e);
 
                     var player = p.player;
                     var unitId = p.unit;
@@ -56,16 +57,18 @@ namespace NaiveNetworkGame.Server.Systems
                         });
                     } else if (p.command == ClientPlayerAction.CreateUnitAction)
                     {
-                        // TODO: create but in spawning state...
-
+                        // dont create unit if at maximum capacity
+                        if (pc.currentUnits >= pc.maxUnits) 
+                            return;
+                        
                         var spawnPositionEntity = Entities
                             .WithAll<PlayerController, Translation>()
                             .ToEntityQuery()
                             .TryGetFirstReadOnly<PlayerController>(
-                            p => p.player == player);
+                                p => p.player == player);
 
                         var spawnPosition = EntityManager.GetComponentData<Translation>(spawnPositionEntity).Value;
-                    
+
                         var unitEntity = PostUpdateCommands.Instantiate(prefabsSharedComponent.unitPrefab);
                         PostUpdateCommands.SetComponent(unitEntity, new Unit
                         {
