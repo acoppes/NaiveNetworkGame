@@ -77,6 +77,9 @@ namespace Scenes
 
         public Text connectionStateText;
 
+        public GameObject receivedBytesObject;
+        public Text receivedBytesText;
+
         private void Start()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -153,18 +156,21 @@ namespace Scenes
                     {
                         case ConnectionState.State.Connected:
                             connectionStateText.text = "Connected";
+                            receivedBytesObject.SetActive(true);
                             break;
                         case ConnectionState.State.Connecting:
                             connectionStateText.text = "Connecting to server...";
+                            receivedBytesObject.SetActive(false);
                             break;
                         case ConnectionState.State.Disconnected:
                             connectionStateText.text = "Disconnected from server...";
+                            receivedBytesObject.SetActive(false);
                             break;
                     }
-                    
-                    
                 }
             }
+
+            receivedBytesText.text = $"{ConnectionStatistics.totalReceivedBytes / 1024} KB";
         }
 
         public void ToggleSpawning()

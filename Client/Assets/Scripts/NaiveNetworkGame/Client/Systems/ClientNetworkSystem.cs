@@ -8,6 +8,11 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Client.Systems
 {
+    public static class ConnectionStatistics
+    {
+        public static int totalReceivedBytes;
+    }
+    
     public struct ServerConnectionParameters
     {
         public string ip;
@@ -158,6 +163,8 @@ namespace NaiveNetworkGame.Client.Systems
                     }
                     else if (cmd == NetworkEvent.Type.Data)
                     {
+                        ConnectionStatistics.totalReceivedBytes += stream.Length;
+                        
                         var type = stream.ReadByte();
 
                         if (type == PacketType.ServerSendPlayerId)
