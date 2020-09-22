@@ -24,6 +24,7 @@ namespace NaiveNetworkGame.Client.Systems
                 var controller = EntityManager.GetComponentData<PlayerController>(controllerEntity);
                 controller.gold = p.gold;
                 controller.player = p.player;
+                controller.unitType = p.unitType;
                 controller.currentUnits = p.currentUnits;
                 controller.maxUnits = p.maxUnits;
                 PostUpdateCommands.SetComponent(controllerEntity, controller);

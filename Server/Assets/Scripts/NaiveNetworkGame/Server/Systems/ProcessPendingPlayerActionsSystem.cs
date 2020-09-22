@@ -58,10 +58,12 @@ namespace NaiveNetworkGame.Server.Systems
 
                         var unitEntity = PostUpdateCommands.Instantiate(playerController.unitPrefab);
                         
-                        var unit = EntityManager.GetComponentData<Unit>(playerController.unitPrefab);
-                        unit.id = (ushort) createdUnits.lastCreatedUnitId++;
-                        unit.player = player;
-                        PostUpdateCommands.SetComponent(unitEntity, unit);
+                        PostUpdateCommands.SetComponent(unitEntity, new Unit
+                        {
+                            id = (ushort) createdUnits.lastCreatedUnitId++,
+                            player = player,
+                            type = playerController.unitType
+                        });
                         
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
