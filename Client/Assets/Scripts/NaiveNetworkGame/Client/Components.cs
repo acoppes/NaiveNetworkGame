@@ -40,6 +40,11 @@ namespace NaiveNetworkGame.Client
         public NetworkConnection connection;
     }
 
+    public struct NetworkObject : IComponentData
+    {
+        
+    }
+    
     public struct ConfirmActionFeedback : IComponentData
     {
         public float2 position;
