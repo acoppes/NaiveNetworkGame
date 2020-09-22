@@ -1,6 +1,4 @@
-﻿using System;
-using NaiveNetworkGame.Server.Systems;
-using Unity.Collections;
+﻿using NaiveNetworkGame.Server.Systems;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -64,9 +62,7 @@ namespace Server
 
         public float sendTranslationStateFrequency = 0.1f;
         public float sendGameStateFrequency = 0.1f;
-        
-        public GameObject unitPrefab;
-        
+
         public int totalOutputInBytes;
         public int lastFrameOutputInBytes;
 
@@ -129,11 +125,8 @@ namespace Server
 
             var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
             
-            var prefabsEntity = entityManager.CreateEntity();
-            entityManager.AddSharedComponentData(prefabsEntity, new PrefabsSharedComponent
-            {
-                unitPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings)
-            });
+            // How to convert from GameObject to Entity
+            // GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings)
 
             var createdUnitsEntity = entityManager.CreateEntity();
             entityManager.AddComponentData(createdUnitsEntity, new CreatedUnits()

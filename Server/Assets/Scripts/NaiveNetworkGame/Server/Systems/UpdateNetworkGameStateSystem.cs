@@ -41,6 +41,7 @@ namespace NaiveNetworkGame.Server.Systems
                 n.unitId = u.id;
                 n.playerId = u.player;
                 n.unitType = u.type;
+                // n.unitType = u.player % 2;
             });
             
             Entities

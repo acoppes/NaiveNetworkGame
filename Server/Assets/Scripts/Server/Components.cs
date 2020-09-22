@@ -3,11 +3,6 @@ using Unity.Mathematics;
 
 namespace Server
 {
-    public struct PrefabsSharedComponent : ISharedComponentData
-    {
-        public Entity unitPrefab;
-    }
-    
     public struct IdleAction : IComponentData
     {
         public float time;

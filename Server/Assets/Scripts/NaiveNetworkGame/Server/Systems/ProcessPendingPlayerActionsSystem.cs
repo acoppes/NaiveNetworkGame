@@ -12,22 +12,17 @@ namespace NaiveNetworkGame.Server.Systems
         {
             base.OnCreate();
             RequireSingletonForUpdate<CreatedUnits>();
-            RequireSingletonForUpdate<PrefabsSharedComponent>();
         }
 
         protected override void OnUpdate()
         {
-            var prefabsEntity = GetSingletonEntity<PrefabsSharedComponent>();
-            var prefabsSharedComponent = 
-                EntityManager.GetSharedComponentData<PrefabsSharedComponent>(prefabsEntity);
-
             var createdUnitsEntity = GetSingletonEntity<CreatedUnits>();
             var createdUnits = GetSingleton<CreatedUnits>();
             
             // process all player pending actions
             Entities
-                .WithAll<ClientPlayerAction, PlayerController>()
-                .ForEach(delegate (Entity e, ref ClientPlayerAction p, ref PlayerController pc)
+                .WithAll<ClientPlayerAction, PlayerController, Translation>()
+                .ForEach(delegate (Entity e, ref ClientPlayerAction p, ref PlayerController playerController, ref Translation t)
                 {
                     // PostUpdateCommands.DestroyEntity(e);
                     PostUpdateCommands.RemoveComponent<ClientPlayerAction>(e);
@@ -58,26 +53,19 @@ namespace NaiveNetworkGame.Server.Systems
                     } else if (p.command == ClientPlayerAction.CreateUnitAction)
                     {
                         // dont create unit if at maximum capacity
-                        if (pc.currentUnits >= pc.maxUnits) 
+                        if (playerController.currentUnits >= playerController.maxUnits) 
                             return;
+
+                        var unitEntity = PostUpdateCommands.Instantiate(playerController.unitPrefab);
                         
-                        var spawnPositionEntity = Entities
-                            .WithAll<PlayerController, Translation>()
-                            .ToEntityQuery()
-                            .TryGetFirstReadOnly<PlayerController>(
-                                p => p.player == player);
-
-                        var spawnPosition = EntityManager.GetComponentData<Translation>(spawnPositionEntity).Value;
-
-                        var unitEntity = PostUpdateCommands.Instantiate(prefabsSharedComponent.unitPrefab);
-                        PostUpdateCommands.SetComponent(unitEntity, new Unit
-                        {
-                            id = (ushort) createdUnits.lastCreatedUnitId++,
-                            player = player
-                        });
+                        var unit = EntityManager.GetComponentData<Unit>(playerController.unitPrefab);
+                        unit.id = (ushort) createdUnits.lastCreatedUnitId++;
+                        unit.player = player;
+                        PostUpdateCommands.SetComponent(unitEntity, unit);
+                        
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
-                            Value = spawnPosition
+                            Value = t.Value
                             // Value = new float3(p.target.x, p.target.y, 0)
                         });
                         PostUpdateCommands.SetComponent(unitEntity, new UnitState
