@@ -23,6 +23,7 @@ namespace NaiveNetworkGame.Client.Systems
 
             ui.playerStats.currentUnits = player.currentUnits;
             ui.playerStats.maxUnits = player.maxUnits;
+            ui.playerStats.unitType = player.unitType;
 
             // set the ui.gold from player gold...
 
