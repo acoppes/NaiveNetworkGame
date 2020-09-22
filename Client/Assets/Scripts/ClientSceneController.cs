@@ -85,6 +85,10 @@ namespace Scenes
 
         private void Start()
         {
+            ConnectionState.connectedTime = 0;
+            ConnectionState.totalReceivedBytes = 0;
+            ConnectionState.currentState = ConnectionState.State.Connecting;
+            
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             
             gameStateQuery = entityManager.CreateEntityQuery(
