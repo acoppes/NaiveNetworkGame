@@ -13,12 +13,13 @@ namespace Scenes
 {
     public struct UserInterfaceComponent : ISharedComponentData, IEquatable<UserInterfaceComponent>
     {
+        public PlayerButton spawnUnitButton;
         public FixedNumbersLabel goldLabel;
         public PlayerStatsUI playerStats;
 
         public bool Equals(UserInterfaceComponent other)
         {
-            return Equals(goldLabel, other.goldLabel);
+            return Equals(spawnUnitButton, other.spawnUnitButton) && Equals(goldLabel, other.goldLabel) && Equals(playerStats, other.playerStats);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +29,13 @@ namespace Scenes
 
         public override int GetHashCode()
         {
-            return (goldLabel != null ? goldLabel.GetHashCode() : 0);
+            unchecked
+            {
+                var hashCode = (spawnUnitButton != null ? spawnUnitButton.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (goldLabel != null ? goldLabel.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (playerStats != null ? playerStats.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
     
@@ -60,7 +67,8 @@ namespace Scenes
         public Transform parent;
         
         public GameObject actionPrefab;
-        
+
+        public PlayerButton spawnUnitButton;
         public FixedNumbersLabel goldLabel;
         public PlayerStatsUI playerStats;
         
@@ -104,7 +112,8 @@ namespace Scenes
             entityManager.AddSharedComponentData(playerEntity, new UserInterfaceComponent
             {
                 goldLabel = goldLabel,
-                playerStats = playerStats
+                playerStats = playerStats,
+                spawnUnitButton = spawnUnitButton
             });
             
             // var playerInputState = entityManager.GetComponentData<PlayerInputState>(gameState);

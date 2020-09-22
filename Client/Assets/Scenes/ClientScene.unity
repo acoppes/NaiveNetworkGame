@@ -1538,6 +1538,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8129957841303079993, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
   m_PrefabInstance: {fileID: 8129957841140383572}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &433550191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8129957841303079995, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
+  m_PrefabInstance: {fileID: 8129957841140383572}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee702fe0db40494691b9548a81b67970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &440775455
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4093,6 +4104,7 @@ MonoBehaviour:
   camera: {fileID: 1990033516}
   parent: {fileID: 1633604428}
   actionPrefab: {fileID: 7091667433302669984, guid: 54f99f49e0358fe499bb61458dedc2c8, type: 3}
+  spawnUnitButton: {fileID: 433550191}
   goldLabel: {fileID: 1712392759}
   playerStats: {fileID: 951623173}
   uiGroup: {fileID: 252646860}

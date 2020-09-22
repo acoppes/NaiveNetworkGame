@@ -25,6 +25,8 @@ namespace NaiveNetworkGame.Client.Systems
             ui.playerStats.maxUnits = player.maxUnits;
             ui.playerStats.unitType = player.unitType;
 
+            ui.spawnUnitButton.unitType = player.unitType;
+
             // set the ui.gold from player gold...
 
             // update the player input state given the ui state too?

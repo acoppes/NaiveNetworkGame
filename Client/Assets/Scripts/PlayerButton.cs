@@ -19,6 +19,12 @@ namespace Scenes
 
         private int activeHash;
 
+        [SerializeField]
+        private GameObject[] icons;
+
+        [NonSerialized]
+        public byte unitType;
+
         private void Start()
         {
             activeHash = Animator.StringToHash("active");
@@ -33,6 +39,11 @@ namespace Scenes
         private void LateUpdate()
         {
             animator.SetBool(activeHash, controller.IsSpawnEnabled());
+
+            for (var i = 0; i < icons.Length; i++)
+            {
+                icons[i].SetActive(i == unitType);
+            }
         }
     }
 }
