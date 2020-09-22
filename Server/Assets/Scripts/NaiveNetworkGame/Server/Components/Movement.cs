@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Components
 {
     [GenerateAuthoringComponent]
     public struct Movement : IComponentData

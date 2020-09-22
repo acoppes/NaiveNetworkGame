@@ -1,4 +1,5 @@
-﻿using NaiveNetworkGame.Server.Systems;
+﻿using NaiveNetworkGame.Server.Components;
+using NaiveNetworkGame.Server.Systems;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;

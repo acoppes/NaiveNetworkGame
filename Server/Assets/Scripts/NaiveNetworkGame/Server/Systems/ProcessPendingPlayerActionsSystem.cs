@@ -2,6 +2,7 @@ using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Server;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
@@ -77,6 +78,12 @@ namespace NaiveNetworkGame.Server.Systems
                         PostUpdateCommands.AddComponent(unitEntity, new SpawningAction
                         {
                             duration = 1.0f
+                        });
+                        //   target = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, 1.25f)
+                        PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
+                        {
+                            wanderCenter = new float2(0, 0),
+                            range = 1.25f
                         });
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());

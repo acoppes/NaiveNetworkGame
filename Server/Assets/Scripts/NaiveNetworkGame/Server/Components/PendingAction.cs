@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Server
+namespace NaiveNetworkGame.Server.Components
 {
     [GenerateAuthoringComponent]
     public struct PendingAction : IComponentData

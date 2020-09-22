@@ -1,5 +1,7 @@
+using NaiveNetworkGame.Server.Components;
 using Server;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace NaiveNetworkGame.Server.Systems
 {
@@ -10,13 +12,14 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<Unit, Movement>()
+                .WithAll<Unit, Movement, UnitBehaviour>()
                 .WithNone<MovementAction, SpawningAction, IdleAction>()
-                .ForEach(delegate (Entity e)
+                .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
                 {
+                    var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, behaviour.range);
                     PostUpdateCommands.AddComponent(e, new MovementAction
                     {
-                        target = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, 1.25f)
+                        target = behaviour.wanderCenter + new float2(offset.x, offset.y)
                     });
                     PostUpdateCommands.AddComponent(e, new IdleAction
                     {

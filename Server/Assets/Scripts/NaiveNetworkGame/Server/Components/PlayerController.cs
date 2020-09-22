@@ -13,5 +13,6 @@ namespace NaiveNetworkGame.Server.Components
         public byte unitType;
 
         public Entity unitPrefab;
+        public Entity playerWander;
     }
 }
