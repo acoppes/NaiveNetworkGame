@@ -1,25 +1,28 @@
 fileFormatVersion: 2
-guid: 0b28bd4fa4510144b92ff23187bd89a5
+guid: 646d2539ebecea447a47351b60ffe815
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 448063705424862199
-    second: character_skeleton_idle_0
+      213: 6708038081258353821
+    second: character_skeleton_attack_0
   - first:
-      213: -231306364232735746
-    second: character_skeleton_idle_1
+      213: -6604702858157993363
+    second: character_skeleton_attack_1
   - first:
-      213: 7315822823259042929
-    second: character_skeleton_idle_2
+      213: 6410197280071845598
+    second: character_skeleton_attack_2
   - first:
-      213: -2174433000661162518
-    second: character_skeleton_idle_3
+      213: 1014344499841501029
+    second: character_skeleton_attack_3
   - first:
-      213: -6425049600556248162
-    second: character_skeleton_idle_4
+      213: 516260957582288197
+    second: character_skeleton_attack_4
   - first:
-      213: -1762586245887126774
-    second: character_skeleton_idle_5
+      213: 8855996188454449494
+    second: character_skeleton_attack_5
+  - first:
+      213: 6341936317388912945
+    second: character_skeleton_attack_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -133,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: character_skeleton_idle_0
+      name: character_skeleton_attack_0
       rect:
         serializedVersion: 2
         x: 0
@@ -147,14 +150,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7fb189ee097d73600800000000000000
-      internalID: 448063705424862199
+      spriteID: d94723d181db71d50800000000000000
+      internalID: 6708038081258353821
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: character_skeleton_idle_1
+      name: character_skeleton_attack_1
       rect:
         serializedVersion: 2
         x: 96
@@ -168,14 +171,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef3ee95561c3accf0800000000000000
-      internalID: -231306364232735746
+      spriteID: d625c746eb16754a0800000000000000
+      internalID: -6604702858157993363
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: character_skeleton_idle_2
+      name: character_skeleton_attack_2
       rect:
         serializedVersion: 2
         x: 192
@@ -189,14 +192,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 174fc0cc816078560800000000000000
-      internalID: 7315822823259042929
+      spriteID: ed68bdaa67895f850800000000000000
+      internalID: 6410197280071845598
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: character_skeleton_idle_3
+      name: character_skeleton_attack_3
       rect:
         serializedVersion: 2
         x: 288
@@ -210,14 +213,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae564bfd4bcd2d1e0800000000000000
-      internalID: -2174433000661162518
+      spriteID: 5678ce8c2fca31e00800000000000000
+      internalID: 1014344499841501029
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: character_skeleton_idle_4
+      name: character_skeleton_attack_4
       rect:
         serializedVersion: 2
         x: 384
@@ -231,14 +234,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e93549efd63a5d6a0800000000000000
-      internalID: -6425049600556248162
+      spriteID: 545681c0b902a2700800000000000000
+      internalID: 516260957582288197
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: character_skeleton_idle_5
+      name: character_skeleton_attack_5
       rect:
         serializedVersion: 2
         x: 480
@@ -252,8 +255,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0398efd5290a87e0800000000000000
-      internalID: -1762586245887126774
+      spriteID: 6517a01cc91d6ea70800000000000000
+      internalID: 8855996188454449494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: character_skeleton_attack_6
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 96
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1397d1aca75130850800000000000000
+      internalID: 6341936317388912945
       vertices: []
       indices: 
       edges: []
