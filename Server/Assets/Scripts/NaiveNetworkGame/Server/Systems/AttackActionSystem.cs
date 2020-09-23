@@ -29,9 +29,13 @@ namespace NaiveNetworkGame.Server.Systems
                     if (action.time > a.duration)
                     {
                         // do damage and remove...
-                        var health = EntityManager.GetComponentData<Health>(target.target);
-                        health.current -= a.damage;
-                        PostUpdateCommands.SetComponent(target.target, health);
+                        if (EntityManager.Exists(target.target))
+                        {
+                            var health = EntityManager.GetComponentData<Health>(target.target);
+                            health.current -= a.damage;
+                            PostUpdateCommands.SetComponent(target.target, health);
+                        }
+
                         PostUpdateCommands.RemoveComponent<AttackAction>(e);
                     }
                 });
@@ -39,8 +43,11 @@ namespace NaiveNetworkGame.Server.Systems
             Entities.WithAll<LookingDirection, AttackAction, AttackTarget>()
                 .ForEach(delegate(Entity e, ref LookingDirection d, ref Translation t, ref AttackTarget a)
                 {
-                    var targetTranslation = EntityManager.GetComponentData<Translation>(a.target);
-                    d.direction = targetTranslation.Value.xy - t.Value.xy;
+                    if (EntityManager.Exists(a.target))
+                    {
+                        var targetTranslation = EntityManager.GetComponentData<Translation>(a.target);
+                        d.direction = targetTranslation.Value.xy - t.Value.xy;
+                    }
                 });
 
         }

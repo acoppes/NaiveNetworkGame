@@ -76,11 +76,11 @@ namespace NaiveNetworkGame.Server.Systems
                             state = UnitState.spawningState
                         });
                         
-                        PostUpdateCommands.SetComponent(unitEntity, new Health
-                        {
-                            total = 100,
-                            current = UnityEngine.Random.Range(5, 100)
-                        });
+                        // PostUpdateCommands.SetComponent(unitEntity, new Health
+                        // {
+                        //     total = 100,
+                        //     current = UnityEngine.Random.Range(5, 100)
+                        // });
                         
                         PostUpdateCommands.AddComponent(unitEntity, new SpawningAction
                         {
