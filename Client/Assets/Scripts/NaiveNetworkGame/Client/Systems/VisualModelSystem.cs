@@ -1,5 +1,5 @@
 using System;
-using Mockups;
+using Client;
 using Unity.Entities;
 using UnityEngine;
 
@@ -29,6 +29,7 @@ namespace NaiveNetworkGame.Client.Systems
     public struct ModelInstanceComponent : ISystemStateSharedComponentData, IEquatable<ModelInstanceComponent>
     {
         public GameObject instance;
+        public UnitModelBehaviour unitModel;
 
         public bool Equals(ModelInstanceComponent other)
         {
@@ -50,31 +51,22 @@ namespace NaiveNetworkGame.Client.Systems
     {
         protected override void OnUpdate()
         {
-            // var modelProvider = ModelProviderSingleton.Instance;
-            // var clientModelRootQuery = Entities.WithAll<ClientModelRootSharedComponent>().ToEntityQuery();
-
             Entities
                 .WithAll<ModelPrefabComponent>()
                 .WithNone<ModelInstanceComponent>()
                 .ForEach(delegate(Entity e, ModelPrefabComponent m)
                 {
-                    // var clientInstanceId = c.id;
-
                     var modelRoot = ModelProviderSingleton.Instance.root;
 
-                    // Entities.ForEach(delegate(Entity e, ClientModelRootSharedComponent clientModelRoot)
-                    // {
-                    //     if (clientModelRoot.networkPlayerId == clientInstanceId)
-                    //     {
-                    //         modelRoot = clientModelRoot.parent;
-                    //     }
-                    // });
-
-                    PostUpdateCommands.AddSharedComponent(e, new ModelInstanceComponent
+                    var modelInstanceComponent = new ModelInstanceComponent
                     {
                         instance = GameObject.Instantiate(m.prefab, modelRoot)
-                    });
-                    // PostUpdateCommands.AddComponent(e, new Selectable());
+                    };
+                    
+                    modelInstanceComponent.unitModel =
+                        modelInstanceComponent.instance.GetComponentInChildren<UnitModelBehaviour>();
+
+                    PostUpdateCommands.AddSharedComponent(e, modelInstanceComponent);
                 });
 
             Entities

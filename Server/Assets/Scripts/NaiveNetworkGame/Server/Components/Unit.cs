@@ -14,5 +14,4 @@ namespace NaiveNetworkGame.Server.Components
         public byte player;
         public byte type;
     }
-    
 }

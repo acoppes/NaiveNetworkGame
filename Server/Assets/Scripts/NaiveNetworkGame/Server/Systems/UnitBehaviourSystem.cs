@@ -11,6 +11,15 @@ namespace NaiveNetworkGame.Server.Systems
     {
         protected override void OnUpdate()
         {
+            // for each unit, calculate best target
+            // order by number of attacking units and select it
+
+            // if unit has attack target and not spawning, idle, etc
+            // move to attack target...
+
+            // if unit is in attack position
+            // perform attack, wait, attack, wait...
+            
             Entities
                 .WithAll<Unit, Movement, UnitBehaviour>()
                 .WithNone<MovementAction, SpawningAction, IdleAction>()

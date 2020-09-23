@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Client
 {
-    public class ActionDurationBehaviour : MonoBehaviour
+    public class BarBehaviour : MonoBehaviour
     {
         public GameObject model;
 

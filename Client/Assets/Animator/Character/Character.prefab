@@ -200,6 +200,7 @@ Transform:
   - {fileID: 7247604717251060485}
   - {fileID: 1923038670886833332}
   - {fileID: 2352810475348930862}
+  - {fileID: 5713468067346513430}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -234,9 +235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 928a7d4ced6d8f04c8e5f369d3e57489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  model: {fileID: 1318132579099619207}
   playerIndicator: {fileID: 600208461775550357}
   selectorAnimator: {fileID: 4888957796133922084}
   actionDuration: {fileID: 6475625062837350770}
+  healthBar: {fileID: 1431023918225645244}
   interpolationSpeed: 10
 --- !u!61 &7728074612990962427
 BoxCollider2D:
@@ -541,3 +544,76 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 436694387529686131, guid: 824f7130ab30adc459f5f82e364ebe49, type: 3}
   m_PrefabInstance: {fileID: 9044666553168971321}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &9074076326997195780
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1318132579616523733}
+    m_Modifications:
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.247
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6481436828068832761, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_Name
+      value: HealthBar
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+--- !u!4 &5713468067346513430 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+  m_PrefabInstance: {fileID: 9074076326997195780}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1431023918225645244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7940300225009132216, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+  m_PrefabInstance: {fileID: 9074076326997195780}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cea51d8e9ab4bd5af44636e1401d890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

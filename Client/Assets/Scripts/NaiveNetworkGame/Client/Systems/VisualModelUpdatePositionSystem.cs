@@ -52,7 +52,7 @@ namespace NaiveNetworkGame.Client.Systems
                 .WithAll<ModelInstanceComponent, LookingDirection>()
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref LookingDirection lookingDirection)
                 {
-                    m.instance.transform.localScale = new Vector3(lookingDirection.direction.x >= 0 ? 1: -1, 1, 1);
+                    m.unitModel.lookingDirection = lookingDirection.direction;
                 });
             
             Entities
@@ -61,7 +61,6 @@ namespace NaiveNetworkGame.Client.Systems
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Selectable selectable)
                 {
                     selectable.bounds = m.instance.GetComponentInChildren<BoxCollider2D>().bounds;
-                    // m.instance.transform.localScale = new Vector3(lookingDirection.direction.x >= 0 ? 1: -1, 1, 1);
                 });
         }
     }
