@@ -26,6 +26,11 @@ namespace NaiveNetworkGame.Client
         public bool isSelected;
     }
 
+    public struct HealthPercentage : IComponentData
+    {
+        public byte value;
+    }
+
     public struct PlayerController : IComponentData
     {
         public byte player;

@@ -6,7 +6,7 @@ namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateAfter(typeof(CreateUnitFromNetworkGameStateSystem))]
-    [UpdateBefore(typeof(VisualModelUpdatePositionSystem))]
+    [UpdateBefore(typeof(UpdateUnitModelSystem))]
     public class TranslationInterpolationSystem : ComponentSystem
     {
         protected override void OnUpdate()

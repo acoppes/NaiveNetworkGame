@@ -15,6 +15,8 @@ namespace NaiveNetworkGame.Common
         
         public byte state;
         public byte statePercentage;
+
+        public byte health;
         
         public static int GetSize()
         {
@@ -37,6 +39,9 @@ namespace NaiveNetworkGame.Common
             
             writer.WriteByte(state);
             writer.WriteByte(statePercentage);
+
+            writer.WriteByte(health);
+            
             return this;
         }
 
@@ -50,6 +55,7 @@ namespace NaiveNetworkGame.Common
             lookingDirectionAngleInDegrees = stream.ReadUShort();
             state = stream.ReadByte();
             statePercentage = stream.ReadByte();
+            health = stream.ReadByte();
             return this;
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public class VisualModelUpdatePositionSystem : ComponentSystem
+    public class UpdateUnitModelSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
@@ -61,6 +61,14 @@ namespace NaiveNetworkGame.Client.Systems
                 .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref Selectable selectable)
                 {
                     selectable.bounds = m.instance.GetComponentInChildren<BoxCollider2D>().bounds;
+                });
+            
+            Entities
+                .WithAll<ModelInstanceComponent, HealthPercentage>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref HealthPercentage h)
+                {
+                    m.unitModel.isHealthBarVisible = h.value < 100;
+                    m.unitModel.healthBarAlpha = h.value / 100.0f;
                 });
         }
     }

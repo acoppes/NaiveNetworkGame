@@ -68,6 +68,12 @@ namespace NaiveNetworkGame.Server.Systems
                 n.statePercentage = state.percentage;
             });
             
+            Entities.WithAll<Health, NetworkGameState>().ForEach(delegate(ref Health health, 
+                ref NetworkGameState n)
+            {
+                n.health = (byte) Mathf.RoundToInt(100.0f * health.current / health.total);
+            });
+            
             Entities
                 .WithAll<PlayerController, NetworkPlayerState, PlayerConnectionId>()
                 .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p) 

@@ -46,6 +46,11 @@ namespace NaiveNetworkGame.Client.Systems
                     unitId = n.unitId,
                     player = n.playerId
                 });
+                
+                PostUpdateCommands.AddComponent(entity, new HealthPercentage
+                {
+                    value = n.health
+                });
 
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {
