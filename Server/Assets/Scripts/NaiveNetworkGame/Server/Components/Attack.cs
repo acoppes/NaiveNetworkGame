@@ -5,7 +5,11 @@ namespace NaiveNetworkGame.Server.Components
     [GenerateAuthoringComponent]
     public struct Attack : IComponentData
     {
+        public float damage;
+        
         public float range;
+        
+        public float duration;
         // public float chaseRange;
     }
 

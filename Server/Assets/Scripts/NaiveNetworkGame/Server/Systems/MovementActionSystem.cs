@@ -7,7 +7,7 @@ using Unity.Transforms;
 namespace NaiveNetworkGame.Server.Systems
 {
     // Given a move action in a unit, it processes movement updates
-    
+
     public class MovementActionSystem : ComponentSystem
     {
         

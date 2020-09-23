@@ -1,7 +1,9 @@
 using NaiveNetworkGame.Server.Components;
 using Server;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
 {
@@ -19,10 +21,68 @@ namespace NaiveNetworkGame.Server.Systems
 
             // if unit is in attack position
             // perform attack, wait, attack, wait...
+
+            var targetsQuery = Entities.WithAll<Unit, Health, Translation>().ToEntityQuery();
+            var targets = targetsQuery.ToEntityArray(Allocator.TempJob);
+            var targetTranslations = targetsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            var targetUnits = targetsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
+
+            Entities
+                .WithAll<Attack, Unit, Translation>()
+                .WithNone<AttackTarget>()
+                .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
+                {
+                    // search for targets near my range...
+                    for (var i = 0; i < targetUnits.Length; i++)
+                    {
+                        // dont attack my units
+                        if (targetUnits[i].player == unit.player)
+                            continue;
+
+                        if (math.distancesq(t.Value, targetTranslations[i].Value) < attack.range * attack.range)
+                        {
+                            PostUpdateCommands.AddComponent(e, new AttackTarget
+                            {
+                                target = targets[i]
+                            });
+                            return;
+                        }
+                    }
+                    
+                });
+
+            targets.Dispose();
+            targetTranslations.Dispose();
+            targetUnits.Dispose();
+            
+            Entities
+                .WithAll<Attack, AttackTarget>()
+                .WithNone<AttackAction>()
+                .ForEach(delegate(Entity e, ref Attack attack, ref AttackTarget target, ref Translation t)
+                {
+                    // if target entity was destroyed, forget about it...
+                    if (!EntityManager.Exists(target.target))
+                    {
+                        PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                    }
+                    else
+                    {
+                        // if target too far away, forget about it...
+                        var tp = EntityManager.GetComponentData<Translation>(target.target);
+                        if (math.distancesq(tp.Value, t.Value) > attack.range * attack.range)
+                        {
+                            PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                        }
+                        else
+                        {
+                            PostUpdateCommands.AddComponent(e, new AttackAction());
+                        }
+                    } 
+                });
             
             Entities
                 .WithAll<Unit, Movement, UnitBehaviour>()
-                .WithNone<MovementAction, SpawningAction, IdleAction>()
+                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction>()
                 .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
                 {
                     var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, behaviour.range);

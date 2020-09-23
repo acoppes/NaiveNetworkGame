@@ -1,6 +1,5 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
-using Server;
 using Unity.Entities;
 using UnityEngine;
 
@@ -36,6 +35,13 @@ namespace NaiveNetworkGame.Server.Systems
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitState.idleState;
+                });
+            
+            Entities
+                .WithAll<UnitState, AttackAction>()
+                .ForEach(delegate(Entity e, ref UnitState u)
+                {
+                    u.state = UnitState.attackingState;
                 });
         }
     }

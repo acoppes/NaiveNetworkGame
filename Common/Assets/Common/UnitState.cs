@@ -8,6 +8,7 @@ namespace NaiveNetworkGame.Common
         public static readonly byte idleState = 0;
         public static readonly byte walkState = 1;
         public static readonly byte spawningState = 2;
+        public static readonly byte attackingState = 3;
         
         public byte state;
         public byte percentage;
