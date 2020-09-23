@@ -3,12 +3,6 @@ using Unity.Mathematics;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public struct UnitBehaviour : IComponentData
-    {
-        public float2 wanderCenter;
-        public float range;
-    }
-    
     public struct IdleAction : IComponentData
     {
         public float time;

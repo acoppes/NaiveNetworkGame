@@ -82,7 +82,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<Unit, Movement, UnitBehaviour>()
-                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction>()
+                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
                 .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
                 {
                     var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, behaviour.range);
