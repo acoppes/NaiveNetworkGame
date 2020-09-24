@@ -378,6 +378,7 @@ GameObject:
   - component: {fileID: 270473152}
   - component: {fileID: 270473151}
   - component: {fileID: 270473150}
+  - component: {fileID: 270473153}
   - component: {fileID: 270473149}
   m_Layer: 0
   m_Name: P0
@@ -411,7 +412,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a248ff5f793e4f10b41878b014264720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionIndex: 0
 --- !u!114 &270473151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,6 +443,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &270473153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270473148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdfeb282152d4caead6794444ef2ab40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnActionPressed: 0
+  selectUnitButtonPressed: 0
+  actionButtonPressed: 0
+  position:
+    x: 0
+    y: 0
 --- !u!1 &324908925
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,6 +694,7 @@ GameObject:
   - component: {fileID: 572262214}
   - component: {fileID: 572262213}
   - component: {fileID: 572262212}
+  - component: {fileID: 572262215}
   - component: {fileID: 572262211}
   m_Layer: 0
   m_Name: P1
@@ -709,7 +728,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a248ff5f793e4f10b41878b014264720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionIndex: 1
 --- !u!114 &572262213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,6 +759,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &572262215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572262210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdfeb282152d4caead6794444ef2ab40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnActionPressed: 0
+  selectUnitButtonPressed: 0
+  actionButtonPressed: 0
+  position:
+    x: 0
+    y: 0
 --- !u!1 &959919666
 GameObject:
   m_ObjectHideFlags: 0

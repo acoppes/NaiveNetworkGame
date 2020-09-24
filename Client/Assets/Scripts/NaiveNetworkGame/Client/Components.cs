@@ -9,15 +9,7 @@ namespace NaiveNetworkGame.Client
     // {
     //     public uint id;
     // }
-    
-    public struct PlayerInputState : IComponentData
-    {
-        public bool spawnActionPressed;
-        public bool selectUnitButtonPressed;
-        public bool actionButtonPressed;
-        public float2 position;
-    }
-    
+
     public struct Unit : IComponentData
     {
         public ushort unitId;

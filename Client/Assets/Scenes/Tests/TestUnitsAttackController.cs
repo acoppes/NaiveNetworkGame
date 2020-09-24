@@ -20,6 +20,8 @@ namespace Scenes.Tests
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             yield return new WaitUntil(() => ConnectionState.currentState == ConnectionState.State.Connected);
+            
+            yield return new WaitForSeconds(1.0f);
 
             var playerInputStateQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<PlayerInputState>());
