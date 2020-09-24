@@ -161,12 +161,16 @@ namespace NaiveNetworkGame.Client.Systems
                 .ForEach(delegate(Entity e, ref NetworkPlayerId networkPlayer, ref PlayerController p)
                 {
                     var m_Connection = networkPlayer.connection;
-
+                    
+                    networkPlayer.state = NetworkConnection.State.Disconnected;
+                    
                     if (!m_Connection.IsCreated)
                     {
                         // this client was disconnected or failed to connect the first time...
                         return;
                     }
+                    
+                    networkPlayer.state = m_Driver.GetConnectionState(m_Connection);
 
                     while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
                     {

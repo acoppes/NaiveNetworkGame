@@ -2,6 +2,7 @@ using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Networking.Transport;
 
 namespace NaiveNetworkGame.Client.Systems
 {
@@ -23,7 +24,7 @@ namespace NaiveNetworkGame.Client.Systems
             
             Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref PlayerController p, ref PlayerInputState playerInputState)
             {
-                if (!networkPlayerId.connection.IsCreated)
+                if (networkPlayerId.state != NetworkConnection.State.Connected)
                     return;
 
                 // if (!networkPlayerId.assigned)

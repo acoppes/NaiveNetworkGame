@@ -114,61 +114,41 @@ namespace NaiveNetworkGame.Server.Systems
                 }
             }
             
-            // process pending connections....
-            NetworkConnection c;
-            while ((c = m_Driver.Accept()) != default(NetworkConnection))
-            {
-                // if we are at maximum players
-                // send disconnected or something...
+            Entities
+                .WithNone<PlayerConnectionId>()
+                .WithAll<PlayerController>()
+                .ForEach(delegate(Entity e, ref PlayerController p)
+                {   
+                    // for each player without connection, we try to accept a connection
 
-                var connectionProcessed = false;
-                
-                Entities
-                        .WithNone<PlayerConnectionId>()
-                        .WithAll<PlayerController>()
-                        .ForEach(delegate(Entity e, ref PlayerController p)
+                    NetworkConnection c;
+                    if ((c = m_Driver.Accept()) != default)
+                    {
+                        // if there is a connection available, then assign it
+                        networkManager.m_Connections.Add(c);
+                        Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                        
+                        PostUpdateCommands.AddComponent(e, new PlayerConnectionId
                         {
-                            if (connectionProcessed)
-                                return;
-                            
-                            PostUpdateCommands.AddComponent(e, new PlayerConnectionId
-                            {
-                                // player = p.player,
-                                connection = c,
-                            });
-                            PostUpdateCommands.AddComponent(e, new NetworkPlayerState());
-
-                            connectionProcessed = true;
+                            // player = p.player,
+                            connection = c,
                         });
+                        PostUpdateCommands.AddComponent(e, new NetworkPlayerState());                        
+                    }
 
-                if (connectionProcessed)
-                {
-                    // otherwise, assign player and continue...
-                    networkManager.m_Connections.Add(c);
-                    Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
-                }
-                else
-                {
-                    // send disconnect... 
-                    var writer = m_Driver.BeginSend(c);
-                    writer.WriteByte(PacketType.ServerDeniedConnectionMaxPlayers);
-                    m_Driver.EndSend(writer);
+                });
+            
+            // If there are still connections, accept them and send denied because max players...
+            NetworkConnection c;
+            while ((c = m_Driver.Accept()) != default)
+            {
+                var writer = m_Driver.BeginSend(c);
+                writer.WriteByte(PacketType.ServerDeniedConnectionMaxPlayers);
+                m_Driver.EndSend(writer);
                     
-                    Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
                     
-                    m_Driver.Disconnect(c);
-                }
-                    
-                // create a new player connected command internally
-                
-                // find created player controller and assign connection id?
-
-                // var playerEntity = PostUpdateCommands.CreateEntity();
-                // PostUpdateCommands.AddComponent(playerEntity, new PlayerConnectionId
-                // {
-                //     player = currentConnectionPlayer++,
-                //     connection = c,
-                // });
+                m_Driver.Disconnect(c);
             }
             
             for (var i = 0; i < networkManager.m_Connections.Length; i++)

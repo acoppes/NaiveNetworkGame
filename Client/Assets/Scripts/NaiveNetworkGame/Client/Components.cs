@@ -34,6 +34,7 @@ namespace NaiveNetworkGame.Client
     public struct NetworkPlayerId : IComponentData
     {
         public NetworkConnection connection;
+        public NetworkConnection.State state;
     }
 
     public struct NetworkObject : IComponentData
