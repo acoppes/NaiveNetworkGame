@@ -1,6 +1,7 @@
 using System.Collections;
 using Client;
 using NaiveNetworkGame.Client;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -20,15 +21,22 @@ namespace Scenes.Tests
 
             yield return new WaitUntil(() => ConnectionState.currentState == ConnectionState.State.Connected);
 
-            // var query = entityManager.CreateEntityQuery(ComponentType.ReadWrite<ClientSingleton>());
-            // var clientSingleton = query.GetSingletonEntity<ClientSingleton>();
-            
             var playerInputStateQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<PlayerInputState>());
-            
-            var playerInputState = playerInputStateQuery.GetSingleton<PlayerInputState>();
-            playerInputState.spawnActionPressed = !playerInputState.spawnActionPressed;
-            playerInputStateQuery.SetSingleton(playerInputState);
+
+            var entities = playerInputStateQuery.ToEntityArray(Allocator.TempJob);
+            var inputStates = playerInputStateQuery.ToComponentDataArray<PlayerInputState>(Allocator.TempJob);
+
+            for (int i = 0; i < inputStates.Length; i++)
+            {
+                var inputState = inputStates[i];
+                inputState.spawnActionPressed = true;
+                
+                entityManager.SetComponentData(entities[i], inputState);
+            }
+
+            entities.Dispose();
+            inputStates.Dispose();
         }
 
     }
