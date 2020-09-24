@@ -19,13 +19,19 @@ namespace NaiveNetworkGame.Client.Systems
             var player = EntityManager.GetComponentData<PlayerController>(playerEntity);
             var ui = EntityManager.GetSharedComponentData<UserInterfaceComponent>(playerEntity);
             
-            ui.goldLabel.SetNumber(player.gold);
+            
+            if (ui.goldLabel != null)
+                ui.goldLabel.SetNumber(player.gold);
 
-            ui.playerStats.currentUnits = player.currentUnits;
-            ui.playerStats.maxUnits = player.maxUnits;
-            ui.playerStats.unitType = player.unitType;
-
-            ui.spawnUnitButton.unitType = player.unitType;
+            if (ui.playerStats)
+            {
+                ui.playerStats.currentUnits = player.currentUnits;
+                ui.playerStats.maxUnits = player.maxUnits;
+                ui.playerStats.unitType = player.unitType;
+            }
+            
+            if (ui.spawnUnitButton != null)
+                ui.spawnUnitButton.unitType = player.unitType;
 
             // set the ui.gold from player gold...
 

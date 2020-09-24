@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Client;
-using Mockups;
 using NaiveNetworkGame.Client;
 using NaiveNetworkGame.Client.Systems;
 using NaiveNetworkGame.Common;
@@ -161,9 +160,12 @@ namespace Scenes
         {
             if (ConnectionState.currentState == ConnectionState.State.Connected)
                 ConnectionState.connectedTime += Time.deltaTime;
-            
-            uiGroup.interactable = ConnectionState.currentState == ConnectionState.State.Connected;
-            uiGroup.alpha = uiGroup.interactable ? 1.0f : 0.0f;
+
+            if (uiGroup != null)
+            {
+                uiGroup.interactable = ConnectionState.currentState == ConnectionState.State.Connected;
+                uiGroup.alpha = uiGroup.interactable ? 1.0f : 0.0f;
+            }
             
             if (connectionStateText != null)
             {
