@@ -4084,6 +4084,7 @@ MonoBehaviour:
   receivedBytesText: {fileID: 259745033}
   connectedTimeObject: {fileID: 974601862}
   connectedTimeText: {fileID: 2016889941}
+  autoCreatePlayer: 1
 --- !u!114 &1633604427
 MonoBehaviour:
   m_ObjectHideFlags: 0
