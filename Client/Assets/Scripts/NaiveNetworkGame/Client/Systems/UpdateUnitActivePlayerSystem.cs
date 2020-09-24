@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Client.Components;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
@@ -7,9 +8,9 @@ namespace NaiveNetworkGame.Client.Systems
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayer)
+            Entities.ForEach(delegate(ref PlayerController p)
             {
-                var player = networkPlayer.player;
+                var player = p.player;
                 
                 Entities.ForEach(delegate(ref Unit unit)
                 {

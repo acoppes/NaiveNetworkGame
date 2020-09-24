@@ -1,4 +1,5 @@
 using Client;
+using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
@@ -136,6 +137,8 @@ namespace NaiveNetworkGame.Client.Systems
             {
                 var m_Connection = client.networkManager.m_Connections[i];
                 var m_Driver = client.networkManager.m_Driver;
+
+                var connectionIndex = i;
                 
                 if (!m_Connection.IsCreated)
                 {
@@ -173,12 +176,25 @@ namespace NaiveNetworkGame.Client.Systems
                             
                             // We are assuming this message is not going to be received again...
                             // var localPlayer = PostUpdateCommands.CreateEntity();
-                            var localPlayer = GetSingletonEntity<PlayerController>();
-                            PostUpdateCommands.AddComponent(localPlayer, new NetworkPlayerId
+                            
+                            Entities.ForEach(delegate(Entity e, ref PlayerController p, ref LocalPlayer l)
                             {
-                                player = networkPlayerId,
-                                connection = m_Connection
+                                if (l.connectionIndex == connectionIndex)
+                                {
+                                    p.player = networkPlayerId;
+                                    PostUpdateCommands.AddComponent(e, new NetworkPlayerId
+                                    {
+                                        connection = m_Connection
+                                    });
+                                }
                             });
+                            
+                            // var localPlayer = GetSingletonEntity<PlayerController>();
+                            // PostUpdateCommands.AddComponent(localPlayer, new NetworkPlayerId
+                            // {
+                            //     player = networkPlayerId,
+                            //     connection = m_Connection
+                            // });
                             // PostUpdateCommands.AddComponent(localPlayer, new PlayerController());
                         }
                         

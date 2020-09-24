@@ -1,42 +1,28 @@
+using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using UnityEngine;
 
 namespace NaiveNetworkGame.Client.Systems
 {
     public class CreatePlayerActionsFromInputSystem : ComponentSystem
     {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            RequireSingletonForUpdate<PlayerInputState>();
-        }
-        
         protected override void OnUpdate()
         {
-            var playerInputStateEntity = GetSingletonEntity<PlayerInputState>();
-            var playerInputState = EntityManager.GetComponentData<PlayerInputState>(playerInputStateEntity);
-            
-            var query = Entities.WithAll<Selectable, Unit, UnitState>().ToEntityQuery();
-
-            var entities = query.ToEntityArray(Allocator.TempJob);
-            var selectables = query.ToComponentDataArray<Selectable>(Allocator.TempJob);
-            var units = query.ToComponentDataArray<Unit>(Allocator.TempJob);
-            var states = query.ToComponentDataArray<UnitState>(Allocator.TempJob);
+            // var query = Entities.WithAll<Selectable, Unit, UnitState>().ToEntityQuery();
+            //
+            // var entities = query.ToEntityArray(Allocator.TempJob);
+            // var selectables = query.ToComponentDataArray<Selectable>(Allocator.TempJob);
+            // var units = query.ToComponentDataArray<Unit>(Allocator.TempJob);
+            // var states = query.ToComponentDataArray<UnitState>(Allocator.TempJob);
             
             // var selectButtonPressed = playerInputState.selectUnitButtonPressed;
             // var actionButtonPressed = playerInputState.actionButtonPressed;
 
-            var spawnActionPressed = playerInputState.spawnActionPressed;
-            
             // TODO: player input, player and networkplayer could be the same entity...
             
-            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId)
+            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref PlayerController p, ref PlayerInputState playerInputState)
             {
-                var player = networkPlayerId.player;
-                
                 if (!networkPlayerId.connection.IsCreated)
                     return;
 
@@ -45,7 +31,7 @@ namespace NaiveNetworkGame.Client.Systems
                 
                 // TODO: better controls...
 
-                if (spawnActionPressed)
+                if (playerInputState.spawnActionPressed)
                 {
                     Entities
                         .WithAllReadOnly<Selectable>()
@@ -58,14 +44,12 @@ namespace NaiveNetworkGame.Client.Systems
                     var e = PostUpdateCommands.CreateEntity();
                     PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                     {
-                        player = player,
+                        player = p.player,
                         unit = 0,
                         command = ClientPlayerAction.CreateUnitAction
                     });
 
-                    spawnActionPressed = false; 
-
-                    return;
+                    playerInputState.spawnActionPressed = false;
                 }
                 
                 
@@ -151,13 +135,13 @@ namespace NaiveNetworkGame.Client.Systems
                 }*/
             });
             
-            entities.Dispose();
-            selectables.Dispose();
-            units.Dispose();
-            states.Dispose();
+            // entities.Dispose();
+            // selectables.Dispose();
+            // units.Dispose();
+            // states.Dispose();
             
-            playerInputState.spawnActionPressed = spawnActionPressed;
-            SetSingleton(playerInputState);
+            // playerInputState.spawnActionPressed = spawnActionPressed;
+            // SetSingleton(playerInputState);
             // playerInputStateQuery.SetSingleton(playerInputState);
         }
     }

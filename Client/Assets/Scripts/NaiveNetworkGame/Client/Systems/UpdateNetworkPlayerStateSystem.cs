@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
 
@@ -5,31 +6,25 @@ namespace NaiveNetworkGame.Client.Systems
 {
     public class UpdateNetworkPlayerStateSystem : ComponentSystem
     {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            RequireSingletonForUpdate<PlayerController>();
-        }
-        
         protected override void OnUpdate()
         {
             // given a network gamestate, update player local data
             
             Entities.ForEach(delegate(Entity e, ref NetworkPlayerState p)
             {
-                // we normally don't get other players state...
-                // var controller = GetSingleton<PlayerController>();
-                var controllerEntity = GetSingletonEntity<PlayerController>();
-
-                var controller = EntityManager.GetComponentData<PlayerController>(controllerEntity);
-                controller.gold = p.gold;
-                controller.player = p.player;
-                controller.unitType = p.unitType;
-                controller.currentUnits = p.currentUnits;
-                controller.maxUnits = p.maxUnits;
-                PostUpdateCommands.SetComponent(controllerEntity, controller);
+                var networkPlayerState = p;
                 
-                // SetSingleton(controller);
+                Entities.ForEach(delegate(ref PlayerController playerController)
+                {
+                    if (playerController.player != networkPlayerState.player) 
+                        return;
+                    
+                    playerController.gold = networkPlayerState.gold;
+                    playerController.player = networkPlayerState.player;
+                    playerController.unitType = networkPlayerState.unitType;
+                    playerController.currentUnits = networkPlayerState.currentUnits;
+                    playerController.maxUnits = networkPlayerState.maxUnits;
+                });
                 
                 PostUpdateCommands.DestroyEntity(e);
             });

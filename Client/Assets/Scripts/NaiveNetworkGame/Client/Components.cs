@@ -31,18 +31,8 @@ namespace NaiveNetworkGame.Client
         public byte value;
     }
 
-    public struct PlayerController : IComponentData
-    {
-        public byte player;
-        public byte unitType;
-        public ushort gold;
-        public byte maxUnits;
-        public byte currentUnits;
-    }
-
     public struct NetworkPlayerId : IComponentData
     {
-        public byte player;
         public NetworkConnection connection;
     }
 

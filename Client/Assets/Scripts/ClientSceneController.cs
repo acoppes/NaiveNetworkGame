@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Client;
 using NaiveNetworkGame.Client;
+using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Client.Systems;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
@@ -90,6 +91,8 @@ namespace Scenes
         public GameObject connectedTimeObject;
         public Text connectedTimeText;
 
+        public bool autoCreatePlayer = true;
+
         private void Start()
         {
             ConnectionState.connectedTime = 0;
@@ -103,17 +106,24 @@ namespace Scenes
             
             playerControllerQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<PlayerController>());
-            
-            var playerEntity = entityManager.CreateEntity();
 
-            entityManager.AddComponentData(playerEntity, new PlayerInputState());
-            entityManager.AddComponentData(playerEntity, new PlayerController());
-            entityManager.AddSharedComponentData(playerEntity, new UserInterfaceComponent
+            if (autoCreatePlayer)
             {
-                goldLabel = goldLabel,
-                playerStats = playerStats,
-                spawnUnitButton = spawnUnitButton
-            });
+                var playerEntity = entityManager.CreateEntity();
+
+                entityManager.AddComponentData(playerEntity, new PlayerInputState());
+                entityManager.AddComponentData(playerEntity, new PlayerController());
+                entityManager.AddComponentData(playerEntity, new LocalPlayer
+                {
+                    connectionIndex = 0
+                });
+                entityManager.AddSharedComponentData(playerEntity, new UserInterfaceComponent
+                {
+                    goldLabel = goldLabel,
+                    playerStats = playerStats,
+                    spawnUnitButton = spawnUnitButton
+                });
+            }
             
             // var playerInputState = entityManager.GetComponentData<PlayerInputState>(gameState);
             // gameStateQuery.SetSingleton(playerInputState);
@@ -129,7 +139,6 @@ namespace Scenes
             });
             
             disconnectButton.onClick.AddListener(OnDisconnectButtonPressed);
-            
         }
 
         private void OnDisconnectButtonPressed()

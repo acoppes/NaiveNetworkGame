@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Client.Components;
 using Scenes;
 using Unity.Entities;
 
