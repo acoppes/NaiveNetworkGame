@@ -9,9 +9,4 @@ echo "Deploying new server"
 sh ./deploy_server.sh
 echo "starting remote server instance"
 sh ./start_remote_server.sh
-echo "Building client"
-sh ./build-client-windows.sh
-sh ./build-client-android.sh
-echo "Deploying client builds"
-sh ./upload_client_builds.sh
-sh ./upload_server_builds.sh
+sh ./build-client-all.sh
