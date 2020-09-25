@@ -16,7 +16,7 @@ namespace NaiveNetworkGame.Server.Systems
             var dt = Time.DeltaTime;
             
             Entities
-                .WithNone<SpawningAction>()
+                .WithNone<SpawningAction, AttackAction>()
                 .WithAll<Movement, Translation>()
                 .WithAllReadOnly<MovementAction>()
                 .ForEach(delegate(Entity e, ref Movement movement, ref Translation t, ref MovementAction m)
