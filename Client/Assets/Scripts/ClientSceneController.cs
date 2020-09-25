@@ -201,19 +201,26 @@ namespace Scenes
 
         public void ToggleSpawning()
         {
-            var playerEntity = playerControllerQuery.GetSingletonEntity();
-            var playerInput = entityManager.GetComponentData<PlayerInputState>(playerEntity);
+            // another option is to iterate in every button of active player....
+            if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
+            {
+                // var playerEntity = playerControllerQuery.GetSingletonEntity();
+                var playerInput = entityManager.GetComponentData<PlayerInputState>(playerEntity);
             
-            playerInput.spawnActionPressed = !playerInput.spawnActionPressed;
-            playerControllerQuery.SetSingleton(playerInput);
+                playerInput.spawnActionPressed = !playerInput.spawnActionPressed;
+                playerControllerQuery.SetSingleton(playerInput);
+            }
         }
 
         public bool IsSpawnEnabled()
         {
-            var playerEntity = playerControllerQuery.GetSingletonEntity();
-            var playerController = entityManager.GetComponentData<PlayerController>(playerEntity);
-            
-            return playerController.currentUnits < playerController.maxUnits;
+            if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
+            {
+                var playerController = entityManager.GetComponentData<PlayerController>(playerEntity);
+                return playerController.currentUnits < playerController.maxUnits;
+            }
+
+            return false;
         }
     }
 }
