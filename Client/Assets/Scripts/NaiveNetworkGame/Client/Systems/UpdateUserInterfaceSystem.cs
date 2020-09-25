@@ -6,11 +6,19 @@ namespace NaiveNetworkGame.Client.Systems
 {
     public class UpdateUserInterfaceSystem : ComponentSystem
     {
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            RequireSingletonForUpdate<ActivePlayer>();
+        }
+
         protected override void OnUpdate()
         {
             // get ui from shared component, singleton or not...
+            var activePlayerEntity = GetSingletonEntity<ActivePlayer>();
+            var player = EntityManager.GetComponentData<PlayerController>(activePlayerEntity);
             
-            Entities.ForEach(delegate(Entity entity, UserInterfaceComponent ui, ref PlayerController player)
+            Entities.ForEach(delegate(Entity entity, UserInterfaceComponent ui)
             {
                 if (ui.goldLabel != null)
                     ui.goldLabel.SetNumber(player.gold);

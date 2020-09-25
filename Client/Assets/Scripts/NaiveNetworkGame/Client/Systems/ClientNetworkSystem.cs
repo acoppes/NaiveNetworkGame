@@ -135,7 +135,7 @@ namespace NaiveNetworkGame.Client.Systems
             Entities
                 .WithNone<NetworkPlayerId>()
                 .WithAll<PlayerController>()
-                .ForEach(delegate(Entity e, ref LocalPlayer l)
+                .ForEach(delegate(Entity e, ref ConnectPlayerToServer l)
                 {
                     var connection = client.m_Driver.Connect(client.endpoint);
 
@@ -146,7 +146,7 @@ namespace NaiveNetworkGame.Client.Systems
                     {
                         connection = connection
                     });
-                    PostUpdateCommands.RemoveComponent<LocalPlayer>(e);
+                    PostUpdateCommands.RemoveComponent<ConnectPlayerToServer>(e);
                 });
 
             DataStreamReader stream;
@@ -156,7 +156,7 @@ namespace NaiveNetworkGame.Client.Systems
             m_Driver.ScheduleUpdate().Complete();
 
             Entities
-                .WithNone<LocalPlayer>()
+                .WithNone<ConnectPlayerToServer>()
                 .WithAll<NetworkPlayerId, PlayerController>()
                 .ForEach(delegate(Entity e, ref NetworkPlayerId networkPlayer, ref PlayerController p)
                 {

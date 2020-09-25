@@ -113,8 +113,12 @@ namespace Scenes
 
                 entityManager.AddComponentData(playerEntity, new PlayerInputState());
                 entityManager.AddComponentData(playerEntity, new PlayerController());
-                entityManager.AddComponentData(playerEntity, new LocalPlayer());
-                entityManager.AddSharedComponentData(playerEntity, new UserInterfaceComponent
+                entityManager.AddComponentData(playerEntity, new ConnectPlayerToServer());
+            }
+
+            {
+                var userInterfaceEntity = entityManager.CreateEntity();
+                entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceComponent
                 {
                     goldLabel = goldLabel,
                     playerStats = playerStats,
