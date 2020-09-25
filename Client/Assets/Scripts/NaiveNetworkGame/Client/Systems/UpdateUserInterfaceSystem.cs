@@ -15,6 +15,11 @@ namespace NaiveNetworkGame.Client.Systems
         protected override void OnUpdate()
         {
             // get ui from shared component, singleton or not...
+            if (!HasSingleton<ActivePlayer>())
+            {
+                return;
+            }
+            
             var activePlayerEntity = GetSingletonEntity<ActivePlayer>();
             var player = EntityManager.GetComponentData<PlayerController>(activePlayerEntity);
             
