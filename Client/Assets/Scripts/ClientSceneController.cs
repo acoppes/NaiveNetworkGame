@@ -76,7 +76,6 @@ namespace Scenes
 
         // public Button spawnUnitButton;
 
-        private EntityQuery gameStateQuery;
         private EntityQuery playerControllerQuery;
 
         public CanvasGroup uiGroup;
@@ -91,7 +90,7 @@ namespace Scenes
         public GameObject connectedTimeObject;
         public Text connectedTimeText;
 
-        public bool autoCreatePlayer = true;
+        private EntityManager entityManager;
 
         private void Start()
         {
@@ -99,23 +98,13 @@ namespace Scenes
             ConnectionState.totalReceivedBytes = 0;
             ConnectionState.currentState = ConnectionState.State.Connecting;
             
-            var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            
-            gameStateQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<PlayerInputState>());
+            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             
             playerControllerQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<PlayerController>());
-
-            if (autoCreatePlayer)
-            {
-                var playerEntity = entityManager.CreateEntity();
-
-                entityManager.AddComponentData(playerEntity, new PlayerInputState());
-                entityManager.AddComponentData(playerEntity, new PlayerController());
-                entityManager.AddComponentData(playerEntity, new ConnectPlayerToServer());
-            }
-
+                ComponentType.ReadWrite<PlayerController>(), 
+                ComponentType.ReadOnly<ActivePlayer>(), 
+                ComponentType.ReadWrite<PlayerInputState>());
+            
             {
                 var userInterfaceEntity = entityManager.CreateEntity();
                 entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceComponent
@@ -212,14 +201,18 @@ namespace Scenes
 
         public void ToggleSpawning()
         {
-            var playerInputState = gameStateQuery.GetSingleton<PlayerInputState>();
-            playerInputState.spawnActionPressed = !playerInputState.spawnActionPressed;
-            gameStateQuery.SetSingleton(playerInputState);
+            var playerEntity = playerControllerQuery.GetSingletonEntity();
+            var playerInput = entityManager.GetComponentData<PlayerInputState>(playerEntity);
+            
+            playerInput.spawnActionPressed = !playerInput.spawnActionPressed;
+            playerControllerQuery.SetSingleton(playerInput);
         }
 
         public bool IsSpawnEnabled()
         {
-            var playerController = playerControllerQuery.GetSingleton<PlayerController>();
+            var playerEntity = playerControllerQuery.GetSingletonEntity();
+            var playerController = entityManager.GetComponentData<PlayerController>(playerEntity);
+            
             return playerController.currentUnits < playerController.maxUnits;
         }
     }
