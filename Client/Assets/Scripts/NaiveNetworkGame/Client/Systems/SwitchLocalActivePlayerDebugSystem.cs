@@ -11,6 +11,9 @@ namespace NaiveNetworkGame.Client.Systems
             if (!Input.GetKeyUp(KeyCode.Tab))
                 return;
             
+            if (Entities.WithAll<PlayerController>().ToEntityQuery().CalculateEntityCount() == 1)
+                return;
+
             var activePlayerEntity = Entity.Null;
             Entities
                 .WithAll<ActivePlayer, PlayerController>()

@@ -76,3 +76,4 @@ Assets/Plugins/Editor/RelationsInspector/LayoutCaches.meta
 Assets/AddressableAssetsData/Windows.meta
 
 Client/TempAssets
+Client/UserSettings/EditorUserSettings.asset
