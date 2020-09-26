@@ -19,6 +19,7 @@ namespace Scenes.Tests
 
         private NetworkPipeline pipeline;
 
+        public bool useGzipCompression = false;
         public CompressionLevel compressionLevel;
 
         public int sourceSize;
@@ -40,15 +41,25 @@ namespace Scenes.Tests
             var bytes = Encoding.UTF8.GetBytes(textToSend.ToCharArray());
             sourceSize = bytes.Length;
 
-            // var memoryStream = new MemoryStream(bytes);
             byte[] resultBytes;
             
             using (var resultStream = new MemoryStream())
             {
-                using (var compressionStream = new DeflateStream(resultStream, compressionLevel))
+                if (useGzipCompression)
                 {
-                    compressionStream.Write(bytes, 0, bytes.Length);
+                    using (var compressionStream = new GZipStream(resultStream, compressionLevel))
+                    {
+                        compressionStream.Write(bytes, 0, bytes.Length);
+                    }
                 }
+                else
+                {
+                    using (var compressionStream = new DeflateStream(resultStream, compressionLevel))
+                    {
+                        compressionStream.Write(bytes, 0, bytes.Length);
+                    }
+                }
+
                 resultBytes = resultStream.ToArray();
             }
             
@@ -60,13 +71,26 @@ namespace Scenes.Tests
 
             using (var readStream = new MemoryStream(resultBytes))
             {
-                using (var uncompressionStream = new DeflateStream(readStream, CompressionMode.Decompress))
+                if (useGzipCompression)
                 {
-                    var readBytes = new byte[bytes.Length];
-                    var length = uncompressionStream.Read(readBytes, 0, bytes.Length);
-                    uncompressedText = Encoding.UTF8.GetString(readBytes, 0, length);
-                    targetSize = length;
-                }    
+                    using (var uncompressionStream = new GZipStream(readStream, CompressionMode.Decompress))
+                    {
+                        var readBytes = new byte[bytes.Length];
+                        var length = uncompressionStream.Read(readBytes, 0, bytes.Length);
+                        uncompressedText = Encoding.UTF8.GetString(readBytes, 0, length);
+                        targetSize = length;
+                    }
+                }
+                else
+                {
+                    using (var uncompressionStream = new DeflateStream(readStream, CompressionMode.Decompress))
+                    {
+                        var readBytes = new byte[bytes.Length];
+                        var length = uncompressionStream.Read(readBytes, 0, bytes.Length);
+                        uncompressedText = Encoding.UTF8.GetString(readBytes, 0, length);
+                        targetSize = length;
+                    }
+                }
             }
 
             

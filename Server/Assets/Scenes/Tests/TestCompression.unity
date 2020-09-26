@@ -249,7 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a42910e09b5c4344b2813026070f8af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  compressionLevel: 2
+  useGzipCompression: 0
+  compressionLevel: 0
   sourceSize: 0
   compressedSize: 0
   targetSize: 0
