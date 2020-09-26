@@ -10,19 +10,23 @@ namespace Scenes.Tests
         private NativeList<NetworkConnection> m_Connections;
         public NetworkDriver m_Driver;
 
-        private NetworkPipeline pipeline;
+        private NetworkPipeline m_Pipeline;
+
+        public int packetDropPercentage = 0;
+        public int packetDelayInMs = 0;
 
         void Start()
         {
-            m_Driver = NetworkDriver.Create(new NetworkDataStreamParameter
+            m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
             {
-                size = 30000
-            },   new FragmentationUtility.Parameters
-            {
-                PayloadCapacity = 16 * 1024
+                MaxPacketSize = NetworkParameterConstants.MTU, 
+                MaxPacketCount = 30, 
+                PacketDelayMs = packetDelayInMs, 
+                PacketDropPercentage = packetDropPercentage
             });
             
-            pipeline = NetworkPipeline.Null;
+            m_Pipeline = NetworkPipeline.Null;
+            m_Pipeline = m_Driver.CreatePipeline(typeof(SimulatorPipelineStage));
 
             // if (useFragmentationPipeline)
             //     pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
@@ -72,7 +76,7 @@ namespace Scenes.Tests
                         var latencyPacketIndex = stream.ReadByte();
                         var timeInClient = stream.ReadFloat();
 
-                        var latencyPacketAck = m_Driver.BeginSend(pipeline, m_Connections[i]);
+                        var latencyPacketAck = m_Driver.BeginSend(m_Pipeline, m_Connections[i]);
                         latencyPacketAck.WriteByte(latencyPacketIndex);
                         latencyPacketAck.WriteFloat(timeInClient);
 

@@ -1,4 +1,5 @@
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace Scenes.Tests
         public NetworkDriver m_Driver;
         public NetworkConnection m_Connection;
 
-        private NetworkPipeline pipeline;
+        private NetworkPipeline m_Pipeline;
 
         public Text latencyText;
 
@@ -20,14 +21,22 @@ namespace Scenes.Tests
 
         private byte latencyPacketIndex;
 
+        public int packetDropPercentage = 0;
+        public int packetDelayInMs = 0;
+        
         void Start ()
         {
-            m_Driver = NetworkDriver.Create(new NetworkDataStreamParameter
+            m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
             {
-                size = 30000
+                MaxPacketSize = NetworkParameterConstants.MTU, 
+                MaxPacketCount = 30, 
+                PacketDelayMs = packetDelayInMs, 
+                PacketDropPercentage = packetDropPercentage
             });
             
-            pipeline = NetworkPipeline.Null;
+            m_Pipeline = NetworkPipeline.Null;
+            
+            m_Pipeline = m_Driver.CreatePipeline(typeof(SimulatorPipelineStage));
 
             // if (useFragmentationPipeline)
             //     pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
@@ -87,7 +96,7 @@ namespace Scenes.Tests
                 latencyUpdateCurrent -= latencyUpdateFrequency;
                 if (m_Driver.GetConnectionState(m_Connection) == NetworkConnection.State.Connected)
                 {
-                    var latencyPacket = m_Driver.BeginSend(pipeline, m_Connection);
+                    var latencyPacket = m_Driver.BeginSend(m_Pipeline, m_Connection);
                     latencyPacket.WriteByte(latencyPacketIndex++);
                     latencyPacket.WriteFloat(Time.realtimeSinceStartup);
                     m_Driver.EndSend(latencyPacket);

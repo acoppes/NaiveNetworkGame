@@ -350,6 +350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a08196a2201e5e74cac3150025edf06f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  packetDropPercentage: 10
+  packetDelayInMs: 90
 --- !u!114 &948546783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,9 +364,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ef16a41d0e4664e9cf1b558d61c364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Done: 0
   latencyText: {fileID: 1148990788}
-  latencyUpdateFrequency: 0
+  latencyUpdateFrequency: 1
+  packetDropPercentage: 20
+  packetDelayInMs: 60
 --- !u!1 &1148990786
 GameObject:
   m_ObjectHideFlags: 0
