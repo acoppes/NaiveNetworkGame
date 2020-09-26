@@ -11,7 +11,7 @@ namespace Development
         public void Open()
         {
             gameObject.SetActive(true);
-            var changelogTextAsset = Resources.Load("Changelog", typeof(TextAsset)) as TextAsset;
+            var changelogTextAsset = Resources.Load<TextAsset>("Changelog");
             text.text = changelogTextAsset.text;
         }
 

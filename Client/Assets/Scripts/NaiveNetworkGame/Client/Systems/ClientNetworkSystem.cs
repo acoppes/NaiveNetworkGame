@@ -366,7 +366,8 @@ namespace NaiveNetworkGame.Client.Systems
         {
             Entities.ForEach(delegate(ClientSingleton c)
             {
-                c.m_Driver.Dispose();
+                if (c.m_Driver.IsCreated)
+                    c.m_Driver.Dispose();
             });
             
             base.OnDestroy();
