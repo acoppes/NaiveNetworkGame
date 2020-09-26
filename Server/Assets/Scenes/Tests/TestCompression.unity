@@ -1,0 +1,439 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!29 &1
+OcclusionCullingSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_OcclusionBakeSettings:
+    smallestOccluder: 5
+    smallestHole: 0.25
+    backfaceThreshold: 100
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
+--- !u!104 &2
+RenderSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 9
+  m_Fog: 0
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.01
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 300
+  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
+  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientIntensity: 1
+  m_AmbientMode: 3
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_SkyboxMaterial: {fileID: 0}
+  m_HaloStrength: 0.5
+  m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
+  m_HaloTexture: {fileID: 0}
+  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
+  m_DefaultReflectionMode: 0
+  m_DefaultReflectionResolution: 128
+  m_ReflectionBounces: 1
+  m_ReflectionIntensity: 1
+  m_CustomReflection: {fileID: 0}
+  m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_UseRadianceAmbientProbe: 0
+--- !u!157 &3
+LightmapSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 12
+  m_GIWorkflowMode: 1
+  m_GISettings:
+    serializedVersion: 2
+    m_BounceScale: 1
+    m_IndirectOutputScale: 1
+    m_AlbedoBoost: 1
+    m_EnvironmentLightingMode: 0
+    m_EnableBakedLightmaps: 0
+    m_EnableRealtimeLightmaps: 0
+  m_LightmapEditorSettings:
+    serializedVersion: 12
+    m_Resolution: 2
+    m_BakeResolution: 40
+    m_AtlasSize: 1024
+    m_AO: 0
+    m_AOMaxDistance: 1
+    m_CompAOExponent: 1
+    m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
+    m_Padding: 2
+    m_LightmapParameters: {fileID: 0}
+    m_LightmapsBakeMode: 1
+    m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
+    m_ReflectionCompression: 2
+    m_MixedBakeMode: 2
+    m_BakeBackend: 1
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 512
+    m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 256
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 1
+    m_PVRDenoiserTypeDirect: 1
+    m_PVRDenoiserTypeIndirect: 1
+    m_PVRDenoiserTypeAO: 1
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
+    m_PVREnvironmentMIS: 1
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 5
+    m_PVRFilteringGaussRadiusAO: 2
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
+  m_LightingDataAsset: {fileID: 0}
+  m_LightingSettings: {fileID: 0}
+--- !u!196 &4
+NavMeshSettings:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_BuildSettings:
+    serializedVersion: 2
+    agentTypeID: 0
+    agentRadius: 0.5
+    agentHeight: 2
+    agentSlope: 45
+    agentClimb: 0.4
+    ledgeDropHeight: 0
+    maxJumpAcrossDistance: 0
+    minRegionArea: 2
+    manualCellSize: 0
+    cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
+    accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
+    debug:
+      m_Flags: 0
+  m_NavMeshData: {fileID: 0}
+--- !u!1 &823658936
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 823658939}
+  - component: {fileID: 823658938}
+  - component: {fileID: 823658937}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &823658937
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823658936}
+  m_Enabled: 1
+--- !u!20 &823658938
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823658936}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 5
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &823658939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823658936}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &948546780
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 948546781}
+  - component: {fileID: 948546782}
+  m_Layer: 0
+  m_Name: ~Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &948546781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948546780}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &948546782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948546780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a42910e09b5c4344b2813026070f8af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textToSend: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non
+    dapibus mauris. Aliquam ullamcorper risus id scelerisque mattis. Nam et erat
+    libero. Vestibulum et metus feugiat, rhoncus est vel, condimentum lorem. Mauris
+    ornare massa non purus bibendum tincidunt. Ut ullamcorper porttitor odio, id
+    ultricies erat faucibus eget. Aenean sed suscipit dui. Donec at nulla gravida,
+    fermentum mi non, tincidunt mi. Aenean imperdiet eget dolor et tempus. Vivamus
+    euismod purus placerat nisi blandit, vitae suscipit diam semper. Cras sed arcu
+    eget velit aliquet sodales. Suspendisse at nisi at est elementum vestibulum.
+    Sed non erat ut turpis volutpat vehicula ut nec augue. In aliquam egestas nibh
+    id scelerisque. Nulla eu convallis turpis, placerat lacinia ex.
+
+
+
+    Quisque
+    aliquet tempus risus tincidunt vestibulum. Donec at urna eget augue gravida pretium.
+    Sed vitae porttitor erat. Mauris diam lacus, vulputate vel magna a, dapibus mollis
+    nibh. Nullam semper lobortis ligula, quis accumsan nibh mollis in. Nam ut sem
+    luctus, consectetur metus eget, mollis orci. Phasellus laoreet eros et dui vehicula
+    eleifend. Aenean in sem non leo vulputate vehicula. Nulla tempor, massa eget
+    luctus malesuada, nibh enim consequat leo, in pulvinar felis dolor id tortor.
+    Nulla eu ultrices sapien. Duis finibus blandit imperdiet.
+
+
+
+    Nulla facilisi.
+    Integer sed rhoncus felis. Nullam dapibus malesuada semper. Integer rhoncus mi
+    ac velit dapibus condimentum. Morbi vel scelerisque metus. Praesent malesuada
+    cursus nisl. Phasellus vel efficitur nulla, quis ultricies ex. Curabitur porttitor,
+    massa ac pulvinar maximus, nibh turpis condimentum odio, id tempor sapien nisl
+    eu massa. Nam auctor pulvinar turpis, a scelerisque risus sodales consectetur.
+    Morbi viverra mattis metus, eget viverra ante ullamcorper et. Phasellus placerat
+    lorem et semper gravida. Morbi id purus arcu. Nullam sed venenatis lorem, a elementum
+    felis. Phasellus magna purus, consequat non enim at, imperdiet aliquet lorem.
+
+
+
+    Ut
+    et dui eget quam pretium elementum non sed sem. Sed viverra elementum dui, at
+    dictum nisl. Etiam volutpat commodo egestas. Morbi vitae velit sit amet sem volutpat
+    tempor at sed tortor. Morbi dapibus massa diam, in tincidunt eros mollis lobortis.
+    In hac habitasse platea dictumst. Integer laoreet sem orci, in placerat neque
+    sagittis ac. Morbi id erat cursus, iaculis arcu vitae, ultrices nunc. Vivamus
+    nec augue id neque pretium ornare. Praesent nec fringilla ligula, vel ultricies
+    massa. In hendrerit nisl eu felis scelerisque, non semper magna posuere. Duis
+    molestie venenatis sem, a vulputate urna fringilla id. Nam euismod erat urna,
+    ac aliquam arcu egestas vitae. Proin urna tortor, ullamcorper vitae feugiat sed,
+    porttitor sed magna. Suspendisse potenti.
+
+
+
+    Aenean eget erat elit. Integer
+    mollis felis at lorem ultrices molestie. Curabitur sapien dolor, malesuada vitae
+    nisi id, tristique gravida erat. Aliquam est arcu, fermentum id libero efficitur,
+    congue sollicitudin lacus. Sed accumsan elit eget lectus tincidunt, id euismod
+    orci luctus. Donec elementum mauris quis nulla tincidunt maximus. In sollicitudin
+    ultrices sem a sollicitudin. Mauris fermentum felis aliquam, blandit sem non,
+    porttitor ipsum. Sed volutpat in arcu at fringilla. Praesent eu justo efficitur
+    nunc varius condimentum. Etiam a est et nibh suscipit suscipit. Vestibulum finibus
+    lacus at orci congue, in ornare lacus convallis.
+
+
+
+    Mauris commodo nisl vel
+    augue luctus consectetur. Vestibulum volutpat sollicitudin nisi nec accumsan.
+    Fusce sit amet nibh porta justo placerat volutpat. Proin in ante interdum, pretium
+    turpis a, sagittis velit. Morbi lobortis accumsan suscipit. Curabitur elementum
+    enim at urna rutrum dapibus. Sed at lacus id risus aliquet tempor quis et diam.
+    Curabitur ac massa tempor, cursus nisl sed, dapibus orci. Interdum et malesuada
+    fames ac ante ipsum primis in faucibus. Nunc eu enim suscipit, lacinia nisi sed,
+    volutpat nunc. Maecenas sollicitudin lacinia orci, eget volutpat nisl lacinia
+    elementum.
+
+
+
+    Sed vel eros magna. Sed dapibus diam ut ante semper, eu convallis
+    metus aliquam. Fusce non pharetra quam. Vivamus sagittis eros eros, vitae suscipit
+    lacus iaculis a. Sed egestas augue sem, a finibus tortor consectetur non. Vivamus
+    dapibus congue leo a maximus. Lorem ipsum dolor sit amet, consectetur adipiscing
+    elit. Vivamus non risus eget risus consequat dictum. In pulvinar lorem sed neque
+    condimentum, pulvinar gravida nisi rutrum. Nunc sit amet elit fringilla, aliquam
+    lectus vel, pellentesque neque. Ut massa ligula, eleifend quis velit eu, finibus
+    elementum sem. Sed ullamcorper auctor diam, ut tincidunt libero eleifend sed.
+    Aenean vulputate dolor sit amet augue mollis, a ultricies arcu cursus. Curabitur
+    massa quam, rhoncus et nunc at, placerat malesuada ipsum. Duis mollis sit amet
+    leo at imperdiet. Nulla porttitor et ex eget elementum.
+
+
+
+    Proin et leo porta
+    ligula tempor blandit. Suspendisse cursus semper nisi vel ultrices. In aliquet
+    consequat leo vel aliquet. Sed sagittis, mi in pellentesque cursus, lorem metus
+    consectetur metus, sit amet tincidunt tortor mauris nec ex. Aenean tristique
+    ac mi et egestas. Nunc a metus elit. Vivamus rutrum tempor lacinia. Integer scelerisque
+    diam a faucibus venenatis. Lorem ipsum dolor sit amet, consectetur adipiscing
+    elit. Duis vel lorem et dolor maximus sollicitudin. Mauris ultrices mauris in
+    felis imperdiet mollis.
+
+
+
+    Maecenas condimentum orci ac tincidunt accumsan.
+    Ut at nisl vel ipsum pharetra vestibulum iaculis vel justo. Nam aliquam venenatis
+    sodales. Etiam ut turpis vitae mauris maximus egestas. Ut facilisis rutrum risus,
+    sed interdum est lacinia non. Curabitur vel magna suscipit, varius lectus quis,
+    convallis velit. Suspendisse sollicitudin sollicitudin nulla, sit amet lacinia
+    ipsum accumsan vel. Nunc sed commodo ligula. Etiam ultrices suscipit nibh, eget
+    ornare purus scelerisque a. Nulla iaculis auctor diam, sed aliquet velit luctus
+    eget. Mauris lobortis vestibulum euismod. Curabitur nec enim viverra, eleifend
+    dui ut, facilisis urna. Orci varius natoque penatibus et magnis dis parturient
+    montes, nascetur ridiculus mus.
+
+
+
+    Ut scelerisque vehicula nisl sit amet
+    cursus. Vestibulum efficitur vel erat id consequat. Donec vulputate at diam non
+    tincidunt. Praesent convallis odio sed est ultricies sollicitudin. Cras nec sagittis
+    neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames
+    ac turpis egestas. Curabitur nec mi eget libero pretium finibus. Integer non
+    velit gravida quam dignissim vestibulum quis vel felis. Morbi nec metus mattis,
+    vehicula est id, luctus ipsum. Donec orci justo, varius et laoreet sed, dapibus
+    sed lacus. Nulla hendrerit, libero at facilisis facilisis, tellus est scelerisque
+    nisl, vel hendrerit ipsum nunc sit amet risus.
+
+
+
+    Nunc nisi magna, porta
+    eu odio quis, laoreet congue lorem. In placerat magna id arcu venenatis, vitae
+    semper erat gravida. Aliquam pulvinar luctus neque, vel aliquet neque bibendum
+    vel. Sed maximus, nisl id luctus consequat, ipsum nisl auctor enim, eu vulputate
+    arcu lorem ut risus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+    Mauris rhoncus consequat ex, nec tincidunt mi posuere at. Pellentesque habitant
+    morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec
+    sit amet magna vitae urna sodales fringilla. Quisque pulvinar sed justo lacinia
+    elementum. Aliquam non turpis finibus, malesuada lectus nec, commodo lectus.
+    Proin dolor dolor, pharetra vitae leo id, imperdiet condimentum ante. Suspendisse
+    rhoncus ac ante at consectetur. Pellentesque ultricies sed justo vel porttitor.
+    Quisque tempor augue sit amet ante blandit aliquam. Etiam vulputate convallis
+    tempus. Duis interdum fringilla condimentum.
+
+
+
+    Donec faucibus, mauris interdum
+    pretium feugiat, ligula purus rutrum sapien, at vehicula tellus nunc et mauris.
+    Nunc tellus tortor, condimentum nec interdum ac, cursus in diam. Vivamus rhoncus
+    mauris quis eros ornare, ac commodo lorem iaculis. Duis pellentesque, ante vitae
+    laoreet egestas, lacus elit auctor velit, in dictum risus dui a velit. Nunc tincidunt
+    luctus quam eu maximus. Ut ultricies felis sed varius ultrices. Proin quam ex,
+    dapibus sed lobortis laoreet, facilisis et arcu. Fusce a justo at nisl ultrices
+    hendrerit. Maecenas eget dictum sem. Aliquam vel lorem mauris.
+
+
+
+    Mauris
+    sapien tortor, ultricies eu nulla a, pellentesque tristique quam. Aenean vel
+    sem at odio mattis imperdiet. Praesent facilisis finibus risus ut cursus. Vestibulum
+    dictum, justo sed iaculis luctus, velit sem congue metus, quis ornare elit nibh
+    ut tellus. Mauris ex elit, commodo ut iaculis eget, efficitur a orci. Vestibulum
+    ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+    Morbi in libero at neque gravida lacinia. Integer luctus arcu nec enim rutrum
+    egestas a at ex. Quisque vel pellentesque lectus, quis elementum sem. Vestibulum
+    sit amet lorem in erat ornare tincidunt vel quis sapien. Etiam bibendum tincidunt
+    nibh.
+
+
+
+    Donec tristique eros tempus, tincidunt dui ac, vestibulum dolor.
+    Sed egestas, lacus eget tristique tristique, turpis justo interdum lectus, sit
+    amet consequat leo tortor tempus eros. Donec viverra, nisi at vulputate pellentesque,
+    erat ex pellentesque nibh, vel scelerisque augue magna at dolor. Sed pharetra
+    nulla nulla, tempus gravida mi elementum ac. Sed eleifend elit neque, eget tempus
+    ante gravida non. Aliquam bibendum leo nisl, eu ultrices sapien cursus nec. Aliquam
+    erat volutpat. Ut eleifend sapien neque, et blandit nisl mattis vel. Fusce tortor
+    leo, euismod ac arcu eu, congue vehicula erat. Mauris eu aliquam erat, a eleifend
+    enim. Phasellus vitae dolor volutpat, placerat urna eu, ultricies odio. In venenatis
+    dolor vitae scelerisque porttitor. Proin urna nisi, tempus eu tortor ultrices,
+    eleifend efficitur velit. Aliquam ut elit vel lacus suscipit tincidunt in eu
+    purus. Suspendisse in malesuada odio. Phasellus euismod ornare orci accumsan
+    consequat.
+
+
+
+    Curabitur posuere, lectus ac fringilla euismod, massa nunc
+    pellentesque massa, a varius mi urna sed erat. Quisque vulputate porta nunc sit
+    amet ultrices. Vestibulum et cursus est, et laoreet mi. Fusce ac lorem lacus.
+    Ut nec ultricies felis. Morbi tempor purus vel arcu commodo, eu iaculis leo porta.
+    Pellentesque et urna enim. Sed ornare felis non ipsum molestie facilisis. '
+  separatedPackets: 0
+  useFragmentationPipeline: 0
+  useCompression: 0
