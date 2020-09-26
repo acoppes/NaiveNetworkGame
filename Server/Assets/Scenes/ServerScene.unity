@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c68657874c3e46a958949de13f335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetFrameRate: 30
+  targetFrameRate: 60
   sendTranslationStateFrequency: 0.1
   sendGameStateFrequency: 0.2
   totalOutputInBytes: 0
