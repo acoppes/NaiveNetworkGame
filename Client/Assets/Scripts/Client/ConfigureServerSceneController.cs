@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Development;
 using NaiveNetworkGame.Client.Systems;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,6 +33,8 @@ namespace Client
         public Button newServerButton;
 
         public Button deleteServersButton;
+
+        public ChangelogWindow changelogWindow;
         
         private ServerList serverList;
         
@@ -88,6 +91,12 @@ namespace Client
 
             newServerInput.contentType = InputField.ContentType.Custom;
             newServerInput.onValidateInput += OnValidateValidIpAddress;
+
+            var autoOpenChangelog = PlayerPrefs.GetInt("NaiveNetworkGame.ChangelogAutoOpen", 1);
+            if (autoOpenChangelog == 1)
+            {
+                changelogWindow.Open();
+            }
         }
 
         private char OnValidateValidIpAddress(string text, int charindex, char addedchar)

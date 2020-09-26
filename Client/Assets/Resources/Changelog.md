@@ -3,7 +3,7 @@
 ## Added
 
   * Latency with server in connection debug info.
-  * Release notes window.
+  * Release notes window with toggle to auto open on start.
 
 ## Changed
 
