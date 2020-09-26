@@ -10,7 +10,11 @@ using UnityEngine.SocialPlatforms;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-
+    public static class ConnectionSettings
+    {
+        public static float latencyKeepAliveFrequency = 1;
+    }
+    
     public struct ServerConnectionParameters
     {
         public string ip;
@@ -29,6 +33,8 @@ namespace NaiveNetworkGame.Client.Systems
     
     public class ClientNetworkSystem : ComponentSystem
     {
+        private float lastLatencyUpdate;
+        
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -178,9 +184,9 @@ namespace NaiveNetworkGame.Client.Systems
                         {
                             Debug.Log("Local player connected to server, sending keep alive");
                             
-                            var writer = m_Driver.BeginSend(m_Connection);
-                            writer.WriteByte(PacketType.ClientKeepAlive);
-                            m_Driver.EndSend(writer);
+                            // var writer = m_Driver.BeginSend(m_Connection);
+                            // writer.WriteByte(PacketType.ClientKeepAlive);
+                            // m_Driver.EndSend(writer);
 
                             ConnectionState.currentState = ConnectionState.State.Connected;
 
@@ -244,6 +250,14 @@ namespace NaiveNetworkGame.Client.Systems
                                 // TODO: show it in the UI
                                 Debug.Log("Server reached max players");
                             }
+
+                            if (type == PacketType.ClientKeepAlive)
+                            {
+                                // keep alive returned, check current latency...
+                                var packetStartTime = stream.ReadFloat();
+
+                                ConnectionState.latency = (float) ((Time.ElapsedTime - packetStartTime) * 0.5f);
+                            }
                         }
                         else if (cmd == NetworkEvent.Type.Disconnect)
                         {
@@ -282,20 +296,47 @@ namespace NaiveNetworkGame.Client.Systems
                         pendingActionSent = true;
                     });
 
-                if (!pendingActionSent)
-                {
-                    // send keep alive packet! 
-                    if (m_Driver.IsCreated && m_Connection.IsCreated)
-                    {
-                        if (m_Driver.GetConnectionState(m_Connection) == NetworkConnection.State.Connected)
-                        {
-                            var writer = m_Driver.BeginSend(m_Connection);
-                            writer.WriteByte(PacketType.ClientKeepAlive);
-                            m_Driver.EndSend(writer);
-                        }
-                    }
-                }
+                // if (!pendingActionSent)
+                // {
+                //     // send keep alive packet! 
+                //     if (m_Driver.IsCreated && m_Connection.IsCreated)
+                //     {
+                //         if (m_Driver.GetConnectionState(m_Connection) == NetworkConnection.State.Connected)
+                //         {
+                //             var writer = m_Driver.BeginSend(m_Connection);
+                //             writer.WriteByte(PacketType.ClientKeepAlive);
+                //             m_Driver.EndSend(writer);
+                //         }
+                //     }
+                // }
             });
+            
+            // TODO: keep alive frequency...
+
+            lastLatencyUpdate -= Time.DeltaTime;
+            var currentTime = (float) Time.ElapsedTime;
+            
+            if (lastLatencyUpdate < 0)
+            {
+                lastLatencyUpdate = ConnectionSettings.latencyKeepAliveFrequency;
+                
+                Entities
+                    .WithAll<NetworkPlayerId>()
+                    .ForEach(delegate(ref NetworkPlayerId networkPlayer)
+                    {
+                        var m_Connection = networkPlayer.connection;
+                        if (!m_Connection.IsCreated)
+                            return;
+
+                        if (m_Driver.GetConnectionState(m_Connection) != NetworkConnection.State.Connected)
+                            return;
+
+                        var writer = m_Driver.BeginSend(m_Connection);
+                        writer.WriteByte(PacketType.ClientKeepAlive);
+                        writer.WriteFloat(currentTime);
+                        m_Driver.EndSend(writer);
+                    });
+            }
             
             // if we want to disconnect from server...
             Entities

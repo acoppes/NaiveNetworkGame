@@ -204,6 +204,16 @@ namespace NaiveNetworkGame.Server.Systems
                             // networkManager.m_Connections[i] = default;
                         }
 
+                        if (packet == PacketType.ClientKeepAlive)
+                        {
+                            var clientTime = stream.ReadFloat();
+                            
+                            var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
+                            writer.WriteByte(PacketType.ClientKeepAlive);
+                            writer.WriteFloat(clientTime);
+                            m_Driver.EndSend(writer);
+                        }
+
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
                     {

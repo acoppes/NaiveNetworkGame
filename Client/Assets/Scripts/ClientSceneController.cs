@@ -90,6 +90,8 @@ namespace Scenes
         public GameObject connectedTimeObject;
         public Text connectedTimeText;
 
+        public Text latencyText;
+
         private EntityManager entityManager;
 
         private void Start()
@@ -197,6 +199,7 @@ namespace Scenes
 
             receivedBytesText.text = $"{ConnectionState.totalReceivedBytes / 1024} KB";
             connectedTimeText.text = $"{ConnectionState.connectedTime:0.}s";
+            latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
         }
 
         public void ToggleSpawning()
