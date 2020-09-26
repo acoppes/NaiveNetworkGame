@@ -19,6 +19,8 @@ namespace Scenes.Tests
 
         private NetworkPipeline pipeline;
 
+        public CompressionLevel compressionLevel;
+
         public int sourceSize;
         public int compressedSize;
         public int targetSize;
@@ -43,7 +45,7 @@ namespace Scenes.Tests
             
             using (var resultStream = new MemoryStream())
             {
-                using (var compressionStream = new DeflateStream(resultStream, CompressionMode.Compress))
+                using (var compressionStream = new DeflateStream(resultStream, compressionLevel))
                 {
                     compressionStream.Write(bytes, 0, bytes.Length);
                 }

@@ -249,6 +249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a42910e09b5c4344b2813026070f8af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  compressionLevel: 2
+  sourceSize: 0
+  compressedSize: 0
+  targetSize: 0
   textToSend: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non
     dapibus mauris. Aliquam ullamcorper risus id scelerisque mattis. Nam et erat
     libero. Vestibulum et metus feugiat, rhoncus est vel, condimentum lorem. Mauris
@@ -434,6 +438,5 @@ MonoBehaviour:
     amet ultrices. Vestibulum et cursus est, et laoreet mi. Fusce ac lorem lacus.
     Ut nec ultricies felis. Morbi tempor purus vel arcu commodo, eu iaculis leo porta.
     Pellentesque et urna enim. Sed ornare felis non ipsum molestie facilisis. '
-  separatedPackets: 0
-  useFragmentationPipeline: 0
-  useCompression: 0
+  compressedText: 
+  uncompressedText: 

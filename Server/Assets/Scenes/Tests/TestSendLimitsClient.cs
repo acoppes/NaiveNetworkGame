@@ -1,9 +1,13 @@
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
+using Unity.Collections;
 using Unity.Networking.Transport;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
+using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace Scenes.Tests
 {
@@ -24,6 +28,9 @@ namespace Scenes.Tests
         public bool separatedPackets;
         
         private StringBuilder longTermStr = new StringBuilder();
+
+        public bool useFragmentationPipeline;
+        public bool useCompression;
         
         void Start ()
         {
@@ -35,9 +42,11 @@ namespace Scenes.Tests
                 PayloadCapacity = 16 * 1024
             });
             
-            // pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
             pipeline = NetworkPipeline.Null;
-            
+
+            if (useFragmentationPipeline)
+                pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+
             m_Connection = default(NetworkConnection);
 
             var endpoint = NetworkEndPoint.LoopbackIpv4;
@@ -81,16 +90,37 @@ namespace Scenes.Tests
                     {
                         var str = new StringBuilder();
                         var streamLength = stream.Length;
-                        var receivedLength = stream.ReadUShort();
+                        receivedLength = stream.ReadUShort();
 
                         Debug.Log($"Got stream from server: {streamLength}, {receivedLength}");
 
-                        for (var i = 0; i < receivedLength; i++)
+                        if (useCompression)
                         {
-                            var b = stream.ReadByte();
-                            str.Append(Convert.ToChar(b));
+                            var nativeArray = new NativeArray<byte>(stream.Length - 2, Allocator.TempJob);
+                            stream.ReadBytes(nativeArray);
+
+                            using (var memoryStream = new MemoryStream(nativeArray.ToArray()))
+                            {
+                                using (var deflate = new DeflateStream(memoryStream, CompressionMode.Decompress))
+                                {
+                                    var bytes = new byte[receivedLength];
+                                    deflate.Read(bytes, 0, bytes.Length);
+                                    str.Append(Encoding.UTF8.GetString(bytes, 0, bytes.Length));
+                                }    
+                            }
+                            
+
+                            nativeArray.Dispose();
                         }
-                        
+                        else
+                        {
+                            for (var i = 0; i < receivedLength; i++)
+                            {
+                                var b = stream.ReadByte();
+                                str.Append(Convert.ToChar(b));
+                            } 
+                        }
+
                         Debug.Log(str.ToString());
                         receivedText = str.ToString();
                     

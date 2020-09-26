@@ -1,10 +1,14 @@
 using System;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Networking.Transport;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
+using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace Scenes.Tests
 {
@@ -19,7 +23,10 @@ namespace Scenes.Tests
         public string textToSend;
 
         public bool separatedPackets;
+        public bool useFragmentationPipeline;
 
+        public bool useCompression;
+        
         void Start()
         {
             m_Driver = NetworkDriver.Create(new NetworkDataStreamParameter
@@ -30,8 +37,10 @@ namespace Scenes.Tests
                 PayloadCapacity = 16 * 1024
             });
             
-            // pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
             pipeline = NetworkPipeline.Null;
+
+            if (useFragmentationPipeline)
+                pipeline = m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
 
             var endpoint = NetworkEndPoint.AnyIpv4;
             endpoint.Port = 9000;
@@ -92,16 +101,44 @@ namespace Scenes.Tests
                                 m_Driver.EndSend(writer);
                             }
                         } else {
-                            var writer = m_Driver.BeginSend(pipeline, m_Connections[i], (int) (min + 2));
 
-                            writer.WriteUShort((ushort) min);
-
-                            for (var j = 0; j < min; j++)
+                            if (useCompression)
                             {
-                                writer.WriteByte(Convert.ToByte(charArray[j]));
-                            }
+                                var bytes = Encoding.UTF8.GetBytes(charArray);
+                                byte[] resultBytes;
 
-                            m_Driver.EndSend(writer);
+                                using (var memoryStream = new MemoryStream())
+                                {
+                                    using (var deflate = new DeflateStream(memoryStream, CompressionLevel.Fastest))
+                                    {
+                                        deflate.Write(bytes, 0, bytes.Length);
+                                    }
+
+                                    resultBytes = memoryStream.ToArray();
+                                }
+                                
+                                var writer = m_Driver.BeginSend(pipeline, m_Connections[i], resultBytes.Length + 2);
+                                writer.WriteUShort((ushort) resultBytes.Length);
+
+                                var array = new NativeArray<byte>(resultBytes, Allocator.TempJob);
+                                writer.WriteBytes(array);
+                                array.Dispose();
+
+                                m_Driver.EndSend(writer);
+                            }
+                            else
+                            {                  
+                                var writer = m_Driver.BeginSend(pipeline, m_Connections[i], (int) (min + 2));
+
+                                writer.WriteUShort((ushort) min);
+
+                                for (var j = 0; j < min; j++)
+                                {
+                                    writer.WriteByte(Convert.ToByte(charArray[j]));
+                                }
+
+                                m_Driver.EndSend(writer);
+                            }
                         }
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
