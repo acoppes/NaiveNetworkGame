@@ -13,8 +13,6 @@ namespace NaiveNetworkGame.Server.Systems
     {
         public static float sendTranslationStateFrequency = 0.1f;
         public static float sendGameStateFrequency = 0.1f;
-
-        public static readonly byte totalPlayers = 2;
     }
     
     public static class ServerNetworkStatistics
