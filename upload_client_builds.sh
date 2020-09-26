@@ -12,8 +12,8 @@ rm ../${WINDOWS_BUILD}
 zip -r ../${WINDOWS_BUILD} .
 cd -
 
-echo 'Uploading build to server'
+echo 'Uploading Windows client build to server'
 scp Client/Builds/${WINDOWS_BUILD} $USER@$SERVER:NaiveNetworkGame/
 
-echo 'Uploading build to server'
+echo 'Uploading Android client build to server'
 scp Client/Builds/${ANDROID_BUILD} $USER@$SERVER:NaiveNetworkGame/
