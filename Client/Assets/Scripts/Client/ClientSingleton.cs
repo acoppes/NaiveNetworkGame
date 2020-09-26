@@ -19,6 +19,9 @@ namespace Client
         public static float connectedTime;
         
         public static float latency;
+        public static double latencyPacketLastTime;
+        public static byte latencyWaitPacket;
+        public static byte latencyPacket;
     }
     
     public struct ClientSingleton : ISharedComponentData, IEquatable<ClientSingleton>

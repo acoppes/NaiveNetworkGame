@@ -7,6 +7,7 @@
 
 ## Changed
 
+  * Latency uses now the packet index (byte) instead of sending the time.
   * Now main scene is 1v1 and increased camera size.
 
 ## Fixed

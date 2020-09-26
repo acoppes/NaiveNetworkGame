@@ -204,11 +204,11 @@ namespace NaiveNetworkGame.Server.Systems
 
                         if (packet == PacketType.ClientKeepAlive)
                         {
-                            var clientTime = stream.ReadFloat();
+                            var packetIndex = stream.ReadByte();
                             
                             var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
                             writer.WriteByte(PacketType.ClientKeepAlive);
-                            writer.WriteFloat(clientTime);
+                            writer.WriteByte(packetIndex);
                             m_Driver.EndSend(writer);
                         }
 

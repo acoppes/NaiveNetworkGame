@@ -14,7 +14,7 @@ namespace NaiveNetworkGame.Client.Systems
     {
         public static float latencyKeepAliveFrequency = 1;
     }
-    
+
     public struct ServerConnectionParameters
     {
         public string ip;
@@ -183,11 +183,6 @@ namespace NaiveNetworkGame.Client.Systems
                         if (cmd == NetworkEvent.Type.Connect)
                         {
                             Debug.Log("Local player connected to server, sending keep alive");
-                            
-                            // var writer = m_Driver.BeginSend(m_Connection);
-                            // writer.WriteByte(PacketType.ClientKeepAlive);
-                            // m_Driver.EndSend(writer);
-
                             ConnectionState.currentState = ConnectionState.State.Connected;
 
                         }
@@ -254,9 +249,13 @@ namespace NaiveNetworkGame.Client.Systems
                             if (type == PacketType.ClientKeepAlive)
                             {
                                 // keep alive returned, check current latency...
-                                var packetStartTime = stream.ReadFloat();
-
-                                ConnectionState.latency = (float) ((Time.ElapsedTime - packetStartTime) * 0.5f);
+                                var packetIndex = stream.ReadByte();
+                                
+                                // if not the packet we are waiting, avoid it...
+                                if (packetIndex == ConnectionState.latencyWaitPacket)
+                                {
+                                    ConnectionState.latency = (float) ((Time.ElapsedTime - ConnectionState.latencyPacketLastTime) * 0.5f);
+                                }
                             }
                         }
                         else if (cmd == NetworkEvent.Type.Disconnect)
@@ -314,7 +313,7 @@ namespace NaiveNetworkGame.Client.Systems
             // TODO: keep alive frequency...
 
             lastLatencyUpdate -= Time.DeltaTime;
-            var currentTime = (float) Time.ElapsedTime;
+            var currentTime = Time.ElapsedTime;
             
             if (lastLatencyUpdate < 0)
             {
@@ -331,9 +330,15 @@ namespace NaiveNetworkGame.Client.Systems
                         if (m_Driver.GetConnectionState(m_Connection) != NetworkConnection.State.Connected)
                             return;
 
+                        ConnectionState.latencyPacketLastTime = currentTime;
+
+                        ConnectionState.latencyWaitPacket = ConnectionState.latencyPacket;
+                        ConnectionState.latencyPacket++;
+                        
                         var writer = m_Driver.BeginSend(m_Connection);
                         writer.WriteByte(PacketType.ClientKeepAlive);
-                        writer.WriteFloat(currentTime);
+                        writer.WriteByte(ConnectionState.latencyWaitPacket);
+                        // writer.WriteFloat(currentTime);
                         m_Driver.EndSend(writer);
                     });
             }
