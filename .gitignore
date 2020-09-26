@@ -77,3 +77,4 @@ Assets/AddressableAssetsData/Windows.meta
 
 Client/TempAssets
 Client/UserSettings/EditorUserSettings.asset
+Server/UserSettings/EditorUserSettings.asset
