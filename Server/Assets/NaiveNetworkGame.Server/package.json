@@ -1,0 +1,8 @@
+{
+    "name": "naivenetworkgame.server",
+    "displayName": "NaiveNetworkGame.Server",
+    "version": "0.0.1",
+    "unity": "2020.2",
+    "description": "NaiveNetworkGame.Server",
+    "category": "Unity"
+}
