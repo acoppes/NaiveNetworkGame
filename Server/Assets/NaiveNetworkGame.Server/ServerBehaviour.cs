@@ -154,18 +154,18 @@ namespace NaiveNetworkGame.Server
 
             timeSinceLastSecondUpdate += Time.deltaTime;
             
-            if (timeSinceLastSecondUpdate > 1)
-            {
-                timeSinceLastSecondUpdate -= 1;
-
-                lastSecondOutputInBytes = ServerNetworkStatistics.outputBytesTotal - previousTotalBytes;
-                previousTotalBytes = ServerNetworkStatistics.outputBytesTotal;
-                
-                Debug.Log($"Last Second Output (Bytes): {lastSecondOutputInBytes}");
-            }
-            
             if (logStatistics)
             {
+                if (timeSinceLastSecondUpdate > 1)
+                {
+                    timeSinceLastSecondUpdate -= 1;
+
+                    lastSecondOutputInBytes = ServerNetworkStatistics.outputBytesTotal - previousTotalBytes;
+                    previousTotalBytes = ServerNetworkStatistics.outputBytesTotal;
+                
+                    Debug.Log($"Last Second Output (Bytes): {lastSecondOutputInBytes}");
+                }
+                
                 if (Time.realtimeSinceStartup - timeSincelastLog > consoleLogFrequencyInSeconds)
                 {
                     // log stuff...
