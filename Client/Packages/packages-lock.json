@@ -199,6 +199,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "naivenetworkgame.server": {
+      "version": "file:../../Server/Assets/NaiveNetworkGame.Server",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "nuget.mono-cecil": {
       "version": "0.1.6-preview",
       "depth": 2,
