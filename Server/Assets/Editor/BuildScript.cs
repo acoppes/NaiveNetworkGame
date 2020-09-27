@@ -10,7 +10,9 @@ public class BuildScript : MonoBehaviour
         {
             target = BuildTarget.StandaloneLinux64,
             targetGroup = BuildTargetGroup.Standalone,
-            options = BuildOptions.EnableHeadlessMode,
+            options = BuildOptions.EnableHeadlessMode | 
+                      BuildOptions.UncompressedAssetBundle | 
+                      BuildOptions.DetailedBuildReport,
             locationPathName = "Builds/Linux/server.x86_64",
             scenes = EditorBuildSettings.scenes.Select(s => s.path).ToArray()
         };
@@ -24,7 +26,9 @@ public class BuildScript : MonoBehaviour
         {
             target = BuildTarget.StandaloneWindows64,
             targetGroup = BuildTargetGroup.Standalone,
-            options = BuildOptions.EnableHeadlessMode,
+            options = BuildOptions.EnableHeadlessMode | 
+                      BuildOptions.UncompressedAssetBundle | 
+                      BuildOptions.DetailedBuildReport,
             locationPathName = "Builds/Windows/server-x86_64.exe",
             scenes = EditorBuildSettings.scenes.Select(s => s.path).ToArray()
         };
