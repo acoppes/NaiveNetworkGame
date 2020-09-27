@@ -7,7 +7,6 @@ using Unity.Mathematics;
 using Unity.Networking.Transport;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
 using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace Scenes.Tests

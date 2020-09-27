@@ -1,6 +1,5 @@
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems

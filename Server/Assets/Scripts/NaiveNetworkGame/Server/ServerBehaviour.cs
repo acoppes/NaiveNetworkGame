@@ -2,9 +2,8 @@
 using NaiveNetworkGame.Server.Systems;
 using Unity.Entities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace Server
+namespace NaiveNetworkGame.Server
 {
     public static class CommandLineArguments
     {
