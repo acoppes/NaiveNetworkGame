@@ -6,27 +6,6 @@ using UnityEngine.SceneManagement;
 
 namespace Server
 {
-    public struct RestartServerCommand : IComponentData
-    {
-        
-    }
-    
-    public class RestartServerSystem : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-     
-            Entities
-            .WithAll<RestartServerCommand>()
-            .ForEach(delegate(Entity e)
-            {
-                PostUpdateCommands.DestroyEntity(e);
-                // PostUpdateCommands.DestroyEntity(EntityManager.UniversalQuery);
-                SceneManager.LoadScene("ReloadScene");
-            });
-        }
-    }
-
     public static class CommandLineArguments
     {
         public static bool HasArgument(string name)
