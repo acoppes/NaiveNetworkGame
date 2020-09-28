@@ -11,12 +11,12 @@ namespace NaiveNetworkGame.Client.Systems
             if (!Input.GetKeyUp(KeyCode.Tab))
                 return;
             
-            if (Entities.WithAll<PlayerController>().ToEntityQuery().CalculateEntityCount() == 1)
+            if (Entities.WithAll<LocalPlayerController>().ToEntityQuery().CalculateEntityCount() == 1)
                 return;
 
             var activePlayerEntity = Entity.Null;
             Entities
-                .WithAll<ActivePlayer, PlayerController>()
+                .WithAll<ActivePlayer, LocalPlayerController>()
                 .ForEach(delegate(Entity e)
                 {
                     activePlayerEntity = e;
@@ -27,7 +27,7 @@ namespace NaiveNetworkGame.Client.Systems
 
             var switched = false;
             Entities
-                .WithAll<PlayerController>()
+                .WithAll<LocalPlayerController>()
                 .WithNone<ActivePlayer>()
                 .ForEach(delegate(Entity e)
                 {

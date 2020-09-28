@@ -14,7 +14,7 @@ namespace NaiveNetworkGame.Server.Systems
         {
             Entities
                 .WithNone<MovementAction>()
-                .WithAll<SpawningAction, UnitState>()
+                .WithAll<ServerOnly, SpawningAction, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref SpawningAction s)
                 {
                     u.state = UnitState.spawningState;
@@ -23,7 +23,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<SpawningAction>()
-                .WithAll<MovementAction, UnitState>()
+                .WithAll<ServerOnly, MovementAction, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitState.walkState;
@@ -31,14 +31,14 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<MovementAction, SpawningAction>()
-                .WithAll<UnitState>()
+                .WithAll<ServerOnly, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitState.idleState;
                 });
             
             Entities
-                .WithAll<UnitState, AttackAction>()
+                .WithAll<ServerOnly, UnitState, AttackAction>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitState.attackingState;

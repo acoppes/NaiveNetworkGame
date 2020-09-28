@@ -21,7 +21,7 @@ namespace NaiveNetworkGame.Client.Systems
             }
             
             var activePlayerEntity = GetSingletonEntity<ActivePlayer>();
-            var player = EntityManager.GetComponentData<PlayerController>(activePlayerEntity);
+            var player = EntityManager.GetComponentData<LocalPlayerController>(activePlayerEntity);
             
             Entities.ForEach(delegate(Entity entity, UserInterfaceComponent ui)
             {

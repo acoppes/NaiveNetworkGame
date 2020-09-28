@@ -23,7 +23,8 @@ namespace NaiveNetworkGame.Client.Systems
             
             // first create entities to be updated....
             
-            Entities.WithAll<NetworkGameState>()
+            Entities
+                .WithAll<NetworkGameState, ClientOnly>()
                 .ForEach(delegate(ref NetworkGameState n)
             {
                 if (createdUnitsInThisUpdate.Contains(n.unitId))

@@ -140,7 +140,7 @@ namespace NaiveNetworkGame.Client.Systems
             
             Entities
                 .WithNone<NetworkPlayerId>()
-                .WithAll<PlayerController>()
+                .WithAll<LocalPlayerController>()
                 .ForEach(delegate(Entity e, ref ConnectPlayerToServer l)
                 {
                     var connection = client.m_Driver.Connect(client.endpoint);
@@ -163,8 +163,8 @@ namespace NaiveNetworkGame.Client.Systems
 
             Entities
                 .WithNone<ConnectPlayerToServer>()
-                .WithAll<NetworkPlayerId, PlayerController>()
-                .ForEach(delegate(Entity e, ref NetworkPlayerId networkPlayer, ref PlayerController p)
+                .WithAll<NetworkPlayerId, LocalPlayerController>()
+                .ForEach(delegate(Entity e, ref NetworkPlayerId networkPlayer, ref LocalPlayerController p)
                 {
                     var m_Connection = networkPlayer.connection;
                     
@@ -209,6 +209,7 @@ namespace NaiveNetworkGame.Client.Systems
                                 for (var j = 0; j < count; j++)
                                 {
                                     var networkStateEntity = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent<ClientOnly>(networkStateEntity);
                                     PostUpdateCommands.AddComponent(networkStateEntity, 
                                         new NetworkGameState().Read(ref stream));
                                 }
@@ -220,6 +221,7 @@ namespace NaiveNetworkGame.Client.Systems
                                 // read unit info...
 
                                 var networkStateEntity = PostUpdateCommands.CreateEntity();
+                                PostUpdateCommands.AddComponent<ClientOnly>(networkStateEntity);
                                 PostUpdateCommands.AddComponent(networkStateEntity, 
                                     new NetworkPlayerState().Read(ref stream));
                             }
@@ -231,6 +233,7 @@ namespace NaiveNetworkGame.Client.Systems
                                 for (var j = 0; j < count; j++)
                                 {
                                     var networkStateEntity = PostUpdateCommands.CreateEntity();
+                                    PostUpdateCommands.AddComponent<ClientOnly>(networkStateEntity);
                                     var translationSync = new NetworkTranslationSync().Read(ref stream);
                                     PostUpdateCommands.AddComponent(networkStateEntity, translationSync);
                                 }

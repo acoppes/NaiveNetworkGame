@@ -103,7 +103,7 @@ namespace Scenes
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             
             playerControllerQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<PlayerController>(), 
+                ComponentType.ReadWrite<LocalPlayerController>(), 
                 ComponentType.ReadOnly<ActivePlayer>(), 
                 ComponentType.ReadWrite<PlayerInputState>());
             
@@ -219,7 +219,7 @@ namespace Scenes
         {
             if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
             {
-                var playerController = entityManager.GetComponentData<PlayerController>(playerEntity);
+                var playerController = entityManager.GetComponentData<LocalPlayerController>(playerEntity);
                 return playerController.currentUnits < playerController.maxUnits;
             }
 

@@ -22,7 +22,7 @@ namespace NaiveNetworkGame.Client.Systems
 
             // TODO: player input, player and networkplayer could be the same entity...
             
-            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref PlayerController p, ref PlayerInputState playerInputState)
+            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerController p, ref PlayerInputState playerInputState)
             {
                 if (networkPlayerId.state != NetworkConnection.State.Connected)
                     return;

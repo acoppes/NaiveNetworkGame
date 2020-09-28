@@ -3,7 +3,7 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Client.Components
 {
     [GenerateAuthoringComponent]
-    public struct PlayerController : IComponentData
+    public struct LocalPlayerController : IComponentData
     {
         public byte player;
         public byte unitType;

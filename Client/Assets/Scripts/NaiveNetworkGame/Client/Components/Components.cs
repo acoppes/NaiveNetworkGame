@@ -55,4 +55,9 @@ namespace NaiveNetworkGame.Client
         public Bounds bounds;
     }
 
+    public struct ClientOnly : IComponentData
+    {
+        
+    }
+
 }

@@ -21,7 +21,7 @@ namespace NaiveNetworkGame.Client.Systems
             // updates all created units with network state...
             
             Entities
-                .WithAll<NetworkGameState>()
+                .WithAll<NetworkGameState, ClientOnly>()
                 .ForEach(delegate(Entity e, ref NetworkGameState n)
                 {
                     // var uid = n.unitId;

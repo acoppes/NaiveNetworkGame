@@ -154,6 +154,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RemotePlayer1
       objectReference: {fileID: 0}
+    - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5135555761720755056, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.739
@@ -288,6 +292,10 @@ PrefabInstance:
     - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_Name
       value: RemotePlayer2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5135555761720755056, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_LocalPosition.x

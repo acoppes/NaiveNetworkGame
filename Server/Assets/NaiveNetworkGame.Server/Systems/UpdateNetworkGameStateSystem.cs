@@ -34,7 +34,7 @@ namespace NaiveNetworkGame.Server.Systems
             //     // n.syncVersion = n.version;
             // });
             
-            Entities.WithAll<Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
+            Entities.WithAll<ServerOnly, Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
                 ref NetworkGameState n)
             {
                 n.unitId = u.id;
@@ -44,7 +44,7 @@ namespace NaiveNetworkGame.Server.Systems
             });
             
             Entities
-                .WithAll<Unit, Translation, NetworkTranslationSync>()
+                .WithAll<ServerOnly, Unit, Translation, NetworkTranslationSync>()
                 .ForEach(delegate(ref Unit unit, ref Translation t, ref NetworkTranslationSync n)
                 {
                     n.unitId = unit.id;
@@ -52,7 +52,7 @@ namespace NaiveNetworkGame.Server.Systems
                     n.delta = ServerNetworkStaticData.sendTranslationStateFrequency;
             });
             
-            Entities.WithAll<LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
+            Entities.WithAll<ServerOnly, LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
                 ref NetworkGameState n)
             {
                 n.lookingDirectionAngleInDegrees = (ushort) 
@@ -60,21 +60,21 @@ namespace NaiveNetworkGame.Server.Systems
                 // n.lookingDirection = l.direction;
             });
             
-            Entities.WithAll<UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
+            Entities.WithAll<ServerOnly, UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
                 ref NetworkGameState n)
             {
                 n.state = state.state;
                 n.statePercentage = state.percentage;
             });
             
-            Entities.WithAll<Health, NetworkGameState>().ForEach(delegate(ref Health health, 
+            Entities.WithAll<ServerOnly, Health, NetworkGameState>().ForEach(delegate(ref Health health, 
                 ref NetworkGameState n)
             {
                 n.health = (byte) Mathf.RoundToInt(100.0f * health.current / health.total);
             });
             
             Entities
-                .WithAll<PlayerController, NetworkPlayerState, PlayerConnectionId>()
+                .WithAll<ServerOnly, PlayerController, NetworkPlayerState, PlayerConnectionId>()
                 .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p) 
                 {
                     n.player = player.player;

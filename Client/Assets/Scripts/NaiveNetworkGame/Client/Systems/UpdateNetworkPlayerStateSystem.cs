@@ -10,11 +10,14 @@ namespace NaiveNetworkGame.Client.Systems
         {
             // given a network gamestate, update player local data
             
-            Entities.ForEach(delegate(Entity e, ref NetworkPlayerState p)
+            Entities
+                .WithAll<NetworkPlayerState, ClientOnly>()
+                .ForEach(delegate(Entity e, ref NetworkPlayerState p)
             {
                 var networkPlayerState = p;
                 
-                Entities.ForEach(delegate(ref PlayerController playerController)
+                Entities
+                    .ForEach(delegate(ref LocalPlayerController playerController)
                 {
                     if (playerController.player != networkPlayerState.player) 
                         return;

@@ -15,7 +15,7 @@ namespace NaiveNetworkGame.Client.Systems
 
             Entities
                 .WithNone<Unit>()
-                .WithAll<NetworkTranslationSync>()
+                .WithAll<NetworkTranslationSync, ClientOnly>()
                 .ForEach(delegate(Entity e, ref NetworkTranslationSync n)
                 {
                     for (var i = 0; i < units.Length; i++)

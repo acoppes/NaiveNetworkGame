@@ -9,10 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5135555761720755056}
+  - component: {fileID: 8609711086089260182}
   - component: {fileID: 3280818747309904161}
   - component: {fileID: 3743679423661859816}
   m_Layer: 0
-  m_Name: PlayerSpawnPosition
+  m_Name: PlayerController
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -32,6 +33,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8609711086089260182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135555761720755020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4237eae116eb415dad45c88afab0652e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3280818747309904161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +58,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  maxUnits: 0
+  currentUnits: 0
   gold: 0
+  unitType: 0
+  unitPrefab: {fileID: 0}
+  playerWander: {fileID: 0}
 --- !u!114 &3743679423661859816
 MonoBehaviour:
   m_ObjectHideFlags: 0
