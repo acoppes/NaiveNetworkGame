@@ -9,6 +9,9 @@ namespace NaiveNetworkGame.Client.Systems
     {
         protected override void OnUpdate()
         {
+            if (Camera.main == null)
+                return;
+            
             var mousePosition = Input.mousePosition;
             var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
             
