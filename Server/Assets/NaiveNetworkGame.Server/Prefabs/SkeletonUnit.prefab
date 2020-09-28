@@ -88,8 +88,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a269a37afb433b925bd7dba099e30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 5
-  range: 0.24
+  damage: 25
+  range: 0.2
   duration: 1
 --- !u!114 &8578447471360002326
 MonoBehaviour:

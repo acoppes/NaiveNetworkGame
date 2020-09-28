@@ -12,4 +12,6 @@
 
 ## Fixed
 
+  * Client units destroyed when no more units in server by sending null game state.
+
 ## Removed

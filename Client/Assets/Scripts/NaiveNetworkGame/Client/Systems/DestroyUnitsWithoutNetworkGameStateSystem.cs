@@ -27,7 +27,7 @@ namespace NaiveNetworkGame.Client.Systems
                 var hasNetworkSync = false;
                 for (var j = 0; j < gameStates.Length; j++)
                 {
-                    if (units[i].unitId == gameStates[j].unitId)
+                    if (units[i].unitId == gameStates[j].unitId && units[i].player == gameStates[j].playerId)
                     {
                         hasNetworkSync = true;
                         break;
