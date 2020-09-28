@@ -199,7 +199,9 @@ namespace Scenes
 
             receivedBytesText.text = $"{ConnectionState.totalReceivedBytes / 1024} KB";
             connectedTimeText.text = $"{ConnectionState.connectedTime:0.}s";
-            latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
+            
+            if (latencyText != null)
+                latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
         }
 
         public void ToggleSpawning()
