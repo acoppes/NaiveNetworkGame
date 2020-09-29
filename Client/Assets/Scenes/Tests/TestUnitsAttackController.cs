@@ -9,6 +9,8 @@ namespace Scenes.Tests
 {
     public class TestUnitsAttackController : MonoBehaviour
     {
+        public int unitsCount = 1;
+        
         // Start is called before the first frame update
         private void Start()
         {
@@ -21,24 +23,31 @@ namespace Scenes.Tests
 
             yield return new WaitUntil(() => ConnectionState.currentState == ConnectionState.State.Connected);
             
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.1f);
 
             var playerInputStateQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<PlayerInputState>());
 
-            var entities = playerInputStateQuery.ToEntityArray(Allocator.TempJob);
-            var inputStates = playerInputStateQuery.ToComponentDataArray<PlayerInputState>(Allocator.TempJob);
-
-            for (int i = 0; i < inputStates.Length; i++)
+            while (unitsCount > 0)
             {
-                var inputState = inputStates[i];
-                inputState.spawnActionPressed = true;
-                
-                entityManager.SetComponentData(entities[i], inputState);
-            }
+                var entities = playerInputStateQuery.ToEntityArray(Allocator.TempJob);
+                var inputStates = playerInputStateQuery.ToComponentDataArray<PlayerInputState>(Allocator.TempJob);
 
-            entities.Dispose();
-            inputStates.Dispose();
+                for (int i = 0; i < inputStates.Length; i++)
+                {
+                    var inputState = inputStates[i];
+                    inputState.spawnActionPressed = true;
+
+                    entityManager.SetComponentData(entities[i], inputState);
+                }
+
+                entities.Dispose();
+                inputStates.Dispose();
+
+                unitsCount--;
+                
+                yield return null;
+            }
         }
 
     }

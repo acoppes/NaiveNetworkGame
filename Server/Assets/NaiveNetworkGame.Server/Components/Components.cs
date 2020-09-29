@@ -17,6 +17,7 @@ namespace NaiveNetworkGame.Server.Components
     public struct ReloadAction : IComponentData
     {
         public float time;
+        public float duration;
     }
 
     public struct MovementAction : IComponentData

@@ -13,6 +13,14 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
+                .WithNone<MovementAction, SpawningAction, AttackAction>()
+                .WithAll<ServerOnly, UnitState>()
+                .ForEach(delegate(Entity e, ref UnitState u)
+                {
+                    u.state = UnitState.idleState;
+                });
+            
+            Entities
                 .WithNone<MovementAction>()
                 .WithAll<ServerOnly, SpawningAction, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref SpawningAction s)
@@ -28,20 +36,20 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     u.state = UnitState.walkState;
                 });
-            
-            Entities
-                .WithNone<MovementAction, SpawningAction, AttackAction>()
-                .WithAll<ServerOnly, UnitState>()
-                .ForEach(delegate(Entity e, ref UnitState u)
-                {
-                    u.state = UnitState.idleState;
-                });
-            
+
             Entities
                 .WithAll<ServerOnly, UnitState, AttackAction>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitState.attackingState;
+                });
+            
+            Entities
+                .WithAll<ServerOnly, UnitState, ReloadAction>()
+                .ForEach(delegate(Entity e, ref UnitState u, ref ReloadAction a)
+                {
+                    u.state = UnitState.reloadingState;
+                    u.percentage = (byte) Mathf.RoundToInt(100.0f * a.time / a.duration);
                 });
         }
     }

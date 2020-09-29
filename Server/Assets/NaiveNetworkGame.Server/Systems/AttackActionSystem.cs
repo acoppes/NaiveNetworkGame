@@ -33,17 +33,18 @@ namespace NaiveNetworkGame.Server.Systems
                         PostUpdateCommands.RemoveComponent<AttackAction>(e);
                         PostUpdateCommands.AddComponent(e, new ReloadAction
                         {
-                            time = UnityEngine.Random.Range(-a.reloadRandom, a.reloadRandom)
+                            time = UnityEngine.Random.Range(-a.reloadRandom, a.reloadRandom),
+                            duration = a.reload
                         });
                     }
                 });
             
             Entities
                 .WithAll<Attack, ReloadAction>()
-                .ForEach(delegate(Entity e, ref Attack a, ref AttackTarget target, ref ReloadAction action)
+                .ForEach(delegate(Entity e, ref ReloadAction action)
                 {
                     action.time += dt;
-                    if (action.time > a.reload)
+                    if (action.time > action.duration)
                     {
                         PostUpdateCommands.RemoveComponent<ReloadAction>(e);
                     }

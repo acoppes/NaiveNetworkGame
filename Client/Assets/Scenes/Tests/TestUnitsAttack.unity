@@ -153,7 +153,6 @@ Transform:
   - {fileID: 1182546515}
   - {fileID: 320018414}
   - {fileID: 1240874287}
-  - {fileID: 1916499702}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -355,12 +354,12 @@ PrefabInstance:
       objectReference: {fileID: 1171583828833580448, guid: 332b40b93fe627c4a9cfd86d884bc435, type: 3}
     - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: unitType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: playerWander
       value: 
-      objectReference: {fileID: 1916499701}
+      objectReference: {fileID: 320018413}
     - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_Name
       value: RemotePlayer2
@@ -691,7 +690,7 @@ GameObject:
   - component: {fileID: 320018416}
   - component: {fileID: 320018415}
   m_Layer: 0
-  m_Name: Wander1
+  m_Name: Wander
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -736,7 +735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d20d64a77642aabc7533847705c16e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 0.15
+  range: 0.5
 --- !u!1 &324908925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1366,6 +1365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97253c3b024cab9409d869f0ff704a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitsCount: 10
 --- !u!1 &1671218896
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,64 +1621,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1916499701
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1916499702}
-  - component: {fileID: 1916499704}
-  - component: {fileID: 1916499703}
-  m_Layer: 0
-  m_Name: Wander2
-  m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1916499702
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916499701}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 28632961}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1916499703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916499701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
---- !u!114 &1916499704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916499701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86d20d64a77642aabc7533847705c16e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 0.15
 --- !u!1 &1990033513
 GameObject:
   m_ObjectHideFlags: 0
