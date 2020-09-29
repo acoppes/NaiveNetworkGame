@@ -14,7 +14,7 @@ namespace NaiveNetworkGame.Client.Systems
             // first time interpolation created with proper translation...
             Entities
                 .WithNone<TranslationInterpolation>()
-                .WithAll<Unit, Translation, NetworkTranslationSync>()
+                .WithAll<Unit, Translation, NetworkTranslationSync, ClientOnly>()
                 .ForEach(delegate(Entity e, ref Translation t, ref NetworkTranslationSync n)
                 {
                     // interpolation component was created with unit the first time...
@@ -29,7 +29,7 @@ namespace NaiveNetworkGame.Client.Systems
                 });
             
             Entities
-                .WithAll<Unit, Translation, NetworkTranslationSync>()
+                .WithAll<Unit, Translation, NetworkTranslationSync, ClientOnly>()
                 .ForEach(delegate(Entity e, ref Translation t, ref NetworkTranslationSync n,
                     ref TranslationInterpolation interpolation)
                 {

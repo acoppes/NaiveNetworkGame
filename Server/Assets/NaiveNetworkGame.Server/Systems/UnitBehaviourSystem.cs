@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEditor.SceneManagement;
 
 namespace NaiveNetworkGame.Server.Systems
 {
@@ -56,7 +57,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<Attack, AttackTarget>()
-                .WithNone<AttackAction>()
+                .WithNone<AttackAction, ReloadAction>()
                 .ForEach(delegate(Entity e, ref Attack attack, ref AttackTarget target, ref Translation t)
                 {
                     // if target entity was destroyed, forget about it...
@@ -80,7 +81,16 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
+                .WithAll<Attack, AttackTarget, AttackAction, MovementAction>()
+                .ForEach(delegate(Entity e)
+                {
+                    PostUpdateCommands.RemoveComponent<MovementAction>(e);
+                });
+
+            
+            Entities
                 .WithAll<Unit, Movement, UnitBehaviour>()
+                .WithNone<ReloadAction>()
                 .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
                 .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
                 {

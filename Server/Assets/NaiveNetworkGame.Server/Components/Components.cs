@@ -10,9 +10,15 @@ namespace NaiveNetworkGame.Server.Components
     
     public struct AttackAction : IComponentData
     {
+        public bool performed;
         public float time;
     }
-    
+
+    public struct ReloadAction : IComponentData
+    {
+        public float time;
+    }
+
     public struct MovementAction : IComponentData
     {
         public float2 target;

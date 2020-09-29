@@ -15,18 +15,10 @@ namespace NaiveNetworkGame.Server.Systems
                 .ForEach(delegate(Entity e, ref Attack a, ref AttackTarget target, ref AttackAction action)
                 {
                     action.time += dt;
-                    
-                    // wait some time (animation)
 
-                    // perform damage
-
-                    // complete animation
-
-                    // add reload action (idle time between attacks)
-                    // remove attack action
-
-                    if (action.time > a.duration)
+                    if (!action.performed && action.time > a.attackTime)
                     {
+                        action.performed = true;
                         // do damage and remove...
                         if (EntityManager.Exists(target.target))
                         {
@@ -34,8 +26,26 @@ namespace NaiveNetworkGame.Server.Systems
                             health.current -= a.damage;
                             PostUpdateCommands.SetComponent(target.target, health);
                         }
+                    }
 
+                    if (action.time > a.duration)
+                    {
                         PostUpdateCommands.RemoveComponent<AttackAction>(e);
+                        PostUpdateCommands.AddComponent(e, new ReloadAction
+                        {
+                            time = UnityEngine.Random.Range(-a.reloadRandom, a.reloadRandom)
+                        });
+                    }
+                });
+            
+            Entities
+                .WithAll<Attack, ReloadAction>()
+                .ForEach(delegate(Entity e, ref Attack a, ref AttackTarget target, ref ReloadAction action)
+                {
+                    action.time += dt;
+                    if (action.time > a.reload)
+                    {
+                        PostUpdateCommands.RemoveComponent<ReloadAction>(e);
                     }
                 });
 

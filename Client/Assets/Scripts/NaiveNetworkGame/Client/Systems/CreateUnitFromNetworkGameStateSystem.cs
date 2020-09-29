@@ -68,6 +68,7 @@ namespace NaiveNetworkGame.Client.Systems
                 PostUpdateCommands.AddComponent(entity, new LookingDirection());
                 // PostUpdateCommands.AddComponent(entity, new Selectable());
                 PostUpdateCommands.AddComponent(entity, new NetworkObject());
+                PostUpdateCommands.AddComponent<ClientOnly>(entity);
 
                 createdUnitsInThisUpdate.Add(n.unitId);
             });

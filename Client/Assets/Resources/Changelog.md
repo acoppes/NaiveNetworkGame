@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Added reload between attacks and changed hit time for different health change feedback.
   * Latency with server in connection debug info.
   * Release notes window with toggle to auto open on start.
 

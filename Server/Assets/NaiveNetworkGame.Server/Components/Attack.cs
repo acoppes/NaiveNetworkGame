@@ -8,8 +8,13 @@ namespace NaiveNetworkGame.Server.Components
         public float damage;
         
         public float range;
-        
+
+        public float attackTime;
         public float duration;
+
+        public float reload;
+
+        public float reloadRandom;
         // public float chaseRange;
     }
 

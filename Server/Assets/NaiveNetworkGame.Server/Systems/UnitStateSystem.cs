@@ -30,7 +30,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithNone<MovementAction, SpawningAction>()
+                .WithNone<MovementAction, SpawningAction, AttackAction>()
                 .WithAll<ServerOnly, UnitState>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {

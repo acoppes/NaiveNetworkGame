@@ -90,7 +90,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 25
   range: 0.2
-  duration: 1
+  attackTime: 0.1
+  duration: 0.5
+  reload: 0.5
+  reloadRandom: 0.15
 --- !u!114 &8578447471360002326
 MonoBehaviour:
   m_ObjectHideFlags: 0
