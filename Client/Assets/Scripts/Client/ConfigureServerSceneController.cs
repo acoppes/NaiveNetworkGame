@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using Development;
 using NaiveNetworkGame.Client.Systems;
@@ -37,6 +39,8 @@ namespace Client
         public Button deleteServersButton;
 
         public ChangelogWindow changelogWindow;
+
+        public Text ipText;
         
         private ServerList serverList;
         
@@ -100,6 +104,21 @@ namespace Client
             {
                 changelogWindow.Open();
             }
+
+            ipText.text = GetLocalIPAddress();
+        }
+        
+        public string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return null;
         }
 
         private char OnValidateValidIpAddress(string text, int charindex, char addedchar)

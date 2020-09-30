@@ -133,6 +133,7 @@ namespace Scenes
             disconnectButton.onClick.AddListener(OnDisconnectButtonPressed);
         }
 
+
         private void OnDisconnectButtonPressed()
         {
             StartCoroutine(DisconnectAndCloseApplication());
