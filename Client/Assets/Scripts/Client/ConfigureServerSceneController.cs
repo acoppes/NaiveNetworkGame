@@ -115,7 +115,8 @@ namespace Client
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    return ip.ToString();
+                    if (ip.ToString().StartsWith("192"))
+                        return ip.ToString();
                 }
             }
             return null;
