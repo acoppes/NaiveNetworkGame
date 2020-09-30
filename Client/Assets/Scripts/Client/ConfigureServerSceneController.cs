@@ -27,6 +27,8 @@ namespace Client
         public Dropdown serverConnectDropdown;
 
         public Button serverConnectButton;
+
+        public Button startLocalServerButton;
         
         public InputField newServerInput;
 
@@ -86,7 +88,8 @@ namespace Client
                 serverConnectDropdown.value = index;
 
             newServerButton.onClick.AddListener(OnNewServerAdded);
-            serverConnectButton.onClick.AddListener(OnServerConnect);
+            serverConnectButton.onClick.AddListener(delegate { OnServerConnect(false); });
+            startLocalServerButton.onClick.AddListener(delegate { OnServerConnect(true); });
             deleteServersButton.onClick.AddListener(OnDeleteServers);
 
             newServerInput.contentType = InputField.ContentType.Custom;
@@ -128,7 +131,7 @@ namespace Client
             }).ToList();
         }
 
-        private void OnServerConnect()
+        private void OnServerConnect(bool startServer)
         {
             // load the other scene with parameters...
 
@@ -146,7 +149,15 @@ namespace Client
             };
             DontDestroyOnLoad(parametersObject.gameObject);
 
-            SceneManager.LoadScene("ClientScene");
+            if (startServer)
+            {
+                SceneManager.LoadScene("ServerScene", LoadSceneMode.Single);
+                SceneManager.LoadScene("ClientScene", LoadSceneMode.Additive);
+            }
+            else
+            {
+                SceneManager.LoadScene("ClientScene", LoadSceneMode.Single);
+            }
         }
 
         private void OnNewServerAdded()

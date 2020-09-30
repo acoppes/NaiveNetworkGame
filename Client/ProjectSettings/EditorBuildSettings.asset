@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ClientScene.unity
     guid: 2036e2a22f088f94ba81971c64c0a48a
+  - enabled: 1
+    path: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+    guid: 54ce42aaeb833024595d736ca061ece9
   m_configObjects: {}
