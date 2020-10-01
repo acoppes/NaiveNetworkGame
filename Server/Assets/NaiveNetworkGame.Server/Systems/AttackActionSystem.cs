@@ -4,6 +4,7 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateBefore(typeof(DamageSystem))]
     public class AttackActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -20,12 +21,20 @@ namespace NaiveNetworkGame.Server.Systems
                     {
                         action.performed = true;
                         // do damage and remove...
-                        if (EntityManager.Exists(target.target))
+
+                        var damageEntity = PostUpdateCommands.CreateEntity();
+                        PostUpdateCommands.AddComponent(damageEntity, new Damage()
                         {
-                            var health = EntityManager.GetComponentData<Health>(target.target);
-                            health.current -= a.damage;
-                            PostUpdateCommands.SetComponent(target.target, health);
-                        }
+                            target = target.target,
+                            damage = a.damage
+                        });
+                        
+                        // if (EntityManager.Exists(target.target))
+                        // {
+                        //     var health = EntityManager.GetComponentData<Health>(target.target);
+                        //     health.current -= a.damage;
+                        //     PostUpdateCommands.SetComponent(target.target, health);
+                        // }
                     }
 
                     if (action.time > a.duration)

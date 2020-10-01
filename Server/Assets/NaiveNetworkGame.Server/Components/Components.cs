@@ -3,6 +3,12 @@ using Unity.Mathematics;
 
 namespace NaiveNetworkGame.Server.Components
 {
+    public struct Damage : IComponentData
+    {
+        public Entity target;
+        public float damage;
+    }
+    
     public struct IsAlive : IComponentData
     {
         
