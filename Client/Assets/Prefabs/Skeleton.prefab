@@ -241,7 +241,7 @@ MonoBehaviour:
   selectorAnimator: {fileID: 4888957796133922084}
   actionDuration: {fileID: 6475625062837350770}
   healthBar: {fileID: 4707697034807678981}
-  interpolationSpeed: 10
+  interpolationSpeed: 20
 --- !u!61 &7728074612990962427
 BoxCollider2D:
   m_ObjectHideFlags: 0

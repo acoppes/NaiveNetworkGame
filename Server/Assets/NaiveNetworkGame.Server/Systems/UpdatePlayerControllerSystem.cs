@@ -16,7 +16,9 @@ namespace NaiveNetworkGame.Server.Systems
 
                 byte currentUnits = 0;
                 
-                Entities.ForEach(delegate(ref Unit unit)
+                Entities
+                    .WithAll<IsAlive>()
+                    .ForEach(delegate(ref Unit unit)
                 {
                     if (unit.player == player)
                     {

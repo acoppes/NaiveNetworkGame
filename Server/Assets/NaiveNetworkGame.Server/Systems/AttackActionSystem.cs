@@ -11,6 +11,12 @@ namespace NaiveNetworkGame.Server.Systems
         {
             var dt = Time.DeltaTime;
             
+            Entities.WithAll<AttackAction, DeathAction>()
+                .ForEach(delegate(Entity e)
+                {
+                    PostUpdateCommands.RemoveComponent<AttackAction>(e);
+                });
+            
             Entities
                 .WithAll<Attack, AttackAction, AttackTarget>()
                 .ForEach(delegate(Entity e, ref Attack a, ref AttackTarget target, ref AttackAction action)

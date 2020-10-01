@@ -20,8 +20,10 @@ namespace NaiveNetworkGame.Server.Systems
                     {
                         // set completely death?
                         PostUpdateCommands.RemoveComponent<DeathAction>(e);
-                        PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
-                        PostUpdateCommands.RemoveComponent<NetworkGameState>(e);
+                        
+                        // TODO: for now we are sending gamestate of death units too to keep corpses in client...
+                        //PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
+                        //PostUpdateCommands.RemoveComponent<NetworkGameState>(e);
                     }
                 });
         }
