@@ -28,13 +28,6 @@ namespace NaiveNetworkGame.Server.Systems
                             target = target.target,
                             damage = a.damage
                         });
-                        
-                        // if (EntityManager.Exists(target.target))
-                        // {
-                        //     var health = EntityManager.GetComponentData<Health>(target.target);
-                        //     health.current -= a.damage;
-                        //     PostUpdateCommands.SetComponent(target.target, health);
-                        // }
                     }
 
                     if (action.time > a.duration)

@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 
@@ -23,6 +24,16 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
             });
+            
+            // Stop sending dead units gamestate sync...
+            // Entities
+            //     .WithNone<IsAlive>()
+            //     .WithAll<ServerOnly, NetworkTranslationSync, NetworkGameState>()
+            //     .ForEach(delegate(Entity e)
+            //     {
+            //         PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
+            //         PostUpdateCommands.RemoveComponent<NetworkGameState>(e);
+            //     });
         }
     }
 }

@@ -16,7 +16,8 @@ namespace NaiveNetworkGame.Server.Components
     
     public struct DeathAction : IComponentData
     {
-        
+        public float time;
+        public float duration;
     }
     
     public struct IdleAction : IComponentData

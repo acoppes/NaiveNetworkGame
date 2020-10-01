@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    [UpdateBefore(typeof(DestroyDeathUnitsSystem))]
+    [UpdateBefore(typeof(DeathOnNoHealthUnitSystem))]
     public class DamageSystem : ComponentSystem
     {
         protected override void OnUpdate()

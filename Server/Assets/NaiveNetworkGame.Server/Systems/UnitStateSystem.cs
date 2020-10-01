@@ -55,9 +55,10 @@ namespace NaiveNetworkGame.Server.Systems
             Entities
                 .WithNone<IsAlive>()
                 .WithAll<ServerOnly, UnitState, DeathAction>()
-                .ForEach(delegate(Entity e, ref UnitState u)
+                .ForEach(delegate(Entity e, ref UnitState u, ref DeathAction a)
                 {
                     u.state = UnitState.deathState;
+                    u.percentage = (byte) Mathf.RoundToInt(100.0f * a.time / a.duration);
                 });
         }
     }
