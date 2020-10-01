@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Better sync for attack animation and damage.
   * Units death animation + death bodies instead of destroying entities (temporary).
   * Button to start local game in Client and show IP address.
   * Reload between attacks and changed hit time for different health change feedback.
@@ -10,11 +11,13 @@
 
 ## Changed
 
+  * Faster animation for health bars.
   * Latency uses now the packet index (byte) instead of sending the time.
   * Now main scene is 1v1 and increased camera size.
 
 ## Fixed
 
+  * Death units don't count for max units.
   * Client units destroyed when no more units in server by sending null game state.
   * Default resolution in Client Windows build.
 
