@@ -103,6 +103,8 @@ namespace NaiveNetworkGame.Server.Systems
                             wanderCenter = wanderCenter,
                             range = range
                         });
+                        PostUpdateCommands.AddComponent<IsAlive>(unitEntity);
+                        
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());
                     }

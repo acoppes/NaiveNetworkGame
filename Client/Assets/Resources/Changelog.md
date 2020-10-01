@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Units death animation + death bodies instead of destroying entities (temporary).
   * Button to start local game in Client and show IP address.
   * Reload between attacks and changed hit time for different health change feedback.
   * Latency with server in connection debug info.

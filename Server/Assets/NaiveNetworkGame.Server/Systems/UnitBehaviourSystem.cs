@@ -21,13 +21,13 @@ namespace NaiveNetworkGame.Server.Systems
             // if unit is in attack position
             // perform attack, wait, attack, wait...
 
-            var targetsQuery = Entities.WithAll<Unit, Health, Translation>().ToEntityQuery();
+            var targetsQuery = Entities.WithAll<Unit, Health, Translation, IsAlive>().ToEntityQuery();
             var targets = targetsQuery.ToEntityArray(Allocator.TempJob);
             var targetTranslations = targetsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
             var targetUnits = targetsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
 
             Entities
-                .WithAll<Attack, Unit, Translation>()
+                .WithAll<Attack, Unit, Translation, IsAlive>()
                 .WithNone<AttackTarget>()
                 .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
                 {
@@ -55,7 +55,7 @@ namespace NaiveNetworkGame.Server.Systems
             targetUnits.Dispose();
             
             Entities
-                .WithAll<Attack, AttackTarget>()
+                .WithAll<Attack, AttackTarget, IsAlive>()
                 .WithNone<AttackAction, ReloadAction>()
                 .ForEach(delegate(Entity e, ref Attack attack, ref AttackTarget target, ref Translation t)
                 {
@@ -68,12 +68,15 @@ namespace NaiveNetworkGame.Server.Systems
                     {
                         // if target too far away, forget about it...
                         var tp = EntityManager.GetComponentData<Translation>(target.target);
-                        if (math.distancesq(tp.Value, t.Value) > attack.range * attack.range)
+                        var isAlive = EntityManager.HasComponent<IsAlive>(target.target);
+                        
+                        if (!isAlive || math.distancesq(tp.Value, t.Value) > attack.range * attack.range)
                         {
                             PostUpdateCommands.RemoveComponent<AttackTarget>(e);
                         }
                         else
                         {
+                            // if lost isalive, lose target...
                             PostUpdateCommands.AddComponent(e, new AttackAction());
                         }
                     } 
@@ -88,7 +91,7 @@ namespace NaiveNetworkGame.Server.Systems
 
             
             Entities
-                .WithAll<Unit, Movement, UnitBehaviour>()
+                .WithAll<Unit, Movement, UnitBehaviour, IsAlive>()
                 .WithNone<ReloadAction>()
                 .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
                 .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)

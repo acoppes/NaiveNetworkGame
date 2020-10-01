@@ -8,14 +8,16 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<Health>()
+                .WithAll<Health, UnitBehaviour>()
                 .ForEach(delegate(Entity e, ref Health h)
                 {
                     // TODO: change to death action
 
                     if (h.current <= 0.01f)
                     {
-                        PostUpdateCommands.DestroyEntity(e);
+                        PostUpdateCommands.AddComponent<DeathAction>(e);
+                        PostUpdateCommands.RemoveComponent<IsAlive>(e);
+                        // PostUpdateCommands.DestroyEntity(e);
                     }
                 });
         }

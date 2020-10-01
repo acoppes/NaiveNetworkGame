@@ -3,6 +3,16 @@ using Unity.Mathematics;
 
 namespace NaiveNetworkGame.Server.Components
 {
+    public struct IsAlive : IComponentData
+    {
+        
+    }
+    
+    public struct DeathAction : IComponentData
+    {
+        
+    }
+    
     public struct IdleAction : IComponentData
     {
         public float time;

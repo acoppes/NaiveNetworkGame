@@ -48,7 +48,7 @@ namespace Client
         // Update is called once per frame
         private void LateUpdate()
         {
-            playerIndicator?.SetActive(isActivePlayer);
+            // playerIndicator?.SetActive(isActivePlayer);
 
             if (selectorAnimator != null)
             {
