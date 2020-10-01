@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Building client"
-sh ./build-client-windows.sh
-sh ./build-client-android.sh
+time sh ./build-client-windows.sh
+time sh ./build-client-android.sh
 echo "Deploying client builds"
 sh ./upload_client_builds.sh
