@@ -91,7 +91,7 @@ MonoBehaviour:
   damage: 25
   range: 0.2
   attackTime: 0.1
-  duration: 0.5
+  duration: 0.64
   reload: 0.5
   reloadRandom: 0.15
 --- !u!114 &3698957157371451092
