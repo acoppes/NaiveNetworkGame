@@ -90,7 +90,7 @@ namespace NaiveNetworkGame.Server.Systems
                                 writer.WriteByte(PacketType.ServerPlayerState);
                                 n.Write(ref writer);
                                 m_Driver.EndSend(writer);
-
+                            
                                 ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
                                 ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                             }
@@ -101,20 +101,9 @@ namespace NaiveNetworkGame.Server.Systems
 
                     if (count == 0)
                     {
-                        var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
-                            sizeof(byte) + sizeof(ushort) +
-                            NetworkGameState.GetSize() * 1);
-                    
-                        writer.WriteByte(PacketType.ServerGameState);
-                        writer.WriteUShort(1);
-
-                        // send null unit to trigger client update...
-                        new NetworkGameState
-                        {
-                            unitId = 0,
-                            playerId = 0
-                        }.Write(ref writer);
-                    
+                        var writer = m_Driver.BeginSend(connection);
+                        
+                        writer.WriteByte(PacketType.ServerEmptyGameState);
                         m_Driver.EndSend(writer);
                         
                         ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
@@ -148,24 +137,24 @@ namespace NaiveNetworkGame.Server.Systems
                     var count = Entities
                         .WithAll<NetworkTranslationSync>().ToEntityQuery().CalculateEntityCount();
                     
-                    var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
-                        sizeof(byte) + sizeof(ushort) +
-                        NetworkTranslationSync.GetSize() * count);
-                    
-                    writer.WriteByte(PacketType.ServerTranslationSync);
-                    writer.WriteUShort((ushort) count);
-                    
-                    Entities
-                        .WithAll<NetworkTranslationSync>()
-                        .ForEach(delegate(ref NetworkTranslationSync n)
-                        {
-                            n.Write(ref writer);
-                        });
-                    
-                    m_Driver.EndSend(writer);
-                    
-                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                    if (count > 0)
+                    {
+                        var writer = m_Driver.BeginSend(server.framentationPipeline, connection,
+                            sizeof(byte) + sizeof(ushort) +
+                            NetworkTranslationSync.GetSize() * count);
+
+                        writer.WriteByte(PacketType.ServerTranslationSync);
+                        writer.WriteUShort((ushort) count);
+
+                        Entities
+                            .WithAll<NetworkTranslationSync>()
+                            .ForEach(delegate(ref NetworkTranslationSync n) { n.Write(ref writer); });
+
+                        m_Driver.EndSend(writer);
+
+                        ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                        ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                    }
                 }
             }
         }

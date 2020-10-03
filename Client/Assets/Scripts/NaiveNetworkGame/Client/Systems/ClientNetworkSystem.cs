@@ -225,6 +225,19 @@ namespace NaiveNetworkGame.Client.Systems
                                 PostUpdateCommands.AddComponent(networkStateEntity, 
                                     new NetworkPlayerState().Read(ref stream));
                             }
+                            
+                            if (type == PacketType.ServerEmptyGameState)
+                            {
+                                // empty game state, no units in town..
+
+                                var networkStateEntity = PostUpdateCommands.CreateEntity();
+                                PostUpdateCommands.AddComponent<ClientOnly>(networkStateEntity);
+                                PostUpdateCommands.AddComponent(networkStateEntity, 
+                                    new NetworkGameState
+                                    {
+                                        unitId = 0, playerId = 0
+                                    });
+                            }
 
                             if (type == PacketType.ServerTranslationSync)
                             {
