@@ -1271,8 +1271,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFrameRate: 60
-  sendTranslationStateFrequency: 0.05
-  sendGameStateFrequency: 0.05
+  sendTranslationStateFrequency: 0.2
+  sendGameStateFrequency: 0.2
   totalOutputInBytes: 0
   lastFrameOutputInBytes: 0
   lastSecondOutputInBytes: 0
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97253c3b024cab9409d869f0ff704a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitsCount: 1
+  unitsCount: 10
 --- !u!1 &1671218896
 GameObject:
   m_ObjectHideFlags: 0
