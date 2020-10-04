@@ -25,22 +25,22 @@ namespace NaiveNetworkGame.Common
             if (showZero)
                 onesActive = true;
 
-            if (numbers [0] != null) {
-                numbers [0].gameObject.SetActive (hundredsActive);
+            if (numbers[0] != null)
+            {
+                numbers[0].gameObject.SetActive(hundredsActive);
 
                 if (hundredsActive)
-                    numbers [0].sprite = numberSprites [hundreds];
+                    numbers[0].sprite = numberSprites[hundreds];
             }
 
-            numbers [1].gameObject.SetActive (tensActive);
-            numbers [2].gameObject.SetActive (onesActive);
+            numbers[1].gameObject.SetActive(tensActive);
+            numbers[2].gameObject.SetActive(onesActive);
 
             if (tensActive)
-                numbers [1].sprite = numberSprites [tens];
+                numbers[1].sprite = numberSprites[tens];
 
             if (onesActive)
-                numbers [2].sprite = numberSprites [ones];
+                numbers[2].sprite = numberSprites[ones];
         }
-
     }
 }

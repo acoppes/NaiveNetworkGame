@@ -11,34 +11,6 @@ using UnityEngine.UI;
 
 namespace Scenes
 {
-    public struct UserInterfaceComponent : ISharedComponentData, IEquatable<UserInterfaceComponent>
-    {
-        public PlayerButton spawnUnitButton;
-        public FixedNumbersLabel goldLabel;
-        public PlayerStatsUI playerStats;
-
-        public bool Equals(UserInterfaceComponent other)
-        {
-            return Equals(spawnUnitButton, other.spawnUnitButton) && Equals(goldLabel, other.goldLabel) && Equals(playerStats, other.playerStats);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is UserInterfaceComponent other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = (spawnUnitButton != null ? spawnUnitButton.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (goldLabel != null ? goldLabel.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (playerStats != null ? playerStats.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-    }
-    
     public struct ClientPrefabsSharedComponent : ISharedComponentData, IEquatable<ClientPrefabsSharedComponent>
     {
         public GameObject confirmActionPrefab;
@@ -109,7 +81,7 @@ namespace Scenes
             
             {
                 var userInterfaceEntity = entityManager.CreateEntity();
-                entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceComponent
+                entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceSharedComponent
                 {
                     goldLabel = goldLabel,
                     playerStats = playerStats,

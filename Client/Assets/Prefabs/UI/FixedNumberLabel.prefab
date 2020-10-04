@@ -165,6 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6132628370485866101}
   - component: {fileID: 6132628370485866100}
+  - component: {fileID: 4820532515410946869}
   m_Layer: 5
   m_Name: FixedNumberLabel
   m_TagString: Untagged
@@ -220,6 +221,21 @@ MonoBehaviour:
   - {fileID: 21300046, guid: 5b82c1bb88187084a95c179aef99cc72, type: 3}
   - {fileID: 21300048, guid: 5b82c1bb88187084a95c179aef99cc72, type: 3}
   showZero: 0
+--- !u!114 &4820532515410946869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132628370485866102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc5c45fa6f84024963d097bb2e3f0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 6132628370485866100}
+  numberPerSecond: 30
+  speedMultiplier: 0.25
 --- !u!1 &6132628370611929834
 GameObject:
   m_ObjectHideFlags: 0

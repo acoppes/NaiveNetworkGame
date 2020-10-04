@@ -23,7 +23,7 @@ namespace NaiveNetworkGame.Client.Systems
             var activePlayerEntity = GetSingletonEntity<ActivePlayer>();
             var player = EntityManager.GetComponentData<LocalPlayerController>(activePlayerEntity);
             
-            Entities.ForEach(delegate(Entity entity, UserInterfaceComponent ui)
+            Entities.ForEach(delegate(Entity entity, UserInterfaceSharedComponent ui)
             {
                 if (ui.goldLabel != null)
                     ui.goldLabel.SetNumber(player.gold);
