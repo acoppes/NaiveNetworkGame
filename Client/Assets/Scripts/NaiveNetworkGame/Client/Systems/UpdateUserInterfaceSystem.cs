@@ -25,23 +25,26 @@ namespace NaiveNetworkGame.Client.Systems
             
             Entities.ForEach(delegate(Entity entity, UserInterfaceSharedComponent ui)
             {
-                if (ui.goldLabel != null)
-                    ui.goldLabel.SetNumber(player.gold);
+                var userInterface = ui.userInterface;
+                
+                if (userInterface.goldLabel != null)
+                    userInterface.goldLabel.SetNumber(player.gold);
 
-                if (ui.playerStats)
+                if (userInterface.playerStats)
                 {
-                    ui.playerStats.currentUnits = player.currentUnits;
-                    ui.playerStats.maxUnits = player.maxUnits;
-                    ui.playerStats.unitType = player.skinType;
+                    userInterface.playerStats.currentUnits = player.currentUnits;
+                    userInterface.playerStats.maxUnits = player.maxUnits;
+                    userInterface.playerStats.unitType = player.skinType;
                 }
             
-                if (ui.spawnUnitButton != null)
-                    ui.spawnUnitButton.unitType = player.skinType;
+                // TODO: use unit type for farm and skin for unit in ui too..
+                
+                if (userInterface.buildUnitButton != null)
+                    userInterface.buildUnitButton.unitType = player.skinType;
+                
+                if (userInterface.buildFarmButton != null)
+                    userInterface.buildFarmButton.unitType = player.skinType;
             });
-     
-            // set the ui.gold from player gold...
-
-            // update the player input state given the ui state too?
         }
     }
 }

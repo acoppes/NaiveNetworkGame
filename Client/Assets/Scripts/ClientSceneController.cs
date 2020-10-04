@@ -40,17 +40,9 @@ namespace Scenes
         
         public GameObject actionPrefab;
 
-        public PlayerButton spawnUnitButton;
-        public FixedNumbersLabel goldLabel;
-        public PlayerStatsUI playerStats;
-        
-        // public PlayerButton playerButton;
-
-        // public Button spawnUnitButton;
+        public UserInterface userInterface;
 
         private EntityQuery playerControllerQuery;
-
-        public CanvasGroup uiGroup;
 
         public Button disconnectButton;
 
@@ -79,15 +71,11 @@ namespace Scenes
                 ComponentType.ReadOnly<ActivePlayer>(), 
                 ComponentType.ReadWrite<PlayerPendingAction>());
             
+            var userInterfaceEntity = entityManager.CreateEntity();
+            entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceSharedComponent
             {
-                var userInterfaceEntity = entityManager.CreateEntity();
-                entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceSharedComponent
-                {
-                    goldLabel = goldLabel,
-                    playerStats = playerStats,
-                    spawnUnitButton = spawnUnitButton
-                });
-            }
+                userInterface = userInterface
+            });
             
             // var playerInputState = entityManager.GetComponentData<PlayerInputState>(gameState);
             // gameStateQuery.SetSingleton(playerInputState);
@@ -135,10 +123,9 @@ namespace Scenes
             if (ConnectionState.currentState == ConnectionState.State.Connected)
                 ConnectionState.connectedTime += Time.deltaTime;
 
-            if (uiGroup != null)
+            if (userInterface != null)
             {
-                uiGroup.interactable = ConnectionState.currentState == ConnectionState.State.Connected;
-                uiGroup.alpha = uiGroup.interactable ? 1.0f : 0.0f;
+                userInterface.visible = ConnectionState.currentState == ConnectionState.State.Connected;
             }
             
             if (connectionStateText != null)

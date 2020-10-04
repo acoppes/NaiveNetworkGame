@@ -509,6 +509,7 @@ GameObject:
   - component: {fileID: 252646857}
   - component: {fileID: 252646856}
   - component: {fileID: 252646860}
+  - component: {fileID: 252646861}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -612,6 +613,23 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &252646861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252646855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 052e17395f1f43b49ee6b0fe7b5c3b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildUnitButton: {fileID: 433550191}
+  buildFarmButton: {fileID: 541061676}
+  goldLabel: {fileID: 1052992430}
+  playerStats: {fileID: 951623173}
+  canvasGroup: {fileID: 252646860}
 --- !u!1 &259745031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1447,6 +1465,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8129957841303079993, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
   m_PrefabInstance: {fileID: 541061674}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &541061676 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8129957841303079995, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
+  m_PrefabInstance: {fileID: 541061674}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee702fe0db40494691b9548a81b67970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &828013656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1947,6 +1976,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6132628370485866101, guid: 6b5a1224becc55649a094d666249e69e, type: 3}
   m_PrefabInstance: {fileID: 1052992428}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1052992430 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4820532515410946869, guid: 6b5a1224becc55649a094d666249e69e, type: 3}
+  m_PrefabInstance: {fileID: 1052992428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc5c45fa6f84024963d097bb2e3f0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1254034849
 GameObject:
   m_ObjectHideFlags: 0
@@ -2192,10 +2232,7 @@ MonoBehaviour:
   camera: {fileID: 1990033516}
   parent: {fileID: 1633604428}
   actionPrefab: {fileID: 7091667433302669984, guid: 54f99f49e0358fe499bb61458dedc2c8, type: 3}
-  spawnUnitButton: {fileID: 433550191}
-  goldLabel: {fileID: 1712392759}
-  playerStats: {fileID: 951623173}
-  uiGroup: {fileID: 252646860}
+  userInterface: {fileID: 252646861}
   disconnectButton: {fileID: 324908927}
   connectionStateText: {fileID: 2037450794}
   receivedBytesObject: {fileID: 1909326809}
@@ -2280,17 +2317,6 @@ MonoBehaviour:
   - modelPrefabs:
     - {fileID: 1318132579616523738, guid: b124561be7ad9cc4899b478a7c219ff7, type: 3}
     - {fileID: 1318132579616523738, guid: 4cffc2ff9c675d64d8d9ffa9372f4e18, type: 3}
---- !u!114 &1712392759 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6132628370485866100, guid: 6b5a1224becc55649a094d666249e69e, type: 3}
-  m_PrefabInstance: {fileID: 1052992428}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a0121af4254cf8b9a95b3f2a997e70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1869166284
 GameObject:
   m_ObjectHideFlags: 0
