@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6341551783857814984}
   - component: {fileID: -2717080253061737762}
   - component: {fileID: 1851499962175053970}
+  - component: {fileID: 6966701034924405489}
   m_Layer: 0
   m_Name: Farm
   m_TagString: Untagged
@@ -74,3 +75,17 @@ MonoBehaviour:
   id: 0
   player: 0
   type: 1
+--- !u!114 &6966701034924405489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135555761720755020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17eaebf5ff134f80b4078910efec11e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  total: 100
+  current: 100

@@ -56,15 +56,19 @@ namespace NaiveNetworkGame.Server.Systems
                         if (playerController.currentUnits >= playerController.maxUnits) 
                             return;
 
-                        var prefab = Entity.Null; 
+                        var prefab = Entity.Null;
+                        var position = t.Value;
                         
                         if (p.unitType == 0)
                         {
                             prefab = playerController.unitPrefab;
                         }
-                        else
+                        else if (p.unitType == 1)
                         {
                             prefab = playerController.farmPrefab;
+                            // use custom location...
+                            var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
+                            position = spawnLocations[0].position;
                         }
                         
                         var unitEntity = PostUpdateCommands.Instantiate(prefab);
@@ -78,7 +82,7 @@ namespace NaiveNetworkGame.Server.Systems
                         
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
-                            Value = t.Value
+                            Value = position
                             // Value = new float3(p.target.x, p.target.y, 0)
                         });
                         PostUpdateCommands.SetComponent(unitEntity, new UnitState
