@@ -105,7 +105,7 @@ namespace Scenes
             playerControllerQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<LocalPlayerController>(), 
                 ComponentType.ReadOnly<ActivePlayer>(), 
-                ComponentType.ReadWrite<PlayerInputState>());
+                ComponentType.ReadWrite<PlayerPendingAction>());
             
             {
                 var userInterfaceEntity = entityManager.CreateEntity();
@@ -205,16 +205,20 @@ namespace Scenes
                 latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
         }
 
-        public void OnPlayerAction(byte actionType)
+        public void OnPlayerAction(PlayerActionAsset playerAction)
         {
             // another option is to iterate in every button of active player....
             if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
             {
                 // var playerEntity = playerControllerQuery.GetSingletonEntity();
-                var playerInput = entityManager.GetComponentData<PlayerInputState>(playerEntity);
-            
-                playerInput.spawnActionPressed = !playerInput.spawnActionPressed;
+                var playerInput = entityManager.GetComponentData<PlayerPendingAction>(playerEntity);
+
+                playerInput.pending = true;
+                playerInput.actionType = playerAction.type;
+                playerInput.unitType = playerAction.unitType;
                 playerControllerQuery.SetSingleton(playerInput);
+
+                // entityManager.AddComponent(playerEntity, new PlayerPendingActions());
             }
         }
 

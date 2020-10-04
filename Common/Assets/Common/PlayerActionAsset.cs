@@ -6,5 +6,6 @@ namespace NaiveNetworkGame.Common
     public class PlayerActionAsset : ScriptableObject
     {
         public byte type;
+        public byte unitType;
     }
 }

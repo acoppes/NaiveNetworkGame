@@ -8,11 +8,13 @@ namespace NaiveNetworkGame.Common
     {
         public static byte MoveUnitAction = 1;
         public static byte BuildUnit = 2;
-        public static byte BuildFarm = 3;
 
         public byte player;
         public uint unit;
-        public byte command;
+        
+        public byte actionType;
+        public byte unitType;
+        
         public float2 target;
         
         public ClientPlayerAction Write(ref DataStreamWriter writer)
@@ -20,7 +22,8 @@ namespace NaiveNetworkGame.Common
             writer.WriteByte(PacketType.ClientPlayerAction);
             writer.WriteByte(player);
             writer.WriteUInt(unit);
-            writer.WriteByte(command);
+            writer.WriteByte(actionType);
+            writer.WriteByte(unitType);
             writer.WriteFloat(target.x);
             writer.WriteFloat(target.y);
             return this;
@@ -30,7 +33,8 @@ namespace NaiveNetworkGame.Common
         {
             player = stream.ReadByte();
             unit = stream.ReadUInt();
-            command = stream.ReadByte();
+            actionType = stream.ReadByte();
+            unitType = stream.ReadByte();
             target.x = stream.ReadFloat();
             target.y = stream.ReadFloat();
             return this;

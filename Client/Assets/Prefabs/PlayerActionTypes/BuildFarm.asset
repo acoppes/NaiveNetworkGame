@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9829e59b5d224561a13f0f3670429b94, type: 3}
   m_Name: BuildFarm
   m_EditorClassIdentifier: 
-  type: 3
+  type: 2
+  unitType: 1

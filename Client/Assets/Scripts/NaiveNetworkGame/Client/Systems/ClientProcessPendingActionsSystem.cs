@@ -1,0 +1,47 @@
+using NaiveNetworkGame.Client.Components;
+using NaiveNetworkGame.Common;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Networking.Transport;
+
+namespace NaiveNetworkGame.Client.Systems
+{
+    public class ClientProcessPendingActionsSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerController p, ref PlayerPendingAction playerPendingActions)
+            {
+                if (networkPlayerId.state != NetworkConnection.State.Connected)
+                    return;
+
+                // if (!networkPlayerId.assigned)
+                //     return;
+                
+                // unselect player logic...
+                
+                // Entities
+                //     .WithAllReadOnly<Selectable>()
+                //     .WithAll<Unit>().ForEach(delegate(ref Unit unit)
+                //     {
+                //         unit.isSelected = false;
+                //     });
+
+                if (playerPendingActions.pending)
+                {
+                    // send deplyo action...
+                    var e = PostUpdateCommands.CreateEntity();
+                    PostUpdateCommands.AddComponent(e, new ClientPlayerAction
+                    {
+                        player = p.player,
+                        unit = 0,
+                        actionType = playerPendingActions.actionType,
+                        unitType = playerPendingActions.unitType
+                    });
+
+                    playerPendingActions.pending = false;
+                }
+            });
+        }
+    }
+}

@@ -9,18 +9,20 @@ namespace NaiveNetworkGame.Client.Systems
     {
         protected override void OnUpdate()
         {
-            if (Camera.main == null)
-                return;
+            // Deprecated now that we dont interact directly with units ...
             
-            var mousePosition = Input.mousePosition;
-            var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-            
-            Entities.ForEach(delegate(ref PlayerInputState playerInputState)
-            {
-                playerInputState.selectUnitButtonPressed = Input.GetMouseButtonUp(0);
-                playerInputState.actionButtonPressed = Input.GetMouseButtonUp(1);
-                playerInputState.position = new float2(worldPosition.x, worldPosition.y);
-            });
+            // if (Camera.main == null)
+            //     return;
+            //
+            // var mousePosition = Input.mousePosition;
+            // var worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            //
+            // Entities.ForEach(delegate(ref PlayerInputState playerInputState)
+            // {
+            //     playerInputState.selectUnitButtonPressed = Input.GetMouseButtonUp(0);
+            //     playerInputState.actionButtonPressed = Input.GetMouseButtonUp(1);
+            //     playerInputState.position = new float2(worldPosition.x, worldPosition.y);
+            // });
         }
     }
 }

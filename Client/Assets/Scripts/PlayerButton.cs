@@ -36,7 +36,7 @@ namespace Scenes
 
         private void OnPressed()
         {
-            controller.OnPlayerAction(actionType.type);
+            controller.OnPlayerAction(actionType);
         }
 
         private void LateUpdate()

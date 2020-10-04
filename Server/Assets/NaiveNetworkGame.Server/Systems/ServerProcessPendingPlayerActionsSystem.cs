@@ -6,7 +6,7 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    public class ProcessPendingPlayerActionsSystem : ComponentSystem
+    public class ServerProcessPendingPlayerActionsSystem : ComponentSystem
     {
         protected override void OnCreate()
         {
@@ -30,11 +30,11 @@ namespace NaiveNetworkGame.Server.Systems
                     var player = p.player;
                     var unitId = p.unit;
                 
-                    if (p.command == ClientPlayerAction.MoveUnitAction)
+                    if (p.actionType == ClientPlayerAction.MoveUnitAction)
                     {
                         var pendingAction = new PendingAction
                         {
-                            command = p.command,
+                            command = p.actionType,
                             target = p.target
                         };
 
@@ -50,7 +50,7 @@ namespace NaiveNetworkGame.Server.Systems
                             PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
                             PostUpdateCommands.AddComponent(unitEntity, pendingAction);
                         });
-                    } else if (p.command == ClientPlayerAction.BuildUnit)
+                    } else if (p.actionType == ClientPlayerAction.BuildUnit)
                     {
                         // dont create unit if at maximum capacity
                         if (playerController.currentUnits >= playerController.maxUnits) 

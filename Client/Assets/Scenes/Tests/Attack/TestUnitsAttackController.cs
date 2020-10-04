@@ -26,17 +26,20 @@ namespace Scenes.Tests
             yield return new WaitForSeconds(0.1f);
 
             var playerInputStateQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<PlayerInputState>());
+                ComponentType.ReadWrite<PlayerPendingAction>());
 
             while (unitsCount > 0)
             {
                 var entities = playerInputStateQuery.ToEntityArray(Allocator.TempJob);
-                var inputStates = playerInputStateQuery.ToComponentDataArray<PlayerInputState>(Allocator.TempJob);
+                var inputStates = playerInputStateQuery.ToComponentDataArray<PlayerPendingAction>(Allocator.TempJob);
 
                 for (int i = 0; i < inputStates.Length; i++)
                 {
                     var inputState = inputStates[i];
-                    inputState.spawnActionPressed = true;
+                    
+                    inputState.pending = true;
+                    inputState.actionType = 2;
+                    inputState.unitType = 0;
 
                     entityManager.SetComponentData(entities[i], inputState);
                 }
