@@ -8,7 +8,7 @@ namespace NaiveNetworkGame.Server.Components
         public Entity target;
         public float damage;
     }
-    
+
     public struct IsAlive : IComponentData
     {
         

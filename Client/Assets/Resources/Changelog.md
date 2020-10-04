@@ -1,3 +1,21 @@
+# 0.0.2
+
+## Added
+
+  * 
+
+## Changed
+
+  * 
+
+## Fixed
+
+  * 
+
+## Removed
+
+  * 
+  
 # 0.0.1
 
 ## Added
@@ -20,5 +38,3 @@
   * Death units don't count for max units.
   * Client units destroyed when no more units in server by sending null game state.
   * Default resolution in Client Windows build.
-
-## Removed

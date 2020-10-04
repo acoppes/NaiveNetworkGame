@@ -79,7 +79,7 @@ namespace NaiveNetworkGame.Server.Systems
                             player = player,
                             type = p.unitType
                         });
-                        
+
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
                             Value = position
