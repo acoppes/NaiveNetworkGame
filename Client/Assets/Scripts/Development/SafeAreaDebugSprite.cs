@@ -16,7 +16,7 @@ namespace Development
         
         private void LateUpdate()
         {
-            var safeAreaColor = Color.yellow;
+            var safeAreaColor = sprite.color;
             safeAreaColor.a = 0.15f;
             
             if (sprite != null)
