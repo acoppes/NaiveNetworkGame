@@ -122,7 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   player: 0
-  type: 1
+  type: 0
 --- !u!114 &1251132875695558521
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,9 +10,11 @@ namespace NaiveNetworkGame.Server.Components
         public byte currentUnits;
         public ushort gold;
 
-        public byte unitType;
+        public byte skinType;
 
         public Entity unitPrefab;
+        public Entity farmPrefab;
+        
         public Entity playerWander;
     }
 }

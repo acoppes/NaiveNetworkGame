@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Client;
+using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
 using Unity.Collections;
 using Unity.Entities;
@@ -53,9 +54,23 @@ namespace NaiveNetworkGame.Client.Systems
                     value = n.health
                 });
 
+                var playerId = n.playerId;
+                var skinType = 0;
+                
+                Entities.ForEach(delegate(ref LocalPlayerController p)
+                {
+                    if (p.player == playerId)
+                    {
+                        skinType = p.skinType;
+                    }
+                });
+
+                var skinModels = modelProvider.skinModels[skinType];
+                var modelPrefab = skinModels.modelPrefabs[n.unitType];
+                
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {
-                    prefab = modelProvider.prefabs[n.unitType]
+                    prefab = modelPrefab
                 });
                 
                 // create it far away first time...

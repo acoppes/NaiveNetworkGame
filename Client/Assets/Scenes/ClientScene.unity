@@ -2273,9 +2273,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0fd7627ece34a54824c5117cbc740b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabs:
-  - {fileID: 1318132579616523738, guid: 5bfeb814a7e0bd34ebbae70bf306b5d3, type: 3}
-  - {fileID: 1318132579616523738, guid: b124561be7ad9cc4899b478a7c219ff7, type: 3}
+  skinModels:
+  - modelPrefabs:
+    - {fileID: 1318132579616523738, guid: 5bfeb814a7e0bd34ebbae70bf306b5d3, type: 3}
+    - {fileID: 1318132579616523738, guid: 4cffc2ff9c675d64d8d9ffa9372f4e18, type: 3}
+  - modelPrefabs:
+    - {fileID: 1318132579616523738, guid: b124561be7ad9cc4899b478a7c219ff7, type: 3}
+    - {fileID: 1318132579616523738, guid: 4cffc2ff9c675d64d8d9ffa9372f4e18, type: 3}
 --- !u!114 &1712392759 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6132628370485866100, guid: 6b5a1224becc55649a094d666249e69e, type: 3}

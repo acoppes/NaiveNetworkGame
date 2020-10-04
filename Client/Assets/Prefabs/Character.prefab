@@ -175,7 +175,6 @@ GameObject:
   - component: {fileID: 1318132579616523733}
   - component: {fileID: 1318132579616523732}
   - component: {fileID: 3505350495668657577}
-  - component: {fileID: 7728074612990962427}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -236,37 +235,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 1318132579099619207}
-  playerIndicator: {fileID: 600208461775550357}
   selectorAnimator: {fileID: 4888957796133922084}
   actionDuration: {fileID: 6475625062837350770}
   healthBar: {fileID: 1431023918225645244}
   interpolationSpeed: 20
---- !u!61 &7728074612990962427
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1318132579616523738}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.05}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.3}
-  m_EdgeRadius: 0
 --- !u!1001 &6170640745137716747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -401,11 +373,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 523232781a9874741a164144e9e2c137, type: 3}
---- !u!1 &600208461775550357 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6277576870969575482, guid: 523232781a9874741a164144e9e2c137, type: 3}
-  m_PrefabInstance: {fileID: 6866353964280528815}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7247604717251060485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4314055480545172650, guid: 523232781a9874741a164144e9e2c137, type: 3}

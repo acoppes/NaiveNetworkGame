@@ -7,8 +7,6 @@ namespace Client
     public class UnitModelBehaviour : MonoBehaviour
     {
         public SpriteRenderer model;
-        
-        public GameObject playerIndicator;
 
         public Animator selectorAnimator;
         
@@ -48,8 +46,6 @@ namespace Client
         // Update is called once per frame
         private void LateUpdate()
         {
-            // playerIndicator?.SetActive(isActivePlayer);
-
             if (selectorAnimator != null)
             {
                 selectorAnimator.SetBool(selectedKeyHash, isSelected);

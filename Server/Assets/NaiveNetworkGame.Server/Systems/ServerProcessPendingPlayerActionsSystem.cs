@@ -56,13 +56,24 @@ namespace NaiveNetworkGame.Server.Systems
                         if (playerController.currentUnits >= playerController.maxUnits) 
                             return;
 
-                        var unitEntity = PostUpdateCommands.Instantiate(playerController.unitPrefab);
+                        var prefab = Entity.Null; 
+                        
+                        if (p.unitType == 0)
+                        {
+                            prefab = playerController.unitPrefab;
+                        }
+                        else
+                        {
+                            prefab = playerController.farmPrefab;
+                        }
+                        
+                        var unitEntity = PostUpdateCommands.Instantiate(prefab);
                         
                         PostUpdateCommands.SetComponent(unitEntity, new Unit
                         {
                             id = (ushort) createdUnits.lastCreatedUnitId++,
                             player = player,
-                            type = playerController.unitType
+                            type = p.unitType
                         });
                         
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
@@ -103,6 +114,7 @@ namespace NaiveNetworkGame.Server.Systems
                             wanderCenter = wanderCenter,
                             range = range
                         });
+                        
                         PostUpdateCommands.AddComponent<IsAlive>(unitEntity);
                         
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());

@@ -32,11 +32,11 @@ namespace NaiveNetworkGame.Client.Systems
                 {
                     ui.playerStats.currentUnits = player.currentUnits;
                     ui.playerStats.maxUnits = player.maxUnits;
-                    ui.playerStats.unitType = player.unitType;
+                    ui.playerStats.unitType = player.skinType;
                 }
             
                 if (ui.spawnUnitButton != null)
-                    ui.spawnUnitButton.unitType = player.unitType;
+                    ui.spawnUnitButton.unitType = player.skinType;
             });
      
             // set the ui.gold from player gold...

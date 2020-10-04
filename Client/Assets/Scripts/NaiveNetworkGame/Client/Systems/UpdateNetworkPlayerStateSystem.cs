@@ -24,7 +24,7 @@ namespace NaiveNetworkGame.Client.Systems
                     
                     playerController.gold = networkPlayerState.gold;
                     playerController.player = networkPlayerState.player;
-                    playerController.unitType = networkPlayerState.unitType;
+                    playerController.skinType = networkPlayerState.skinType;
                     playerController.currentUnits = networkPlayerState.currentUnits;
                     playerController.maxUnits = networkPlayerState.maxUnits;
                 });
