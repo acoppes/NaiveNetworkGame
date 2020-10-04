@@ -1298,7 +1298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8129957841303079992, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_Name
-      value: SpawnUnitButton_01
+      value: BuildFarmButton
       objectReference: {fileID: 0}
     - target: {fileID: 8129957841303079993, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1388,6 +1388,10 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 1633604426}
+    - target: {fileID: 8129957841303079995, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
+      propertyPath: actionType
+      value: 
+      objectReference: {fileID: 11400000, guid: 720d1e51a2526104e9c8e877b5a5f668, type: 2}
     - target: {fileID: 8129957841982670483, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
@@ -3261,7 +3265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8129957841303079992, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_Name
-      value: SpawnUnitButton
+      value: BuildUnitButton
       objectReference: {fileID: 0}
     - target: {fileID: 8129957841303079993, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3351,6 +3355,10 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 1633604426}
+    - target: {fileID: 8129957841303079995, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
+      propertyPath: actionType
+      value: 
+      objectReference: {fileID: 11400000, guid: d0e5a20a4734f384aac7109ccc6e74a8, type: 2}
     - target: {fileID: 8129957841982670483, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0

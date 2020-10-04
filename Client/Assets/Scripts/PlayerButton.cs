@@ -1,4 +1,5 @@
 using System;
+using NaiveNetworkGame.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +26,8 @@ namespace Scenes
         [NonSerialized]
         public byte unitType;
 
+        public PlayerActionAsset actionType;
+        
         private void Start()
         {
             activeHash = Animator.StringToHash("active");
@@ -33,7 +36,7 @@ namespace Scenes
 
         private void OnPressed()
         {
-            controller.ToggleSpawning();
+            controller.OnPlayerAction(actionType.type);
         }
 
         private void LateUpdate()

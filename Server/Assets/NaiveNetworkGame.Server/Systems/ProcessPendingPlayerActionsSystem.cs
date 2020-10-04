@@ -50,7 +50,7 @@ namespace NaiveNetworkGame.Server.Systems
                             PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
                             PostUpdateCommands.AddComponent(unitEntity, pendingAction);
                         });
-                    } else if (p.command == ClientPlayerAction.CreateUnitAction)
+                    } else if (p.command == ClientPlayerAction.BuildUnit)
                     {
                         // dont create unit if at maximum capacity
                         if (playerController.currentUnits >= playerController.maxUnits) 

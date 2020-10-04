@@ -205,7 +205,7 @@ namespace Scenes
                 latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
         }
 
-        public void ToggleSpawning()
+        public void OnPlayerAction(byte actionType)
         {
             // another option is to iterate in every button of active player....
             if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))

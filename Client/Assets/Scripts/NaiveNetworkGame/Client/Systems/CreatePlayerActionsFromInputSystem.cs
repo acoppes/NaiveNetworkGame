@@ -47,7 +47,7 @@ namespace NaiveNetworkGame.Client.Systems
                     {
                         player = p.player,
                         unit = 0,
-                        command = ClientPlayerAction.CreateUnitAction
+                        command = ClientPlayerAction.BuildUnit
                     });
 
                     playerInputState.spawnActionPressed = false;
