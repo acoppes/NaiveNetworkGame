@@ -62,6 +62,13 @@ namespace NaiveNetworkGame.Server.Systems
                         var playerActions = GetBufferFromEntity<PlayerAction>()[e];
                         var playerAction = playerActions[p.unitType];
 
+                        // can't execute action if not enough gold...
+                        if (playerController.gold < playerAction.cost)
+                            return;
+
+                        // consume gold
+                        playerController.gold -= playerAction.cost;
+
                         var prefab = playerAction.prefab;
 
                         if (p.unitType == 0)
@@ -72,7 +79,8 @@ namespace NaiveNetworkGame.Server.Systems
                         {
                             // prefab = playerController.farmPrefab;
                             // use custom location...
-                            var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
+                            var spawnLocations = GetBufferFromEntity<PlayerSpawnLocation>()[e];
+                            // var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
                             position = spawnLocations[0].position;
                         }
                         
