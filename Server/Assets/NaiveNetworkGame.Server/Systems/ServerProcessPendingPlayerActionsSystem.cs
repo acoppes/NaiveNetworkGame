@@ -56,16 +56,21 @@ namespace NaiveNetworkGame.Server.Systems
                         if (playerController.currentUnits >= playerController.maxUnits) 
                             return;
 
-                        var prefab = Entity.Null;
+                        // var prefab = Entity.Null;
                         var position = t.Value;
-                        
+
+                        var playerActions = GetBufferFromEntity<PlayerAction>()[e];
+                        var playerAction = playerActions[p.unitType];
+
+                        var prefab = playerAction.prefab;
+
                         if (p.unitType == 0)
                         {
-                            prefab = playerController.unitPrefab;
+                            // prefab = playerController.unitPrefab;
                         }
                         else if (p.unitType == 1)
                         {
-                            prefab = playerController.farmPrefab;
+                            // prefab = playerController.farmPrefab;
                             // use custom location...
                             var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
                             position = spawnLocations[0].position;

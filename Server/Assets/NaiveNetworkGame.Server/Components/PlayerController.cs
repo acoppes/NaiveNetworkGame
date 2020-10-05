@@ -12,9 +12,6 @@ namespace NaiveNetworkGame.Server.Components
 
         public byte skinType;
 
-        public Entity unitPrefab;
-        public Entity farmPrefab;
-        
         public Entity playerWander;
     }
 }
