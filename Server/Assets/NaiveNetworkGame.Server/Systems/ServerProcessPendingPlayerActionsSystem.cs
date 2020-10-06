@@ -81,7 +81,7 @@ namespace NaiveNetworkGame.Server.Systems
                         }
                         else if (p.unitType == 1)
                         {
-                            if (!playerController.hasBuildingSlots)
+                            if (playerController.buildingSlots == 0)
                                 return;
                         
                             var buildingSlotBuffer = GetBufferFromEntity<BuildingSlot>()[e];

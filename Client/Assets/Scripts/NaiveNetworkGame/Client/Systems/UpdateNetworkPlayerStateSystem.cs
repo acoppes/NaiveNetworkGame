@@ -27,6 +27,7 @@ namespace NaiveNetworkGame.Client.Systems
                     playerController.skinType = networkPlayerState.skinType;
                     playerController.currentUnits = networkPlayerState.currentUnits;
                     playerController.maxUnits = networkPlayerState.maxUnits;
+                    playerController.buildingSlots = networkPlayerState.buildingSlots;
                 });
                 
                 PostUpdateCommands.DestroyEntity(e);

@@ -14,6 +14,6 @@ namespace NaiveNetworkGame.Server.Components
 
         public Entity playerWander;
 
-        public bool hasBuildingSlots;
+        public byte buildingSlots;
     }
 }

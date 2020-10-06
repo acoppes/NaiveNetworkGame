@@ -10,5 +10,6 @@ namespace NaiveNetworkGame.Client.Components
         public ushort gold;
         public byte maxUnits;
         public byte currentUnits;
+        public byte buildingSlots;
     }
 }

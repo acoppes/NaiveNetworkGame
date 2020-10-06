@@ -62,7 +62,7 @@ namespace NaiveNetworkGame.Client.Systems
                     }
 
                     unitButton.enabled = unitButton.cost < player.gold;
-                    farmButton.enabled = farmButton.cost < player.gold;
+                    farmButton.enabled = farmButton.cost < player.gold && player.buildingSlots > 0;
                 }
                 
                             

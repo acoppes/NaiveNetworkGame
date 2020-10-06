@@ -26,11 +26,12 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
 
-                p.hasBuildingSlots = false;
+                p.buildingSlots = 0;
                 
                 for (var i = 0; i < buildingSlots.Length; i++)
                 {
-                    p.hasBuildingSlots = p.hasBuildingSlots || buildingSlots[i].available;
+                    if (buildingSlots[i].available)
+                        p.buildingSlots++;
                 }
 
                 p.currentUnits = unitSlots;
