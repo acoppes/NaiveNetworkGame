@@ -32,6 +32,8 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     var playerId = p.player;
                     var gold = p.gold;
+                    byte maxUnits = 0;
+                    
                     Entities
                         .WithAll<IsAlive, Unit, ResourceCollector, ServerOnly>()
                         .ForEach(delegate(ref Unit unit, ref ResourceCollector r)
@@ -42,6 +44,18 @@ namespace NaiveNetworkGame.Server.Systems
                                 r.collectedGold = 0;
                             }
                         });
+                    
+                    Entities
+                        .WithAll<IsAlive, Unit, House, ServerOnly>()
+                        .ForEach(delegate(ref Unit unit, ref House h)
+                        {
+                            if (unit.player == playerId)
+                            {
+                                maxUnits += h.maxUnits;
+                            }
+                        });
+
+                    p.maxUnits = maxUnits;
                     p.gold = gold;
                 });
         }

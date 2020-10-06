@@ -13,5 +13,6 @@ namespace NaiveNetworkGame.Server.Components
         public ushort id;
         public byte player;
         public byte type;
+        public byte slotCost;
     }
 }

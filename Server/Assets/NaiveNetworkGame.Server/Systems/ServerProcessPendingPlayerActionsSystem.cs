@@ -52,10 +52,6 @@ namespace NaiveNetworkGame.Server.Systems
                         });
                     } else if (p.actionType == ClientPlayerAction.BuildUnit)
                     {
-                        // dont create unit if at maximum capacity
-                        if (playerController.currentUnits >= playerController.maxUnits) 
-                            return;
-
                         // var prefab = Entity.Null;
                         var position = t.Value;
 
@@ -63,11 +59,7 @@ namespace NaiveNetworkGame.Server.Systems
                         var playerAction = playerActions[p.unitType];
 
                         // can't execute action if not enough gold...
-                        if (playerController.gold < playerAction.cost)
-                            return;
 
-                        // consume gold
-                        playerController.gold -= playerAction.cost;
 
                         var prefab = playerAction.prefab;
 
@@ -83,15 +75,27 @@ namespace NaiveNetworkGame.Server.Systems
                             // var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
                             position = spawnLocations[0].position;
                         }
+
+                        var unitComponent = GetComponentDataFromEntity<Unit>()[prefab];
+
+                        // dont create unit if at maximum capacity
+                        if (unitComponent.slotCost > 0 && 
+                            playerController.currentUnits + unitComponent.slotCost > playerController.maxUnits) 
+                            return;
+
+                        if (playerController.gold < playerAction.cost)
+                            return;
+
+                        // consume gold
+                        playerController.gold -= playerAction.cost;
                         
                         var unitEntity = PostUpdateCommands.Instantiate(prefab);
+
+                        unitComponent.id = (ushort) createdUnits.lastCreatedUnitId++;
+                        unitComponent.player = player;
+                        // unitComponent.type = p.unitType;
                         
-                        PostUpdateCommands.SetComponent(unitEntity, new Unit
-                        {
-                            id = (ushort) createdUnits.lastCreatedUnitId++,
-                            player = player,
-                            type = p.unitType
-                        });
+                        PostUpdateCommands.SetComponent(unitEntity, unitComponent);
 
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {

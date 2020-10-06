@@ -8,13 +8,13 @@ namespace NaiveNetworkGame.Server.Systems
     {
         protected override void OnUpdate()
         {
-            // we could update gold here too...
-            
             Entities.ForEach(delegate(ref PlayerController p)
             {
                 var player = p.player;
 
-                byte currentUnits = 0;
+                p.currentUnits = 0;
+                
+                var slots = p.currentUnits;
                 
                 Entities
                     .WithAll<IsAlive>()
@@ -22,11 +22,11 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.player == player)
                     {
-                        currentUnits++;
+                        slots += unit.slotCost;
                     }
                 });
 
-                p.currentUnits = currentUnits;
+                p.currentUnits = slots;
             });
         }
     }

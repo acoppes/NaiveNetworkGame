@@ -183,13 +183,15 @@ namespace Scenes
 
         public bool IsSpawnEnabled()
         {
-            if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
-            {
-                var playerController = entityManager.GetComponentData<LocalPlayerController>(playerEntity);
-                return playerController.currentUnits < playerController.maxUnits;
-            }
-
-            return false;
+            return true;
+            
+            // if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
+            // {
+            //     var playerController = entityManager.GetComponentData<LocalPlayerController>(playerEntity);
+            //     return playerController.currentUnits < playerController.maxUnits;
+            // }
+            //
+            // return false;
         }
     }
 }

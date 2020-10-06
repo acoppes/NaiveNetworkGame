@@ -123,6 +123,7 @@ MonoBehaviour:
   id: 0
   player: 0
   type: 0
+  slotCost: 1
 --- !u!114 &2579941333386765120
 MonoBehaviour:
   m_ObjectHideFlags: 0

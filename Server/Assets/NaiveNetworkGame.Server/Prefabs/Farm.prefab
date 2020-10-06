@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1851499962175053970}
   - component: {fileID: 6966701034924405489}
   - component: {fileID: -4110471192995103439}
+  - component: {fileID: 2128647238132424109}
   m_Layer: 0
   m_Name: Farm
   m_TagString: Untagged
@@ -103,3 +104,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldPerSecond: 5
+  collectedGold: 0
+  currentCollectionTime: 0
+--- !u!114 &2128647238132424109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135555761720755020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21019374cc743b4890648a1cbe84ef5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxUnits: 10
