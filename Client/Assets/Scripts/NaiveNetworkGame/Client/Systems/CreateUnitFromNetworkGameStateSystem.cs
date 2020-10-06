@@ -66,7 +66,7 @@ namespace NaiveNetworkGame.Client.Systems
                 });
 
                 var skinModels = modelProvider.skinModels[skinType];
-                var modelPrefab = skinModels.modelPrefabs[n.unitType];
+                var modelPrefab = skinModels.list[n.unitType];
                 
                 PostUpdateCommands.AddSharedComponent(entity, new ModelPrefabComponent
                 {

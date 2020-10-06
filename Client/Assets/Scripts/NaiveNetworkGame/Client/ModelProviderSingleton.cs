@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using NaiveNetworkGame.Common;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NaiveNetworkGame.Client
 {
     [Serializable]
     public class SkinModels
     {
-        public List<GameObject> modelPrefabs;
+        [FormerlySerializedAs("modelPrefabs")] 
+        public List<GameObject> list;
     }
     
     public class ModelProviderSingleton : SingletonBehaviour<ModelProviderSingleton>

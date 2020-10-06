@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using NaiveNetworkGame.Client;
 using NaiveNetworkGame.Common;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,13 +23,25 @@ namespace Scenes
         private int activeHash;
 
         [SerializeField]
+        private List<SkinModels> iconsPerSkin;
+
+        [SerializeField]
+        private Transform iconsContainer;
+
+        [SerializeField]
         private GameObject[] icons;
 
         [NonSerialized]
-        public byte unitType;
+        public byte skinType;
 
+        [SerializeField]
+        private FixedNumbersLabel costLabel;
+        
         public PlayerActionAsset actionType;
         
+        [NonSerialized]
+        public byte cost;
+
         private void Start()
         {
             activeHash = Animator.StringToHash("active");
@@ -43,9 +57,21 @@ namespace Scenes
         {
             animator.SetBool(activeHash, controller.IsSpawnEnabled());
 
-            for (var i = 0; i < icons.Length; i++)
+            for (var i = 0; i < iconsContainer.childCount; i++)
             {
-                icons[i].SetActive(i == unitType);
+                iconsContainer.GetChild(i).gameObject.SetActive(false);
+            }
+            
+            iconsPerSkin[skinType].list[actionType.unitType].SetActive(true);
+
+            // for (var i = 0; i < icons.Length; i++)
+            // {
+            //     icons[i].SetActive(i == skinType);
+            // }
+
+            if (costLabel != null)
+            {
+                costLabel.SetNumber(cost);
             }
         }
     }

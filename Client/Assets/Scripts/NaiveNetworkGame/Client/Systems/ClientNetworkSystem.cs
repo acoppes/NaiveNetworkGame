@@ -1,6 +1,7 @@
 using Client;
 using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
+using NaiveNetworkGame.Server.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
@@ -203,12 +204,18 @@ namespace NaiveNetworkGame.Client.Systems
                                 // this is my player id!!
                                 p.player = stream.ReadByte();
 
-                                // TODO: set buffer for actions or something??
+                                var actions = PostUpdateCommands.AddBuffer<PlayerAction>(e);
+                                
                                 var actionsCount = stream.ReadByte();
                                 for (var i = 0; i < actionsCount; i++)
                                 {
                                     var actionType = stream.ReadByte();
                                     var actionCost = stream.ReadByte();
+                                    actions.Add(new PlayerAction
+                                    {
+                                        type = actionType,
+                                        cost = actionCost
+                                    });
                                 }
                             }
 
