@@ -8,13 +8,13 @@ namespace NaiveNetworkGame.Server.Systems
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach(delegate(ref PlayerController p)
+            Entities.ForEach(delegate(ref PlayerController p, DynamicBuffer<BuildingSlot> buildingSlots)
             {
                 var player = p.player;
 
                 p.currentUnits = 0;
                 
-                var slots = p.currentUnits;
+                var unitSlots = p.currentUnits;
                 
                 Entities
                     .WithAll<IsAlive>()
@@ -22,11 +22,18 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.player == player)
                     {
-                        slots += unit.slotCost;
+                        unitSlots += unit.slotCost;
                     }
                 });
 
-                p.currentUnits = slots;
+                p.hasBuildingSlots = false;
+                
+                for (var i = 0; i < buildingSlots.Length; i++)
+                {
+                    p.hasBuildingSlots = p.hasBuildingSlots || buildingSlots[i].available;
+                }
+
+                p.currentUnits = unitSlots;
             });
         }
     }

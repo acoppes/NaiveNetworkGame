@@ -63,18 +63,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                         var prefab = playerAction.prefab;
 
-                        if (p.unitType == 0)
-                        {
-                            // prefab = playerController.unitPrefab;
-                        }
-                        else if (p.unitType == 1)
-                        {
-                            // prefab = playerController.farmPrefab;
-                            // use custom location...
-                            var spawnLocations = GetBufferFromEntity<BuildingSlot>()[e];
-                            // var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
-                            position = spawnLocations[0].position;
-                        }
+
 
                         var unitComponent = GetComponentDataFromEntity<Unit>()[prefab];
 
@@ -85,6 +74,38 @@ namespace NaiveNetworkGame.Server.Systems
 
                         if (playerController.gold < playerAction.cost)
                             return;
+                        
+                        if (p.unitType == 0)
+                        {
+                            // prefab = playerController.unitPrefab;
+                        }
+                        else if (p.unitType == 1)
+                        {
+                            if (!playerController.hasBuildingSlots)
+                                return;
+                        
+                            var buildingSlotBuffer = GetBufferFromEntity<BuildingSlot>()[e];
+                            
+                            for (int i = 0; i < buildingSlotBuffer.Length; i++)
+                            {
+                                var buildingSlot = buildingSlotBuffer[i];
+                                if (buildingSlot.available)
+                                {
+                                    position = buildingSlot.position;
+                                    buildingSlot.available = false;
+                                    buildingSlotBuffer[i] = buildingSlot;
+                                    break;
+                                }
+                            }
+                            
+                            // var updateBuffer = PostUpdateCommands.SetBuffer<BuildingSlot>(e);
+                            // for (var i = 0; i < updateBuffer.Length; i++)
+                            // {
+                            //     updateBuffer[i] = buildingSlotBuffer[i];
+                            // }
+
+                            // PostUpdateCommands.buff;
+                        }
 
                         // consume gold
                         playerController.gold -= playerAction.cost;

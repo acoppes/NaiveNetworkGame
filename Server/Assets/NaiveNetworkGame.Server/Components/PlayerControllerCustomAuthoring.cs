@@ -57,7 +57,8 @@ namespace NaiveNetworkGame.Server.Components
                 var t = buildingSlotsParent.GetChild(i);
                 buildingSlotsBuffer.Add(new BuildingSlot
                 {
-                    position = new float3(t.position.x, t.position.y, 0)
+                    position = new float3(t.position.x, t.position.y, 0),
+                    available = true
                 });
             }
         }

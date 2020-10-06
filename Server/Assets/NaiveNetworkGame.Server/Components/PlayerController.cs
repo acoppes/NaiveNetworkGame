@@ -13,5 +13,7 @@ namespace NaiveNetworkGame.Server.Components
         public byte skinType;
 
         public Entity playerWander;
+
+        public bool hasBuildingSlots;
     }
 }
