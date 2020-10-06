@@ -71,7 +71,7 @@ namespace NaiveNetworkGame.Server.Systems
                         {
                             // prefab = playerController.farmPrefab;
                             // use custom location...
-                            var spawnLocations = GetBufferFromEntity<PlayerSpawnLocation>()[e];
+                            var spawnLocations = GetBufferFromEntity<BuildingSlot>()[e];
                             // var spawnLocations = EntityManager.GetBuffer<PlayerSpawnLocation>(e);
                             position = spawnLocations[0].position;
                         }

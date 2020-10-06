@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Assertions;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
@@ -18,6 +19,7 @@ namespace NaiveNetworkGame.Server.Components
         }
 
         public List<PlayerActionData> actions;
+        public Transform buildingSlotsParent;
         
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
@@ -46,6 +48,16 @@ namespace NaiveNetworkGame.Server.Components
                     type = action.type,
                     cost = action.cost,
                     prefab = prefab
+                });
+            }
+
+            var buildingSlotsBuffer = dstManager.AddBuffer<BuildingSlot>(entity);
+            for (var i = 0; i < buildingSlotsParent.childCount; i++)
+            {
+                var t = buildingSlotsParent.GetChild(i);
+                buildingSlotsBuffer.Add(new BuildingSlot
+                {
+                    position = new float3(t.position.x, t.position.y, 0)
                 });
             }
         }
