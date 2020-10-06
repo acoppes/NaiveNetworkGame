@@ -46,17 +46,23 @@ namespace NaiveNetworkGame.Client.Systems
 
                 foreach (var action in actions)
                 {
-                    if (userInterface.buildUnitButton != null && userInterface.buildUnitButton.actionType.unitType == action.type)
+                    var unitButton = userInterface.buildUnitButton;
+                    
+                    if (unitButton != null && unitButton.actionType.unitType == action.type)
                     {
-                        userInterface.buildUnitButton.skinType = player.skinType;
-                        userInterface.buildUnitButton.cost = action.cost;
+                        unitButton.skinType = player.skinType;
+                        unitButton.cost = action.cost;
                     }
-                
-                    if (userInterface.buildFarmButton != null && userInterface.buildFarmButton.actionType.unitType == action.type)
+
+                    var farmButton = userInterface.buildFarmButton;
+                    if (farmButton != null && farmButton.actionType.unitType == action.type)
                     {
-                        userInterface.buildFarmButton.skinType = player.skinType;
-                        userInterface.buildFarmButton.cost = action.cost;
-                    }    
+                        farmButton.skinType = player.skinType;
+                        farmButton.cost = action.cost;
+                    }
+
+                    unitButton.enabled = unitButton.cost < player.gold;
+                    farmButton.enabled = farmButton.cost < player.gold;
                 }
                 
                             

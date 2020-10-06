@@ -38,10 +38,13 @@ namespace Scenes
         private FixedNumbersLabel costLabel;
         
         public PlayerActionAsset actionType;
-        
+
         [NonSerialized]
         public byte cost;
 
+        [NonSerialized]
+        public bool enabled;
+        
         private void Start()
         {
             activeHash = Animator.StringToHash("active");
@@ -55,7 +58,7 @@ namespace Scenes
 
         private void LateUpdate()
         {
-            animator.SetBool(activeHash, controller.IsSpawnEnabled());
+            animator.SetBool(activeHash, enabled);
 
             for (var i = 0; i < iconsContainer.childCount; i++)
             {
