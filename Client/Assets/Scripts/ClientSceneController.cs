@@ -5,6 +5,7 @@ using NaiveNetworkGame.Client;
 using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Client.Systems;
 using NaiveNetworkGame.Common;
+using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UI;
@@ -176,6 +177,20 @@ namespace Scenes
                 playerInput.actionType = playerAction.type;
                 playerInput.unitType = playerAction.unitType;
                 playerControllerQuery.SetSingleton(playerInput);
+
+                var playerActions = entityManager.GetBuffer<PlayerAction>(playerEntity);
+                var playerController = entityManager.GetComponentData<LocalPlayerController>(playerEntity);
+
+                for (var i = 0; i < playerActions.Length; i++)
+                {
+                    var pa = playerActions[i];
+                    if (pa.type == playerAction.unitType)
+                    {
+                        playerController.gold -= pa.cost;
+                        entityManager.SetComponentData(playerEntity, playerController);
+                    }
+                }
+
 
                 // entityManager.AddComponent(playerEntity, new PlayerPendingActions());
             }
