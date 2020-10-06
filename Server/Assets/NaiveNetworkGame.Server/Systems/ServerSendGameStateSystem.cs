@@ -40,9 +40,19 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<PlayerController, PlayerConnectionId>()
                 .ForEach(delegate(Entity pe, ref PlayerConnectionId p, ref PlayerController playerController)
                 {
-                    var writer = m_Driver.BeginSend(p.connection);
+                    var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
                     writer.WriteByte(PacketType.ServerSendPlayerId);
                     writer.WriteByte(playerController.player);
+
+                    var playerActions = GetBufferFromEntity<PlayerAction>()[pe];
+                    
+                    writer.WriteByte((byte) playerActions.Length);
+                    for (var i = 0; i < playerActions.Length; i++)
+                    {
+                        writer.WriteByte(playerActions[i].type);
+                        writer.WriteByte(playerActions[i].cost);
+                    }
+                    
                     m_Driver.EndSend(writer);
 
                     ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;

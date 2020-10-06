@@ -53,14 +53,22 @@ namespace NaiveNetworkGame.Server.Systems
             Entities
                 .ForEach(delegate(Entity e, ref StartServerCommand s)
                 {
+                    // m_ServerDriver = NetworkDriver.Create(new ReliableUtility.Parameters { WindowSize = 32 });
+                    // m_Pipeline = m_ServerDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+                    
                     server.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(
                             new NetworkDataStreamParameter { size = 0 },
                             new FragmentationUtility.Parameters
-                        {
-                            PayloadCapacity = 16 * 1024
-                        }),
+                            {
+                                PayloadCapacity = 16 * 1024
+                            }, 
+                            new ReliableUtility.Parameters
+                            {
+                                WindowSize = 32
+                            }),
+                        
                         // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
                         // {
                         //     MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
@@ -73,6 +81,8 @@ namespace NaiveNetworkGame.Server.Systems
 
                     server.framentationPipeline = 
                         server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+                    server.reliabilityPipeline = 
+                        server.networkManager.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
 
                     var endpoint = NetworkEndPoint.AnyIpv4.WithPort(s.port);
                     

@@ -28,11 +28,15 @@ namespace Client
     {
         public NetworkDriver m_Driver;
         public NetworkPipeline framentationPipeline;
+        public NetworkPipeline reliabilityPipeline;
         public NetworkEndPoint endpoint;
-
+        
         public bool Equals(ClientSingleton other)
         {
-            return m_Driver.Equals(other.m_Driver);
+            return m_Driver.Equals(other.m_Driver) && 
+                   framentationPipeline.Equals(other.framentationPipeline) && 
+                   reliabilityPipeline.Equals(other.reliabilityPipeline) && 
+                   endpoint.Equals(other.endpoint);
         }
 
         public override bool Equals(object obj)
@@ -42,7 +46,14 @@ namespace Client
 
         public override int GetHashCode()
         {
-            return m_Driver.GetHashCode();
+            unchecked
+            {
+                var hashCode = m_Driver.GetHashCode();
+                hashCode = (hashCode * 397) ^ framentationPipeline.GetHashCode();
+                hashCode = (hashCode * 397) ^ reliabilityPipeline.GetHashCode();
+                hashCode = (hashCode * 397) ^ endpoint.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

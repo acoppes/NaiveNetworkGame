@@ -70,12 +70,18 @@ namespace NaiveNetworkGame.Client.Systems
                         new FragmentationUtility.Parameters
                         {
                             PayloadCapacity = 16 * 1024
+                        }, 
+                        new ReliableUtility.Parameters
+                        {
+                            WindowSize = 32
                         }
                     );
                     
                     client.framentationPipeline = 
                         client.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
-
+                    client.reliabilityPipeline = 
+                        client.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+                    
                     var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
 
                     var parametersObject = ServerConnectionParametersObject.Instance;
@@ -195,10 +201,15 @@ namespace NaiveNetworkGame.Client.Systems
                             if (type == PacketType.ServerSendPlayerId)
                             {
                                 // this is my player id!!
-                                var networkPlayerId = stream.ReadByte();
-                                p.player = networkPlayerId;
-                                
-                                // now we can create units....
+                                p.player = stream.ReadByte();
+
+                                // TODO: set buffer for actions or something??
+                                var actionsCount = stream.ReadByte();
+                                for (var i = 0; i < actionsCount; i++)
+                                {
+                                    var actionType = stream.ReadByte();
+                                    var actionCost = stream.ReadByte();
+                                }
                             }
 
                             if (type == PacketType.ServerGameState)
