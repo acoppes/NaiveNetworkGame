@@ -2311,10 +2311,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skinModels:
-  - modelPrefabs:
+  - list:
     - {fileID: 1318132579616523738, guid: 5bfeb814a7e0bd34ebbae70bf306b5d3, type: 3}
     - {fileID: 1318132579616523738, guid: 4cffc2ff9c675d64d8d9ffa9372f4e18, type: 3}
-  - modelPrefabs:
+  - list:
     - {fileID: 1318132579616523738, guid: b124561be7ad9cc4899b478a7c219ff7, type: 3}
     - {fileID: 1318132579616523738, guid: 4cffc2ff9c675d64d8d9ffa9372f4e18, type: 3}
 --- !u!1 &1869166284
@@ -2863,6 +2863,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 372696524603670926, guid: cae4347b43d06884dbda0b119ece6397, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 372696524603670926, guid: cae4347b43d06884dbda0b119ece6397, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.02
+      objectReference: {fileID: 0}
     - target: {fileID: 5988993934910889927, guid: cae4347b43d06884dbda0b119ece6397, type: 3}
       propertyPath: m_Name
       value: World1

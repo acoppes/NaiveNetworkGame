@@ -10685,6 +10685,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5988993934910889928}
     m_Modifications:
+    - target: {fileID: 2368936764077287736, guid: 063ce02a17b9aeb48a9b2396c439174f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9336a360308b5684aac7ca4c6e1f4cff, type: 3}
     - target: {fileID: 2368936765928768753, guid: 063ce02a17b9aeb48a9b2396c439174f, type: 3}
       propertyPath: m_Name
       value: House_01
@@ -11305,6 +11309,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5988993934910889928}
     m_Modifications:
+    - target: {fileID: 2368936764077287736, guid: 063ce02a17b9aeb48a9b2396c439174f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9336a360308b5684aac7ca4c6e1f4cff, type: 3}
     - target: {fileID: 2368936765928768753, guid: 063ce02a17b9aeb48a9b2396c439174f, type: 3}
       propertyPath: m_Name
       value: House
