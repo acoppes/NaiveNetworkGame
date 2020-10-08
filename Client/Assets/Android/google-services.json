@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "706635797480",
+    "firebase_url": "https://test999-e00ad.firebaseio.com",
+    "project_id": "test999-e00ad",
+    "storage_bucket": "test999-e00ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706635797480:android:b4ed7cc76874f4e6f14a5d",
+        "android_client_info": {
+          "package_name": "com.gemserk.games.naivenetworkgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "706635797480-0a58aikcjqlp0lsqgp4nuf50dt33hb6n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOVU_Z5pwk381Rl9Wb4BQ8umzy516AlDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "706635797480-0a58aikcjqlp0lsqgp4nuf50dt33hb6n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

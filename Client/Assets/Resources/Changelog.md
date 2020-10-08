@@ -2,19 +2,7 @@
 
 ## Added
 
-  * 
-
-## Changed
-
-  * 
-
-## Fixed
-
-  * 
-
-## Removed
-
-  * 
+  * Houses to generate income and to increase unit slots.
   
 # 0.0.1
 

@@ -700,16 +700,16 @@ TextureImporter:
     second: tileset_v1_231
   - first:
       213: -5554572763340794435
-    second: tileset_v1_232
+    second: stones_var1
   - first:
       213: 821422056872246438
-    second: tileset_v1_233
+    second: stones_var2
   - first:
       213: 203486020054803772
-    second: tileset_v1_234
+    second: stones_var3
   - first:
       213: 2451893278141344292
-    second: tileset_v1_235
+    second: stones_var4
   - first:
       213: 5394204800165380018
     second: tileset_v1_236
@@ -1296,8 +1296,8 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteExtrude: 2
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 96
@@ -6115,7 +6115,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_v1_232
+      name: stones_var1
       rect:
         serializedVersion: 2
         x: 16
@@ -6136,7 +6136,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_v1_233
+      name: stones_var2
       rect:
         serializedVersion: 2
         x: 32
@@ -6157,7 +6157,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_v1_234
+      name: stones_var3
       rect:
         serializedVersion: 2
         x: 48
@@ -6178,7 +6178,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tileset_v1_235
+      name: stones_var4
       rect:
         serializedVersion: 2
         x: 64
