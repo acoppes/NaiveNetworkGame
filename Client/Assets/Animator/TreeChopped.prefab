@@ -173,8 +173,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2368936765928768754}
+  - component: {fileID: 3334425186023156963}
   m_Layer: 0
-  m_Name: Tree1
+  m_Name: TreeChopped
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,3 +197,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3334425186023156963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2368936765928768753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac9902f347908de4c93fc65b560a8e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  model: {fileID: 2368936764077287736}
+  sprites:
+  - {fileID: -833333564304061386, guid: b0ca36d04fad7d544ad0d49db20952f4, type: 3}
+  - {fileID: 2160099501060816905, guid: b0ca36d04fad7d544ad0d49db20952f4, type: 3}
+  - {fileID: -8873212048200246828, guid: b0ca36d04fad7d544ad0d49db20952f4, type: 3}
