@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5135555761720755056}
   - component: {fileID: 6341551783857814984}
-  - component: {fileID: -4110471192995103439}
-  - component: {fileID: 2128647238132424109}
   - component: {fileID: 1390473950265174376}
+  - component: {fileID: 308226996447683080}
   m_Layer: 0
   m_Name: House
   m_TagString: Untagged
@@ -46,34 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4237eae116eb415dad45c88afab0652e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-4110471192995103439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1922df8ddf334656ab74345d662c5f45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goldPerSecond: 3
-  collectedGold: 0
-  currentCollectionTime: 0
---- !u!114 &2128647238132424109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d21019374cc743b4890648a1cbe84ef5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxUnits: 5
 --- !u!114 &1390473950265174376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,3 +63,18 @@ MonoBehaviour:
   speed: 0
   health: 100
   spawnDuration: 4
+  networking: 0
+--- !u!114 &308226996447683080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135555761720755020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e81ff902cb5d4c1cb5c0bf9837080912, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitSlots: 5
+  goldPerSedond: 3

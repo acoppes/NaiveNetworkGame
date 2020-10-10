@@ -3,6 +3,32 @@ using Unity.Mathematics;
 
 namespace NaiveNetworkGame.Server.Components
 {
+    public static class NetworkUnitId
+    {
+        public static ushort current = 1;
+    }
+
+    public struct Unit : IComponentData
+    {
+        public ushort id;
+        public byte player;
+        public byte type;
+        public byte slotCost;
+    }
+    
+    public struct House : IComponentData
+    {
+        public byte maxUnits;
+    }
+    
+    public struct ResourceCollector : IComponentData
+    {
+        public ushort goldPerSecond;
+        public ushort collectedGold;
+        
+        public float currentCollectionTime;
+    }
+
     public struct Damage : IComponentData
     {
         public Entity target;
@@ -47,5 +73,10 @@ namespace NaiveNetworkGame.Server.Components
     {
         public float duration;
         public float time;
+    }
+    
+    public struct WanderArea : IComponentData
+    {
+        public float range;
     }
 }
