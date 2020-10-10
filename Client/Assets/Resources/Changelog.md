@@ -3,6 +3,13 @@
 ## Added
 
   * Houses to generate income and to increase unit slots.
+  * House animation for spawning.
+
+## Fixed
+
+  * Fixed a NaN bug when trying to move to current position. 
+  * Fixed strange interpolation bug with first created unit.
+  * Houses have no income and provide no unit slots while spawning.
   
 # 0.0.1
 
