@@ -2,12 +2,11 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public struct CreatedUnits : IComponentData
+    public static class NetworkUnitId
     {
-        public ushort currentUnitId;
+        public static ushort current = 1;
     }
 
-    [GenerateAuthoringComponent]
     public struct Unit : IComponentData
     {
         public ushort id;

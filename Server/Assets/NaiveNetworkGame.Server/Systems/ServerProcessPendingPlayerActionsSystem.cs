@@ -8,17 +8,8 @@ namespace NaiveNetworkGame.Server.Systems
 {
     public class ServerProcessPendingPlayerActionsSystem : ComponentSystem
     {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            RequireSingletonForUpdate<CreatedUnits>();
-        }
-
         protected override void OnUpdate()
         {
-            var createdUnitsEntity = GetSingletonEntity<CreatedUnits>();
-            var createdUnits = GetSingleton<CreatedUnits>();
-            
             // process all player pending actions
             Entities
                 .WithAll<ClientPlayerAction, PlayerController, Translation>()
@@ -62,9 +53,7 @@ namespace NaiveNetworkGame.Server.Systems
 
 
                         var prefab = playerAction.prefab;
-
-
-
+                        
                         var unitComponent = GetComponentDataFromEntity<Unit>()[prefab];
 
                         // dont create unit if at maximum capacity
@@ -112,7 +101,7 @@ namespace NaiveNetworkGame.Server.Systems
                         
                         var unitEntity = PostUpdateCommands.Instantiate(prefab);
 
-                        unitComponent.id = (ushort) createdUnits.currentUnitId++;
+                        unitComponent.id = NetworkUnitId.current++;
                         unitComponent.player = player;
                         // unitComponent.type = p.unitType;
                         
@@ -134,10 +123,10 @@ namespace NaiveNetworkGame.Server.Systems
                         //     current = UnityEngine.Random.Range(5, 100)
                         // });
                         
-                        PostUpdateCommands.AddComponent(unitEntity, new SpawningAction
-                        {
-                            duration = 1.0f
-                        });
+                        // PostUpdateCommands.AddComponent(unitEntity, new SpawningAction
+                        // {
+                        //     duration = 1.0f
+                        // });
                         //   target = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, 1.25f)
                         
                         var wanderArea = playerController.playerWander;
@@ -147,14 +136,11 @@ namespace NaiveNetworkGame.Server.Systems
                             wanderArea = wanderArea
                         });
                         
-                        PostUpdateCommands.AddComponent<IsAlive>(unitEntity);
                         PostUpdateCommands.AddComponent<NetworkUnit>(unitEntity);
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());
                     }
                 });
-            
-            PostUpdateCommands.SetComponent(createdUnitsEntity, createdUnits);
         }
     }
 }

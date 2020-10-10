@@ -76,7 +76,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  unitType: 0
   slotsCost: 1
   speed: 0.5
   health: 100
-  spawnDuration: 1
+  spawnDuration: 2

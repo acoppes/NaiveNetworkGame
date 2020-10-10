@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2128647238132424109}
   - component: {fileID: 1390473950265174376}
   m_Layer: 0
-  m_Name: Farm
+  m_Name: House
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,4 +91,4 @@ MonoBehaviour:
   slotsCost: 0
   speed: 0
   health: 100
-  spawnDuration: 1
+  spawnDuration: 4

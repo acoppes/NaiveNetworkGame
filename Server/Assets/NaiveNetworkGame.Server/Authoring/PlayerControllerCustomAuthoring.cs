@@ -62,5 +62,18 @@ namespace NaiveNetworkGame.Server.Components
                 });
             }
         }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (buildingSlotsParent != null)
+            {
+                for (var i = 0; i < buildingSlotsParent.childCount; i++)
+                {
+                    var t = buildingSlotsParent.GetChild(i);
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawWireSphere(t.position, 0.05f);
+                }
+            }
+        }
     }
 }

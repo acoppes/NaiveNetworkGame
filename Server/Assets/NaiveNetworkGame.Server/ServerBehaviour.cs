@@ -107,12 +107,6 @@ namespace NaiveNetworkGame.Server
             // How to convert from GameObject to Entity
             // GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings)
 
-            var createdUnitsEntity = entityManager.CreateEntity();
-            entityManager.AddComponentData(createdUnitsEntity, new CreatedUnits()
-            {
-                currentUnitId = 1
-            });
-            
             logStatistics = CommandLineArguments.HasArgument("-logStatistics");
             
             Debug.Log("Starting server instance");

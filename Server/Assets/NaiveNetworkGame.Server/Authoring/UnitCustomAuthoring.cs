@@ -8,6 +8,7 @@ namespace NaiveNetworkGame.Server.Components
     {
         // public float damage;
         // public float range;
+        
         public byte player;
         public byte unitType;
         public byte slotsCost = 1;
@@ -15,42 +16,51 @@ namespace NaiveNetworkGame.Server.Components
         public float speed;
         public float health;
         public float spawnDuration = 0;
+
+        public bool networking;
         
-        public void Convert(Entity entity, EntityManager entityManager, GameObjectConversionSystem conversionSystem)
+        public void Convert(Entity entity, EntityManager em, GameObjectConversionSystem conversionSystem)
         {
-            entityManager.AddComponentData(entity, new Unit
+            em.AddComponentData(entity, new Unit
             {
                 player = player,
                 type = unitType,
-                slotCost = slotsCost
+                slotCost = slotsCost,
+                id = NetworkUnitId.current++
             });
             
-            entityManager.AddComponentData(entity, new Movement
+            em.AddComponentData(entity, new Movement
             {
                 speed = speed
             });
-            entityManager.AddComponentData(entity, new UnitState());
+            em.AddComponentData(entity, new UnitState());
             // entityManager.AddComponentData(entity, new Attack
             // {
             //     damage = damage,
             //     range = range
             // });
-            entityManager.AddComponentData(entity, new LookingDirection());
-            entityManager.AddComponentData(entity, new Health
+            em.AddComponentData(entity, new LookingDirection());
+            em.AddComponentData(entity, new Health
             {
                 total = health,
                 current = health
             });
 
-            entityManager.AddComponentData(entity, new IsAlive());
-            entityManager.AddComponentData(entity, new UnitBehaviour());
+            em.AddComponentData(entity, new IsAlive());
+            em.AddComponentData(entity, new UnitBehaviour());
 
             if (spawnDuration > 0)
             {
-                entityManager.AddComponentData(entity, new SpawningAction
+                em.AddComponentData(entity, new SpawningAction
                 {
                     duration = spawnDuration
                 });
+            }
+
+            if (networking)
+            {
+                em.AddComponentData(entity, new NetworkGameState());
+                em.AddComponentData(entity, new NetworkTranslationSync());
             }
         }
     }
