@@ -10,11 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5135555761720755056}
   - component: {fileID: 6341551783857814984}
-  - component: {fileID: -2717080253061737762}
-  - component: {fileID: 1851499962175053970}
-  - component: {fileID: 6966701034924405489}
   - component: {fileID: -4110471192995103439}
   - component: {fileID: 2128647238132424109}
+  - component: {fileID: 1390473950265174376}
   m_Layer: 0
   m_Name: Farm
   m_TagString: Untagged
@@ -48,50 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4237eae116eb415dad45c88afab0652e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-2717080253061737762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 046160d98b4149a0bd0be5f5b2dce7eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  percentage: 0
---- !u!114 &1851499962175053970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcee1e631c615ab459cf7b7814031592, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
-  player: 0
-  type: 1
-  slotCost: 0
---- !u!114 &6966701034924405489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17eaebf5ff134f80b4078910efec11e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  total: 100
-  current: 100
 --- !u!114 &-4110471192995103439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,3 +74,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxUnits: 5
+--- !u!114 &1390473950265174376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135555761720755020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b5d7d7edb3c4c1091d223158dbdbd2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: 0
+  unitType: 1
+  slotsCost: 0
+  speed: 0
+  health: 100
+  spawnDuration: 1

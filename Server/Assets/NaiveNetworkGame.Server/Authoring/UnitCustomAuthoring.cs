@@ -9,6 +9,7 @@ namespace NaiveNetworkGame.Server.Components
         // public float damage;
         // public float range;
         public byte player;
+        public byte unitType;
         public byte slotsCost = 1;
         
         public float speed;
@@ -20,6 +21,7 @@ namespace NaiveNetworkGame.Server.Components
             entityManager.AddComponentData(entity, new Unit
             {
                 player = player,
+                type = unitType,
                 slotCost = slotsCost
             });
             

@@ -347,8 +347,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1001876732}
-  - component: {fileID: 1001876731}
   - component: {fileID: 1001876730}
+  - component: {fileID: 1001876731}
   m_Layer: 0
   m_Name: Wander1
   m_TagString: Untagged
@@ -378,10 +378,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1001876729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86d20d64a77642aabc7533847705c16e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4feaf9e8c79c4b318e0c2a9afbfdabbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 1.5
+  range: 0.75
 --- !u!4 &1001876732
 Transform:
   m_ObjectHideFlags: 0
@@ -390,7 +390,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001876729}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.186, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -494,8 +494,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1707393444}
-  - component: {fileID: 1707393443}
   - component: {fileID: 1707393442}
+  - component: {fileID: 1707393443}
   m_Layer: 0
   m_Name: Wander2
   m_TagString: Untagged
@@ -525,10 +525,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1707393441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86d20d64a77642aabc7533847705c16e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4feaf9e8c79c4b318e0c2a9afbfdabbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 1.5
+  range: 0.75
 --- !u!4 &1707393444
 Transform:
   m_ObjectHideFlags: 0
@@ -537,7 +537,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1707393441}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.123, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
