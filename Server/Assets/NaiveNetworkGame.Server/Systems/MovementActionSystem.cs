@@ -23,6 +23,16 @@ namespace NaiveNetworkGame.Server.Systems
                     var p0 = t.Value.xy;
                     var p1 = m.target;
 
+                    var speed = movement.speed * dt;
+
+                    if (math.distancesq(p1, p0) < speed * speed)
+                    {
+                        // already near destination...
+                        PostUpdateCommands.RemoveComponent<MovementAction>(e);
+                        t.Value = new float3(p1.x, p1.y, t.Value.z);
+                        return;
+                    }
+                    
                     m.direction = math.normalize(p1 - p0);
                     
                     var newpos = p0 + m.direction * movement.speed * dt;
