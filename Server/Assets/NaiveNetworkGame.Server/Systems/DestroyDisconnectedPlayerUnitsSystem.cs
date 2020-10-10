@@ -1,4 +1,3 @@
-using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 
@@ -16,7 +15,9 @@ namespace NaiveNetworkGame.Server.Systems
                 var player = pc.player;
                 
                 // destroy all player units if no connection
-                Entities.ForEach(delegate(Entity unitEntity, ref Unit unit)
+                Entities
+                    .WithAll<NetworkUnit>()
+                    .ForEach(delegate(Entity unitEntity, ref Unit unit)
                 {
                     if (unit.player == player)
                     {

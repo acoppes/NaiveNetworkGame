@@ -148,7 +148,7 @@ namespace NaiveNetworkGame.Server.Systems
                         if (wander != Entity.Null)
                         {
                             wanderCenter = EntityManager.GetComponentData<Translation>(wander).Value.xy;
-                            range = EntityManager.GetComponentData<PlayerWanderArea>(wander).range;
+                            range = EntityManager.GetComponentData<WanderArea>(wander).range;
                         }
                         
                         PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
@@ -158,7 +158,7 @@ namespace NaiveNetworkGame.Server.Systems
                         });
                         
                         PostUpdateCommands.AddComponent<IsAlive>(unitEntity);
-                        
+                        PostUpdateCommands.AddComponent<NetworkUnit>(unitEntity);
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());
                     }

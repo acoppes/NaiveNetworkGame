@@ -1359,6 +1359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitsCount: 10
+  unitPrefab: {fileID: 0}
 --- !u!1 &1869166284
 GameObject:
   m_ObjectHideFlags: 0

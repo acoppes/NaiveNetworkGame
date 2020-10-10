@@ -54,6 +54,8 @@ namespace Scenes.Tests
         }
         
         public int unitsCount = 1;
+
+        public GameObject unitPrefab;
         
         // Start is called before the first frame update
         private void Start()

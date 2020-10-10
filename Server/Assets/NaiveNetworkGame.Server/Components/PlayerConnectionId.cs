@@ -15,4 +15,9 @@ namespace NaiveNetworkGame.Server.Components
     {
         
     }
+
+    public struct NetworkUnit : IComponentData
+    {
+        
+    }
 }
