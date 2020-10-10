@@ -1,0 +1,20 @@
+fastlane_version "2.68.0"
+
+update_fastlane
+
+default_platform :android
+
+platform :android do
+  desc "Naive Network Game Distrubution"
+  lane :distribute do
+      # build_android_app(...) # build_android_app is a built-in fastlane action.
+
+      firebase_app_distribution(
+          app: "1:706635797480:android:b4ed7cc76874f4e6f14a5d",
+          testers: "ariel.coppes@gmail.com",
+          release_notes: "New Features!!",
+          apk_path: "Client/Builds/Android/NaiveNetworkGame.apk"
+      )
+
+  end
+end
