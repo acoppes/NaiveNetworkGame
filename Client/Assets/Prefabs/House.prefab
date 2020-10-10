@@ -92,8 +92,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1318132579616523733}
   - component: {fileID: 3505350495668657577}
+  - component: {fileID: 4841549242771130049}
   m_Layer: 0
-  m_Name: Farm
+  m_Name: House
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,10 +130,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 1318132579099619207}
-  selectorAnimator: {fileID: 0}
+  selectorAnimator: {fileID: 4841549242771130049}
   actionDuration: {fileID: 6682967894387447556}
   healthBar: {fileID: 2064417012419488415}
   interpolationSpeed: 20
+--- !u!95 &4841549242771130049
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318132579616523738}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 3a07bfdf44babab4f849f60afebd2525, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &5819253643340716157
 PrefabInstance:
   m_ObjectHideFlags: 0
