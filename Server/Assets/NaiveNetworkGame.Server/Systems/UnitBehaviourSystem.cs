@@ -96,15 +96,23 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
                 .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
                 {
-                    var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, behaviour.range);
-                    PostUpdateCommands.AddComponent(e, new MovementAction
+                    var wanderAreaEntity = behaviour.wanderArea;
+
+                    if (EntityManager.Exists(wanderAreaEntity))
                     {
-                        target = behaviour.wanderCenter + new float2(offset.x, offset.y)
-                    });
-                    PostUpdateCommands.AddComponent(e, new IdleAction
-                    {
-                        time = UnityEngine.Random.Range(1.0f, 3.0f)
-                    });
+                        var wanderArea = GetComponentDataFromEntity<WanderArea>()[wanderAreaEntity];
+                        var wanderCenter = GetComponentDataFromEntity<Translation>()[wanderAreaEntity];
+                        
+                        var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, wanderArea.range);
+                        PostUpdateCommands.AddComponent(e, new MovementAction
+                        {
+                            target = wanderCenter.Value.xy + new float2(offset.x, offset.y)
+                        });
+                        PostUpdateCommands.AddComponent(e, new IdleAction
+                        {
+                            time = UnityEngine.Random.Range(1.0f, 3.0f)
+                        });    
+                    }
                 });
         }
     }

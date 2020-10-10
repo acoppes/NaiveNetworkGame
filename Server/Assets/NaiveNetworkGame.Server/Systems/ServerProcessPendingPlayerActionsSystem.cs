@@ -139,22 +139,12 @@ namespace NaiveNetworkGame.Server.Systems
                             duration = 1.0f
                         });
                         //   target = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, 1.25f)
-
-                        var wanderCenter = new float2(0, 0);
-                        var range = 1.25f;
-
-                        var wander = playerController.playerWander;
                         
-                        if (wander != Entity.Null)
-                        {
-                            wanderCenter = EntityManager.GetComponentData<Translation>(wander).Value.xy;
-                            range = EntityManager.GetComponentData<WanderArea>(wander).range;
-                        }
-                        
+                        var wanderArea = playerController.playerWander;
+
                         PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
                         {
-                            wanderCenter = wanderCenter,
-                            range = range
+                            wanderArea = wanderArea
                         });
                         
                         PostUpdateCommands.AddComponent<IsAlive>(unitEntity);
