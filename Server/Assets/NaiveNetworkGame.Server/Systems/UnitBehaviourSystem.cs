@@ -21,14 +21,18 @@ namespace NaiveNetworkGame.Server.Systems
             // if unit is in attack position
             // perform attack, wait, attack, wait...
 
-            var targetsQuery = Entities.WithAll<Unit, Health, Translation, IsAlive>().ToEntityQuery();
+            var targetsQuery = Entities
+                .WithNone<SpawningAction, DeathAction>()
+                .WithAll<Unit, Health, Translation, IsAlive>()
+                .ToEntityQuery();
+            
             var targets = targetsQuery.ToEntityArray(Allocator.TempJob);
             var targetTranslations = targetsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
             var targetUnits = targetsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
 
             Entities
                 .WithAll<Attack, Unit, Translation, IsAlive>()
-                .WithNone<AttackTarget>()
+                .WithNone<AttackTarget, SpawningAction, DeathAction>()
                 .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
                 {
                     // search for targets near my range...
@@ -47,7 +51,46 @@ namespace NaiveNetworkGame.Server.Systems
                             return;
                         }
                     }
-                    
+                });
+            
+            // if we have attack target, remove chase target...
+            Entities
+                .WithAll<AttackTarget, ChaseTarget>()
+                .ForEach(delegate(Entity e)
+                {
+                    PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                });
+            
+            // Entities
+            //     .WithAll<AttackTarget, ChaseAction>()
+            //     .ForEach(delegate(Entity e)
+            //     {
+            //         PostUpdateCommands.RemoveComponent<ChaseAction>(e);
+            //     });
+            
+            
+            // TODO: search for best target here (distance, less targeting units, etc)
+            Entities
+                .WithAll<Attack, Unit, Translation, IsAlive>()
+                .WithNone<AttackTarget, ChaseTarget, SpawningAction, DeathAction>()
+                .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
+                {
+                    // search for targets near my range...
+                    for (var i = 0; i < targetUnits.Length; i++)
+                    {
+                        // dont attack my units
+                        if (targetUnits[i].player == unit.player)
+                            continue;
+
+                        if (math.distancesq(t.Value, targetTranslations[i].Value) < attack.chaseRange * attack.chaseRange)
+                        {
+                            PostUpdateCommands.AddComponent(e, new ChaseTarget
+                            {
+                                target = targets[i]
+                            });
+                            return;
+                        }
+                    }
                 });
 
             targets.Dispose();
@@ -82,6 +125,43 @@ namespace NaiveNetworkGame.Server.Systems
                     } 
                 });
             
+            // Stop chasing if target is not valid or is not alive
+            // Entities
+            //     .WithAll<ChaseAction>()
+            //     .ForEach(delegate(Entity e, ref ChaseAction chasingAction)
+            //     {
+            //         if (!EntityManager.Exists(chasingAction.target))
+            //         {
+            //             PostUpdateCommands.RemoveComponent<ChaseAction>(e);
+            //         }
+            //         else
+            //         {
+            //             var isAlive = EntityManager.HasComponent<IsAlive>(chasingAction.target);
+            //             if (!isAlive)
+            //             {
+            //                 PostUpdateCommands.RemoveComponent<ChaseAction>(e);
+            //             }
+            //         } 
+            //     });
+            
+            Entities
+                .WithAll<ChaseTarget>()
+                .ForEach(delegate(Entity e, ref ChaseTarget chaseTarget)
+                {
+                    if (!EntityManager.Exists(chaseTarget.target))
+                    {
+                        PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                    }
+                    else
+                    {
+                        var isAlive = EntityManager.HasComponent<IsAlive>(chaseTarget.target);
+                        if (!isAlive)
+                        {
+                            PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                        }
+                    } 
+                });
+            
             Entities
                 .WithAll<Attack, AttackTarget, AttackAction, MovementAction>()
                 .ForEach(delegate(Entity e)
@@ -89,15 +169,39 @@ namespace NaiveNetworkGame.Server.Systems
                     PostUpdateCommands.RemoveComponent<MovementAction>(e);
                 });
 
+            Entities
+                .WithAll<Unit, Movement, UnitBehaviour, IsAlive, ChaseTarget>()
+                .WithNone<ReloadAction, DeathAction>()
+                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
+                .ForEach(delegate (Entity e, ref ChaseTarget chaseTarget)
+                {
+                    var t = GetComponentDataFromEntity<Translation>()[chaseTarget.target];
+                    
+                    PostUpdateCommands.AddComponent(e, new MovementAction
+                    {
+                        target = t.Value.xy
+                    });
+                });
+            
+            Entities
+                .WithAll<Unit, Movement, UnitBehaviour, IsAlive, ChaseTarget>()
+                .WithAll<MovementAction>()
+                .WithNone<ReloadAction, DeathAction>()
+                .WithNone<SpawningAction, IdleAction, AttackAction, AttackTarget>()
+                .ForEach(delegate (Entity e, ref MovementAction m, ref ChaseTarget chaseTarget)
+                {
+                    var t = GetComponentDataFromEntity<Translation>()[chaseTarget.target];
+                    m.target = t.Value.xy;
+                });
             
             Entities
                 .WithAll<Unit, Movement, UnitBehaviour, IsAlive>()
-                .WithNone<ReloadAction>()
+                .WithNone<ReloadAction, ChaseTarget, DeathAction>()
                 .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
                 .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
                 {
                     var wanderAreaEntity = behaviour.wanderArea;
-
+                    
                     if (EntityManager.Exists(wanderAreaEntity))
                     {
                         var wanderArea = GetComponentDataFromEntity<WanderArea>()[wanderAreaEntity];

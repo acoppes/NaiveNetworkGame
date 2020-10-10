@@ -8,6 +8,7 @@ namespace NaiveNetworkGame.Server.Components
         public float damage;
         
         public float range;
+        public float chaseRange;
 
         public float attackTime;
         public float duration;
@@ -19,6 +20,11 @@ namespace NaiveNetworkGame.Server.Components
     }
 
     public struct AttackTarget : IComponentData
+    {
+        public Entity target;
+    }
+    
+    public struct ChaseTarget : IComponentData
     {
         public Entity target;
     }

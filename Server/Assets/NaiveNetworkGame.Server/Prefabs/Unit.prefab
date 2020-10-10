@@ -59,6 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 25
   range: 0.2
+  chaseRange: 3
   attackTime: 0.35
   duration: 0.64
   reload: 0.5
@@ -81,3 +82,4 @@ MonoBehaviour:
   speed: 0.5
   health: 100
   spawnDuration: 2
+  networking: 0

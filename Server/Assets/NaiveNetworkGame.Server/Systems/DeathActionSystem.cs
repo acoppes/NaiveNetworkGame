@@ -1,4 +1,3 @@
-using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 
@@ -8,14 +7,27 @@ namespace NaiveNetworkGame.Server.Systems
     {
         protected override void OnUpdate()
         {
-            var dt = Time.DeltaTime;
+            Entities
+                .WithAll<DeathAction, MovementAction>()
+                .ForEach(delegate(Entity e, ref DeathAction a)
+                {
+                    PostUpdateCommands.RemoveComponent<MovementAction>(e);
+                });
+            
+            
+            Entities
+                .WithAll<DeathAction, ChaseTarget>()
+                .ForEach(delegate(Entity e, ref DeathAction a)
+                {
+                    PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                });
             
             Entities
                 .WithNone<IsAlive>()
                 .WithAll<DeathAction>()
                 .ForEach(delegate(Entity e, ref DeathAction a)
                 {
-                    a.time += dt;
+                    a.time += Time.DeltaTime;
                     if (a.time > a.duration)
                     {
                         // set completely death?

@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Units now chase targets to attack them.
   * Houses to generate income and to increase unit slots.
   * House animation for spawning.
 

@@ -966,6 +966,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 28632961}
     m_Modifications:
+    - target: {fileID: 2650860313776627908, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
+      propertyPath: chaseRange
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4411973371358119004, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: player
       value: 1
@@ -976,7 +980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4411973371358119004, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: spawnDuration
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4411973371358119004, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: slotsCost
@@ -992,7 +996,7 @@ PrefabInstance:
       objectReference: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 5135555761720755056, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.102
+      value: -0.636
       objectReference: {fileID: 0}
     - target: {fileID: 5135555761720755056, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1391,6 +1395,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 28632961}
     m_Modifications:
+    - target: {fileID: 2650860313776627908, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
+      propertyPath: chaseRange
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4411973371358119004, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: player
       value: 2
@@ -1401,7 +1409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4411973371358119004, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: spawnDuration
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4411973371358119004, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: slotsCost
@@ -1417,7 +1425,7 @@ PrefabInstance:
       objectReference: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 5135555761720755056, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.076
+      value: 0.519
       objectReference: {fileID: 0}
     - target: {fileID: 5135555761720755056, guid: 09e18f4d2a73d714aa4af96f94064a03, type: 3}
       propertyPath: m_LocalPosition.y
