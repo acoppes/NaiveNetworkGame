@@ -110,7 +110,7 @@ namespace NaiveNetworkGame.Server
             var createdUnitsEntity = entityManager.CreateEntity();
             entityManager.AddComponentData(createdUnitsEntity, new CreatedUnits()
             {
-                lastCreatedUnitId = 0
+                currentUnitId = 1
             });
             
             logStatistics = CommandLineArguments.HasArgument("-logStatistics");

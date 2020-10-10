@@ -4,7 +4,7 @@ namespace NaiveNetworkGame.Server.Components
 {
     public struct CreatedUnits : IComponentData
     {
-        public int lastCreatedUnitId;
+        public ushort currentUnitId;
     }
 
     [GenerateAuthoringComponent]
