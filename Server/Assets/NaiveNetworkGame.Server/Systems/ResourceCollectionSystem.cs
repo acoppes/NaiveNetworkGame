@@ -8,6 +8,7 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
+                .WithNone<SpawningAction>()
                 .WithAll<IsAlive, ResourceCollector, ServerOnly>()
                 .ForEach(delegate(ref ResourceCollector r)
                 {
@@ -35,6 +36,7 @@ namespace NaiveNetworkGame.Server.Systems
                     byte maxUnits = 0;
                     
                     Entities
+                        .WithNone<SpawningAction>()
                         .WithAll<IsAlive, Unit, ResourceCollector, ServerOnly>()
                         .ForEach(delegate(ref Unit unit, ref ResourceCollector r)
                         {
@@ -46,6 +48,7 @@ namespace NaiveNetworkGame.Server.Systems
                         });
                     
                     Entities
+                        .WithNone<SpawningAction>()
                         .WithAll<IsAlive, Unit, House, ServerOnly>()
                         .ForEach(delegate(ref Unit unit, ref House h)
                         {
