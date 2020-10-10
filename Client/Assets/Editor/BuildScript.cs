@@ -8,11 +8,13 @@ public class BuildScript : MonoBehaviour
     public static void BuildAndroidPlayer()
     {
         var keystorePath = Environment.GetEnvironmentVariable("BUILD_KEY_STORE_PATH");
+        Debug.Log($"Using store: {keystorePath} for Android Build");
         if (!string.IsNullOrWhiteSpace(keystorePath))
         {
             PlayerSettings.Android.useCustomKeystore = true;
             PlayerSettings.Android.keystoreName = keystorePath;
             PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable("BUILD_KEY_STORE_ALIAS");
+            Debug.Log($"Using alias: {PlayerSettings.Android.keyaliasName} for Android Build");
             PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable("BUILD_KEY_STORE_PASS");
             PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable("BUILD_KEY_STORE_ALIAS_PASS");
         }
