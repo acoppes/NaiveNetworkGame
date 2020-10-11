@@ -3,12 +3,14 @@
 ## Added
 
   * Units behave like nav agents obstacle logic, moving away from other units with greater obstacle priority.
-  * Units now chase targets to attack them.
+  * Units now chase nearest target to attack it.
   * Houses to generate income and to increase unit slots.
   * House spawn and death animation.
+  * Added coin icon for player's gold.
 
 ## Fixed
 
+  * Fixed wander logic it wasn't performing the idle between movement and movement.
   * Fixed a NaN bug when trying to move to current position. 
   * Fixed strange interpolation bug with first created unit.
   * Houses have no income and provide no unit slots while spawning.
