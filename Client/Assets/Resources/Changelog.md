@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Units behave like nav agents obstacle logic, moving away from other units with greater obstacle priority.
   * Units now chase targets to attack them.
   * Houses to generate income and to increase unit slots.
   * House spawn and death animation.
