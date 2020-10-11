@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public class PlayerControllerCustomAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class PlayerControllerCustomAuthoring : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
     {
         
         [Serializable]
@@ -21,24 +21,34 @@ namespace NaiveNetworkGame.Server.Components
         public List<PlayerActionData> actions;
         public Transform buildingSlotsParent;
         
+        public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
+        {
+            foreach (var action in actions)
+            {
+                if (action.prefab != null)
+                    referencedPrefabs.Add(action.prefab);
+            }
+        }
+        
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
             var buffer = dstManager.AddBuffer<PlayerAction>(entity);
+            
             foreach (var action in actions)
             {
-                var prefab = Entity.Null;
-                
-                if (conversionSystem.HasPrimaryEntity(action.prefab))
-                {
-                    prefab = conversionSystem.GetPrimaryEntity(action.prefab);
-                }
-                else
-                {
-                    prefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(action.prefab, new GameObjectConversionSettings
-                    {
-                        DestinationWorld = dstManager.World
-                    });
-                }
+            //     var prefab = Entity.Null;
+            //     
+            //     if (conversionSystem.HasPrimaryEntity(action.prefab))
+            //     {
+            //         prefab = conversionSystem.GetPrimaryEntity(action.prefab);
+            //     }
+            //     else
+            //     {
+            //         prefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(action.prefab, new GameObjectConversionSettings
+            //         {
+            //             DestinationWorld = dstManager.World
+            //         });
+            //     }
 
                //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
 
@@ -47,7 +57,7 @@ namespace NaiveNetworkGame.Server.Components
                 {
                     type = action.type,
                     cost = action.cost,
-                    prefab = prefab
+                    prefab = action.prefab != null ? conversionSystem.GetPrimaryEntity(action.prefab) : Entity.Null
                 });
             }
 
@@ -75,5 +85,7 @@ namespace NaiveNetworkGame.Server.Components
                 }
             }
         }
+
+
     }
 }
