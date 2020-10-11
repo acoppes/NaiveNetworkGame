@@ -92,9 +92,11 @@ MonoBehaviour:
   player: 0
   maxUnits: 0
   currentUnits: 0
+  maxGold: 999
   gold: 0
   skinType: 0
   playerWander: {fileID: 0}
+  buildingSlots: 0
 --- !u!114 &3743679423661859816
 MonoBehaviour:
   m_ObjectHideFlags: 0

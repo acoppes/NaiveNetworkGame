@@ -59,6 +59,10 @@ namespace NaiveNetworkGame.Server.Systems
                         });
 
                     p.maxUnits = maxUnits;
+
+                    if (gold > p.maxGold)
+                        gold = p.maxGold;
+                    
                     p.gold = gold;
                 });
         }

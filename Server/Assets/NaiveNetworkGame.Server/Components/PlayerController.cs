@@ -8,6 +8,8 @@ namespace NaiveNetworkGame.Server.Components
         public byte player;
         public byte maxUnits;
         public byte currentUnits;
+
+        public ushort maxGold;
         public ushort gold;
 
         public byte skinType;
