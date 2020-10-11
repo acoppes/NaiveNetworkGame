@@ -7,5 +7,7 @@ namespace NaiveNetworkGame.Server.Components
     public struct UnitBehaviour : IComponentData
     {
         public Entity wanderArea;
+        public float minIdleTime;
+        public float maxIdleTime;
     }
 }

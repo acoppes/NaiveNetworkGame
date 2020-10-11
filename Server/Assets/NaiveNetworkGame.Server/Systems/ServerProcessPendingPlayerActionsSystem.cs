@@ -133,7 +133,9 @@ namespace NaiveNetworkGame.Server.Systems
 
                         PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
                         {
-                            wanderArea = wanderArea
+                            wanderArea = wanderArea,
+                            minIdleTime = 1,
+                            maxIdleTime = 3
                         });
                         
                         PostUpdateCommands.AddComponent<NetworkUnit>(unitEntity);

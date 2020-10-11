@@ -214,7 +214,7 @@ namespace NaiveNetworkGame.Server.Systems
                         });
                         PostUpdateCommands.AddComponent(e, new IdleAction
                         {
-                            time = UnityEngine.Random.Range(1.0f, 3.0f)
+                            time = UnityEngine.Random.Range(behaviour.minIdleTime, behaviour.maxIdleTime)
                         });    
                     }
                 });

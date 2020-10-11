@@ -1,11 +1,20 @@
+using System;
+using System.Collections.Generic;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
 using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public class UnitCustomAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class UnitCustomAuthoring : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
     {
+        [Serializable]
+        public struct Behaviour
+        {
+            public float minIdleTime;
+            public float maxIdleTime;
+            public GameObject wanderArea;
+        }
         // public float damage;
         // public float range;
         
@@ -17,7 +26,17 @@ namespace NaiveNetworkGame.Server.Components
         public float health;
         public float spawnDuration = 0;
 
+        public Behaviour behaviourData;
+        
         public bool networking;
+        
+        public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
+        {
+            if (behaviourData.wanderArea != null)
+            {
+                referencedPrefabs.Add(behaviourData.wanderArea);
+            }
+        }
         
         public void Convert(Entity entity, EntityManager em, GameObjectConversionSystem conversionSystem)
         {
@@ -47,7 +66,14 @@ namespace NaiveNetworkGame.Server.Components
             });
 
             em.AddComponentData(entity, new IsAlive());
-            em.AddComponentData(entity, new UnitBehaviour());
+
+            em.AddComponentData(entity, new UnitBehaviour
+            {
+                minIdleTime = behaviourData.minIdleTime,
+                maxIdleTime = behaviourData.maxIdleTime,
+                wanderArea = behaviourData.wanderArea != null ? 
+                    conversionSystem.GetPrimaryEntity(behaviourData.wanderArea) : Entity.Null
+            });
 
             if (spawnDuration > 0)
             {
@@ -63,5 +89,7 @@ namespace NaiveNetworkGame.Server.Components
                 em.AddComponentData(entity, new NetworkTranslationSync());
             }
         }
+
+
     }
 }
