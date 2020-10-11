@@ -10,12 +10,12 @@ namespace NaiveNetworkGame.Server.Systems
             var dt = Time.DeltaTime;
             
             // if for some reason we have a movement action pending... remove idle
-            Entities
-                .WithAll<IdleAction, MovementAction>()
-                .ForEach(delegate(Entity e)
-                {
-                    PostUpdateCommands.RemoveComponent<IdleAction>(e);
-                });
+            // Entities
+            //     .WithAll<IdleAction, MovementAction>()
+            //     .ForEach(delegate(Entity e)
+            //     {
+            //         PostUpdateCommands.RemoveComponent<IdleAction>(e);
+            //     });
             
             // if for some reason we have an attack action pending... remove idle
             Entities
@@ -26,7 +26,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithNone<MovementAction, SpawningAction, AttackAction>()
+                .WithNone<MovementAction, SpawningAction, AttackAction, DeathAction>()
                 .WithAll<IdleAction>()
                 .ForEach(delegate(Entity e, ref IdleAction idle)
                 {

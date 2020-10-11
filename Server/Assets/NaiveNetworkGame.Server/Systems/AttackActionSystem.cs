@@ -1,5 +1,6 @@
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
@@ -11,10 +12,46 @@ namespace NaiveNetworkGame.Server.Systems
         {
             var dt = Time.DeltaTime;
             
+            Entities
+                .WithAll<Attack, AttackTarget, IsAlive>()
+                .WithNone<AttackAction, ReloadAction>()
+                .ForEach(delegate(Entity e, ref Attack attack, ref AttackTarget target, ref Translation t)
+                {
+                    // if target entity was destroyed, forget about it...
+                    if (!EntityManager.Exists(target.target))
+                    {
+                        PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                    }
+                    else
+                    {
+                        // if target too far away, forget about it...
+                        var tp = EntityManager.GetComponentData<Translation>(target.target);
+                        var isAlive = EntityManager.HasComponent<IsAlive>(target.target);
+                        
+                        if (!isAlive || math.distancesq(tp.Value, t.Value) > attack.range * attack.range)
+                        {
+                            PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                        }
+                        else
+                        {
+                            // if lost isalive, lose target...
+                            PostUpdateCommands.AddComponent(e, new AttackAction());
+                        }
+                    } 
+                });
+            
             Entities.WithAll<AttackAction, DeathAction>()
                 .ForEach(delegate(Entity e)
                 {
                     PostUpdateCommands.RemoveComponent<AttackAction>(e);
+                });
+            
+                
+            Entities
+                .WithAll<Attack, AttackTarget, AttackAction, MovementAction>()
+                .ForEach(delegate(Entity e)
+                {
+                    PostUpdateCommands.RemoveComponent<MovementAction>(e);
                 });
             
             Entities
