@@ -23,6 +23,17 @@ namespace NaiveNetworkGame.Server.Systems
                         // PostUpdateCommands.DestroyEntity(e);
                     }
                 });
+            
+            Entities
+                .WithNone<UnitBehaviour>()
+                .WithAll<Health, IsAlive>()
+                .ForEach(delegate(Entity e, ref Health h)
+                {
+                    if (h.current <= 0.01f)
+                    {
+                        PostUpdateCommands.RemoveComponent<IsAlive>(e);
+                    }
+                });
         }
     }
 }

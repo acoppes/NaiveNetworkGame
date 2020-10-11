@@ -37,6 +37,7 @@ namespace NaiveNetworkGame.Server.Components
     
     public struct DynamicObstacle : IComponentData
     {
+        public uint index;
         public float range;
         public float rangeSq;
         public float3 movement;

@@ -59,6 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 25
   range: 0.2
+  chaseRange: 0
   attackTime: 0.35
   duration: 0.64
   reload: 0.5
@@ -81,3 +82,11 @@ MonoBehaviour:
   speed: 0.5
   health: 100
   spawnDuration: 2
+  behaviourData:
+    minIdleTime: 0
+    maxIdleTime: 0
+    wanderArea: {fileID: 0}
+  dynamiceObstacleData:
+    disabled: 0
+    range: 0.075
+  networking: 0

@@ -114,26 +114,28 @@ namespace NaiveNetworkGame.Server.Systems
             var translations = query.ToComponentDataArray<Translation>(Allocator.TempJob);
             var obstacles = query.ToComponentDataArray<DynamicObstacle>(Allocator.TempJob);
 
+            uint currentInternalIndex = 0;
+            
             Entities
                 .WithAll<DynamicObstacle>()
                 .ForEach(delegate(ref DynamicObstacle d)
                 {
                     d.rangeSq = d.range * d.range;
+                    d.index = currentInternalIndex++;
                 });
             
             Entities
                 .WithAll<Translation, DynamicObstacle>()
                 .ForEach(delegate(Entity e, ref Translation t0, ref DynamicObstacle d0)
                 {
-                    // var entities = query.ToEntityArray(Allocator.TempJob);
-                    
                     for (var j = 0; j < translations.Length; j++)
                     {
-                        // if (tempEntities[j] == e)
-                        //     continue;
+                        var d1 = obstacles[j];
+
+                        if (d0.index == d1.index)
+                            continue;
                         
                         var t1 = translations[j];
-                        var d1 = obstacles[j];
 
                         var m = t1.Value - t0.Value;
                         var d = math.lengthsq(m);
