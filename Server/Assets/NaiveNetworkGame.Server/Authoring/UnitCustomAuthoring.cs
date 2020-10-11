@@ -15,6 +15,14 @@ namespace NaiveNetworkGame.Server.Components
             public float maxIdleTime;
             public GameObject wanderArea;
         }
+
+        [Serializable]
+        public struct DynamicObstacleData
+        {
+            public bool disabled;
+            public float range;
+        }
+        
         // public float damage;
         // public float range;
         
@@ -27,6 +35,7 @@ namespace NaiveNetworkGame.Server.Components
         public float spawnDuration = 0;
 
         public Behaviour behaviourData;
+        public DynamicObstacleData dynamiceObstacleData;
         
         public bool networking;
         
@@ -88,8 +97,23 @@ namespace NaiveNetworkGame.Server.Components
                 em.AddComponentData(entity, new NetworkGameState());
                 em.AddComponentData(entity, new NetworkTranslationSync());
             }
+
+            if (!dynamiceObstacleData.disabled)
+            {
+                em.AddComponentData(entity, new DynamicObstacle
+                {
+                    range = dynamiceObstacleData.range
+                });
+            }
         }
 
-
+        private void OnDrawGizmos()
+        {
+            if (!dynamiceObstacleData.disabled)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(transform.position, dynamiceObstacleData.range);
+            }
+        }
     }
 }

@@ -34,6 +34,13 @@ namespace NaiveNetworkGame.Server.Components
         public Entity target;
         public float damage;
     }
+    
+    public struct DynamicObstacle : IComponentData
+    {
+        public float range;
+        public float rangeSq;
+        public float3 movement;
+    }
 
     public struct IsAlive : IComponentData
     {

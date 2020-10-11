@@ -82,4 +82,11 @@ MonoBehaviour:
   speed: 0.5
   health: 100
   spawnDuration: 2
+  behaviourData:
+    minIdleTime: 0
+    maxIdleTime: 0
+    wanderArea: {fileID: 0}
+  dynamiceObstacleData:
+    disabled: 0
+    range: 0.075
   networking: 0

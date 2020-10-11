@@ -21,7 +21,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
                 });
-            
+
             Entities
                 .WithNone<IsAlive>()
                 .WithAll<DeathAction>()
