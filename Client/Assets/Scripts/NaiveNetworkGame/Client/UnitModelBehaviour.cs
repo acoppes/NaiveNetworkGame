@@ -1,8 +1,9 @@
 using System;
+using Client;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Client
+namespace NaiveNetworkGame.Client
 {
     public class UnitModelBehaviour : MonoBehaviour
     {

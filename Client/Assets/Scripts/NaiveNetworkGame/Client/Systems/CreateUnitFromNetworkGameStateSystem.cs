@@ -26,11 +26,15 @@ namespace NaiveNetworkGame.Client.Systems
             
             Entities
                 .WithAll<NetworkGameState, ClientOnly>()
-                .ForEach(delegate(ref NetworkGameState n)
+                .ForEach(delegate(ref NetworkGameState n) 
             {
-                if (createdUnitsInThisUpdate.Contains(n.unitId))
+                // Ignore unit id 0 which is reserved for no entity
+                if (n.unitId == 0)
                     return;
                 
+                if (createdUnitsInThisUpdate.Contains(n.unitId))
+                    return;
+
                 for (var i = 0; i < units.Length; i++)
                 {
                     var unit = units[i];

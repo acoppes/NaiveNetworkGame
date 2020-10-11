@@ -1,3 +1,4 @@
+using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 
@@ -35,7 +36,7 @@ namespace NaiveNetworkGame.Server.Systems
                         
                         // TODO: for now we are sending gamestate of death units too to keep corpses in client...
                         //PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
-                        //PostUpdateCommands.RemoveComponent<NetworkGameState>(e);
+                        PostUpdateCommands.RemoveComponent<NetworkGameState>(e);
                     }
                 });
         }
