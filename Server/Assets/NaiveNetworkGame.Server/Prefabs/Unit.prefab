@@ -87,6 +87,6 @@ MonoBehaviour:
     maxIdleTime: 0
     wanderArea: {fileID: 0}
   dynamiceObstacleData:
-    disabled: 0
+    priority: 50
     range: 0.075
   networking: 0

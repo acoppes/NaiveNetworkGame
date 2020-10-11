@@ -19,7 +19,7 @@ namespace NaiveNetworkGame.Server.Components
         [Serializable]
         public struct DynamicObstacleData
         {
-            public bool disabled;
+            public byte priority;
             public float range;
         }
         
@@ -98,10 +98,11 @@ namespace NaiveNetworkGame.Server.Components
                 em.AddComponentData(entity, new NetworkTranslationSync());
             }
 
-            if (!dynamiceObstacleData.disabled)
+            if (dynamiceObstacleData.priority > 0)
             {
                 em.AddComponentData(entity, new DynamicObstacle
                 {
+                    priority = dynamiceObstacleData.priority,
                     range = dynamiceObstacleData.range
                 });
             }
@@ -109,7 +110,7 @@ namespace NaiveNetworkGame.Server.Components
 
         private void OnDrawGizmos()
         {
-            if (!dynamiceObstacleData.disabled)
+            if (dynamiceObstacleData.priority > 0)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawWireSphere(transform.position, dynamiceObstacleData.range);

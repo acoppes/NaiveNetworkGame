@@ -115,6 +115,16 @@ namespace NaiveNetworkGame.Server.Systems
             var obstacles = query.ToComponentDataArray<DynamicObstacle>(Allocator.TempJob);
 
             uint currentInternalIndex = 0;
+
+            Entities
+                .WithNone<IsAlive>()
+                .WithAll<Health, DynamicObstacle>()
+                .ForEach(delegate(ref DynamicObstacle d)
+                {
+                    // reduce priority if not alive but has health.
+                    if (d.priority > 0)
+                        d.priority = 1;
+                });
             
             Entities
                 .WithAll<DynamicObstacle>()
@@ -128,6 +138,10 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<Translation, DynamicObstacle>()
                 .ForEach(delegate(Entity e, ref Translation t0, ref DynamicObstacle d0)
                 {
+                    // we have the logic disabled...
+                    if (d0.priority == 0)
+                        return;
+                    
                     for (var j = 0; j < translations.Length; j++)
                     {
                         var d1 = obstacles[j];
@@ -135,6 +149,9 @@ namespace NaiveNetworkGame.Server.Systems
                         if (d0.index == d1.index)
                             continue;
                         
+                        if (d0.priority > d1.priority)
+                            continue;
+
                         var t1 = translations[j];
 
                         var m = t1.Value - t0.Value;
@@ -144,7 +161,8 @@ namespace NaiveNetworkGame.Server.Systems
                         if (d > r)
                             continue;
 
-                        var mlen = d - r;
+                        // if both of the units are moving, then only move half the distance.
+                        var mlen = (d - r) * 0.5f;
                         d0.movement += math.normalizesafe(m, float3.zero) * mlen;
                     }
                 });
