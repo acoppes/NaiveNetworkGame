@@ -105,14 +105,22 @@ namespace NaiveNetworkGame.Server.Systems
     // }
 
     [UpdateAfter(typeof(MovementActionSystem))]
-    public class DynamicObstacleSystem : ComponentSystem
+    public class DynamicObstacleSystem : SystemBase
     {
+        private EntityQuery obstaclesQuery;
+        
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            obstaclesQuery = GetEntityQuery(typeof(Translation), typeof(DynamicObstacle));
+        }
+
         protected override void OnUpdate()
         {
-            var query = Entities.WithAll<Translation, DynamicObstacle>().ToEntityQuery();
+            // var query = Entities.WithAll<Translation, DynamicObstacle>().ToEntityQuery();
             
-            var translations = query.ToComponentDataArray<Translation>(Allocator.TempJob);
-            var obstacles = query.ToComponentDataArray<DynamicObstacle>(Allocator.TempJob);
+            var translations = obstaclesQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            var obstacles = obstaclesQuery.ToComponentDataArray<DynamicObstacle>(Allocator.TempJob);
 
             uint currentInternalIndex = 0;
 
@@ -124,7 +132,7 @@ namespace NaiveNetworkGame.Server.Systems
                     // reduce priority if not alive but has health.
                     if (d.priority > 0)
                         d.priority = 1;
-                });
+                }).ScheduleParallel();
             
             Entities
                 .WithAll<DynamicObstacle>()
@@ -132,8 +140,8 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     d.rangeSq = d.range * d.range;
                     d.index = currentInternalIndex++;
-                });
-            
+                }).Run();
+
             Entities
                 .WithAll<Translation, DynamicObstacle>()
                 .ForEach(delegate(Entity e, ref Translation t0, ref DynamicObstacle d0)
@@ -165,7 +173,7 @@ namespace NaiveNetworkGame.Server.Systems
                         var mlen = (d - r) * 0.5f;
                         d0.movement += math.normalizesafe(m, float3.zero) * mlen;
                     }
-                });
+                }).Run();
             
             Entities
                 .WithAll<Translation, DynamicObstacle>()
@@ -173,7 +181,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     t.Value += d.movement;
                     d.movement = float3.zero; 
-                });
+                }).ScheduleParallel();
             
             // entities.Dispose();
             obstacles.Dispose();
