@@ -29,8 +29,8 @@ namespace NaiveNetworkGame.Client.Systems
                 .ForEach(delegate(ref NetworkGameState n) 
             {
                 // Ignore unit id 0 which is reserved for no entity
-                if (n.unitId == 0)
-                    return;
+                // if (n.unitId == 0)
+                //     return;
                 
                 if (createdUnitsInThisUpdate.Contains(n.unitId))
                     return;

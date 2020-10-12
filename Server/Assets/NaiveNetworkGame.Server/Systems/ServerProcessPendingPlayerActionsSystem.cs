@@ -1,11 +1,11 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
     public class ServerProcessPendingPlayerActionsSystem : ComponentSystem
     {
         protected override void OnUpdate()
