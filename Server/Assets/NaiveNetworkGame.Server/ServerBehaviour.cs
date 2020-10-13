@@ -67,7 +67,8 @@ namespace NaiveNetworkGame.Server
             // set default port
             ushort port = 9000;
             // default framerate
-            Application.targetFrameRate = targetFrameRate;
+            if (targetFrameRate > 0)
+                Application.targetFrameRate = targetFrameRate;
 
             var targetFrameRateArgument = CommandLineArguments.GetArgument("-targetFrameRate");
             
