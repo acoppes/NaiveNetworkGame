@@ -144,7 +144,7 @@ namespace NaiveNetworkGame.Server.Systems
 
             Entities
                 .WithAll<Translation, DynamicObstacle>()
-                .ForEach(delegate(Entity e, ref Translation t0, ref DynamicObstacle d0)
+                .ForEach(delegate(Entity e, ref DynamicObstacle d0, in Translation t0)
                 {
                     // we have the logic disabled...
                     if (d0.priority == 0)
@@ -170,7 +170,12 @@ namespace NaiveNetworkGame.Server.Systems
                             continue;
 
                         // if both of the units are moving, then only move half the distance.
-                        var mlen = (d - r) * 0.5f;
+                        var mult = 0.5f;
+
+                        if (d0.priority < d1.priority)
+                            mult = 1.0f;
+
+                        var mlen = (d - r) * mult;
                         d0.movement += math.normalizesafe(m, float3.zero) * mlen;
                     }
                 }).Run();
