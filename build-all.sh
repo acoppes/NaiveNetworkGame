@@ -16,7 +16,7 @@ sh ./start_remote_server.sh
 sh ./build-client-all.sh
 
 # build windows server & upload both servers
-sh ./build-server-windows.sh
+# sh ./build-server-windows.sh
 sh ./upload_server_builds.sh
 
 # END_TIME="$(($(date +%s)-$START_TIME))"
