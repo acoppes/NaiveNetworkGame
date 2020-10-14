@@ -51,7 +51,9 @@ namespace NaiveNetworkGame.Common
 
             currentNumber = nextNumber;
 
-            label.SetNumber(Mathf.RoundToInt(currentNumber));
+            var number = Mathf.RoundToInt(currentNumber);
+            if (number > 0)
+            label.SetNumber(number);
         }
 
     }

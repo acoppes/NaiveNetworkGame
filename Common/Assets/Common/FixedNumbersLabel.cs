@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace NaiveNetworkGame.Common
@@ -14,6 +15,8 @@ namespace NaiveNetworkGame.Common
 
         public void SetNumber(int number)
         {
+            Assert.IsTrue(number >= 0, "FixedNumberLabel doesnt support negative numbers.");
+            
             var hundreds = number / 100;
             var tens = (number % 100) / 10;
             var ones = (number % 10);
