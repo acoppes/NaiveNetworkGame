@@ -128,12 +128,12 @@ namespace Scenes
 
         private void LateUpdate()
         {
-            if (ConnectionState.currentState == ConnectionState.State.Connected)
+            if (ConnectionState.currentState == ConnectionState.State.SimulationRunning)
                 ConnectionState.connectedTime += Time.deltaTime;
 
             if (userInterface != null)
             {
-                userInterface.visible = ConnectionState.currentState == ConnectionState.State.Connected;
+                userInterface.visible = ConnectionState.currentState == ConnectionState.State.SimulationRunning;
             }
             
             if (connectionStateText != null)
@@ -144,7 +144,13 @@ namespace Scenes
 
                     switch (ConnectionState.currentState)
                     {
-                        case ConnectionState.State.Connected:
+                        case ConnectionState.State.WaitingForPlayers:
+                            connectionStateText.gameObject.SetActive(true);
+                            connectionStateText.text = "Waiting for other players...";
+                            receivedBytesObject.SetActive(false);
+                            connectedTimeObject.SetActive(false);
+                            break;
+                        case ConnectionState.State.SimulationRunning:
                             // connectionStateText.text = "Connected";
                             connectionStateText.gameObject.SetActive(false);
                             receivedBytesObject.SetActive(true);

@@ -4,6 +4,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class ServerSendGameStateSystem : ComponentSystem
     {
         private float sendGameStateTime;
@@ -34,6 +35,22 @@ namespace NaiveNetworkGame.Server.Systems
             
             // First, for each connection, send player id
             var m_Driver = networkManager.m_Driver;
+            
+            // Send simulation started packet to all connections,
+            // we are not waiting for players anymore... reliablity pipeline!
+
+            Entities
+                .WithAll<PlayerConnectionId>()
+                .ForEach(delegate(Entity e, ref PlayerConnectionId p)
+                {
+                    if (!p.simulationStarted)
+                    {
+                        var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
+                        writer.WriteByte(PacketType.ServerSimulationStarted);
+                        m_Driver.EndSend(writer);
+                    }
+                    p.simulationStarted = true;
+                });
             
             Entities
                 .WithNone<PlayerConnectionSynchronized>()

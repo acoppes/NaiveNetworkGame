@@ -9,8 +9,9 @@ namespace Client
     {
         public enum State
         {
-            Connecting, 
-            Connected,
+            Connecting,
+            WaitingForPlayers,
+            SimulationRunning,
             Disconnected
         }
 

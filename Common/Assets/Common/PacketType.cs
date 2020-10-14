@@ -10,6 +10,7 @@ namespace NaiveNetworkGame.Common
         public static readonly byte ServerEmptyGameState = 5;
 
         public static readonly byte ServerDeniedConnectionMaxPlayers = 30;
+        public static readonly byte ServerSimulationStarted = 31;        
         
         public static readonly byte ClientKeepAlive = 50 + 1;
         public static readonly byte ClientPlayerAction = 50 + 2;

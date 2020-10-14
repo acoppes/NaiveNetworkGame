@@ -2,6 +2,8 @@
 
 ## Added
 
+  * Server simulation doesn't start until all players are connected.
+  * Wait for other players before showing ui and stuff.
   * Units behave like nav agents obstacle logic, moving away from other units with greater obstacle priority.
   * Units now chase nearest target to attack it.
   * Houses to generate income and to increase unit slots.

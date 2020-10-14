@@ -190,7 +190,7 @@ namespace NaiveNetworkGame.Client.Systems
                         if (cmd == NetworkEvent.Type.Connect)
                         {
                             Debug.Log("Local player connected to server, sending keep alive");
-                            ConnectionState.currentState = ConnectionState.State.Connected;
+                            ConnectionState.currentState = ConnectionState.State.WaitingForPlayers;
 
                         }
                         else if (cmd == NetworkEvent.Type.Data)
@@ -199,6 +199,11 @@ namespace NaiveNetworkGame.Client.Systems
 
                             var type = stream.ReadByte();
 
+                            if (type == PacketType.ServerSimulationStarted)
+                            {
+                                ConnectionState.currentState = ConnectionState.State.SimulationRunning;
+                            }
+                            
                             if (type == PacketType.ServerSendPlayerId)
                             {
                                 // this is my player id!!

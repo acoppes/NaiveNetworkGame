@@ -6,6 +6,8 @@ namespace NaiveNetworkGame.Server.Components
     public struct PlayerConnectionId : IComponentData
     {
         public NetworkConnection connection;
+        public bool simulationStarted;
+        
         // public byte player;
         // public bool synchronized;
         // public bool destroyed;
