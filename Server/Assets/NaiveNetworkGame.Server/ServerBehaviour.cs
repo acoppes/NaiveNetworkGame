@@ -59,6 +59,8 @@ namespace NaiveNetworkGame.Server
 
         private bool logStatistics = false;
 
+        public bool autostartServerSimulation;
+
         private void Start ()
         {
             ServerNetworkStaticData.sendGameStateFrequency = sendGameStateFrequency;
@@ -111,6 +113,12 @@ namespace NaiveNetworkGame.Server
             logStatistics = CommandLineArguments.HasArgument("-logStatistics");
             
             Debug.Log("Starting server instance");
+
+            if (autostartServerSimulation)
+            {
+                var manager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                manager.CreateEntity(typeof(ServerSimulation));
+            }
         }
 
         // private void OnDestroy()

@@ -5,9 +5,8 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    // Just a small default wander (around 0,0) behaviour for units...
-
     [UpdateAfter(typeof(TargetingSystem))]
+    [UpdateInGroup(typeof(ServerSystemGroup))]
     public class UnitBehaviourSystem : ComponentSystem
     {
         protected override void OnUpdate()

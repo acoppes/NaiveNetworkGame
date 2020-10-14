@@ -8,6 +8,11 @@ namespace NaiveNetworkGame.Server.Components
         public static ushort current = 1;
     }
 
+    public struct ServerSimulation : IComponentData
+    {
+            
+    }
+    
     public struct Unit : IComponentData
     {
         public ushort id;
