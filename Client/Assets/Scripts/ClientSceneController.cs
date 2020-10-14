@@ -46,7 +46,8 @@ namespace Scenes
         private EntityQuery playerControllerQuery;
 
         public Button disconnectButton;
-
+        public Button forceStartButton;
+        
         public Text connectionStateText;
 
         public GameObject receivedBytesObject;
@@ -92,6 +93,12 @@ namespace Scenes
             });
             
             disconnectButton.onClick.AddListener(OnDisconnectButtonPressed);
+            
+            forceStartButton.onClick.AddListener(delegate
+            {
+                // create server simulation
+                entityManager.CreateEntity(typeof(ServerSimulation));
+            });
         }
 
 
@@ -163,6 +170,20 @@ namespace Scenes
             
             if (latencyText != null)
                 latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
+
+            var serverQuery = entityManager.CreateEntityQuery(typeof(ServerSingleton));
+            var hasServer = serverQuery.CalculateEntityCount() > 0;
+            var serverSimulationStarted = entityManager.CreateEntityQuery(
+                typeof(ServerSimulation)).CalculateEntityCount() > 0;
+
+            if (hasServer)
+            {
+                // var s = serverQuery.GetSingletonEntity();
+                var s = entityManager.GetSharedComponentData<ServerSingleton>(serverQuery.GetSingletonEntity());
+                hasServer = s.networkManager != null;
+            }
+            
+            forceStartButton.gameObject.SetActive(hasServer && !serverSimulationStarted);
         }
 
         public void OnPlayerAction(PlayerActionAsset playerAction)
