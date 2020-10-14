@@ -6,6 +6,7 @@ using Unity.Transforms;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateBefore(typeof(DamageSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class AttackActionSystem : ComponentSystem
     {
         protected override void OnUpdate()

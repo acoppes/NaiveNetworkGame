@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    public class ServerSystemGroup : ComponentSystemGroup
+    public class ServerSimulationSystemGroup : ComponentSystemGroup
     {
         protected override void OnCreate()
         {

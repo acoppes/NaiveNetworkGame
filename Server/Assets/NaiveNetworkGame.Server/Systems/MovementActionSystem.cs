@@ -7,15 +7,9 @@ namespace NaiveNetworkGame.Server.Systems
 {
     // Given a move action in a unit, it processes movement updates
 
-    [UpdateInGroup(typeof(ServerSystemGroup))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class MovementActionSystem : ComponentSystem
     {
-        // protected override void OnCreate()
-        // {
-        //     base.OnCreate();
-        //     RequireSingletonForUpdate<ServerSimulation>();
-        // }
-
         protected override void OnUpdate()
         {
             var dt = Time.DeltaTime;

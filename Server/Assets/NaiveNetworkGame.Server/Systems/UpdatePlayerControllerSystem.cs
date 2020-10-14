@@ -4,6 +4,8 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateAfter(typeof(ServerProcessPendingPlayerActionsSystem))]
+    [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class UpdatePlayerControllerSystem : ComponentSystem
     {
         protected override void OnUpdate()

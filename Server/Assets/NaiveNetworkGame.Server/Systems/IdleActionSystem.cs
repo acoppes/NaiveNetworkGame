@@ -3,20 +3,13 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class IdleActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
             var dt = Time.DeltaTime;
-            
-            // if for some reason we have a movement action pending... remove idle
-            // Entities
-            //     .WithAll<IdleAction, MovementAction>()
-            //     .ForEach(delegate(Entity e)
-            //     {
-            //         PostUpdateCommands.RemoveComponent<IdleAction>(e);
-            //     });
-            
+
             // if for some reason we have an attack action pending... remove idle
             Entities
                 .WithAll<IdleAction, AttackAction>()

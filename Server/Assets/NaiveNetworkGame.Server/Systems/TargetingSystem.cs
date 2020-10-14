@@ -3,10 +3,10 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class TargetingSystem : ComponentSystem
     {
         protected override void OnUpdate()

@@ -146,6 +146,8 @@ namespace NaiveNetworkGame.Server.Systems
 
                 });
             
+            // TODO: if needed players reached => create server simulation singleton in order to start the simulation..
+            
             // If there are still connections, accept them and send denied because max players...
             NetworkConnection c;
             while ((c = m_Driver.Accept()) != default)
@@ -175,6 +177,8 @@ namespace NaiveNetworkGame.Server.Systems
 
                         if (packet == PacketType.ClientPlayerAction)
                         {
+                            // TODO: Ignore player actions while simulation not started 
+                            
                             var action = new ClientPlayerAction().Read(ref stream);
                             
                             Entities

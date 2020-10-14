@@ -4,6 +4,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class DeathActionSystem : ComponentSystem
     {
         protected override void OnUpdate()

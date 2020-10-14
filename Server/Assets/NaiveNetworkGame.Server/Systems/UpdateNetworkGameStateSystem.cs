@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class UpdateNetworkGameStateSystem : ComponentSystem
     {
         private int frame;

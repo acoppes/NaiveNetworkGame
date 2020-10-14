@@ -3,6 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class ResourceCollectionSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -23,6 +24,7 @@ namespace NaiveNetworkGame.Server.Systems
     }
 
     [UpdateAfter(typeof(ResourceCollectionSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class CopyResourceCollectionToPlayerControllerSystem : ComponentSystem
     {
         protected override void OnUpdate()

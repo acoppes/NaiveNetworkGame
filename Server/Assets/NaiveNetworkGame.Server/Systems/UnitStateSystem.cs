@@ -7,7 +7,8 @@ namespace NaiveNetworkGame.Server.Systems
 {
     // Given actions being processed by unit, updates its state.
     
-    // [UpdateBefore(typeof(ServerMovementSystem))]
+    [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class UnitStateSystem : ComponentSystem
     {
         protected override void OnUpdate()

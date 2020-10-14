@@ -6,6 +6,7 @@ using Unity.Transforms;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class ServerProcessPendingPlayerActionsSystem : ComponentSystem
     {
         protected override void OnUpdate()

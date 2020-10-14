@@ -6,7 +6,7 @@ using Unity.Transforms;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateAfter(typeof(TargetingSystem))]
-    [UpdateInGroup(typeof(ServerSystemGroup))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class UnitBehaviourSystem : ComponentSystem
     {
         protected override void OnUpdate()

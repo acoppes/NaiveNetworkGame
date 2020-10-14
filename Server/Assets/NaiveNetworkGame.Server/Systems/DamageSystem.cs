@@ -4,6 +4,7 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateBefore(typeof(DeathOnNoHealthUnitSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class DamageSystem : ComponentSystem
     {
         protected override void OnUpdate()

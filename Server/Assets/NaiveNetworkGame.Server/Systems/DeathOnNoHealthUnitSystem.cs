@@ -3,6 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class DeathOnNoHealthUnitSystem : ComponentSystem
     {
         protected override void OnUpdate()

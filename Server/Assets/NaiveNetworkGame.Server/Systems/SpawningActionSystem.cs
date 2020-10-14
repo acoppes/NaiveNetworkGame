@@ -6,6 +6,7 @@ namespace NaiveNetworkGame.Server.Systems
     // Processes spawn over time logic for units...
     
     [UpdateBefore(typeof(UnitStateSystem))]
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class SpawningActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
