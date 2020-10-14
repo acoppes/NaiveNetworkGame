@@ -178,6 +178,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LocalPlayer2
       objectReference: {fileID: 0}
+    - target: {fileID: 693300645167947220, guid: 80618a0dc239b1441ac1ebd6c45d6ad1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 693300645167947218, guid: 80618a0dc239b1441ac1ebd6c45d6ad1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 80618a0dc239b1441ac1ebd6c45d6ad1, type: 3}

@@ -612,7 +612,8 @@ MonoBehaviour:
   bytesPerSecond: 0
   kbPerSecond: 0
   mbPerSecond: 0
-  autostartServerSimulation: 1
+  playersNeededToStartSimulation: 2
+  autostartServerSimulation: 0
 --- !u!4 &1633604428
 Transform:
   m_ObjectHideFlags: 0

@@ -11,6 +11,9 @@ namespace NaiveNetworkGame.Server.Components
         public NetworkPipeline framentationPipeline;
         public NetworkPipeline reliabilityPipeline;
 
+        // players needed to start simulation
+        public byte playersNeededToStartSimulation;
+
         public bool Equals(ServerSingleton other)
         {
             return Equals(networkManager, other.networkManager) && 

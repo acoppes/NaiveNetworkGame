@@ -25,6 +25,7 @@ namespace NaiveNetworkGame.Server.Systems
     public struct StartServerCommand : IComponentData
     {
         public ushort port;
+        public byte playersNeededToStartSimulation;
     }
 
     public class ServerNetworkSystem : ComponentSystem
@@ -55,7 +56,8 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     // m_ServerDriver = NetworkDriver.Create(new ReliableUtility.Parameters { WindowSize = 32 });
                     // m_Pipeline = m_ServerDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
-                    
+
+                    server.playersNeededToStartSimulation = s.playersNeededToStartSimulation;
                     server.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(
@@ -160,7 +162,7 @@ namespace NaiveNetworkGame.Server.Systems
                     
                 m_Driver.Disconnect(c);
             }
-            
+
             for (var i = 0; i < networkManager.m_Connections.Length; i++)
             {
                 Assert.IsTrue(networkManager.m_Connections[i].IsCreated);
@@ -248,6 +250,16 @@ namespace NaiveNetworkGame.Server.Systems
                         Debug.Log("Client disconnected from server");
                         networkManager.m_Connections[i] = default;
                     }
+                }
+            }
+
+            if (!HasSingleton<ServerSimulation>())
+            {
+                var players = Entities.WithAll<PlayerConnectionId>().ToEntityQuery().CalculateEntityCount();
+                if (server.playersNeededToStartSimulation == players)
+                {
+                    // start simulation if reached needed players
+                    EntityManager.CreateEntity(typeof(ServerSimulation));
                 }
             }
         }

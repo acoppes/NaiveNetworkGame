@@ -59,6 +59,7 @@ namespace NaiveNetworkGame.Server
 
         private bool logStatistics = false;
 
+        public byte playersNeededToStartSimulation = 2;
         public bool autostartServerSimulation;
 
         private void Start ()
@@ -99,7 +100,8 @@ namespace NaiveNetworkGame.Server
             var startServerCommand = entityManager.CreateEntity();
             entityManager.AddComponentData(startServerCommand, new StartServerCommand
             {
-                port = port
+                port = port, 
+                playersNeededToStartSimulation = playersNeededToStartSimulation
             });
             
             // create multiple player controllers, all disabled....
