@@ -6,6 +6,7 @@ using Unity.Networking.Transport;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace NaiveNetworkGame.Server.Systems
 {
@@ -30,7 +31,7 @@ namespace NaiveNetworkGame.Server.Systems
     
     public struct StopServerCommand : IComponentData
     {
-        
+        public bool restart;
     }
 
     public class ServerNetworkSystem : ComponentSystem
@@ -54,11 +55,14 @@ namespace NaiveNetworkGame.Server.Systems
             var serverEntity = GetSingletonEntity<ServerSingleton>();
             var server =
                 EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
-
+            
             Entities
-                .ForEach(delegate(Entity e, ref StopServerCommand s)
+                .ForEach(delegate(Entity e, ref StopServerCommand stop)
                 {
                     PostUpdateCommands.DestroyEntity(e);
+
+                    if (!server.started)
+                        return;
 
                     if (server.networkManager != null)
                     {
@@ -67,22 +71,43 @@ namespace NaiveNetworkGame.Server.Systems
                     }
 
                     server.networkManager = null;
+                    server.started = false;
                     
                     PostUpdateCommands.SetSharedComponent(serverEntity, server);
 
                     PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerSingleton>().ToEntityQuery());
+                    PostUpdateCommands.DestroyEntity(GetSingletonEntity<ServerSimulation>());
                     PostUpdateCommands.DestroyEntity(Entities.WithAll<Prefab>().ToEntityQuery());
-
+                    
+                    if (stop.restart)
+                    {
+                        SceneManager.LoadScene("ServerScene");
+                        
+                        var restart = PostUpdateCommands.CreateEntity();
+                        PostUpdateCommands.AddComponent(restart, new StartServerCommand
+                        {
+                            port = server.port,
+                            playersNeededToStartSimulation = server.playersNeededToStartSimulation
+                        });
+                    }
                 });
             
-            // create server
+              
             Entities
-                .ForEach(delegate(Entity e, ref StartServerCommand s)
+                .ForEach(delegate(Entity e, ref StartServerCommand start)
                 {
+                    PostUpdateCommands.DestroyEntity(e);
+
+                    if (server.started)
+                        return;
+                    
                     // m_ServerDriver = NetworkDriver.Create(new ReliableUtility.Parameters { WindowSize = 32 });
                     // m_Pipeline = m_ServerDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
 
-                    server.playersNeededToStartSimulation = s.playersNeededToStartSimulation;
+                    server.started = true;
+                    server.port = start.port;
+                    server.playersNeededToStartSimulation = start.playersNeededToStartSimulation;
+                    
                     server.networkManager = new NetworkManager
                     {
                         m_Driver = NetworkDriver.Create(
@@ -102,7 +127,7 @@ namespace NaiveNetworkGame.Server.Systems
                         // }),
                         m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
                     };
-                    
+
                     // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
                     //     typeof(SimulatorPipelineStage));
 
@@ -111,28 +136,32 @@ namespace NaiveNetworkGame.Server.Systems
                     server.reliabilityPipeline = 
                         server.networkManager.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
 
-                    var endpoint = NetworkEndPoint.AnyIpv4.WithPort(s.port);
+                    var endpoint = NetworkEndPoint.AnyIpv4.WithPort(start.port);
                     
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
                     // endpoint.Port = 9000;
                     
-                    Debug.Log($"Starting Server at port: {s.port}");
+                    Debug.Log($"Starting Server at port: {start.port}");
                     
                     if (server.networkManager.m_Driver.Bind(endpoint) != 0)
-                        Debug.Log($"Failed to bind to port {s.port}");
+                        Debug.Log($"Failed to bind to port {start.port}");
                     else
                         server.networkManager.m_Driver.Listen();
 
                     PostUpdateCommands.SetSharedComponent(serverEntity, server);
-                    PostUpdateCommands.DestroyEntity(e);
                 });
-            
+
+            // create server
+
             var networkManager = server.networkManager;
 
             if (networkManager == null)
                 return;
 
             var m_Driver = networkManager.m_Driver;
+
+            if (!m_Driver.IsCreated)
+                return;
             
             m_Driver.ScheduleUpdate().Complete();
             
@@ -236,6 +265,15 @@ namespace NaiveNetworkGame.Server.Systems
                                         PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
                                         PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
                                         PostUpdateCommands.RemoveComponent<PlayerConnectionSynchronized>(e);
+                                        
+                                        if (HasSingleton<ServerSimulation>())
+                                        {
+                                            // If client disconnected manually and simulation already started, then restart server...
+                                            PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new StopServerCommand
+                                            {
+                                                restart = true
+                                            });
+                                        }
                                     }
                                 });
                         
@@ -269,6 +307,15 @@ namespace NaiveNetworkGame.Server.Systems
                                 PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
                                 PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
                                 PostUpdateCommands.RemoveComponent<PlayerConnectionSynchronized>(e);
+                                
+                                if (HasSingleton<ServerSimulation>())
+                                {
+                                    // If client disconnected by timeout, and simulation already started, then restart server...
+                                    PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new StopServerCommand
+                                    {
+                                        restart = true
+                                    });
+                                }
                             }
                         });
                         

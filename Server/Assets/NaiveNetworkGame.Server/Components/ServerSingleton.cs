@@ -7,18 +7,21 @@ namespace NaiveNetworkGame.Server.Components
 {
     public struct ServerSingleton : ISharedComponentData, IEquatable<ServerSingleton>
     {
+        public bool started;
         public NetworkManager networkManager;
         public NetworkPipeline framentationPipeline;
         public NetworkPipeline reliabilityPipeline;
 
         // players needed to start simulation
+        public ushort port;
         public byte playersNeededToStartSimulation;
 
         public bool Equals(ServerSingleton other)
         {
-            return Equals(networkManager, other.networkManager) && 
+            return started == other.started && Equals(networkManager, other.networkManager) && 
                    framentationPipeline.Equals(other.framentationPipeline) && 
-                   reliabilityPipeline.Equals(other.reliabilityPipeline);
+                   reliabilityPipeline.Equals(other.reliabilityPipeline) && 
+                   playersNeededToStartSimulation == other.playersNeededToStartSimulation;
         }
 
         public override bool Equals(object obj)
@@ -30,9 +33,11 @@ namespace NaiveNetworkGame.Server.Components
         {
             unchecked
             {
-                var hashCode = (networkManager != null ? networkManager.GetHashCode() : 0);
+                var hashCode = started.GetHashCode();
+                hashCode = (hashCode * 397) ^ (networkManager != null ? networkManager.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ framentationPipeline.GetHashCode();
                 hashCode = (hashCode * 397) ^ reliabilityPipeline.GetHashCode();
+                hashCode = (hashCode * 397) ^ playersNeededToStartSimulation.GetHashCode();
                 return hashCode;
             }
         }
