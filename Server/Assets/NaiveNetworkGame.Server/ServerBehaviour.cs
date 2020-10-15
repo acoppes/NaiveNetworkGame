@@ -2,6 +2,7 @@
 using NaiveNetworkGame.Server.Systems;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NaiveNetworkGame.Server
 {
@@ -182,13 +183,17 @@ namespace NaiveNetworkGame.Server
                 }
             }
 
-            // if (Input.GetKeyUp(KeyCode.R))
-            // {
-            //     var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            //     entityManager.CreateEntity(ComponentType.ReadOnly<RestartServerCommand>());
-            //     // RestartServerCommand
-            //     // SceneManager.LoadScene("ReloadScene");
-            // }
+            if (Input.GetKeyUp(KeyCode.R))
+            {
+                // var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                // entityManager.CreateEntity(ComponentType.ReadOnly<RestartServerCommand>());
+                // RestartServerCommand
+                SceneManager.LoadScene("EmptyScene");
+
+                var manager = World.DefaultGameObjectInjectionWorld.EntityManager;
+                manager.CreateEntity(typeof(StopServerCommand));
+                // manager.DestroyEntity(manager.UniversalQuery);
+            }
         }
         
     }

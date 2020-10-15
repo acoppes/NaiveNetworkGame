@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/NaiveNetworkGame.Server/Scenes/ServerScene.unity
     guid: 54ce42aaeb833024595d736ca061ece9
+  - enabled: 1
+    path: Assets/Scenes/EmptyScene.unity
+    guid: bc21f6910f1c0ac459a9a262e82b6685
   m_configObjects: {}

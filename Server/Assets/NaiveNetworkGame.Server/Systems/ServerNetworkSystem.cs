@@ -27,6 +27,11 @@ namespace NaiveNetworkGame.Server.Systems
         public ushort port;
         public byte playersNeededToStartSimulation;
     }
+    
+    public struct StopServerCommand : IComponentData
+    {
+        
+    }
 
     public class ServerNetworkSystem : ComponentSystem
     {
@@ -49,6 +54,26 @@ namespace NaiveNetworkGame.Server.Systems
             var serverEntity = GetSingletonEntity<ServerSingleton>();
             var server =
                 EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
+
+            Entities
+                .ForEach(delegate(Entity e, ref StopServerCommand s)
+                {
+                    PostUpdateCommands.DestroyEntity(e);
+
+                    if (server.networkManager != null)
+                    {
+                        server.networkManager.m_Connections.Dispose();
+                        server.networkManager.m_Driver.Dispose();
+                    }
+
+                    server.networkManager = null;
+                    
+                    PostUpdateCommands.SetSharedComponent(serverEntity, server);
+
+                    PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerSingleton>().ToEntityQuery());
+                    PostUpdateCommands.DestroyEntity(Entities.WithAll<Prefab>().ToEntityQuery());
+
+                });
             
             // create server
             Entities
@@ -266,6 +291,8 @@ namespace NaiveNetworkGame.Server.Systems
 
         protected override void OnDestroy()
         {
+            
+
             var serverEntity = GetSingletonEntity<ServerSingleton>();
             var server =
                 EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
