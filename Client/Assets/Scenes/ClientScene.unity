@@ -1664,11 +1664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5056231423289127476, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5056231423289127476, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6606644730436358087, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1866,10 +1866,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8129957842857449808, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129957842857449808, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8129957842857449809, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 9891155f48e5b8e469b17772e2d2e169, type: 3}
+      objectReference: {fileID: 6270697782557902780, guid: 0d3f014071c2e61459bb0bdb8e6fe547, type: 3}
     - target: {fileID: 8256360905495876813, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1881,7 +1889,7 @@ PrefabInstance:
     - target: {fileID: 9075502069268035028, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 9891155f48e5b8e469b17772e2d2e169, type: 3}
+      objectReference: {fileID: -7710094303110637390, guid: 2c654f84a012dc141874ba8cb6d300f9, type: 3}
     - target: {fileID: 9113866205651796304, guid: 94ad48e2ff948d64d9c7ab9f492b9a2f, type: 3}
       propertyPath: m_IsActive
       value: 0
