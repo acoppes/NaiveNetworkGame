@@ -17,7 +17,9 @@ namespace Client
         [Serializable]
         public struct ServerConfig
         {
+            public string name;
             public string ip;
+            public ushort port;
         }
 
         [Serializable]
@@ -43,6 +45,46 @@ namespace Client
         public Text ipText;
         
         private ServerList serverList;
+
+        private void AddDefaultServers(ServerList list)
+        {
+            list.severs.Add(new ServerConfig
+            {
+                name = "Localhost",
+                ip = "127.0.0.1", 
+                port = 9000,
+            });
+            list.severs.Add(new ServerConfig
+            {
+                name = "Server1",
+                ip = "209.151.153.172",
+                port = 9000
+            });
+            list.severs.Add(new ServerConfig
+            {
+                name = "Server2",
+                ip = "209.151.153.172",
+                port = 9001
+            });
+            list.severs.Add(new ServerConfig
+            {
+                name = "Server3",
+                ip = "209.151.153.172",
+                port = 9002
+            });
+            list.severs.Add(new ServerConfig
+            {
+                name = "Server4",
+                ip = "209.151.153.172",
+                port = 9003
+            });
+            list.severs.Add(new ServerConfig
+            {
+                name = "Server5",
+                ip = "209.151.153.172",
+                port = 9004
+            });
+        }
         
         // Start is called before the first frame update
         private void Start()
@@ -62,27 +104,20 @@ namespace Client
             }
             catch
             {
-                  
+                serverList.severs.Clear();
             } 
             
             if (savedServersJson == null || serverList.severs.Count == 0)
             {
                 serverList = new ServerList();
-                serverList.severs.Add(new ServerConfig
-                {
-                    ip = "127.0.0.1"
-                });
-                serverList.severs.Add(new ServerConfig
-                {
-                    ip = "209.151.153.172"
-                });
+                AddDefaultServers(serverList);
             }
 
             PlayerPrefs.SetString("SavedServers", JsonUtility.ToJson(serverList));
 
             serverConnectDropdown.options = serverList.severs.Select(s => new Dropdown.OptionData
             {
-                text = s.ip
+                text = s.name
             }).ToList();
 
             var lastSelectedServer = PlayerPrefs.GetString("LastSelectedServer", null);
@@ -133,21 +168,13 @@ namespace Client
         private void OnDeleteServers()
         {
             serverList.severs.Clear();
-            
-            serverList.severs.Add(new ServerConfig
-            {
-                ip = "127.0.0.1"
-            });
-            serverList.severs.Add(new ServerConfig
-            {
-                ip = "209.151.153.172"
-            });
+            AddDefaultServers(serverList);
             
             PlayerPrefs.SetString("SavedServers", JsonUtility.ToJson(serverList));
             
             serverConnectDropdown.options = serverList.severs.Select(s => new Dropdown.OptionData
             {
-                text = s.ip
+                text = s.name
             }).ToList();
         }
 
@@ -155,18 +182,21 @@ namespace Client
         {
             // load the other scene with parameters...
 
-            var selectedServer = serverConnectDropdown.options[serverConnectDropdown.value].text;
+            var selectedServer = serverList.severs[serverConnectDropdown.value];
             
-            PlayerPrefs.SetString("LastSelectedServer", selectedServer);
+            // var selectedServer = serverConnectDropdown.options[serverConnectDropdown.value].text;
+            
+            PlayerPrefs.SetString("LastSelectedServer", selectedServer.name);
 
             // launch...
 
             var parametersObject = ServerConnectionParametersObject.Instance;
             parametersObject.parameters = new ServerConnectionParameters
             {
-                ip = selectedServer,
-                port = 9000
+                ip = selectedServer.ip,
+                port = selectedServer.port
             };
+            
             DontDestroyOnLoad(parametersObject.gameObject);
 
             if (startServer)
@@ -185,14 +215,16 @@ namespace Client
             var newServerIp = newServerInput.text;
             serverList.severs.Add(new ServerConfig
             {
-                ip = newServerIp
+                name = newServerIp,
+                ip = newServerIp,
+                port = 9000
             });
             
             PlayerPrefs.SetString("SavedServers", JsonUtility.ToJson(serverList));
 
             serverConnectDropdown.options = serverList.severs.Select(s => new Dropdown.OptionData
             {
-                text = s.ip
+                text = s.name
             }).ToList();
             
             newServerInput.text = string.Empty;
