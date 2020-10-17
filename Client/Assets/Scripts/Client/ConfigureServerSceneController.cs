@@ -127,8 +127,8 @@ namespace Client
                 serverConnectDropdown.value = index;
 
             newServerButton.onClick.AddListener(OnNewServerAdded);
-            serverConnectButton.onClick.AddListener(delegate { OnServerConnect(false); });
-            startLocalServerButton.onClick.AddListener(delegate { OnServerConnect(true); });
+            serverConnectButton.onClick.AddListener(OnServerConnect);
+            startLocalServerButton.onClick.AddListener(OnLocalServer);
             deleteServersButton.onClick.AddListener(OnDeleteServers);
 
             newServerInput.contentType = InputField.ContentType.Custom;
@@ -140,6 +140,7 @@ namespace Client
                 changelogWindow.Open();
             }
 
+            // TODO: dropdown of assigned ip addresses
             ipText.text = GetLocalIPAddress();
         }
         
@@ -178,7 +179,7 @@ namespace Client
             }).ToList();
         }
 
-        private void OnServerConnect(bool startServer)
+        private void OnServerConnect()
         {
             // load the other scene with parameters...
 
@@ -199,15 +200,23 @@ namespace Client
             
             DontDestroyOnLoad(parametersObject.gameObject);
 
-            if (startServer)
+            SceneManager.LoadScene("ClientScene", LoadSceneMode.Single);
+        }
+        
+        private void OnLocalServer()
+        {
+            var parametersObject = ServerConnectionParametersObject.Instance;
+            parametersObject.parameters = new ServerConnectionParameters
             {
-                SceneManager.LoadScene("ServerScene", LoadSceneMode.Single);
-                SceneManager.LoadScene("ClientScene", LoadSceneMode.Additive);
-            }
-            else
-            {
-                SceneManager.LoadScene("ClientScene", LoadSceneMode.Single);
-            }
+                // or we could use localhost or 127.0.0.1
+                ip = ipText.text,
+                port = 9000
+            };
+            
+            DontDestroyOnLoad(parametersObject.gameObject);
+
+            SceneManager.LoadScene("ServerScene", LoadSceneMode.Single);
+            SceneManager.LoadScene("ClientScene", LoadSceneMode.Additive);
         }
 
         private void OnNewServerAdded()
