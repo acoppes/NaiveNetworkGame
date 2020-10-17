@@ -8,6 +8,7 @@ using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Scenes
@@ -46,7 +47,7 @@ namespace Scenes
         private EntityQuery playerControllerQuery;
 
         public Button disconnectButton;
-        public Button forceStartButton;
+        [FormerlySerializedAs("forceStartButton")] public Button secondPlayerButton;
         
         public Text connectionStateText;
 
@@ -60,6 +61,10 @@ namespace Scenes
 
         private EntityManager entityManager;
 
+        public GameObject secondLocalPlayer;
+
+        private bool secondPlayerAdded = false;
+        
         private void Start()
         {
             ConnectionState.connectedTime = 0;
@@ -94,10 +99,23 @@ namespace Scenes
             
             disconnectButton.onClick.AddListener(OnDisconnectButtonPressed);
             
-            forceStartButton.onClick.AddListener(delegate
+            secondPlayerButton.onClick.AddListener(delegate
             {
+                
                 // create server simulation
-                entityManager.CreateEntity(typeof(ServerSimulation));
+                if (!secondPlayerAdded)
+                {
+                    secondLocalPlayer.SetActive(true);
+                    secondPlayerAdded = true;
+
+                    secondPlayerButton.GetComponentInChildren<Text>().text = "Switch Player";
+                }
+                else
+                {
+                    // switch player
+                    entityManager.CreateEntity(typeof(SwitchLocalPlayerAction));
+                }
+                
             });
         }
 
@@ -128,6 +146,11 @@ namespace Scenes
 
         private void LateUpdate()
         {
+            if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                entityManager.CreateEntity(typeof(SwitchLocalPlayerAction));
+            }
+
             if (ConnectionState.currentState == ConnectionState.State.SimulationRunning)
                 ConnectionState.connectedTime += Time.deltaTime;
 
@@ -189,7 +212,8 @@ namespace Scenes
                 hasServer = s.networkManager != null;
             }
             
-            forceStartButton.gameObject.SetActive(hasServer && !serverSimulationStarted);
+            if (!secondPlayerAdded)
+                secondPlayerButton.gameObject.SetActive(hasServer && !serverSimulationStarted);
         }
 
         public void OnPlayerAction(PlayerActionAsset playerAction)
