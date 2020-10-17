@@ -19,6 +19,7 @@ namespace NaiveNetworkGame.Server.Components
         public byte player;
         public byte type;
         public byte slotCost;
+        public bool isBuilding;
     }
 
     public struct Skin : IComponentData
@@ -30,7 +31,7 @@ namespace NaiveNetworkGame.Server.Components
     {
         public byte maxUnits;
     }
-    
+
     public struct ResourceCollector : IComponentData
     {
         public ushort goldPerSecond;

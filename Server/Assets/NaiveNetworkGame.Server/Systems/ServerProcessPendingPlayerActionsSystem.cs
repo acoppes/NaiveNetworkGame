@@ -64,19 +64,15 @@ namespace NaiveNetworkGame.Server.Systems
 
                         if (playerController.gold < playerAction.cost)
                             return;
-                        
-                        if (p.unitType == 0)
-                        {
-                            // prefab = playerController.unitPrefab;
-                        }
-                        else if (p.unitType == 1)
+
+                        if (unitComponent.isBuilding)
                         {
                             if (playerController.buildingSlots == 0)
                                 return;
                         
                             var buildingSlotBuffer = GetBufferFromEntity<BuildingSlot>()[e];
                             
-                            for (int i = 0; i < buildingSlotBuffer.Length; i++)
+                            for (var i = 0; i < buildingSlotBuffer.Length; i++)
                             {
                                 var buildingSlot = buildingSlotBuffer[i];
                                 if (buildingSlot.available)
@@ -96,7 +92,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                             // PostUpdateCommands.buff;
                         }
-
+                        
                         // consume gold
                         playerController.gold -= playerAction.cost;
                         

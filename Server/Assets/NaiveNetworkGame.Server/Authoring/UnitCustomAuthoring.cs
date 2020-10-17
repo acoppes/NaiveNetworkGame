@@ -34,6 +34,8 @@ namespace NaiveNetworkGame.Server.Components
         public float health;
         public float spawnDuration = 0;
 
+        public bool isBuilding;
+
         public Behaviour behaviourData;
         public DynamicObstacleData dynamiceObstacleData;
         
@@ -54,7 +56,8 @@ namespace NaiveNetworkGame.Server.Components
                 player = player,
                 type = unitType,
                 slotCost = slotsCost,
-                id = NetworkUnitId.current++
+                id = NetworkUnitId.current++,
+                isBuilding = isBuilding
             });
             
             em.AddComponentData(entity, new Movement

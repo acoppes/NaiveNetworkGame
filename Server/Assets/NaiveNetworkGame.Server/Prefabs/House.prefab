@@ -63,12 +63,13 @@ MonoBehaviour:
   speed: 0
   health: 100
   spawnDuration: 4
+  isBuilding: 1
   behaviourData:
     minIdleTime: 0
     maxIdleTime: 0
     wanderArea: {fileID: 0}
   dynamiceObstacleData:
-    disabled: 1
+    priority: 0
     range: 0
   networking: 0
 --- !u!114 &308226996447683080
