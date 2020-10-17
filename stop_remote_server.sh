@@ -3,4 +3,4 @@
 export SERVER_IP=209.151.153.172
 
 # ssh stop remote server
-ssh acoppes@$SERVER_IP 'nohup Linux/stop_server.sh > /dev/null 2>&1 &'
+ssh acoppes@$SERVER_IP 'nohup ./Linux/stop_server.sh > /dev/null 2>&1 &'
