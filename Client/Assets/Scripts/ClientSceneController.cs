@@ -214,7 +214,7 @@ namespace Scenes
             // }
             
             if (!secondPlayerAdded)
-                secondPlayerButton.gameObject.SetActive(!serverSimulationStarted);
+                secondPlayerButton.gameObject.SetActive(ConnectionState.currentState == ConnectionState.State.WaitingForPlayers);
         }
 
         public void OnPlayerAction(PlayerActionAsset playerAction)

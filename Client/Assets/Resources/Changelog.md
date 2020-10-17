@@ -15,6 +15,7 @@
 
 ## Fixed
 
+  * Button to add local player disabled if not waiting for players anymore.
   * Start local server was using selected ip to connect with client.
   * Wander logic it wasn't performing the idle between movement and movement.
   * NaN bug when trying to move to current position. 
