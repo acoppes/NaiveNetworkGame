@@ -1,3 +1,9 @@
+# 0.0.3
+
+## Added
+
+## Fixed
+
 # 0.0.2
 
 ## Added
@@ -15,6 +21,7 @@
 
 ## Fixed
 
+  * Fixed bug with second player skin being the default skin.
   * Button to add local player disabled if not waiting for players anymore.
   * Start local server was using selected ip to connect with client.
   * Wander logic it wasn't performing the idle between movement and movement.
