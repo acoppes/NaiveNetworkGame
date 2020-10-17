@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Multiple server instances (press clear servers list if not working)
   * Server auto restart on client disconnection.
   * Server simulation doesn't start until all players are connected.
   * Wait for other players before showing ui and stuff.
@@ -13,9 +14,10 @@
 
 ## Fixed
 
-  * Fixed wander logic it wasn't performing the idle between movement and movement.
-  * Fixed a NaN bug when trying to move to current position. 
-  * Fixed strange interpolation bug with first created unit.
+  * Start local server was using selected ip to connect with client.
+  * Wander logic it wasn't performing the idle between movement and movement.
+  * NaN bug when trying to move to current position. 
+  * Strange interpolation bug with first created unit.
   * Houses have no income and provide no unit slots while spawning.
   
 # 0.0.1
