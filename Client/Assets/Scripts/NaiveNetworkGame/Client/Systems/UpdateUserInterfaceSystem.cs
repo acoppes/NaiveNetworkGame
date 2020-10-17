@@ -44,26 +44,34 @@ namespace NaiveNetworkGame.Client.Systems
                 
                 var actions = GetBufferFromEntity<PlayerAction>()[activePlayerEntity];
 
+                var unitButton = userInterface.buildUnitButton;
+                var houseButton = userInterface.buildHouseButton;
+                var barracksButton = userInterface.buildBarracksButton;
+
                 foreach (var action in actions)
                 {
-                    var unitButton = userInterface.buildUnitButton;
-                    
                     if (unitButton != null && unitButton.actionType.unitType == action.type)
                     {
                         unitButton.skinType = player.skinType;
                         unitButton.cost = action.cost;
                     }
 
-                    var farmButton = userInterface.buildFarmButton;
-                    if (farmButton != null && farmButton.actionType.unitType == action.type)
+                    if (houseButton != null && houseButton.actionType.unitType == action.type)
                     {
-                        farmButton.skinType = player.skinType;
-                        farmButton.cost = action.cost;
+                        houseButton.skinType = player.skinType;
+                        houseButton.cost = action.cost;
                     }
-
-                    unitButton.enabled = unitButton.cost <= player.gold && player.currentUnits < player.maxUnits;
-                    farmButton.enabled = farmButton.cost <= player.gold && player.buildingSlots > 0;
+                    
+                    if (barracksButton != null && barracksButton.actionType.unitType == action.type)
+                    {
+                        barracksButton.skinType = player.skinType;
+                        barracksButton.cost = action.cost;
+                    }
                 }
+                
+                unitButton.enabled = unitButton.cost <= player.gold && player.currentUnits < player.maxUnits;
+                houseButton.enabled = houseButton.cost <= player.gold && player.buildingSlots > 0;
+                barracksButton.enabled = barracksButton.cost <= player.gold && player.buildingSlots > 0;
             });
         }
     }

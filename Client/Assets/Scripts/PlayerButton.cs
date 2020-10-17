@@ -23,7 +23,7 @@ namespace Scenes
         private int activeHash;
 
         [SerializeField]
-        private List<SkinModels> iconsPerSkin;
+        private List<GameObject> skinIcons;
 
         [SerializeField]
         private Transform iconsContainer;
@@ -65,7 +65,9 @@ namespace Scenes
                 iconsContainer.GetChild(i).gameObject.SetActive(false);
             }
             
-            iconsPerSkin[skinType].list[actionType.unitType].SetActive(true);
+            skinIcons[skinType].SetActive(true);
+            
+            // iconsPerSkin[skinType].list[actionType.unitType].SetActive(true);
 
             // for (var i = 0; i < icons.Length; i++)
             // {

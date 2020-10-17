@@ -1,14 +1,18 @@
 using System;
 using NaiveNetworkGame.Common;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Scenes
 {
     public class UserInterface : MonoBehaviour
     {
         public PlayerButton buildUnitButton;
-        public PlayerButton buildFarmButton;
+        [FormerlySerializedAs("buildFarmButton")] 
+        public PlayerButton buildHouseButton;
         
+        public PlayerButton buildBarracksButton;
+
         public FixedNumberAnimator goldLabel;
         public PlayerStatsUI playerStats;
 

@@ -129,6 +129,9 @@ MonoBehaviour:
   - type: 1
     cost: 15
     prefab: {fileID: 5135555761720755020, guid: 02a4c458dd36eda4eaad47c1249b9ff6, type: 3}
+  - type: 2
+    cost: 30
+    prefab: {fileID: 5135555761720755020, guid: b797800646dc4c443bcc2c632bb5abf9, type: 3}
   buildingSlotsParent: {fileID: 5211734856648737426}
 --- !u!1 &7504360320551999600
 GameObject:
