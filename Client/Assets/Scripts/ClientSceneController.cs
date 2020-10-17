@@ -200,20 +200,21 @@ namespace Scenes
             if (latencyText != null)
                 latencyText.text = $"{Mathf.RoundToInt((float) (ConnectionState.latency * 1000.0f))}ms";
 
-            var serverQuery = entityManager.CreateEntityQuery(typeof(ServerSingleton));
-            var hasServer = serverQuery.CalculateEntityCount() > 0;
+            // var serverQuery = entityManager.CreateEntityQuery(typeof(ServerSingleton));
+            // var hasServer = serverQuery.CalculateEntityCount() > 0;
+            
             var serverSimulationStarted = entityManager.CreateEntityQuery(
                 typeof(ServerSimulation)).CalculateEntityCount() > 0;
 
-            if (hasServer)
-            {
-                // var s = serverQuery.GetSingletonEntity();
-                var s = entityManager.GetSharedComponentData<ServerSingleton>(serverQuery.GetSingletonEntity());
-                hasServer = s.networkManager != null;
-            }
+            // if (hasServer)
+            // {
+            //     // var s = serverQuery.GetSingletonEntity();
+            //     var s = entityManager.GetSharedComponentData<ServerSingleton>(serverQuery.GetSingletonEntity());
+            //     hasServer = s.networkManager != null;
+            // }
             
             if (!secondPlayerAdded)
-                secondPlayerButton.gameObject.SetActive(hasServer && !serverSimulationStarted);
+                secondPlayerButton.gameObject.SetActive(!serverSimulationStarted);
         }
 
         public void OnPlayerAction(PlayerActionAsset playerAction)
