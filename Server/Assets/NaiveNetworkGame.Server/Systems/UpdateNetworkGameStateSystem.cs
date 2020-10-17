@@ -68,6 +68,12 @@ namespace NaiveNetworkGame.Server.Systems
                 n.statePercentage = state.percentage;
             });
             
+            Entities.WithAll<ServerOnly, Skin, NetworkGameState>().ForEach(delegate(ref Skin skin, 
+                ref NetworkGameState n)
+            {
+                n.skinType = skin.type;
+            });
+            
             Entities.WithAll<ServerOnly, Health, NetworkGameState>().ForEach(delegate(ref Health health, 
                 ref NetworkGameState n)
             {

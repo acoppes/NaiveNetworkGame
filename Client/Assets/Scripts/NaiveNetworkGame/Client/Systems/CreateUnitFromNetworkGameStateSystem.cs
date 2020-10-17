@@ -58,17 +58,9 @@ namespace NaiveNetworkGame.Client.Systems
                     value = n.health
                 });
 
-                var playerId = n.playerId;
-                var skinType = 0;
+                // var playerId = n.playerId;
+                var skinType = n.skinType;
                 
-                Entities.ForEach(delegate(ref LocalPlayerController p)
-                {
-                    if (p.player == playerId)
-                    {
-                        skinType = p.skinType;
-                    }
-                });
-
                 var skinModels = modelProvider.skinModels[skinType];
                 var modelPrefab = skinModels.list[n.unitType];
                 

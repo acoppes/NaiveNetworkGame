@@ -20,6 +20,11 @@ namespace NaiveNetworkGame.Server.Components
         public byte type;
         public byte slotCost;
     }
+
+    public struct Skin : IComponentData
+    {
+        public byte type;
+    }
     
     public struct House : IComponentData
     {

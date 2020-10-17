@@ -6,8 +6,10 @@ namespace NaiveNetworkGame.Common
     public struct NetworkGameState : IComponentData
     {
         public ushort unitId;
+        
         public byte playerId;
         public byte unitType;
+        public byte skinType;
 
         public ushort lookingDirectionAngleInDegrees;
         
@@ -31,6 +33,7 @@ namespace NaiveNetworkGame.Common
             writer.WriteUShort(unitId);
             writer.WriteByte(playerId);
             writer.WriteByte(unitType);
+            writer.WriteByte(skinType);
             
             // writer.WriteFloat(lookingDirection.x);
             // writer.WriteFloat(lookingDirection.y);
@@ -50,6 +53,8 @@ namespace NaiveNetworkGame.Common
             unitId = stream.ReadUShort();
             playerId = stream.ReadByte();
             unitType = stream.ReadByte();
+            skinType = stream.ReadByte();
+            
             // lookingDirection.x = stream.ReadFloat();
             // lookingDirection.y = stream.ReadFloat();
             lookingDirectionAngleInDegrees = stream.ReadUShort();

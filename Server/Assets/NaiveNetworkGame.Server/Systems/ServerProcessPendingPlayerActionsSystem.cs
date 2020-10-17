@@ -107,6 +107,11 @@ namespace NaiveNetworkGame.Server.Systems
                         // unitComponent.type = p.unitType;
                         
                         PostUpdateCommands.SetComponent(unitEntity, unitComponent);
+                        
+                        PostUpdateCommands.AddComponent(unitEntity, new Skin
+                        {
+                            type = playerController.skinType
+                        });
 
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
