@@ -66,6 +66,16 @@ namespace NaiveNetworkGame.Server.Systems
 
                     if (server.networkManager != null)
                     {
+                        for (var i = 0; i < server.networkManager.m_Connections.Length; i++)
+                        {
+                            var c = server.networkManager.m_Connections[i];
+                            if (c.IsCreated && server.networkManager.m_Driver.GetConnectionState(c) ==
+                                NetworkConnection.State.Connected)
+                            {
+                                server.networkManager.m_Driver.Disconnect(c);
+                            }
+                        }
+                        
                         server.networkManager.m_Connections.Dispose();
                         server.networkManager.m_Driver.Dispose();
                     }
