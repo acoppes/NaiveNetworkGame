@@ -42,7 +42,8 @@ namespace Client
 
         public ChangelogWindow changelogWindow;
 
-        public Text ipText;
+        // public Text ipText;
+        public Dropdown localAddressesDropdown;
         
         private ServerList serverList;
 
@@ -141,21 +142,25 @@ namespace Client
             }
 
             // TODO: dropdown of assigned ip addresses
-            ipText.text = GetLocalIPAddress();
+            // ipText.text = GetLocalIPAddress();
+            var addresses = GetLocalIPAddresses();
+            localAddressesDropdown.options = addresses.Select(a => new Dropdown.OptionData(a)).ToList();
         }
         
-        public string GetLocalIPAddress()
+        public List<string> GetLocalIPAddresses()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
+            var list = new List<string>();
             foreach (var ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if (ip.ToString().StartsWith("192"))
-                        return ip.ToString();
+                    list.Add(ip.ToString());
+                    // if (ip.ToString().StartsWith("192"))
+                    //     return ip.ToString();
                 }
             }
-            return null;
+            return list;
         }
 
         private char OnValidateValidIpAddress(string text, int charindex, char addedchar)
@@ -205,11 +210,13 @@ namespace Client
         
         private void OnLocalServer()
         {
+            var selectedAddress = localAddressesDropdown.options[localAddressesDropdown.value].text;
+            
             var parametersObject = ServerConnectionParametersObject.Instance;
             parametersObject.parameters = new ServerConnectionParameters
             {
                 // or we could use localhost or 127.0.0.1
-                ip = ipText.text,
+                ip = selectedAddress,
                 port = 9000
             };
             

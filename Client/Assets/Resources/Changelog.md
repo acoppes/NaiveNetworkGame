@@ -2,6 +2,7 @@
 
 ## Added
 
+  * Show list of assigned ip addresses and let player select which to use.
   * Multiple server instances (press clear servers list if not working)
   * Server auto restart on client disconnection.
   * Server simulation doesn't start until all players are connected.
