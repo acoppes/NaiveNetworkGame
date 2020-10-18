@@ -126,7 +126,7 @@ namespace NaiveNetworkGame.Server.Components
                 {
                     unitType = barracksData.unitType,
                     spawnDuration = barracksData.spawnDuration,
-                    spawnPosition = barracksData.spawnPosition.position
+                    spawnPosition = barracksData.spawnPosition.localPosition
                 });
             }
         }

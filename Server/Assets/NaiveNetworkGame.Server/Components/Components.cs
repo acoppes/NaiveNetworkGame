@@ -36,6 +36,7 @@ namespace NaiveNetworkGame.Server.Components
         public float duration;
         public Entity prefab;
         public Entity wanderArea;
+        public bool unitSpawning;
     }
 
     public struct Skin : IComponentData
