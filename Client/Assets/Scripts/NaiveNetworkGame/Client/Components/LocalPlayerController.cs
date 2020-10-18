@@ -11,5 +11,6 @@ namespace NaiveNetworkGame.Client.Components
         public byte maxUnits;
         public byte currentUnits;
         public byte buildingSlots;
+        public byte freeBarracksCount;
     }
 }

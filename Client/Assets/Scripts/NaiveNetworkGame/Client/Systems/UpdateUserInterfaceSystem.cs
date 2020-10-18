@@ -69,7 +69,9 @@ namespace NaiveNetworkGame.Client.Systems
                     }
                 }
                 
-                unitButton.enabled = unitButton.cost <= player.gold && player.currentUnits < player.maxUnits;
+                unitButton.enabled = unitButton.cost <= player.gold && player.currentUnits < player.maxUnits 
+                                                                    && player.freeBarracksCount > 0;
+                
                 houseButton.enabled = houseButton.cost <= player.gold && player.buildingSlots > 0;
                 barracksButton.enabled = barracksButton.cost <= player.gold && player.buildingSlots > 0;
             });

@@ -18,6 +18,6 @@ namespace NaiveNetworkGame.Server.Components
 
         public byte availableBuildingSlots;
 
-        public byte barracksCount;
+        public byte freeBarracksCount;
     }
 }

@@ -28,6 +28,7 @@ namespace NaiveNetworkGame.Client.Systems
                     playerController.currentUnits = networkPlayerState.currentUnits;
                     playerController.maxUnits = networkPlayerState.maxUnits;
                     playerController.buildingSlots = networkPlayerState.buildingSlots;
+                    playerController.freeBarracksCount = networkPlayerState.freeBarracks;
                 });
                 
                 PostUpdateCommands.DestroyEntity(e);

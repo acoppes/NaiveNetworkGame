@@ -123,6 +123,10 @@ namespace NaiveNetworkGame.Server.Systems
                             .WithAll<Barracks, Unit>()
                             .ForEach(delegate(Entity be, ref Barracks b)
                             {
+                                // don't allow other barracks to process this action...
+                                if (actionProcessed)
+                                    return;
+                                
                                 // enqueue unit build...
                                 // consume player gold...
 

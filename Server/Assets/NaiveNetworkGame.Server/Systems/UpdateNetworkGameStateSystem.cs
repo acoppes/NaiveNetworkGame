@@ -90,6 +90,7 @@ namespace NaiveNetworkGame.Server.Systems
                     n.maxUnits = player.maxUnits;
                     n.currentUnits = player.currentUnits;
                     n.buildingSlots = player.availableBuildingSlots;
+                    n.freeBarracks = player.freeBarracksCount;
                 });
         }
     }

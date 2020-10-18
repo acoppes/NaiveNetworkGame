@@ -30,15 +30,18 @@ namespace NaiveNetworkGame.Server.Systems
 
                 p.availableBuildingSlots = 0;
 
-                byte barracksCount = 0;
+                byte freeBarracksCount = 0;
                 
-                Entities.ForEach(delegate(ref Barracks b, ref Unit u)
+                Entities
+                    .WithNone<SpawningAction>()
+                    .WithNone<BuildUnitAction>()
+                    .ForEach(delegate(ref Barracks b, ref Unit u)
                 {
                     if (u.player == player)
-                        barracksCount++;
+                        freeBarracksCount++;
                 });
 
-                p.barracksCount = barracksCount;
+                p.freeBarracksCount = freeBarracksCount;
                 
                 for (var i = 0; i < buildingSlots.Length; i++)
                 {
