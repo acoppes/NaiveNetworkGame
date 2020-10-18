@@ -24,7 +24,6 @@ namespace Scenes.Tests
                         PostUpdateCommands.AddComponent(command, new ClientPlayerAction
                         {
                             player = p.player,
-                            unit = 0,
                             actionType = 2,
                             unitType = 1
                         });

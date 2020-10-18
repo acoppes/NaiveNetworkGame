@@ -6,11 +6,9 @@ namespace NaiveNetworkGame.Common
 {
     public struct ClientPlayerAction : IComponentData
     {
-        public static byte MoveUnitAction = 1;
         public static byte BuildUnit = 2;
 
         public byte player;
-        public uint unit;
         
         public byte actionType;
         public byte unitType;
@@ -21,7 +19,6 @@ namespace NaiveNetworkGame.Common
         {
             writer.WriteByte(PacketType.ClientPlayerAction);
             writer.WriteByte(player);
-            writer.WriteUInt(unit);
             writer.WriteByte(actionType);
             writer.WriteByte(unitType);
             writer.WriteFloat(target.x);
@@ -32,7 +29,6 @@ namespace NaiveNetworkGame.Common
         public ClientPlayerAction Read(ref DataStreamReader stream)
         {
             player = stream.ReadByte();
-            unit = stream.ReadUInt();
             actionType = stream.ReadByte();
             unitType = stream.ReadByte();
             target.x = stream.ReadFloat();

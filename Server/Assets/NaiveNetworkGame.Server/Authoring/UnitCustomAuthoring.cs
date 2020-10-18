@@ -23,6 +23,15 @@ namespace NaiveNetworkGame.Server.Components
             public float range;
         }
         
+        [Serializable]
+        public struct BarracksData
+        {
+            public bool isBarrack;
+            public byte unitType;
+            public float spawnDuration;
+            public Transform spawnPosition;
+        }
+
         // public float damage;
         // public float range;
         
@@ -35,6 +44,7 @@ namespace NaiveNetworkGame.Server.Components
         public float spawnDuration = 0;
 
         public bool isBuilding;
+        public BarracksData barracksData;
 
         public Behaviour behaviourData;
         public DynamicObstacleData dynamiceObstacleData;
@@ -107,6 +117,16 @@ namespace NaiveNetworkGame.Server.Components
                 {
                     priority = dynamiceObstacleData.priority,
                     range = dynamiceObstacleData.range
+                });
+            }
+
+            if (barracksData.isBarrack)
+            {
+                em.AddComponentData(entity, new Barracks
+                {
+                    unitType = barracksData.unitType,
+                    spawnDuration = barracksData.spawnDuration,
+                    spawnPosition = barracksData.spawnPosition.position
                 });
             }
         }

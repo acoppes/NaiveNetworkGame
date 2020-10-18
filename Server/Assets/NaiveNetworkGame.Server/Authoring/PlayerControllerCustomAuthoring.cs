@@ -36,21 +36,7 @@ namespace NaiveNetworkGame.Server.Components
             
             foreach (var action in actions)
             {
-            //     var prefab = Entity.Null;
-            //     
-            //     if (conversionSystem.HasPrimaryEntity(action.prefab))
-            //     {
-            //         prefab = conversionSystem.GetPrimaryEntity(action.prefab);
-            //     }
-            //     else
-            //     {
-            //         prefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(action.prefab, new GameObjectConversionSettings
-            //         {
-            //             DestinationWorld = dstManager.World
-            //         });
-            //     }
-
-               //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
+                //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
 
                 buffer = dstManager.GetBuffer<PlayerAction>(entity);
                 buffer.Add(new PlayerAction
@@ -68,7 +54,7 @@ namespace NaiveNetworkGame.Server.Components
                 buildingSlotsBuffer.Add(new BuildingSlot
                 {
                     position = new float3(t.position.x, t.position.y, 0),
-                    available = true
+                    hasBuilding = false
                 });
             }
         }

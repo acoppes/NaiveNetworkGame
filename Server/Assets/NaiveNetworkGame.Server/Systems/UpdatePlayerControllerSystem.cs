@@ -28,12 +28,24 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
 
-                p.buildingSlots = 0;
+                p.availableBuildingSlots = 0;
+
+                byte barracksCount = 0;
+                
+                Entities.ForEach(delegate(ref Barracks b, ref Unit u)
+                {
+                    if (u.player == player)
+                        barracksCount++;
+                });
+
+                p.barracksCount = barracksCount;
                 
                 for (var i = 0; i < buildingSlots.Length; i++)
                 {
-                    if (buildingSlots[i].available)
-                        p.buildingSlots++;
+                    if (!buildingSlots[i].hasBuilding)
+                    {
+                        p.availableBuildingSlots++;
+                    }
                 }
 
                 p.currentUnits = unitSlots;

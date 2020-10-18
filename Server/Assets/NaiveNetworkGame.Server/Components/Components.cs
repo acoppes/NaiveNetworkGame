@@ -22,6 +22,22 @@ namespace NaiveNetworkGame.Server.Components
         public bool isBuilding;
     }
 
+    public struct Barracks : IComponentData
+    {
+        // public bool buildingUnit;
+        public byte unitType;
+        public float spawnDuration;
+        public float3 spawnPosition;
+    }
+
+    public struct BuildUnitAction : IComponentData
+    {
+        public float time;
+        public float duration;
+        public Entity prefab;
+        public Entity wanderArea;
+    }
+
     public struct Skin : IComponentData
     {
         public byte type;

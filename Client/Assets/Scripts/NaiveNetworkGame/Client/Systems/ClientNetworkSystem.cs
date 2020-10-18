@@ -319,7 +319,9 @@ namespace NaiveNetworkGame.Client.Systems
                 // TODO: check the connection wasn't destroyed...
                 var pendingActionSent = false;
 
+                // avoid destroying server entities with queued client player action...
                 Entities
+                    .WithNone<ServerOnly>()
                     .WithAll<ClientPlayerAction>()
                     .ForEach(delegate(Entity e, ref ClientPlayerAction p)
                     {

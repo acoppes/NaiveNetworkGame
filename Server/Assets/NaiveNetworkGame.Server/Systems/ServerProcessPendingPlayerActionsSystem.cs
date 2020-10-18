@@ -13,97 +13,76 @@ namespace NaiveNetworkGame.Server.Systems
         {
             // process all player pending actions
             Entities
-                .WithAll<ClientPlayerAction, PlayerController, Translation>()
+                .WithAll<ServerOnly, ClientPlayerAction, PlayerController, Translation>()
                 .ForEach(delegate (Entity e, ref ClientPlayerAction p, ref PlayerController playerController, ref Translation t)
                 {
-                    // PostUpdateCommands.DestroyEntity(e);
-                    PostUpdateCommands.RemoveComponent<ClientPlayerAction>(e);
-
                     var player = p.player;
-                    var unitId = p.unit;
+
+                    PostUpdateCommands.RemoveComponent<ClientPlayerAction>(e);
                 
-                    if (p.actionType == ClientPlayerAction.MoveUnitAction)
+                    // Changed to only process build unit actions
+                    if (p.actionType != ClientPlayerAction.BuildUnit)
+                        return;
+                    
+                    var position = t.Value;
+
+                    var playerActions = GetBufferFromEntity<PlayerAction>()[e];
+                    var playerAction = playerActions[p.unitType];
+
+                    // can't execute action if not enough gold...
+
+
+                    var prefab = playerAction.prefab;
+                    
+                    var unitComponent = GetComponentDataFromEntity<Unit>()[prefab];
+
+                    // dont create unit if at maximum capacity
+                    if (unitComponent.slotCost > 0 && 
+                        playerController.currentUnits + unitComponent.slotCost > playerController.maxUnits) 
+                        return;
+
+                    if (playerController.gold < playerAction.cost)
+                        return;
+
+                    var availableSlotIndex = 0;
+
+                    if (unitComponent.isBuilding)
                     {
-                        var pendingAction = new PendingAction
-                        {
-                            command = p.actionType,
-                            target = p.target
-                        };
-
-                        Entities.WithAll<Unit, Movement>().ForEach(delegate(Entity unitEntity, ref Unit unit)
-                        {
-                            if (unit.player != player)
-                                return;
-
-                            if (unit.id != unitId)
-                                return;
-
-                            PostUpdateCommands.RemoveComponent<PendingAction>(unitEntity);
-                            PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
-                            PostUpdateCommands.AddComponent(unitEntity, pendingAction);
-                        });
-                    } else if (p.actionType == ClientPlayerAction.BuildUnit)
-                    {
-                        // var prefab = Entity.Null;
-                        var position = t.Value;
-
-                        var playerActions = GetBufferFromEntity<PlayerAction>()[e];
-                        var playerAction = playerActions[p.unitType];
-
-                        // can't execute action if not enough gold...
-
-
-                        var prefab = playerAction.prefab;
-                        
-                        var unitComponent = GetComponentDataFromEntity<Unit>()[prefab];
-
-                        // dont create unit if at maximum capacity
-                        if (unitComponent.slotCost > 0 && 
-                            playerController.currentUnits + unitComponent.slotCost > playerController.maxUnits) 
+                        if (playerController.availableBuildingSlots == 0)
                             return;
-
-                        if (playerController.gold < playerAction.cost)
-                            return;
-
-                        if (unitComponent.isBuilding)
-                        {
-                            if (playerController.buildingSlots == 0)
-                                return;
+                    
+                        var buildingSlotBuffer = GetBufferFromEntity<BuildingSlot>()[e];
                         
-                            var buildingSlotBuffer = GetBufferFromEntity<BuildingSlot>()[e];
-                            
-                            for (var i = 0; i < buildingSlotBuffer.Length; i++)
+                        for (var i = 0; i < buildingSlotBuffer.Length; i++)
+                        {
+                            var buildingSlotFor = buildingSlotBuffer[i];
+                            if (!buildingSlotFor.hasBuilding)
                             {
-                                var buildingSlot = buildingSlotBuffer[i];
-                                if (buildingSlot.available)
-                                {
-                                    position = buildingSlot.position;
-                                    buildingSlot.available = false;
-                                    buildingSlotBuffer[i] = buildingSlot;
-                                    break;
-                                }
+                                position = buildingSlotFor.position;
+                                
+                                // buildingSlot.available = false;
+                                // buildingSlotBuffer[i] = buildingSlot;
+                                
+                                availableSlotIndex = i;
+                                
+                                break;
                             }
-                            
-                            // var updateBuffer = PostUpdateCommands.SetBuffer<BuildingSlot>(e);
-                            // for (var i = 0; i < updateBuffer.Length; i++)
-                            // {
-                            //     updateBuffer[i] = buildingSlotBuffer[i];
-                            // }
-
-                            // PostUpdateCommands.buff;
                         }
                         
-                        // consume gold
                         playerController.gold -= playerAction.cost;
-                        
+                    
                         var unitEntity = PostUpdateCommands.Instantiate(prefab);
+                        
+                        // Update the selected building slot with the entity....
+                        var buildingSlot = buildingSlotBuffer[availableSlotIndex];
+                        // buildingSlot.building = unitEntity;
+                        buildingSlot.hasBuilding = true;
+                        buildingSlotBuffer[availableSlotIndex] = buildingSlot;
 
                         unitComponent.id = NetworkUnitId.current++;
                         unitComponent.player = player;
-                        // unitComponent.type = p.unitType;
                         
                         PostUpdateCommands.SetComponent(unitEntity, unitComponent);
-                        
                         PostUpdateCommands.AddComponent(unitEntity, new Skin
                         {
                             type = playerController.skinType
@@ -112,37 +91,60 @@ namespace NaiveNetworkGame.Server.Systems
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
                             Value = position
-                            // Value = new float3(p.target.x, p.target.y, 0)
                         });
                         PostUpdateCommands.SetComponent(unitEntity, new UnitState
                         {
                             state = UnitState.spawningState
                         });
-                        
-                        // PostUpdateCommands.SetComponent(unitEntity, new Health
-                        // {
-                        //     total = 100,
-                        //     current = UnityEngine.Random.Range(5, 100)
-                        // });
-                        
-                        // PostUpdateCommands.AddComponent(unitEntity, new SpawningAction
-                        // {
-                        //     duration = 1.0f
-                        // });
-                        //   target = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, 1.25f)
-                        
-                        var wanderArea = playerController.playerWander;
 
-                        PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
-                        {
-                            wanderArea = wanderArea,
-                            minIdleTime = 1,
-                            maxIdleTime = 3
-                        });
+                        // var wanderArea = playerController.playerWander;
+                        //
+                        // PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
+                        // {
+                        //     wanderArea = wanderArea,
+                        //     minIdleTime = 1,
+                        //     maxIdleTime = 3
+                        // });
                         
                         PostUpdateCommands.AddComponent<NetworkUnit>(unitEntity);
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
                         PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());
+                    }
+                    else
+                    {
+                        // search barrack capable of biulding this unit...
+                        var actionProcessed = false;
+
+                        var pendingAction = p;
+                        var wanderArea = playerController.playerWander;
+                        
+                        Entities
+                            .WithNone<BuildUnitAction>()
+                            .WithAll<Barracks, Unit>()
+                            .ForEach(delegate(Entity be, ref Barracks b)
+                            {
+                                // enqueue unit build...
+                                // consume player gold...
+
+                                // check if this barracks can build this kind of units...
+                                if (b.unitType != unitComponent.type)
+                                    return;
+                                
+                                PostUpdateCommands.AddComponent(be, new BuildUnitAction
+                                {
+                                    duration = b.spawnDuration,
+                                    prefab = prefab,
+                                    wanderArea = wanderArea
+                                });
+                                PostUpdateCommands.AddComponent(be, pendingAction);
+
+                                actionProcessed = true;
+                            });
+
+                        if (actionProcessed)
+                        {
+                            playerController.gold -= playerAction.cost;
+                        }
                     }
                 });
         }

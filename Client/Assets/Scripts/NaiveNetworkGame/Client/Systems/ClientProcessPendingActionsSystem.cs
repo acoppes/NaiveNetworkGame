@@ -10,7 +10,8 @@ namespace NaiveNetworkGame.Client.Systems
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerController p, ref PlayerPendingAction playerPendingActions)
+            Entities
+                .ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerController p, ref PlayerPendingAction playerPendingActions)
             {
                 if (networkPlayerId.state != NetworkConnection.State.Connected)
                     return;
@@ -29,12 +30,11 @@ namespace NaiveNetworkGame.Client.Systems
 
                 if (playerPendingActions.pending)
                 {
-                    // send deplyo action...
+                    // send player action...
                     var e = PostUpdateCommands.CreateEntity();
                     PostUpdateCommands.AddComponent(e, new ClientPlayerAction
                     {
                         player = p.player,
-                        unit = 0,
                         actionType = playerPendingActions.actionType,
                         unitType = playerPendingActions.unitType
                     });

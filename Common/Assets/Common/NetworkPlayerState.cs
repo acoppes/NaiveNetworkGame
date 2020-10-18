@@ -11,6 +11,7 @@ namespace NaiveNetworkGame.Common
         public byte currentUnits;
         public ushort gold;
         public byte buildingSlots;
+        public byte barracks;
         
         public NetworkPlayerState Write(ref DataStreamWriter writer)
         {
@@ -20,6 +21,7 @@ namespace NaiveNetworkGame.Common
             writer.WriteByte(currentUnits);
             writer.WriteUShort(gold);
             writer.WriteByte(buildingSlots);
+            writer.WriteByte(barracks);
             return this;
         }
 
@@ -31,6 +33,7 @@ namespace NaiveNetworkGame.Common
             currentUnits = stream.ReadByte();
             gold = stream.ReadUShort();
             buildingSlots = stream.ReadByte();
+            barracks = stream.ReadByte();
             return this;
         }
     }

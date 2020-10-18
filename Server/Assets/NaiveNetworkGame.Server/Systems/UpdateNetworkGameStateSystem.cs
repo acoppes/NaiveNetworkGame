@@ -89,7 +89,7 @@ namespace NaiveNetworkGame.Server.Systems
                     n.gold = player.gold;
                     n.maxUnits = player.maxUnits;
                     n.currentUnits = player.currentUnits;
-                    n.buildingSlots = player.buildingSlots;
+                    n.buildingSlots = player.availableBuildingSlots;
                 });
         }
     }
