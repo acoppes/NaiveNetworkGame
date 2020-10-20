@@ -19,7 +19,7 @@ namespace NaiveNetworkGame.Server.Components
         }
 
         public List<PlayerActionData> actions;
-        public Transform buildingSlotsParent;
+        // public Transform buildingSlotsParent;
         
         public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
         {
@@ -47,30 +47,30 @@ namespace NaiveNetworkGame.Server.Components
                 });
             }
 
-            var buildingSlotsBuffer = dstManager.AddBuffer<BuildingSlot>(entity);
-            for (var i = 0; i < buildingSlotsParent.childCount; i++)
-            {
-                var t = buildingSlotsParent.GetChild(i);
-                buildingSlotsBuffer.Add(new BuildingSlot
-                {
-                    position = new float3(t.position.x, t.position.y, 0),
-                    hasBuilding = false
-                });
-            }
+            // var buildingSlotsBuffer = dstManager.AddBuffer<BuildingSlot>(entity);
+            // for (var i = 0; i < buildingSlotsParent.childCount; i++)
+            // {
+            //     var t = buildingSlotsParent.GetChild(i);
+            //     buildingSlotsBuffer.Add(new BuildingSlot
+            //     {
+            //         position = new float3(t.position.x, t.position.y, 0),
+            //         hasBuilding = false
+            //     });
+            // }
         }
 
-        private void OnDrawGizmosSelected()
-        {
-            if (buildingSlotsParent != null)
-            {
-                for (var i = 0; i < buildingSlotsParent.childCount; i++)
-                {
-                    var t = buildingSlotsParent.GetChild(i);
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(t.position, 0.05f);
-                }
-            }
-        }
+        // private void OnDrawGizmosSelected()
+        // {
+        //     if (buildingSlotsParent != null)
+        //     {
+        //         for (var i = 0; i < buildingSlotsParent.childCount; i++)
+        //         {
+        //             var t = buildingSlotsParent.GetChild(i);
+        //             Gizmos.color = Color.yellow;
+        //             Gizmos.DrawWireSphere(t.position, 0.05f);
+        //         }
+        //     }
+        // }
 
 
     }

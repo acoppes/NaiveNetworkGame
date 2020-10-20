@@ -7,15 +7,20 @@ namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateAfter(typeof(ServerProcessPendingPlayerActionsSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class ProcessBarrackPendingActions : ComponentSystem
+    public class ProcessBuildUnitAction : ComponentSystem
     {
         protected override void OnUpdate()
         {
-            // TODO: delegate the build structure to holder entities? 
+            Entities
+                .WithAll<BuildUnitAction, BuildingHolder>()
+                .ForEach(delegate(Entity entity, ref BuildingHolder holder)
+                {
+                    holder.hasBuilding = true;
+                });
             
             Entities
-                .WithAll<ServerOnly, BuildUnitAction, Barracks, Unit, Skin>()
-                .ForEach(delegate(Entity e, ref BuildUnitAction buildAction, ref Barracks b, ref Unit barrackUnit, 
+                .WithAll<ServerOnly, BuildUnitAction, Unit, Skin>()
+                .ForEach(delegate(Entity e, ref BuildUnitAction buildAction, ref UnitSpawnPosition spawnPosition, ref Unit barrackUnit, 
                     ref Skin s, ref Translation t)
                 {
                     buildAction.time += Time.DeltaTime;
@@ -38,7 +43,7 @@ namespace NaiveNetworkGame.Server.Systems
                         PostUpdateCommands.AddComponent(unitEntity, s);
                         PostUpdateCommands.SetComponent(unitEntity, new Translation
                         {
-                            Value = t.Value + b.spawnPosition
+                            Value = t.Value + spawnPosition.position
                         });
                     
                         PostUpdateCommands.SetComponent(unitEntity, new UnitState

@@ -10,7 +10,7 @@ namespace NaiveNetworkGame.Server.Systems
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach(delegate(ref PlayerController p, DynamicBuffer<BuildingSlot> buildingSlots)
+            Entities.ForEach(delegate(ref PlayerController p)
             {
                 var player = p.player;
 
@@ -28,8 +28,6 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
 
-                p.availableBuildingSlots = 0;
-
                 byte freeBarracksCount = 0;
                 
                 Entities
@@ -42,14 +40,21 @@ namespace NaiveNetworkGame.Server.Systems
                 });
 
                 p.freeBarracksCount = freeBarracksCount;
+
+                byte availableBuildingSlots = 0;
                 
-                for (var i = 0; i < buildingSlots.Length; i++)
-                {
-                    if (!buildingSlots[i].hasBuilding)
+                Entities
+                    .ForEach(delegate(ref BuildingHolder holder, ref Unit u)
                     {
-                        p.availableBuildingSlots++;
-                    }
-                }
+                        if (u.player != player)
+                            return;
+
+                        if (holder.hasBuilding)
+                            return;
+                        
+                        availableBuildingSlots++;
+                    });
+                p.availableBuildingSlots = availableBuildingSlots;
 
                 p.currentUnits = unitSlots;
             });

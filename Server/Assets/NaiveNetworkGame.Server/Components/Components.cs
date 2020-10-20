@@ -27,7 +27,16 @@ namespace NaiveNetworkGame.Server.Components
     {
         // public bool buildingUnit;
         public byte unitType;
-        public float3 spawnPosition;
+    }
+
+    public struct UnitSpawnPosition : IComponentData
+    {
+        public float3 position;
+    }
+
+    public struct BuildingHolder : IComponentData
+    {
+        public bool hasBuilding;
     }
 
     public struct BuildUnitAction : IComponentData

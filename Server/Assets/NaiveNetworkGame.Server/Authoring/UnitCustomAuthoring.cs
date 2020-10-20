@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NaiveNetworkGame.Common;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
@@ -47,6 +48,11 @@ namespace NaiveNetworkGame.Server.Components
 
         public Behaviour behaviourData;
         public DynamicObstacleData dynamiceObstacleData;
+
+        public bool isHolder;
+
+        public bool hasSkin;
+        public byte skinType;
         
         public bool networking;
         
@@ -69,6 +75,14 @@ namespace NaiveNetworkGame.Server.Components
                 isBuilding = isBuilding,
                 spawnDuration = spawnDuration
             });
+
+            if (hasSkin)
+            {
+                em.AddComponentData(entity, new Skin
+                {
+                    type = skinType
+                });
+            }
             
             em.AddComponentData(entity, new Movement
             {
@@ -125,7 +139,22 @@ namespace NaiveNetworkGame.Server.Components
                 em.AddComponentData(entity, new Barracks
                 {
                     unitType = barracksData.unitType,
-                    spawnPosition = barracksData.spawnPosition.localPosition
+                });
+                em.AddComponentData(entity, new UnitSpawnPosition
+                {
+                    position = barracksData.spawnPosition.localPosition
+                });
+            }
+            
+            if (isHolder)
+            {
+                em.AddComponentData(entity, new BuildingHolder
+                {
+                    hasBuilding = false
+                });
+                em.AddComponentData(entity, new UnitSpawnPosition
+                {
+                    position = float3.zero
                 });
             }
         }
