@@ -60,7 +60,7 @@ MonoBehaviour:
   unitType: 3
   slotsCost: 0
   speed: 0
-  health: 1
+  health: 0
   spawnDuration: 0
   isBuilding: 0
   barracksData:
@@ -75,6 +75,4 @@ MonoBehaviour:
     priority: 0
     range: 0
   isHolder: 1
-  hasSkin: 1
-  skinType: 0
   networking: 0

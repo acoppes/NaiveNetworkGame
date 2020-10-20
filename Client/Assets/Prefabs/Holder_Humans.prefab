@@ -132,7 +132,7 @@ MonoBehaviour:
   model: {fileID: 1318132579099619207}
   selectorAnimator: {fileID: 4841549242771130049}
   actionDuration: {fileID: 6682967894387447556}
-  healthBar: {fileID: 2064417012419488415}
+  healthBar: {fileID: 0}
   interpolationSpeed: 20
 --- !u!95 &4841549242771130049
 Animator:
@@ -281,6 +281,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HealthBar
       objectReference: {fileID: 0}
+    - target: {fileID: 6481436828068832761, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
 --- !u!4 &4625227679583291957 stripped
@@ -288,14 +292,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3650106717129867794, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
   m_PrefabInstance: {fileID: 8257302268216789031}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2064417012419488415 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7940300225009132216, guid: b4d0dbb93603049458efb9e1675242f9, type: 3}
-  m_PrefabInstance: {fileID: 8257302268216789031}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cea51d8e9ab4bd5af44636e1401d890, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

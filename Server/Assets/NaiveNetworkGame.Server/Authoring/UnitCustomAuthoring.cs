@@ -85,11 +85,15 @@ namespace NaiveNetworkGame.Server.Components
             //     range = range
             // });
             em.AddComponentData(entity, new LookingDirection());
-            em.AddComponentData(entity, new Health
+            
+            if (health > 0)
             {
-                total = health,
-                current = health
-            });
+                em.AddComponentData(entity, new Health
+                {
+                    total = health,
+                    current = health
+                });
+            }
 
             em.AddComponentData(entity, new IsAlive());
 

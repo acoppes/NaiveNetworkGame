@@ -10,10 +10,13 @@
 
 ## Added
 
+  * Visual building slots to show the player how many building slots they have.
   * Buildable barracks, like houses, but allow player to spawn units.
   * Spawn limited to one unit per barrack built.
 
 ## Fixed
+
+  * Build actions are processed by proper player.
 
 # 0.0.2
 
