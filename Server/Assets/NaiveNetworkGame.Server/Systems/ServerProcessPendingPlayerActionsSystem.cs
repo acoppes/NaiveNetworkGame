@@ -50,77 +50,17 @@ namespace NaiveNetworkGame.Server.Systems
                     {
                         if (playerController.availableBuildingSlots == 0)
                             return;
-                    
-                        // var buildingSlotBuffer = GetBufferFromEntity<BuildingSlot>()[e];
-                        //
-                        // for (var i = 0; i < buildingSlotBuffer.Length; i++)
-                        // {
-                        //     var buildingSlotFor = buildingSlotBuffer[i];
-                        //     if (!buildingSlotFor.hasBuilding)
-                        //     {
-                        //         position = buildingSlotFor.position;
-                        //         
-                        //         // buildingSlot.available = false;
-                        //         // buildingSlotBuffer[i] = buildingSlot;
-                        //         
-                        //         availableSlotIndex = i;
-                        //         
-                        //         break;
-                        //     }
-                        // }
-                        //
-                        // playerController.gold -= playerAction.cost;
-                        //
-                        // var unitEntity = PostUpdateCommands.Instantiate(prefab);
-                        //
-                        // // Update the selected building slot with the entity....
-                        // var buildingSlot = buildingSlotBuffer[availableSlotIndex];
-                        // // buildingSlot.building = unitEntity;
-                        // buildingSlot.hasBuilding = true;
-                        // buildingSlotBuffer[availableSlotIndex] = buildingSlot;
-                        //
-                        // unitComponent.id = NetworkUnitId.current++;
-                        // unitComponent.player = player;
-                        //
-                        // PostUpdateCommands.SetComponent(unitEntity, unitComponent);
-                        // PostUpdateCommands.AddComponent(unitEntity, new Skin
-                        // {
-                        //     type = playerController.skinType
-                        // });
-                        //
-                        // PostUpdateCommands.SetComponent(unitEntity, new Translation
-                        // {
-                        //     Value = position
-                        // });
-                        // PostUpdateCommands.SetComponent(unitEntity, new UnitState
-                        // {
-                        //     state = UnitState.spawningState
-                        // });
-                        //
-                        // // var wanderArea = playerController.playerWander;
-                        // //
-                        // // PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
-                        // // {
-                        // //     wanderArea = wanderArea,
-                        // //     minIdleTime = 1,
-                        // //     maxIdleTime = 3
-                        // // });
-                        //
-                        // PostUpdateCommands.AddComponent<NetworkUnit>(unitEntity);
-                        // PostUpdateCommands.AddComponent(unitEntity, new NetworkGameState());
-                        // PostUpdateCommands.AddComponent(unitEntity, new NetworkTranslationSync());
-                        
-                        var actionProcessed = false;
 
-                        var pendingAction = p;
-                        
-                        // var wanderArea = playerController.playerWander;
+                        var actionProcessed = false;
                         
                         Entities
                             .WithNone<BuildUnitAction>()
                             .WithAll<BuildingHolder, Unit>()
-                            .ForEach(delegate(Entity be, ref BuildingHolder holder)
+                            .ForEach(delegate(Entity be, ref BuildingHolder holder, ref Unit u)
                             {
+                                if (u.player != player)
+                                    return;
+                                
                                 // don't allow other barracks to process this action...
                                 if (actionProcessed)
                                     return;
@@ -158,8 +98,11 @@ namespace NaiveNetworkGame.Server.Systems
                         Entities
                             .WithNone<BuildUnitAction>()
                             .WithAll<Barracks, Unit>()
-                            .ForEach(delegate(Entity be, ref Barracks b)
+                            .ForEach(delegate(Entity be, ref Barracks b, ref Unit u)
                             {
+                                if (u.player != player)
+                                    return;
+                                
                                 // don't allow other barracks to process this action...
                                 if (actionProcessed)
                                     return;

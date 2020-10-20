@@ -51,9 +51,6 @@ namespace NaiveNetworkGame.Server.Components
 
         public bool isHolder;
 
-        public bool hasSkin;
-        public byte skinType;
-        
         public bool networking;
         
         public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
@@ -76,14 +73,7 @@ namespace NaiveNetworkGame.Server.Components
                 spawnDuration = spawnDuration
             });
 
-            if (hasSkin)
-            {
-                em.AddComponentData(entity, new Skin
-                {
-                    type = skinType
-                });
-            }
-            
+            em.AddComponentData(entity, new Skin());
             em.AddComponentData(entity, new Movement
             {
                 speed = speed
