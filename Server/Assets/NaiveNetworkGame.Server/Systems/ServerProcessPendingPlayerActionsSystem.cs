@@ -136,7 +136,7 @@ namespace NaiveNetworkGame.Server.Systems
                                 
                                 PostUpdateCommands.AddComponent(be, new BuildUnitAction
                                 {
-                                    duration = b.spawnDuration,
+                                    // duration = b.spawnDuration,
                                     prefab = prefab,
                                     wanderArea = wanderArea
                                 });

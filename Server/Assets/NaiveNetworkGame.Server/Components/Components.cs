@@ -20,13 +20,13 @@ namespace NaiveNetworkGame.Server.Components
         public byte type;
         public byte slotCost;
         public bool isBuilding;
+        public float spawnDuration;
     }
 
     public struct Barracks : IComponentData
     {
         // public bool buildingUnit;
         public byte unitType;
-        public float spawnDuration;
         public float3 spawnPosition;
     }
 

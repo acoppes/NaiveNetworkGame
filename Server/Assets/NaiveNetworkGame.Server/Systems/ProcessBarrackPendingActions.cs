@@ -25,6 +25,7 @@ namespace NaiveNetworkGame.Server.Systems
                         buildAction.unitSpawning = true;
                         
                         var unitComponent = EntityManager.GetComponentData<Unit>(buildAction.prefab);
+                        buildAction.duration = unitComponent.spawnDuration;
 
                         // delay? 
                         var unitEntity = PostUpdateCommands.Instantiate(buildAction.prefab);
@@ -47,7 +48,7 @@ namespace NaiveNetworkGame.Server.Systems
                     
                         PostUpdateCommands.AddComponent(unitEntity, new SpawningAction
                         {
-                            duration = b.spawnDuration
+                            duration =  buildAction.duration 
                         });
 
                         var wanderArea = buildAction.wanderArea;

@@ -28,7 +28,6 @@ namespace NaiveNetworkGame.Server.Components
         {
             public bool isBarrack;
             public byte unitType;
-            public float spawnDuration;
             public Transform spawnPosition;
         }
 
@@ -67,7 +66,8 @@ namespace NaiveNetworkGame.Server.Components
                 type = unitType,
                 slotCost = slotsCost,
                 id = NetworkUnitId.current++,
-                isBuilding = isBuilding
+                isBuilding = isBuilding,
+                spawnDuration = spawnDuration
             });
             
             em.AddComponentData(entity, new Movement
@@ -125,7 +125,6 @@ namespace NaiveNetworkGame.Server.Components
                 em.AddComponentData(entity, new Barracks
                 {
                     unitType = barracksData.unitType,
-                    spawnDuration = barracksData.spawnDuration,
                     spawnPosition = barracksData.spawnPosition.localPosition
                 });
             }

@@ -81,12 +81,11 @@ MonoBehaviour:
   slotsCost: 1
   speed: 0.5
   health: 100
-  spawnDuration: 0
+  spawnDuration: 3
   isBuilding: 0
   barracksData:
     isBarrack: 0
     unitType: 0
-    spawnDuration: 0
     spawnPosition: {fileID: 0}
   behaviourData:
     minIdleTime: 0
