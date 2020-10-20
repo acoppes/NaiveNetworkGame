@@ -4,7 +4,7 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -1611710951212684679
-    second: war1_buildings_0
+    second: war1_humans_holder
   - first:
       213: 817421914313130063
     second: war1_buildings_1
@@ -187,7 +187,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: war1_buildings_0
+      name: war1_humans_holder
       rect:
         serializedVersion: 2
         x: 11
