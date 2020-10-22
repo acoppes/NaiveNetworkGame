@@ -7,6 +7,8 @@
   * Simulation continues after win/lose unless players click continue.
   * Disconnect/Continue returns to main menu.
   * Units have two modes, aggressive and defensive. If aggressive then all units go to the enemy base, if defensive, they return and protect the main base. 
+  * Attack/Defend button will be the same button and will be like "autocast" in rts games.
+  * Build queue or auto build like Tiny Warriors.
 
 ## Added
 

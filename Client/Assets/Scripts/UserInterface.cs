@@ -12,6 +12,8 @@ namespace Scenes
         public PlayerButton buildHouseButton;
         
         public PlayerButton buildBarracksButton;
+        public PlayerButton attackButton;
+        public PlayerButton defendButton;
 
         public FixedNumberAnimator goldLabel;
         public PlayerStatsUI playerStats;

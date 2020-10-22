@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 907057587302233172}
   - component: {fileID: 9075502069268035028}
   m_Layer: 5
-  m_Name: UndeadsIcon
+  m_Name: Icon1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -767,7 +767,7 @@ GameObject:
   - component: {fileID: 8129957842857449810}
   - component: {fileID: 8129957842857449809}
   m_Layer: 5
-  m_Name: HumansIcon
+  m_Name: Icon0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -60,12 +60,18 @@ namespace Scenes
         {
             animator.SetBool(activeHash, enabled);
 
-            for (var i = 0; i < iconsContainer.childCount; i++)
+            if (iconsContainer != null)
             {
-                iconsContainer.GetChild(i).gameObject.SetActive(false);
+                for (var i = 0; i < iconsContainer.childCount; i++)
+                {
+                    iconsContainer.GetChild(i).gameObject.SetActive(false);
+                }
             }
             
-            skinIcons[skinType].SetActive(true);
+            if (skinIcons != null && skinIcons.Count > 0)
+            {
+                skinIcons[skinType].SetActive(true);
+            }
             
             // iconsPerSkin[skinType].list[actionType.unitType].SetActive(true);
 

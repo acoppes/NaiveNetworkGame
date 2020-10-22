@@ -74,6 +74,9 @@ namespace NaiveNetworkGame.Client.Systems
                 
                 houseButton.enabled = houseButton.cost <= player.gold && player.buildingSlots > 0;
                 barracksButton.enabled = barracksButton.cost <= player.gold && player.buildingSlots > 0;
+
+                userInterface.attackButton.enabled = player.behaviourMode == 0;
+                userInterface.defendButton.enabled = player.behaviourMode == 1;
             });
         }
     }
