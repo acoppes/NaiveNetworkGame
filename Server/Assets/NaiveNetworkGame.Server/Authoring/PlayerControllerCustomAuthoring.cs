@@ -47,16 +47,7 @@ namespace NaiveNetworkGame.Server.Components
                 });
             }
 
-            // var buildingSlotsBuffer = dstManager.AddBuffer<BuildingSlot>(entity);
-            // for (var i = 0; i < buildingSlotsParent.childCount; i++)
-            // {
-            //     var t = buildingSlotsParent.GetChild(i);
-            //     buildingSlotsBuffer.Add(new BuildingSlot
-            //     {
-            //         position = new float3(t.position.x, t.position.y, 0),
-            //         hasBuilding = false
-            //     });
-            // }
+            dstManager.AddComponentData(entity, new PlayerBehaviour());
         }
 
         // private void OnDrawGizmosSelected()

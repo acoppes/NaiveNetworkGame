@@ -20,4 +20,13 @@ namespace NaiveNetworkGame.Server.Components
 
         public byte freeBarracksCount;
     }
+
+    public struct PlayerBehaviour : IComponentData
+    {
+        // byte aggressive = 1;
+        // byte defensive = 0;
+        
+        public byte mode;
+        // mode data?
+    }
 }

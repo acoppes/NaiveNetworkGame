@@ -82,7 +82,8 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<ServerOnly, PlayerController, NetworkPlayerState, PlayerConnectionId>()
-                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, ref PlayerConnectionId p) 
+                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, 
+                    ref PlayerConnectionId p, ref PlayerBehaviour b) 
                 {
                     n.player = player.player;
                     n.skinType = player.skinType;
@@ -91,6 +92,7 @@ namespace NaiveNetworkGame.Server.Systems
                     n.currentUnits = player.currentUnits;
                     n.buildingSlots = player.availableBuildingSlots;
                     n.freeBarracks = player.freeBarracksCount;
+                    n.behaviourMode = b.mode;
                 });
         }
     }

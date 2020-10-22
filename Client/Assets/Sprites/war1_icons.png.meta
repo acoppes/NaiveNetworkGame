@@ -1,0 +1,2604 @@
+fileFormatVersion: 2
+guid: 58b9ea82203393f4f90e4ef6c00898ef
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8055985429197906837
+    second: war1_icons_0
+  - first:
+      213: 7887551530626080494
+    second: war1_icons_1
+  - first:
+      213: 8465956396746588900
+    second: war1_icons_2
+  - first:
+      213: 2176611140105787686
+    second: war1_icons_3
+  - first:
+      213: 7326550977706177406
+    second: war1_icons_4
+  - first:
+      213: -5881604420054329662
+    second: war1_icons_5
+  - first:
+      213: 2082042202501922626
+    second: war1_icons_6
+  - first:
+      213: 2502509175197651628
+    second: war1_icons_7
+  - first:
+      213: 6645179246273581649
+    second: war1_icons_8
+  - first:
+      213: -5262054602655440848
+    second: war1_icons_9
+  - first:
+      213: -7634604572041095069
+    second: war1_icons_10
+  - first:
+      213: -1835460532712481082
+    second: war1_icons_11
+  - first:
+      213: 8897509070960808461
+    second: war1_icons_12
+  - first:
+      213: -2484577483952858581
+    second: war1_icons_13
+  - first:
+      213: 555452607713995286
+    second: war1_icons_14
+  - first:
+      213: -2712947790631697684
+    second: war1_icons_15
+  - first:
+      213: 3453774245348982920
+    second: war1_icons_16
+  - first:
+      213: 5448857429851818841
+    second: war1_icons_17
+  - first:
+      213: 7717601772708494974
+    second: war1_icons_18
+  - first:
+      213: 3270240797262255910
+    second: war1_icons_barracks1
+  - first:
+      213: -3296582304524419426
+    second: war1_icons_barracks2
+  - first:
+      213: 8708660787009926950
+    second: war1_icons_21
+  - first:
+      213: 6553633514651459394
+    second: war1_icons_22
+  - first:
+      213: 7767375662923123158
+    second: war1_icons_23
+  - first:
+      213: 442572888467055890
+    second: war1_icons_24
+  - first:
+      213: 5986046956417225389
+    second: war1_icons_25
+  - first:
+      213: 8866607039974711136
+    second: war1_icons_26
+  - first:
+      213: -5680317178594258933
+    second: war1_icons_27
+  - first:
+      213: -1090123022230870432
+    second: war1_icons_28
+  - first:
+      213: 2260617479157438145
+    second: war1_icons_29
+  - first:
+      213: -3479189873422918088
+    second: war1_icons_30
+  - first:
+      213: 4298508204003828073
+    second: war1_icons_31
+  - first:
+      213: 8417739856811103718
+    second: war1_icons_32
+  - first:
+      213: -5242673221003312604
+    second: war1_icons_33
+  - first:
+      213: -2983567016457091177
+    second: war1_icons_34
+  - first:
+      213: 7884918458224501131
+    second: war1_icons_35
+  - first:
+      213: -7944095039819324585
+    second: war1_icons_36
+  - first:
+      213: 7105855357059381690
+    second: war1_icons_37
+  - first:
+      213: -5835847078985378961
+    second: war1_icons_38
+  - first:
+      213: 3438142190877396574
+    second: war1_icons_39
+  - first:
+      213: 3948378537792432482
+    second: war1_icons_40
+  - first:
+      213: -3161723647597953275
+    second: war1_icons_41
+  - first:
+      213: -6863166230105157004
+    second: war1_icons_42
+  - first:
+      213: 1974671766914011973
+    second: war1_icons_43
+  - first:
+      213: 1423332200698113317
+    second: war1_icons_44
+  - first:
+      213: 7927494014500710305
+    second: war1_icons_45
+  - first:
+      213: 6071466534676300627
+    second: war1_icons_46
+  - first:
+      213: -8452386071529715950
+    second: war1_icons_47
+  - first:
+      213: -8456966026352964578
+    second: war1_icons_48
+  - first:
+      213: 5850174183852858948
+    second: war1_icons_49
+  - first:
+      213: -5047058265646316035
+    second: war1_icons_50
+  - first:
+      213: 6040879438127469675
+    second: war1_icons_51
+  - first:
+      213: 4466598767154287315
+    second: war1_icons_52
+  - first:
+      213: -3070985683755409961
+    second: war1_icons_53
+  - first:
+      213: -6172227415170174859
+    second: war1_icons_54
+  - first:
+      213: 1783310459978039783
+    second: war1_icons_55
+  - first:
+      213: -5640833683455310052
+    second: war1_icons_56
+  - first:
+      213: 7058119371921521951
+    second: war1_icons_57
+  - first:
+      213: 721567698054788062
+    second: war1_icons_58
+  - first:
+      213: 3479367082399306587
+    second: war1_icons_59
+  - first:
+      213: 3504635491352754669
+    second: war1_icons_60
+  - first:
+      213: 47354069796707048
+    second: war1_icons_61
+  - first:
+      213: -8826607443007433924
+    second: war1_icons_62
+  - first:
+      213: -6401324188260574592
+    second: war1_icons_63
+  - first:
+      213: 9194473505843863428
+    second: war1_icons_64
+  - first:
+      213: 4985729155218282416
+    second: war1_icons_65
+  - first:
+      213: 6221331948731312944
+    second: war1_icons_66
+  - first:
+      213: -8000821249857062207
+    second: war1_icons_67
+  - first:
+      213: -5277325969988077724
+    second: war1_icons_68
+  - first:
+      213: -3750239851376689456
+    second: war1_icons_69
+  - first:
+      213: -6469392372297780162
+    second: war1_icons_70
+  - first:
+      213: -1346191344942178952
+    second: war1_icons_71
+  - first:
+      213: 929328947265113199
+    second: war1_icons_72
+  - first:
+      213: -883257558265249437
+    second: war1_icons_73
+  - first:
+      213: -463651943854280026
+    second: war1_icons_74
+  - first:
+      213: -2226300317412525820
+    second: war1_icons_75
+  - first:
+      213: -5144931903761239230
+    second: war1_icons_76
+  - first:
+      213: 2472634739442444648
+    second: war1_icons_attack2
+  - first:
+      213: 7071327147743446622
+    second: war1_icons_78
+  - first:
+      213: -8641027768777844985
+    second: war1_icons_79
+  - first:
+      213: -732091557458025788
+    second: war1_icons_80
+  - first:
+      213: -5121570504135575051
+    second: war1_icons_81
+  - first:
+      213: 6832450946079652865
+    second: war1_icons_82
+  - first:
+      213: 7801055261925463272
+    second: war1_icons_83
+  - first:
+      213: -3048533183590636594
+    second: war1_icons_84
+  - first:
+      213: -1772825524228356746
+    second: war1_icons_85
+  - first:
+      213: 6603778706281379294
+    second: war1_icons_86
+  - first:
+      213: 6587569693895478657
+    second: war1_icons_87
+  - first:
+      213: 8308632980367148674
+    second: war1_icons_88
+  - first:
+      213: -4262945724989523812
+    second: war1_icons_89
+  - first:
+      213: 2893268088213431761
+    second: war1_icons_90
+  - first:
+      213: 6001271182654416657
+    second: war1_icons_91
+  - first:
+      213: 4185581911113316845
+    second: war1_icons_92
+  - first:
+      213: -2646733759935279775
+    second: war1_icons_93
+  - first:
+      213: -7764031767529306273
+    second: war1_icons_94
+  - first:
+      213: 611903635017161717
+    second: war1_icons_95
+  - first:
+      213: -7741338151699409886
+    second: war1_icons_96
+  - first:
+      213: -6676325009567591010
+    second: war1_icons_97
+  - first:
+      213: 8589516367080140324
+    second: war1_icons_defend2
+  - first:
+      213: -1035002016105591709
+    second: war1_icons_99
+  - first:
+      213: 8295968953389682249
+    second: war1_icons_100
+  - first:
+      213: 1406832061682927694
+    second: war1_icons_101
+  - first:
+      213: 6079181137156570464
+    second: war1_icons_102
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: war1_icons_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6c9fe04fe3633090800000000000000
+      internalID: -8055985429197906837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_1
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eee5e8ab356367d60800000000000000
+      internalID: 7887551530626080494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_2
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e2c6000d7e1d7570800000000000000
+      internalID: 8465956396746588900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_3
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 629d92cbc40e43e10800000000000000
+      internalID: 2176611140105787686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_4
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e73b7f6eb432da560800000000000000
+      internalID: 7326550977706177406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_5
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c65b4921f7506ea0800000000000000
+      internalID: -5881604420054329662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_6
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24fbf7f1a56e4ec10800000000000000
+      internalID: 2082042202501922626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_7
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca2dfc206d2bab220800000000000000
+      internalID: 2502509175197651628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_8
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1525fea115b683c50800000000000000
+      internalID: 6645179246273581649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_9
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 030630ce73d69f6b0800000000000000
+      internalID: -5262054602655440848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_10
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 368dae2779f6c0690800000000000000
+      internalID: -7634604572041095069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_11
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ce5c64ce522786e0800000000000000
+      internalID: -1835460532712481082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_12
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d025f68eb5d4a7b70800000000000000
+      internalID: 8897509070960808461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_13
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2a5e0431f1058dd0800000000000000
+      internalID: -2484577483952858581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_14
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61a6b5c243d55b700800000000000000
+      internalID: 555452607713995286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_15
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce28735bb5ca95ad0800000000000000
+      internalID: -2712947790631697684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_16
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 95
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8804b6490654eef20800000000000000
+      internalID: 3453774245348982920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95bc01296fa3e9b40800000000000000
+      internalID: 5448857429851818841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_18
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7ef6343ced6a1b60800000000000000
+      internalID: 7717601772708494974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_barracks1
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6279ecabdaa326d20800000000000000
+      internalID: 3270240797262255910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_barracks2
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9ebbfd2cdf2042d0800000000000000
+      internalID: -3296582304524419426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_21
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 627b91768d06bd870800000000000000
+      internalID: 8708660787009926950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_22
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24f15ec75fe23fa50800000000000000
+      internalID: 6553633514651459394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_23
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d90c8913034bcb60800000000000000
+      internalID: 7767375662923123158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_24
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2152c4c72b5542600800000000000000
+      internalID: 442572888467055890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_25
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da29e0ecdf5b21350800000000000000
+      internalID: 5986046956417225389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_26
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06f9ba420248c0b70800000000000000
+      internalID: 8866607039974711136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_27
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0017562f957b21b0800000000000000
+      internalID: -5680317178594258933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_28
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 066247213ea1fd0f0800000000000000
+      internalID: -1090123022230870432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_29
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c6d73abe935f5f10800000000000000
+      internalID: 2260617479157438145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_30
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83e9d706e3f67bfc0800000000000000
+      internalID: -3479189873422918088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_31
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96120c3ef6e57ab30800000000000000
+      internalID: 4298508204003828073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_32
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e59fd8fcc1d1d470800000000000000
+      internalID: 8417739856811103718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_33
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42205ac7b784e37b0800000000000000
+      internalID: -5242673221003312604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_34
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 797c08c2b9d3896d0800000000000000
+      internalID: -2983567016457091177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_35
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 76
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b816469cf8bdc6d60800000000000000
+      internalID: 7884918458224501131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75360a1a6a7e0c190800000000000000
+      internalID: -7944095039819324585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_37
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab9b4de7cc11d9260800000000000000
+      internalID: 7105855357059381690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_38
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6353955008e20fa0800000000000000
+      internalID: -5835847078985378961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_39
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5ec7864b1cb6bf20800000000000000
+      internalID: 3438142190877396574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_40
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 269e4e75c557bc630800000000000000
+      internalID: 3948378537792432482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_41
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50fb8f2181d4f14d0800000000000000
+      internalID: -3161723647597953275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_42
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47210242da221c0a0800000000000000
+      internalID: -6863166230105157004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_43
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54317ee7281776b10800000000000000
+      internalID: 1974671766914011973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_44
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52d6cfb6811b0c310800000000000000
+      internalID: 1423332200698113317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_45
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a7a955fdcd140e60800000000000000
+      internalID: 7927494014500710305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_46
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3538d0135ae224450800000000000000
+      internalID: 6071466534676300627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_47
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 217030e86a713ba80800000000000000
+      internalID: -8452386071529715950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_48
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 57
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1c4fa9b432d2aa80800000000000000
+      internalID: -8456966026352964578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_49
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44ed5b6bc6eff2150800000000000000
+      internalID: 5850174183852858948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_50
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df5c3737f3f35f9b0800000000000000
+      internalID: -5047058265646316035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_51
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b649c80d7d385d350800000000000000
+      internalID: 6040879438127469675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_52
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d2dd66e9eb8cfd30800000000000000
+      internalID: 4466598767154287315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_53
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ddd2799acaa165d0800000000000000
+      internalID: -3070985683755409961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_54
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 570bad52ed7d75aa0800000000000000
+      internalID: -6172227415170174859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_55
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e1ca3b3a679fb810800000000000000
+      internalID: 1783310459978039783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_56
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c17869cb6abb7b1b0800000000000000
+      internalID: -5640833683455310052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_57
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1d7fa95c2a73f160800000000000000
+      internalID: 7058119371921521951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_58
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed3b3f39ff5830a00800000000000000
+      internalID: 721567698054788062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_59
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b53199d4de1394030800000000000000
+      internalID: 3479367082399306587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_60
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de9be493967f2a030800000000000000
+      internalID: 3504635491352754669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_61
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ead6ec864c38a000800000000000000
+      internalID: 47354069796707048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_62
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3319b3cb47918580800000000000000
+      internalID: -8826607443007433924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_63
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08adc92019de927a0800000000000000
+      internalID: -6401324188260574592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_64
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48f509c60f4599f70800000000000000
+      internalID: 9194473505843863428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_65
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b7181b404ed03540800000000000000
+      internalID: 4985729155218282416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_66
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03b2be1027c965650800000000000000
+      internalID: 6221331948731312944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_67
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ca7fd2a67f57f090800000000000000
+      internalID: -8000821249857062207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_68
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 38
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 467bae2adfb23c6b0800000000000000
+      internalID: -5277325969988077724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_69
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0debd2c89b874fbc0800000000000000
+      internalID: -3750239851376689456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_70
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e34b198e9e91836a0800000000000000
+      internalID: -6469392372297780162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_71
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87d140daa1e515de0800000000000000
+      internalID: -1346191344942178952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_72
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6c8935f0c3a5ec00800000000000000
+      internalID: 929328947265113199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_73
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 361cb623ee90eb3f0800000000000000
+      internalID: -883257558265249437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_74
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a2752b7307c099f0800000000000000
+      internalID: -463651943854280026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_75
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 409794128a79a11e0800000000000000
+      internalID: -2226300317412525820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_76
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 243bcba41b78998b0800000000000000
+      internalID: -5144931903761239230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_attack2
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 869e1c7e130905220800000000000000
+      internalID: 2472634739442444648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_78
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5603db4396622260800000000000000
+      internalID: 7071327147743446622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_79
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 707d5b3c607e41880800000000000000
+      internalID: -8641027768777844985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_80
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c2e6a67b9617d5f0800000000000000
+      internalID: -732091557458025788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_81
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f971e003c68ce8b0800000000000000
+      internalID: -5121570504135575051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_82
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10cfb528fedb1de50800000000000000
+      internalID: 6832450946079652865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_83
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e45240dd6ae24c60800000000000000
+      internalID: 7801055261925463272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_84
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec3e61aa83f61b5d0800000000000000
+      internalID: -3048533183590636594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_85
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6758f9b1498a567e0800000000000000
+      internalID: -1772825524228356746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_86
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed5b03bbeb555ab50800000000000000
+      internalID: 6603778706281379294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_87
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18dc4c1fbbfbb6b50800000000000000
+      internalID: 6587569693895478657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_88
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 19
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28601e3bca13e4370800000000000000
+      internalID: 8308632980367148674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_89
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c98ba3df279f6d4c0800000000000000
+      internalID: -4262945724989523812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_90
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d56fed3ff3f62820800000000000000
+      internalID: 2893268088213431761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_91
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 117a7e2385cc84350800000000000000
+      internalID: 6001271182654416657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_92
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de9b53e629c261a30800000000000000
+      internalID: 4185581911113316845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_93
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16d06081ba9e44bd0800000000000000
+      internalID: -2646733759935279775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_94
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5741973e3e904490800000000000000
+      internalID: -7764031767529306273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_95
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fbd7f13d1bed7800800000000000000
+      internalID: 611903635017161717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_96
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22417c567fd319490800000000000000
+      internalID: -7741338151699409886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_97
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e95daa7c6cde853a0800000000000000
+      internalID: -6676325009567591010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_defend2
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42e273c60a7143770800000000000000
+      internalID: 8589516367080140324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_99
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36c8638662fe2a1f0800000000000000
+      internalID: -1035002016105591709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_100
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94e06762fc3312370800000000000000
+      internalID: 8295968953389682249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_101
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e48cd3f6e42168310800000000000000
+      internalID: 1406832061682927694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: war1_icons_102
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 0
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06df87d09079d5450800000000000000
+      internalID: 6079181137156570464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

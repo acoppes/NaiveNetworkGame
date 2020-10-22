@@ -13,6 +13,8 @@ namespace NaiveNetworkGame.Common
         public byte buildingSlots;
         public byte freeBarracks;
         
+        public byte behaviourMode;
+        
         public NetworkPlayerState Write(ref DataStreamWriter writer)
         {
             writer.WriteByte(player);
@@ -22,6 +24,8 @@ namespace NaiveNetworkGame.Common
             writer.WriteUShort(gold);
             writer.WriteByte(buildingSlots);
             writer.WriteByte(freeBarracks);
+            writer.WriteByte(behaviourMode);
+
             return this;
         }
 
@@ -34,6 +38,7 @@ namespace NaiveNetworkGame.Common
             gold = stream.ReadUShort();
             buildingSlots = stream.ReadByte();
             freeBarracks = stream.ReadByte();
+            behaviourMode = stream.ReadByte();
             return this;
         }
     }
