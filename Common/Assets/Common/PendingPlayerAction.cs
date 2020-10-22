@@ -4,10 +4,8 @@ using Unity.Networking.Transport;
 
 namespace NaiveNetworkGame.Common
 {
-    public struct ClientPlayerAction : IComponentData
+    public struct PendingPlayerAction : IComponentData
     {
-        public static byte BuildUnit = 2;
-
         public byte player;
         
         public byte actionType;
@@ -15,7 +13,7 @@ namespace NaiveNetworkGame.Common
         
         public float2 target;
         
-        public ClientPlayerAction Write(ref DataStreamWriter writer)
+        public PendingPlayerAction Write(ref DataStreamWriter writer)
         {
             writer.WriteByte(PacketType.ClientPlayerAction);
             writer.WriteByte(player);
@@ -26,7 +24,7 @@ namespace NaiveNetworkGame.Common
             return this;
         }
 
-        public ClientPlayerAction Read(ref DataStreamReader stream)
+        public PendingPlayerAction Read(ref DataStreamReader stream)
         {
             player = stream.ReadByte();
             actionType = stream.ReadByte();

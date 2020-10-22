@@ -21,7 +21,7 @@ namespace Scenes.Tests
                     .ForEach(delegate(ref LocalPlayerController p)
                     {
                         var command = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(command, new ClientPlayerAction
+                        PostUpdateCommands.AddComponent(command, new PendingPlayerAction
                         {
                             player = p.player,
                             actionType = 2,

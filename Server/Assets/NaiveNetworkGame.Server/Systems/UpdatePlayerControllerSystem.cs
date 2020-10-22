@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    [UpdateAfter(typeof(ServerProcessPendingPlayerActionsSystem))]
+    [UpdateAfter(typeof(ProcessPendingPlayerActionsSystem))]
     [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class UpdatePlayerControllerSystem : ComponentSystem

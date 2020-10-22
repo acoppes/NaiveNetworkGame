@@ -5,7 +5,7 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    [UpdateAfter(typeof(ServerProcessPendingPlayerActionsSystem))]
+    [UpdateAfter(typeof(ProcessPendingPlayerActionsSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     public class ProcessBuildUnitAction : ComponentSystem
     {

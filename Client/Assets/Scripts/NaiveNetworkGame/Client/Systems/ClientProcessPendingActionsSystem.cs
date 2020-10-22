@@ -32,7 +32,7 @@ namespace NaiveNetworkGame.Client.Systems
                 {
                     // send player action...
                     var e = PostUpdateCommands.CreateEntity();
-                    PostUpdateCommands.AddComponent(e, new ClientPlayerAction
+                    PostUpdateCommands.AddComponent(e, new PendingPlayerAction
                     {
                         player = p.player,
                         actionType = playerPendingActions.actionType,

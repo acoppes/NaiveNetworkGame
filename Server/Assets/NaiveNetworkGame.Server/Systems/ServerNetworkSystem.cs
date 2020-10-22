@@ -245,10 +245,10 @@ namespace NaiveNetworkGame.Server.Systems
                         {
                             // TODO: Ignore player actions while simulation not started 
                             
-                            var action = new ClientPlayerAction().Read(ref stream);
+                            var action = new PendingPlayerAction().Read(ref stream);
                             
                             Entities
-                                .WithNone<ClientPlayerAction>()
+                                .WithNone<PendingPlayerAction>()
                                 .ForEach(delegate(Entity playerEntity, ref PlayerController p)
                             {
                                 if (p.player == action.player)

@@ -7,24 +7,22 @@ namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class ServerProcessPendingPlayerActionsSystem : ComponentSystem
+    public class ProcessPendingPlayerActionsSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
             // process all player pending actions
             Entities
-                .WithAll<ServerOnly, ClientPlayerAction, PlayerController, Translation>()
-                .ForEach(delegate (Entity e, ref ClientPlayerAction p, ref PlayerController playerController, ref Translation t)
+                .WithAll<ServerOnly, PendingPlayerAction, PlayerController>()
+                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController)
                 {
                     var player = p.player;
-
-                    PostUpdateCommands.RemoveComponent<ClientPlayerAction>(e);
-                
+                    
                     // Changed to only process build unit actions
-                    if (p.actionType != ClientPlayerAction.BuildUnit)
+                    if (p.actionType != PlayerAction.BuildUnit)
                         return;
                     
-                    var position = t.Value;
+                    PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
 
                     var playerActions = GetBufferFromEntity<PlayerAction>()[e];
                     var playerAction = playerActions[p.unitType];
@@ -131,6 +129,36 @@ namespace NaiveNetworkGame.Server.Systems
                         }
                     }
                 });
+            
+              Entities
+                .WithAll<ServerOnly, PendingPlayerAction, PlayerController, PlayerBehaviour>()
+                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref PlayerBehaviour b)
+                {
+                    // Changed to only process build unit actions
+                    if (p.actionType == PlayerAction.Attack)
+                    {
+                        // switch player mode...
+                        // create a switch mode action so player can do more stuff?
+                        b.mode = 1;
+                        // consume action
+                        PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                    } else if (p.actionType == PlayerAction.Defend)
+                    {
+                        // switch player mode...
+                        b.mode = 0;
+                        // consume action
+                        PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                    }
+                    
+                });
+              
+              Entities
+                  .WithAll<ServerOnly, PendingPlayerAction, PlayerController, Translation>()
+                  .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref Translation t)
+                  {
+                      // destroy the other pending actions not processed...
+                      PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
+                  });
         }
     }
 }
