@@ -14,7 +14,8 @@ namespace NaiveNetworkGame.Server.Components
 
         public byte skinType;
 
-        public Entity playerWander;
+        public Entity defendArea;
+        public Entity attackArea;
 
         public byte availableBuildingSlots;
 

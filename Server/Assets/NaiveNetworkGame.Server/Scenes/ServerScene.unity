@@ -661,6 +661,14 @@ PrefabInstance:
       propertyPath: farmPrefab
       value: 
       objectReference: {fileID: 5135555761720755020, guid: 02a4c458dd36eda4eaad47c1249b9ff6, type: 3}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: defendArea
+      value: 
+      objectReference: {fileID: 1001876729}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: attackArea
+      value: 
+      objectReference: {fileID: 1707393441}
     - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_Name
       value: RemotePlayer1
@@ -740,7 +748,7 @@ GameObject:
   - component: {fileID: 1001876730}
   - component: {fileID: 1001876731}
   m_Layer: 0
-  m_Name: Wander1
+  m_Name: Player1_Area
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -771,7 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4feaf9e8c79c4b318e0c2a9afbfdabbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 0.75
+  range: 0.5
 --- !u!4 &1001876732
 Transform:
   m_ObjectHideFlags: 0
@@ -780,7 +788,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001876729}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.816, y: 0, z: 0}
+  m_LocalPosition: {x: -2.327, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1204,7 +1212,7 @@ GameObject:
   - component: {fileID: 1707393442}
   - component: {fileID: 1707393443}
   m_Layer: 0
-  m_Name: Wander2
+  m_Name: Player2_Area
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1235,7 +1243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4feaf9e8c79c4b318e0c2a9afbfdabbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 0.75
+  range: 0.5
 --- !u!4 &1707393444
 Transform:
   m_ObjectHideFlags: 0
@@ -1244,7 +1252,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1707393441}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.772, y: 0, z: 0}
+  m_LocalPosition: {x: 2.278, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1411,6 +1419,14 @@ PrefabInstance:
       propertyPath: skinType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: defendArea
+      value: 
+      objectReference: {fileID: 1707393441}
+    - target: {fileID: 3280818747309904161, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
+      propertyPath: attackArea
+      value: 
+      objectReference: {fileID: 1001876729}
     - target: {fileID: 5135555761720755020, guid: 7f1ed26068feed44894711d2a2fb0cac, type: 3}
       propertyPath: m_Name
       value: RemotePlayer2

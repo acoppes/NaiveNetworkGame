@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 25
   range: 0.2
-  chaseRange: 3
+  chaseRange: 2
   attackTime: 0.35
   duration: 0.64
   reload: 0.5
@@ -94,4 +94,5 @@ MonoBehaviour:
   dynamiceObstacleData:
     priority: 50
     range: 0.075
+  isHolder: 0
   networking: 0

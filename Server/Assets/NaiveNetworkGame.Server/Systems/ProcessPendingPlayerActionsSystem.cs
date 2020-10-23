@@ -91,7 +91,7 @@ namespace NaiveNetworkGame.Server.Systems
                         var actionProcessed = false;
 
                         var pendingAction = p;
-                        var wanderArea = playerController.playerWander;
+                        var wanderArea = playerController.defendArea;
                         
                         Entities
                             .WithNone<BuildUnitAction>()
@@ -134,6 +134,12 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<ServerOnly, PendingPlayerAction, PlayerController, PlayerBehaviour>()
                 .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref PlayerBehaviour b)
                 {
+                    var player = playerController.player;
+                    var attackArea = playerController.attackArea;
+                    var defendArea = playerController.defendArea;
+                    
+                    // TODO: extract switch mode process to another system...
+                    
                     // Changed to only process build unit actions
                     if (p.actionType == PlayerAction.Attack)
                     {
@@ -141,12 +147,62 @@ namespace NaiveNetworkGame.Server.Systems
                         // create a switch mode action so player can do more stuff?
                         b.mode = 1;
                         // consume action
+                        
+                        Entities.WithAll<Unit, UnitBehaviour>()
+                            .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
+                            {
+                                if (u.player != player)
+                                    return;
+                                ub.wanderArea = attackArea;
+                            });
+                        
+                        Entities.WithAll<Unit, IdleAction>()
+                            .ForEach(delegate(Entity unitEntity, ref Unit u)
+                            {
+                                if (u.player != player)
+                                    return;
+                                PostUpdateCommands.RemoveComponent<IdleAction>(unitEntity);
+                            });
+                        
+                        Entities.WithAll<Unit, MovementAction>()
+                            .ForEach(delegate(Entity unitEntity, ref Unit u)
+                            {
+                                if (u.player != player)
+                                    return;
+                                PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
+                            });
+                        
                         PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
                     } else if (p.actionType == PlayerAction.Defend)
                     {
                         // switch player mode...
                         b.mode = 0;
                         // consume action
+                        
+                        Entities.WithAll<Unit, UnitBehaviour>()
+                            .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
+                            {
+                                if (u.player != player)
+                                    return;
+                                ub.wanderArea = defendArea;
+                            });
+                        
+                        Entities.WithAll<Unit, IdleAction>()
+                            .ForEach(delegate(Entity unitEntity, ref Unit u)
+                            {
+                                if (u.player != player)
+                                    return;
+                                PostUpdateCommands.RemoveComponent<IdleAction>(unitEntity);
+                            });
+                        
+                        Entities.WithAll<Unit, MovementAction>()
+                            .ForEach(delegate(Entity unitEntity, ref Unit u)
+                            {
+                                if (u.player != player)
+                                    return;
+                                PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
+                            });
+                        
                         PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
                     }
                     
