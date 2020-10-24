@@ -20,6 +20,8 @@ namespace NaiveNetworkGame.Server.Components
         public byte availableBuildingSlots;
 
         public byte freeBarracksCount;
+
+        public float defensiveRange;
     }
 
     public struct PlayerBehaviour : IComponentData

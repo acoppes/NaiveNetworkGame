@@ -20,7 +20,9 @@ namespace NaiveNetworkGame.Server.Components
 
         public List<PlayerActionData> actions;
         // public Transform buildingSlotsParent;
-        
+
+        public float defensiveRange;
+
         public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
         {
             foreach (var action in actions)
@@ -48,20 +50,16 @@ namespace NaiveNetworkGame.Server.Components
             }
 
             dstManager.AddComponentData(entity, new PlayerBehaviour());
+
+            var p = dstManager.GetComponentData<PlayerController>(entity);
+            p.defensiveRange = defensiveRange;
+            dstManager.SetComponentData(entity, p);
         }
 
-        // private void OnDrawGizmosSelected()
-        // {
-        //     if (buildingSlotsParent != null)
-        //     {
-        //         for (var i = 0; i < buildingSlotsParent.childCount; i++)
-        //         {
-        //             var t = buildingSlotsParent.GetChild(i);
-        //             Gizmos.color = Color.yellow;
-        //             Gizmos.DrawWireSphere(t.position, 0.05f);
-        //         }
-        //     }
-        // }
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.DrawWireSphere(transform.position, defensiveRange);
+        }
 
 
     }

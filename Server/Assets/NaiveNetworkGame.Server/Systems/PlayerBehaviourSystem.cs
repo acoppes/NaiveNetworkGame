@@ -1,5 +1,8 @@
 using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Systems
 {
@@ -92,9 +95,11 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<ServerOnly>()
-                .ForEach(delegate(Entity e, ref PlayerController playerController, ref PlayerBehaviour b)
+                .ForEach(delegate(Entity e, ref PlayerController playerController, ref Translation t, ref PlayerBehaviour b)
                 {
                     var player = playerController.player;
+                    var defendCenter = t.Value;
+                    var defendRange = playerController.defensiveRange * playerController.defensiveRange;
 
                     switch (b.mode)
                     {
@@ -112,14 +117,29 @@ namespace NaiveNetworkGame.Server.Systems
                             // could be processed all the time, not only here...
                             Entities
                                 .WithNone<DisableAttack>()
-                                .WithAll<Unit>()
-                                .ForEach(delegate(Entity ue, ref Unit u)
+                                .WithAll<Unit, Translation>()
+                                .ForEach(delegate(Entity ue, ref Unit u, ref Translation ut)
                                 {
                                     if (u.player != player)
                                         return;
-                                    
-                                    // disable attack!!
-                                    PostUpdateCommands.AddComponent<DisableAttack>(ue);
+
+                                    if (math.distancesq(ut.Value, defendCenter) > defendRange)
+                                    {
+                                        PostUpdateCommands.AddComponent<DisableAttack>(ue);
+                                    }
+                                });
+                            
+                            Entities
+                                .WithAll<DisableAttack, Unit, Translation>()
+                                .ForEach(delegate(Entity ue, ref Unit u, ref Translation ut)
+                                {
+                                    if (u.player != player)
+                                        return;
+
+                                    if (math.distancesq(ut.Value, defendCenter) < defendRange)
+                                    {
+                                        PostUpdateCommands.RemoveComponent<DisableAttack>(ue);
+                                    }
                                 });
                             
                             Entities
