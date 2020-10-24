@@ -30,15 +30,7 @@ namespace NaiveNetworkGame.Server.Systems
                 var area = playerController.attackArea;
 
                 b.mode = PlayerBehaviour.aggressive;
-                
-                Entities.WithAll<Unit, UnitBehaviour>()
-                    .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
-                    {
-                        if (u.player != player)
-                            return;
-                        ub.wanderArea = area;
-                    });
-                        
+
                 Entities.WithAll<Unit, IdleAction>()
                     .ForEach(delegate(Entity unitEntity, ref Unit u)
                     {
@@ -67,15 +59,7 @@ namespace NaiveNetworkGame.Server.Systems
                     var area = playerController.defendArea;
 
                     b.mode = PlayerBehaviour.defensive;
-                
-                    Entities.WithAll<Unit, UnitBehaviour>()
-                        .ForEach(delegate(Entity ue, ref Unit u, ref UnitBehaviour ub)
-                        {
-                            if (u.player != player)
-                                return;
-                            ub.wanderArea = area;
-                        });
-                        
+
                     Entities.WithAll<Unit, IdleAction>()
                         .ForEach(delegate(Entity ue, ref Unit u)
                         {
@@ -101,9 +85,21 @@ namespace NaiveNetworkGame.Server.Systems
                     var defendCenter = t.Value;
                     var defendRange = playerController.defensiveRange * playerController.defensiveRange;
 
+                    var attackArea = playerController.attackArea;
+                    var defendArea = playerController.defendArea;
+
                     switch (b.mode)
                     {
                         case PlayerBehaviour.aggressive:
+                            
+                            Entities.WithAll<Unit, UnitBehaviour>()
+                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
+                                {
+                                    if (u.player != player)
+                                        return;
+                                    ub.wanderArea = attackArea;
+                                });
+                            
                             Entities
                                 .WithAll<Unit, DisableAttack>()
                                 .ForEach(delegate(Entity ue, ref Unit u)
@@ -115,6 +111,15 @@ namespace NaiveNetworkGame.Server.Systems
                             break;
                         case PlayerBehaviour.defensive:
                             // could be processed all the time, not only here...
+                            
+                            Entities.WithAll<Unit, UnitBehaviour>()
+                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
+                                {
+                                    if (u.player != player)
+                                        return;
+                                    ub.wanderArea = defendArea;
+                                });
+                            
                             Entities
                                 .WithNone<DisableAttack>()
                                 .WithAll<Unit, Translation>()
