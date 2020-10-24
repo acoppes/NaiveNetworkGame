@@ -52,15 +52,6 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
             
-              
-            // By default, we sue the unit position as the chase center
-            Entities
-                .WithAll<Attack, Translation, IsAlive>()
-                .ForEach(delegate(Entity e, ref Attack attack, ref Translation t)
-                {
-                    attack.chaseCenter = t.Value;
-                });
-            
             // TODO: search for best target here (distance, less targeting units, etc)
             Entities
                 .WithAll<Attack, Unit, IsAlive>()

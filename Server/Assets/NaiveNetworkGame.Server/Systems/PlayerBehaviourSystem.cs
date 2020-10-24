@@ -2,10 +2,25 @@ using NaiveNetworkGame.Server.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Systems
 {
+    [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
+    [UpdateBefore(typeof(PlayerBehaviourSystem))]
+    public class UpdateChaseCenterSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            // By default, we sue the unit position as the chase center
+            Entities
+                .WithAll<Attack, Translation, IsAlive>()
+                .ForEach(delegate(Entity e, ref Attack attack, ref Translation t)
+                {
+                    attack.chaseCenter = t.Value;
+                });
+        }
+    }
+    
     [UpdateAfter(typeof(ProcessPendingPlayerActionsSystem))]
     [UpdateBefore(typeof(UnitBehaviourSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
@@ -118,6 +133,16 @@ namespace NaiveNetworkGame.Server.Systems
                                     if (u.player != player)
                                         return;
                                     ub.wanderArea = defendArea;
+                                });
+                            
+                            // While we are on defensive mode, we use the defend center as the center of chase target
+                            Entities
+                                .WithAll<Unit, Attack>()
+                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref Attack attack)
+                                {
+                                    if (u.player != player)
+                                        return;
+                                    attack.chaseCenter = defendCenter;
                                 });
                             
                             Entities
