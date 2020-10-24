@@ -48,6 +48,14 @@ namespace NaiveNetworkGame.Server.Components
         public bool unitSpawning;
     }
 
+    public struct SwitchToAttackAction : IComponentData
+    {
+    }
+
+    public struct SwitchToDefendAction : IComponentData
+    {
+    }
+    
     public struct Skin : IComponentData
     {
         public byte type;

@@ -24,8 +24,8 @@ namespace NaiveNetworkGame.Server.Components
 
     public struct PlayerBehaviour : IComponentData
     {
-        // byte aggressive = 1;
-        // byte defensive = 0;
+        public const byte aggressive = 1;
+        public const byte defensive = 0;
         
         public byte mode;
         // mode data?
