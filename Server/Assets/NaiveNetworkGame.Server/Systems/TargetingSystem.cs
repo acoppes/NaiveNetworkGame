@@ -52,17 +52,28 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
             
+              
+            // By default, we sue the unit position as the chase center
+            Entities
+                .WithAll<Attack, Translation, IsAlive>()
+                .ForEach(delegate(Entity e, ref Attack attack, ref Translation t)
+                {
+                    attack.chaseCenter = t.Value;
+                });
+            
             // TODO: search for best target here (distance, less targeting units, etc)
             Entities
-                .WithAll<Attack, Unit, Translation, IsAlive>()
+                .WithAll<Attack, Unit, IsAlive>()
                 .WithNone<AttackTarget, ChaseTarget, SpawningAction, DeathAction, ReloadAction>()
                 .WithNone<DisableAttack>()
-                .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
+                .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit)
                 {
                     // var bestTarget = Entity.Null;
                     var bestTargetIndex = -1;
                     var bestTargetDistanceSq = float.MaxValue;
                     var chaseRangeSq = attack.chaseRange * attack.chaseRange;
+
+                    var chaseCenter = attack.chaseCenter;
                     
                     // search for targets near my range...
                     for (var i = 0; i < targetUnits.Length; i++)
@@ -72,7 +83,7 @@ namespace NaiveNetworkGame.Server.Systems
                             continue;
 
                         // inside chase area
-                        var currentDistanceSq = math.distancesq(t.Value, targetTranslations[i].Value);
+                        var currentDistanceSq = math.distancesq(chaseCenter, targetTranslations[i].Value);
                         if (currentDistanceSq < chaseRangeSq && currentDistanceSq < bestTargetDistanceSq)
                         {
                             bestTargetIndex = i;

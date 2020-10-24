@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace NaiveNetworkGame.Server.Components
 {
@@ -17,6 +18,8 @@ namespace NaiveNetworkGame.Server.Components
 
         public float reloadRandom;
         // public float chaseRange;
+
+        public float3 chaseCenter;
     }
 
     public struct DisableAttack : IComponentData
