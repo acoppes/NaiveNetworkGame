@@ -84,7 +84,10 @@ namespace NaiveNetworkGame.Server.Components
             //     damage = damage,
             //     range = range
             // });
-            em.AddComponentData(entity, new LookingDirection());
+            em.AddComponentData(entity, new LookingDirection
+            {
+                direction = new float2(1, 0)
+            });
             
             if (health > 0)
             {
@@ -97,13 +100,17 @@ namespace NaiveNetworkGame.Server.Components
 
             em.AddComponentData(entity, new IsAlive());
 
-            em.AddComponentData(entity, new UnitBehaviour
+            if (!isBuilding)
             {
-                minIdleTime = behaviourData.minIdleTime,
-                maxIdleTime = behaviourData.maxIdleTime,
-                wanderArea = behaviourData.wanderArea != null ? 
-                    conversionSystem.GetPrimaryEntity(behaviourData.wanderArea) : Entity.Null
-            });
+                em.AddComponentData(entity, new UnitBehaviour
+                {
+                    minIdleTime = behaviourData.minIdleTime,
+                    maxIdleTime = behaviourData.maxIdleTime,
+                    wanderArea = behaviourData.wanderArea != null
+                        ? conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
+                        : Entity.Null
+                });
+            }
 
             if (spawnDuration > 0)
             {
