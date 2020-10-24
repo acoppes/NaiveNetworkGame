@@ -100,7 +100,7 @@ namespace NaiveNetworkGame.Server.Components
 
             em.AddComponentData(entity, new IsAlive());
 
-            if (!isBuilding)
+            if (!isBuilding && !isHolder)
             {
                 em.AddComponentData(entity, new UnitBehaviour
                 {

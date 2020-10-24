@@ -47,7 +47,12 @@ namespace NaiveNetworkGame.Server.Systems
                     PostUpdateCommands.RemoveComponent<AttackAction>(e);
                 });
             
-                
+            Entities.WithAll<AttackAction, DisableAttack>()
+                .ForEach(delegate(Entity e)
+                {
+                    PostUpdateCommands.RemoveComponent<AttackAction>(e);
+                });
+            
             Entities
                 .WithAll<Attack, AttackTarget, AttackAction, MovementAction>()
                 .ForEach(delegate(Entity e)

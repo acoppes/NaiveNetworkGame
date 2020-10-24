@@ -19,6 +19,11 @@ namespace NaiveNetworkGame.Server.Components
         // public float chaseRange;
     }
 
+    public struct DisableAttack : IComponentData
+    {
+        
+    }
+    
     public struct AttackTarget : IComponentData
     {
         public Entity target;

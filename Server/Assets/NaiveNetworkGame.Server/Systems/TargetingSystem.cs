@@ -31,7 +31,7 @@ namespace NaiveNetworkGame.Server.Systems
 
             Entities
                 .WithAll<Attack, Unit, Translation, IsAlive>()
-                .WithNone<AttackTarget, SpawningAction, DeathAction, ReloadAction>()
+                .WithNone<AttackTarget, SpawningAction, DeathAction, ReloadAction, DisableAttack>()
                 .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
                 {
                     // search for targets near my range...
@@ -56,6 +56,7 @@ namespace NaiveNetworkGame.Server.Systems
             Entities
                 .WithAll<Attack, Unit, Translation, IsAlive>()
                 .WithNone<AttackTarget, ChaseTarget, SpawningAction, DeathAction, ReloadAction>()
+                .WithNone<DisableAttack>()
                 .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
                 {
                     // var bestTarget = Entity.Null;

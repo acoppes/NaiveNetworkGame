@@ -18,7 +18,8 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
                 });
-
+            
+            
             // Stop chasing if target is not valid or is not alive
             // Entities
             //     .WithAll<ChaseAction>()
