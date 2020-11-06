@@ -1,12 +1,13 @@
 {
   "dependencies": {
+    "com.gemserk.tools.gameobjectbrush": "https://github.com/acoppes/unity-gameobject-brush.git#0.0.2",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.device-simulator": "2.2.3-preview",
     "com.unity.entities": "0.14.0-preview.19",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.scriptablebuildpipeline": "1.11.2",
-    "com.unity.test-framework": "1.1.16",
+    "com.unity.test-framework": "1.1.18",
     "com.unity.transport": "0.4.1-preview.1",
     "com.unity.ugui": "1.0.0",
     "naivenetworkgame.common": "file:../../Common/Assets/Common",
