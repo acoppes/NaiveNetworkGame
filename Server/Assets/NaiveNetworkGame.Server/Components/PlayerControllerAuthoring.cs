@@ -33,7 +33,7 @@ namespace NaiveNetworkGame.Server.Components
         // mode data?
     }
     
-    public class PlayerController : MonoBehaviour, IConvertGameObjectToEntity
+    public class PlayerControllerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         public byte player;
         public byte maxUnits;
