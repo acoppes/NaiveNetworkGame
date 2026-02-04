@@ -328,8 +328,8 @@ namespace NaiveNetworkGame.Client.Systems
                         PostUpdateCommands.DestroyEntity(e);
                         // PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
                                 
-                        var writer = m_Driver.BeginSend(m_Connection);
-
+                        // var writer = m_Driver.BeginSend(m_Connection);
+                        m_Driver.BeginSend(m_Connection, out var writer);
                         p.Write(ref writer);
                         m_Driver.EndSend(writer);
 
@@ -376,7 +376,8 @@ namespace NaiveNetworkGame.Client.Systems
                         ConnectionState.latencyWaitPacket = ConnectionState.latencyPacket;
                         ConnectionState.latencyPacket++;
                         
-                        var writer = m_Driver.BeginSend(m_Connection);
+                        // var writer = m_Driver.BeginSend(m_Connection);
+                        m_Driver.BeginSend(m_Connection, out var writer);
                         writer.WriteByte(PacketType.ClientKeepAlive);
                         writer.WriteByte(ConnectionState.latencyWaitPacket);
                         // writer.WriteFloat(currentTime);
@@ -397,7 +398,8 @@ namespace NaiveNetworkGame.Client.Systems
                         if (connection.IsCreated && m_Driver.GetConnectionState(connection) == NetworkConnection.State.Connected)
                         {
                             // Send player manual disconnection
-                            var writer = m_Driver.BeginSend(connection);
+                            // var writer = m_Driver.BeginSend(connection);
+                            m_Driver.BeginSend(connection, out var writer);
                             writer.WriteByte(PacketType.ClientDisconnect);
                             m_Driver.EndSend(writer);
                         }

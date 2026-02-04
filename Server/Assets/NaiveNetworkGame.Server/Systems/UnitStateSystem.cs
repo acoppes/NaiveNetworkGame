@@ -18,7 +18,7 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<ServerOnly, UnitState, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
-                    u.state = UnitState.idleState;
+                    u.state = UnitStateTypes.idleState;
                 });
             
             Entities
@@ -26,7 +26,7 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<ServerOnly, SpawningAction, UnitState, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref SpawningAction s)
                 {
-                    u.state = UnitState.spawningState;
+                    u.state = UnitStateTypes.spawningState;
                     u.percentage = (byte) Mathf.RoundToInt(100.0f * s.time / s.duration);
                 });
             
@@ -35,21 +35,21 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<ServerOnly, MovementAction, UnitState, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
-                    u.state = UnitState.walkState;
+                    u.state = UnitStateTypes.walkState;
                 });
 
             Entities
                 .WithAll<ServerOnly, UnitState, AttackAction, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
-                    u.state = UnitState.attackingState;
+                    u.state = UnitStateTypes.attackingState;
                 });
             
             Entities
                 .WithAll<ServerOnly, UnitState, ReloadAction, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref ReloadAction a)
                 {
-                    u.state = UnitState.reloadingState;
+                    u.state = UnitStateTypes.reloadingState;
                     u.percentage = (byte) Mathf.RoundToInt(100.0f * a.time / a.duration);
                 });
             
@@ -58,7 +58,7 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<ServerOnly, UnitState, DeathAction>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref DeathAction a)
                 {
-                    u.state = UnitState.deathState;
+                    u.state = UnitStateTypes.deathState;
                     u.percentage = (byte) Mathf.RoundToInt(100.0f * a.time / a.duration);
                 });
         }

@@ -29,7 +29,7 @@ namespace NaiveNetworkGame.Client.Systems
                     var model = m.instance.GetComponent<UnitModelBehaviour>();
                     if (model != null)
                     {
-                        model.isDurationVisible = state.state == UnitState.spawningState;
+                        model.isDurationVisible = state.state == UnitStateTypes.spawningState;
                         model.durationAlpha = state.percentage / 100.0f;
                         // TODO: update with duration alpha from server...
                         // TODO: duration visible should also be defined in server depending the action if

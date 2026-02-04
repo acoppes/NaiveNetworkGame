@@ -45,7 +45,8 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (!p.simulationStarted)
                     {
-                        var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
+                        // var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
+                        m_Driver.BeginSend(server.reliabilityPipeline, p.connection, out var writer);
                         writer.WriteByte(PacketType.ServerSimulationStarted);
                         m_Driver.EndSend(writer);
                     }
@@ -57,7 +58,8 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<PlayerController, PlayerConnectionId>()
                 .ForEach(delegate(Entity pe, ref PlayerConnectionId p, ref PlayerController playerController)
                 {
-                    var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
+                    // var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
+                    m_Driver.BeginSend(server.reliabilityPipeline, p.connection, out var writer);
                     writer.WriteByte(PacketType.ServerSendPlayerId);
                     writer.WriteByte(playerController.player);
 
@@ -113,7 +115,8 @@ namespace NaiveNetworkGame.Server.Systems
                             // only send player state to each player...
                             if (p.connection == connection)
                             {
-                                var writer = m_Driver.BeginSend(connection);
+                                // var writer = m_Driver.BeginSend(connection);
+                                m_Driver.BeginSend(connection, out var writer);
                                 writer.WriteByte(PacketType.ServerPlayerState);
                                 n.Write(ref writer);
                                 m_Driver.EndSend(writer);
@@ -128,8 +131,8 @@ namespace NaiveNetworkGame.Server.Systems
 
                     if (count == 0)
                     {
-                        var writer = m_Driver.BeginSend(connection);
-                        
+                        // var writer = m_Driver.BeginSend(connection);
+                        m_Driver.BeginSend(connection, out var writer);
                         writer.WriteByte(PacketType.ServerEmptyGameState);
                         m_Driver.EndSend(writer);
                         
@@ -138,8 +141,10 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                     else
                     {
-                        var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
-                            sizeof(byte) + sizeof(ushort) +
+                        // var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
+                        //     sizeof(byte) + sizeof(ushort) +
+                        //     NetworkGameState.GetSize() * count);
+                        m_Driver.BeginSend(server.framentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
                             NetworkGameState.GetSize() * count);
                     
                         writer.WriteByte(PacketType.ServerGameState);
@@ -166,8 +171,11 @@ namespace NaiveNetworkGame.Server.Systems
                     
                     if (count > 0)
                     {
-                        var writer = m_Driver.BeginSend(server.framentationPipeline, connection,
-                            sizeof(byte) + sizeof(ushort) +
+                        // var writer = m_Driver.BeginSend(server.framentationPipeline, connection,
+                        //     sizeof(byte) + sizeof(ushort) +
+                        //     NetworkTranslationSync.GetSize() * count);
+                        
+                        m_Driver.BeginSend(server.framentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
                             NetworkTranslationSync.GetSize() * count);
 
                         writer.WriteByte(PacketType.ServerTranslationSync);

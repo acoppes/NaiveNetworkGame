@@ -47,7 +47,7 @@ namespace NaiveNetworkGame.Server.Systems
                     
                         PostUpdateCommands.SetComponent(unitEntity, new UnitState
                         {
-                            state = UnitState.spawningState
+                            state = UnitStateTypes.spawningState
                         });
                     
                         PostUpdateCommands.AddComponent(unitEntity, new SpawningAction

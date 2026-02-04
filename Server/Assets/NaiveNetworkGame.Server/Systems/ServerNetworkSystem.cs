@@ -218,7 +218,8 @@ namespace NaiveNetworkGame.Server.Systems
             NetworkConnection c;
             while ((c = m_Driver.Accept()) != default)
             {
-                var writer = m_Driver.BeginSend(c);
+                var result = m_Driver.BeginSend(c, out var writer);
+                // var writer = m_Driver.BeginSend(c);
                 writer.WriteByte(PacketType.ServerDeniedConnectionMaxPlayers);
                 m_Driver.EndSend(writer);
                     
@@ -295,7 +296,9 @@ namespace NaiveNetworkGame.Server.Systems
                         {
                             var packetIndex = stream.ReadByte();
                             
-                            var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
+                            // var writer = m_Driver.BeginSend(networkManager.m_Connections[i]);
+                            m_Driver.BeginSend(networkManager.m_Connections[i], out var writer);
+                            
                             writer.WriteByte(PacketType.ClientKeepAlive);
                             writer.WriteByte(packetIndex);
                             m_Driver.EndSend(writer);

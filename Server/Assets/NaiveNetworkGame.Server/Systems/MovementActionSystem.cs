@@ -8,7 +8,7 @@ namespace NaiveNetworkGame.Server.Systems
     // Given a move action in a unit, it processes movement updates
 
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class MovementActionSystem : ComponentSystem
+    public partial class MovementActionSystem : ComponentSystem
     {
         protected override void OnUpdate()
         {
