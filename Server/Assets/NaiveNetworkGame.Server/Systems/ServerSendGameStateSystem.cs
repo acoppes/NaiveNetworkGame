@@ -55,8 +55,8 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<PlayerConnectionSynchronized>()
-                .WithAll<PlayerController, PlayerConnectionId>()
-                .ForEach(delegate(Entity pe, ref PlayerConnectionId p, ref PlayerController playerController)
+                .WithAll<PlayerControllerComponentData, PlayerConnectionId>()
+                .ForEach(delegate(Entity pe, ref PlayerConnectionId p, ref PlayerControllerComponentData playerController)
                 {
                     // var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
                     m_Driver.BeginSend(server.reliabilityPipeline, p.connection, out var writer);

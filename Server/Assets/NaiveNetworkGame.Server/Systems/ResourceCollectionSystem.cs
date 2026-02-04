@@ -30,8 +30,8 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<PlayerController, ServerOnlyComponentData>()
-                .ForEach(delegate(ref PlayerController p)
+                .WithAll<PlayerControllerComponentData, ServerOnlyComponentData>()
+                .ForEach(delegate(ref PlayerControllerComponentData p)
                 {
                     var playerId = p.player;
                     var gold = p.gold;

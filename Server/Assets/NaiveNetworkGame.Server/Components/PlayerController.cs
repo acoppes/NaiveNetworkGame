@@ -1,9 +1,9 @@
 using Unity.Entities;
+using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    [GenerateAuthoringComponent]
-    public struct PlayerController : IComponentData
+    public struct PlayerControllerComponentData : IComponentData
     {
         public byte player;
         public byte maxUnits;
@@ -31,5 +31,51 @@ namespace NaiveNetworkGame.Server.Components
         
         public byte mode;
         // mode data?
+    }
+    
+    public class PlayerController : MonoBehaviour, IConvertGameObjectToEntity
+    {
+        public byte player;
+        public byte maxUnits;
+        public byte currentUnits;
+
+        public ushort maxGold;
+        public ushort gold;
+
+        public byte skinType;
+
+        public GameObject defendArea;
+        public GameObject attackArea;
+
+        public byte availableBuildingSlots;
+
+        public byte freeBarracksCount;
+
+        public float defensiveRange;
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        {
+            dstManager.AddComponentData(entity, new PlayerControllerComponentData()
+            {
+                player = player,
+                maxUnits = maxUnits,
+                currentUnits = currentUnits,
+
+                maxGold = maxGold,
+                gold = gold,
+
+                skinType = skinType,
+
+                defendArea = conversionSystem.GetPrimaryEntity(defendArea),
+                attackArea = conversionSystem.GetPrimaryEntity(attackArea),
+
+                availableBuildingSlots = availableBuildingSlots,
+
+                freeBarracksCount = freeBarracksCount,
+
+                defensiveRange = defensiveRange,
+            });
+            
+            // conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
+        }
     }
 }

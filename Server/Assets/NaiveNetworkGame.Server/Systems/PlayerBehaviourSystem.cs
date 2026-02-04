@@ -36,7 +36,7 @@ namespace NaiveNetworkGame.Server.Systems
         {
             Entities
                 .WithAll<ServerOnlyComponentData>()
-                .ForEach(delegate(Entity e, ref SwitchToAttackAction a, ref PlayerController playerController, 
+                .ForEach(delegate(Entity e, ref SwitchToAttackAction a, ref PlayerControllerComponentData playerController, 
                     ref PlayerBehaviour b)
             {
                 PostUpdateCommands.RemoveComponent<SwitchToAttackAction>(e);
@@ -65,7 +65,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<ServerOnlyComponentData>()
-                .ForEach(delegate(Entity e, ref SwitchToDefendAction a, ref PlayerController playerController, 
+                .ForEach(delegate(Entity e, ref SwitchToDefendAction a, ref PlayerControllerComponentData playerController, 
                     ref PlayerBehaviour b)
                 {
                     PostUpdateCommands.RemoveComponent<SwitchToDefendAction>(e);
@@ -94,7 +94,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithAll<ServerOnlyComponentData>()
-                .ForEach(delegate(Entity e, ref PlayerController playerController, ref Translation t, ref PlayerBehaviour b)
+                .ForEach(delegate(Entity e, ref PlayerControllerComponentData playerController, ref Translation t, ref PlayerBehaviour b)
                 {
                     var player = playerController.player;
                     var defendCenter = t.Value;

@@ -190,8 +190,8 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<PlayerConnectionId>()
-                .WithAll<PlayerController>()
-                .ForEach(delegate(Entity e, ref PlayerController p)
+                .WithAll<PlayerControllerComponentData>()
+                .ForEach(delegate(Entity e, ref PlayerControllerComponentData p)
                 {   
                     // for each player without connection, we try to accept a connection
 
@@ -250,7 +250,7 @@ namespace NaiveNetworkGame.Server.Systems
                             
                             Entities
                                 .WithNone<PendingPlayerAction>()
-                                .ForEach(delegate(Entity playerEntity, ref PlayerController p)
+                                .ForEach(delegate(Entity playerEntity, ref PlayerControllerComponentData p)
                             {
                                 if (p.player == action.player)
                                 {
@@ -267,7 +267,7 @@ namespace NaiveNetworkGame.Server.Systems
                         {
                             var connection = networkManager.m_Connections[i];
                             Entities
-                                .WithAll<PlayerController, PlayerConnectionId, NetworkPlayerState>()
+                                .WithAll<PlayerControllerComponentData, PlayerConnectionId, NetworkPlayerState>()
                                 .ForEach(delegate(Entity e, ref PlayerConnectionId p)
                                 {
                                     if (p.connection == connection)
@@ -311,7 +311,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                         var connection = networkManager.m_Connections[i];
                         Entities
-                            .WithAll<PlayerController, PlayerConnectionId, NetworkPlayerState>()
+                            .WithAll<PlayerControllerComponentData, PlayerConnectionId, NetworkPlayerState>()
                             .ForEach(delegate(Entity e, ref PlayerConnectionId p)
                         {
                             if (p.connection == connection)

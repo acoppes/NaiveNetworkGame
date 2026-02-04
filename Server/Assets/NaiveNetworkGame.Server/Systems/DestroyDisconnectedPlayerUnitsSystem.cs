@@ -9,8 +9,8 @@ namespace NaiveNetworkGame.Server.Systems
         {
             Entities
                 .WithNone<PlayerConnectionId>()
-                .WithAll<PlayerController>()
-                .ForEach(delegate(Entity playerEntity, ref PlayerController pc)
+                .WithAll<PlayerControllerComponentData>()
+                .ForEach(delegate(Entity playerEntity, ref PlayerControllerComponentData pc)
             {
                 var player = pc.player;
                 

@@ -81,8 +81,8 @@ namespace NaiveNetworkGame.Server.Systems
             });
             
             Entities
-                .WithAll<ServerOnlyComponentData, PlayerController, NetworkPlayerState, PlayerConnectionId>()
-                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, 
+                .WithAll<ServerOnlyComponentData, PlayerControllerComponentData, NetworkPlayerState, PlayerConnectionId>()
+                .ForEach(delegate(ref PlayerControllerComponentData player, ref NetworkPlayerState n, 
                     ref PlayerConnectionId p, ref PlayerBehaviour b) 
                 {
                     n.player = player.player;
