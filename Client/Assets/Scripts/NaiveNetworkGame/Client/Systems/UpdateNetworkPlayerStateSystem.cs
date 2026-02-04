@@ -17,7 +17,7 @@ namespace NaiveNetworkGame.Client.Systems
                 var networkPlayerState = p;
                 
                 Entities
-                    .ForEach(delegate(ref LocalPlayerController playerController)
+                    .ForEach(delegate(ref LocalPlayerControllerComponentData playerController)
                 {
                     if (playerController.player != networkPlayerState.player) 
                         return;

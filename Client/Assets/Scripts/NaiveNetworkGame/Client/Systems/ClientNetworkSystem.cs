@@ -147,7 +147,7 @@ namespace NaiveNetworkGame.Client.Systems
             
             Entities
                 .WithNone<NetworkPlayerId>()
-                .WithAll<LocalPlayerController>()
+                .WithAll<LocalPlayerControllerComponentData>()
                 .ForEach(delegate(Entity e, ref ConnectPlayerToServer l)
                 {
                     var connection = client.m_Driver.Connect(client.endpoint);
@@ -170,8 +170,8 @@ namespace NaiveNetworkGame.Client.Systems
 
             Entities
                 .WithNone<ConnectPlayerToServer>()
-                .WithAll<NetworkPlayerId, LocalPlayerController>()
-                .ForEach(delegate(Entity e, ref NetworkPlayerId networkPlayer, ref LocalPlayerController p)
+                .WithAll<NetworkPlayerId, LocalPlayerControllerComponentData>()
+                .ForEach(delegate(Entity e, ref NetworkPlayerId networkPlayer, ref LocalPlayerControllerComponentData p)
                 {
                     var m_Connection = networkPlayer.connection;
                     
@@ -321,7 +321,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                 // avoid destroying server entities with queued client player action...
                 Entities
-                    .WithNone<ServerOnly>()
+                    .WithNone<ServerOnlyComponentData>()
                     .WithAll<PendingPlayerAction>()
                     .ForEach(delegate(Entity e, ref PendingPlayerAction p)
                     {

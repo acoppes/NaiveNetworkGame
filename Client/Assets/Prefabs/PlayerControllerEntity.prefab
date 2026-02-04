@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 693300645167947218}
   - component: {fileID: 693300645167947221}
   m_Layer: 0
-  m_Name: P0
+  m_Name: PlayerControllerEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -48,10 +49,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
-  unitType: 0
+  skinType: 0
   gold: 0
   maxUnits: 0
   currentUnits: 0
+  buildingSlots: 0
+  freeBarracksCount: 0
+  behaviourMode: 0
 --- !u!114 &693300645167947223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,12 +80,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdfeb282152d4caead6794444ef2ab40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnActionPressed: 0
-  selectUnitButtonPressed: 0
-  actionButtonPressed: 0
-  position:
-    x: 0
-    y: 0
+  pending: 0
+  actionType: 0
+  unitType: 0
 --- !u!114 &693300645167947218
 MonoBehaviour:
   m_ObjectHideFlags: 0

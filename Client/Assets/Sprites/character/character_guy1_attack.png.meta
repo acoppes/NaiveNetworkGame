@@ -33,7 +33,7 @@ TextureImporter:
       213: -1929734503553545212
     second: character_guy1_attack_9
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -54,6 +54,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,8 +64,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -92,6 +93,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -364,6 +366,17 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      character_guy1_attack_0: 5746333573597916398
+      character_guy1_attack_1: 6412371725463848052
+      character_guy1_attack_2: 2596352166411512293
+      character_guy1_attack_3: 774185728230794010
+      character_guy1_attack_4: 5892951491497245399
+      character_guy1_attack_5: 4874071926640076384
+      character_guy1_attack_6: -1443259063293769250
+      character_guy1_attack_7: -1436103547469261318
+      character_guy1_attack_8: 2818110789179344231
+      character_guy1_attack_9: -1929734503553545212
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

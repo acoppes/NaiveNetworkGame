@@ -35,7 +35,7 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<ServerOnly>()
+                .WithAll<ServerOnlyComponentData>()
                 .ForEach(delegate(Entity e, ref SwitchToAttackAction a, ref PlayerController playerController, 
                     ref PlayerBehaviour b)
             {
@@ -64,7 +64,7 @@ namespace NaiveNetworkGame.Server.Systems
             });
             
             Entities
-                .WithAll<ServerOnly>()
+                .WithAll<ServerOnlyComponentData>()
                 .ForEach(delegate(Entity e, ref SwitchToDefendAction a, ref PlayerController playerController, 
                     ref PlayerBehaviour b)
                 {
@@ -93,7 +93,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithAll<ServerOnly>()
+                .WithAll<ServerOnlyComponentData>()
                 .ForEach(delegate(Entity e, ref PlayerController playerController, ref Translation t, ref PlayerBehaviour b)
                 {
                     var player = playerController.player;

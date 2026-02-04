@@ -22,7 +22,7 @@ namespace NaiveNetworkGame.Client.Systems
             }
             
             var activePlayerEntity = GetSingletonEntity<ActivePlayer>();
-            var player = EntityManager.GetComponentData<LocalPlayerController>(activePlayerEntity);
+            var player = EntityManager.GetComponentData<LocalPlayerControllerComponentData>(activePlayerEntity);
 
             // player wasny sync...
             if (player.player == 0)

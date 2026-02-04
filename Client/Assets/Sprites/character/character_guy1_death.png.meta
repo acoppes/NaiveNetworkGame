@@ -42,7 +42,7 @@ TextureImporter:
       213: -4209745698446649499
     second: character_guy1_death_12
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -63,6 +63,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -72,8 +73,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -101,6 +102,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -436,6 +438,20 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      character_guy1_death_0: 5137919811557040960
+      character_guy1_death_1: -188604061935100273
+      character_guy1_death_10: -4939949947519076444
+      character_guy1_death_11: -4495988905741522769
+      character_guy1_death_12: -4209745698446649499
+      character_guy1_death_2: 7928997672485064041
+      character_guy1_death_3: 4955087953338829984
+      character_guy1_death_4: 2394800163138124875
+      character_guy1_death_5: 5242399645619901709
+      character_guy1_death_6: 2644101469571465732
+      character_guy1_death_7: 3697235095353174080
+      character_guy1_death_8: -5321237231953287890
+      character_guy1_death_9: 2726232933609488775
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

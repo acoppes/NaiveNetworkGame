@@ -17,8 +17,8 @@ namespace Scenes.Tests
             
             protected override void OnUpdate()
             {
-                Entities.WithAll<LocalPlayerController, NetworkPlayerId>()
-                    .ForEach(delegate(ref LocalPlayerController p)
+                Entities.WithAll<LocalPlayerControllerComponentData, NetworkPlayerId>()
+                    .ForEach(delegate(ref LocalPlayerControllerComponentData p)
                     {
                         var command = PostUpdateCommands.CreateEntity();
                         PostUpdateCommands.AddComponent(command, new PendingPlayerAction

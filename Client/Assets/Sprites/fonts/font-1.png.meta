@@ -282,7 +282,7 @@ TextureImporter:
       213: 21300184
     second: font-1_92
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -303,6 +303,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -313,7 +314,7 @@ TextureImporter:
     serializedVersion: 2
     filterMode: 0
     aniso: 16
-    mipBias: -100
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -341,9 +342,22 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -2320,6 +2334,100 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      font-1_0: 21300000
+      font-1_1: 21300002
+      font-1_10: 21300020
+      font-1_11: 21300022
+      font-1_12: 21300024
+      font-1_13: 21300026
+      font-1_14: 21300028
+      font-1_15: 21300030
+      font-1_16: 21300032
+      font-1_17: 21300034
+      font-1_18: 21300036
+      font-1_19: 21300038
+      font-1_2: 21300004
+      font-1_20: 21300040
+      font-1_21: 21300042
+      font-1_22: 21300044
+      font-1_23: 21300046
+      font-1_24: 21300048
+      font-1_25: 21300050
+      font-1_26: 21300052
+      font-1_27: 21300054
+      font-1_28: 21300056
+      font-1_29: 21300058
+      font-1_3: 21300006
+      font-1_30: 21300060
+      font-1_31: 21300062
+      font-1_32: 21300064
+      font-1_33: 21300066
+      font-1_34: 21300068
+      font-1_35: 21300070
+      font-1_36: 21300072
+      font-1_37: 21300074
+      font-1_38: 21300076
+      font-1_39: 21300078
+      font-1_4: 21300008
+      font-1_40: 21300080
+      font-1_41: 21300082
+      font-1_42: 21300084
+      font-1_43: 21300086
+      font-1_44: 21300088
+      font-1_45: 21300090
+      font-1_46: 21300092
+      font-1_47: 21300094
+      font-1_48: 21300096
+      font-1_49: 21300098
+      font-1_5: 21300010
+      font-1_50: 21300100
+      font-1_51: 21300102
+      font-1_52: 21300104
+      font-1_53: 21300106
+      font-1_54: 21300108
+      font-1_55: 21300110
+      font-1_56: 21300112
+      font-1_57: 21300114
+      font-1_58: 21300116
+      font-1_59: 21300118
+      font-1_6: 21300012
+      font-1_60: 21300120
+      font-1_61: 21300122
+      font-1_62: 21300124
+      font-1_63: 21300126
+      font-1_64: 21300128
+      font-1_65: 21300130
+      font-1_66: 21300132
+      font-1_67: 21300134
+      font-1_68: 21300136
+      font-1_69: 21300138
+      font-1_7: 21300014
+      font-1_70: 21300140
+      font-1_71: 21300142
+      font-1_72: 21300144
+      font-1_73: 21300146
+      font-1_74: 21300148
+      font-1_75: 21300150
+      font-1_76: 21300152
+      font-1_77: 21300154
+      font-1_78: 21300156
+      font-1_79: 21300158
+      font-1_8: 21300016
+      font-1_80: 21300160
+      font-1_81: 21300162
+      font-1_82: 21300164
+      font-1_83: 21300166
+      font-1_84: 21300168
+      font-1_85: 21300170
+      font-1_86: 21300172
+      font-1_87: 21300174
+      font-1_88: 21300176
+      font-1_89: 21300178
+      font-1_9: 21300018
+      font-1_90: 21300180
+      font-1_91: 21300182
+      font-1_92: 21300184
   spritePackingTag: Fonts
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

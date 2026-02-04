@@ -63,7 +63,7 @@ TextureImporter:
       213: -4249672990020870496
     second: war1_orcs_buildings_19
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -84,6 +84,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -93,8 +94,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -122,6 +123,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -604,6 +606,27 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      war1_orcs_barracks: -7710094303110637390
+      war1_orcs_buildings_1: 4825941312212058064
+      war1_orcs_buildings_10: 8420187948470422478
+      war1_orcs_buildings_11: 7631866403412598034
+      war1_orcs_buildings_12: 1744414766682435122
+      war1_orcs_buildings_13: -5919837219544492304
+      war1_orcs_buildings_14: -1847341625116394321
+      war1_orcs_buildings_15: 806036082677693008
+      war1_orcs_buildings_16: -896305675223529927
+      war1_orcs_buildings_17: 8154194364140762915
+      war1_orcs_buildings_18: 3830091170430281495
+      war1_orcs_buildings_19: -4249672990020870496
+      war1_orcs_buildings_2: 8192934304533375111
+      war1_orcs_buildings_3: 821018931280455862
+      war1_orcs_buildings_4: 8522155797251198275
+      war1_orcs_buildings_5: -1239318123765546650
+      war1_orcs_buildings_6: -7939852827382001047
+      war1_orcs_buildings_7: -5925088758816673194
+      war1_orcs_buildings_9: 1598518669386332477
+      war1_orcs_holder: 1799410993002414792
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

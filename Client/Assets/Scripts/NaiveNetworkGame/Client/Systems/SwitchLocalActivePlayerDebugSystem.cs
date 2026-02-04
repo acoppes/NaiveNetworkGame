@@ -16,12 +16,12 @@ namespace NaiveNetworkGame.Client.Systems
             {
                 PostUpdateCommands.DestroyEntity(switchCommand);
                 
-                if (Entities.WithAll<LocalPlayerController>().ToEntityQuery().CalculateEntityCount() == 1)
+                if (Entities.WithAll<LocalPlayerControllerComponentData>().ToEntityQuery().CalculateEntityCount() == 1)
                     return;
 
                 var activePlayerEntity = Entity.Null;
                 Entities
-                    .WithAll<ActivePlayer, LocalPlayerController>()
+                    .WithAll<ActivePlayer, LocalPlayerControllerComponentData>()
                     .ForEach(delegate(Entity e)
                     {
                         activePlayerEntity = e;
@@ -32,7 +32,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                 var switched = false;
                 Entities
-                    .WithAll<LocalPlayerController>()
+                    .WithAll<LocalPlayerControllerComponentData>()
                     .WithNone<ActivePlayer>()
                     .ForEach(delegate(Entity e)
                     {

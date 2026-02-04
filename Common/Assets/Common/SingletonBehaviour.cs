@@ -36,7 +36,7 @@ namespace NaiveNetworkGame.Common
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null)
+            if (UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null)
                 return;
             // if there is only one Component in the system?
             if (gameObject.GetComponents<MonoBehaviour>().Length == 1)

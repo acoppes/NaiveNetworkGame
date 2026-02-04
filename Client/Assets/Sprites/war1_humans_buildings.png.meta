@@ -75,7 +75,7 @@ TextureImporter:
       213: -5929371955072694745
     second: war1_buildings_23
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -96,6 +96,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -105,8 +106,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -134,6 +135,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -700,6 +702,31 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      war1_buildings_1: 817421914313130063
+      war1_buildings_10: 4212485805194214799
+      war1_buildings_11: 3864523149770876418
+      war1_buildings_12: -7937495848041520249
+      war1_buildings_13: 9096854215649504673
+      war1_buildings_14: 1246541845829033240
+      war1_buildings_15: -5683542089204157954
+      war1_buildings_16: 9026935349512984963
+      war1_buildings_17: 5829938987582016307
+      war1_buildings_18: -5562254433035349332
+      war1_buildings_19: 7208841793994135577
+      war1_buildings_2: -6707359190795637140
+      war1_buildings_20: 744640845996203578
+      war1_buildings_21: -768057265844175812
+      war1_buildings_22: -3385973442112002151
+      war1_buildings_23: -5929371955072694745
+      war1_buildings_3: -4949461612838883325
+      war1_buildings_4: 3693442402037288882
+      war1_buildings_5: -7229980591560151490
+      war1_buildings_6: -9011376682889845227
+      war1_buildings_7: 118526700218604608
+      war1_buildings_8: -6649671380452398024
+      war1_humans_barrack: 6270697782557902780
+      war1_humans_holder: -1611710951212684679
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

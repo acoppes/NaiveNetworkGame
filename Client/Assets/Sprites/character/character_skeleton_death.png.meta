@@ -33,7 +33,7 @@ TextureImporter:
       213: -6988734499638121933
     second: character_skeleton_death_9
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -54,6 +54,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,8 +64,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -92,6 +93,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -364,6 +366,17 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      character_skeleton_death_0: -6582217972963060605
+      character_skeleton_death_1: 6729751302724323741
+      character_skeleton_death_2: 203922514691450299
+      character_skeleton_death_3: 7956203269544436651
+      character_skeleton_death_4: -3950182271142676549
+      character_skeleton_death_5: 6677335597936660287
+      character_skeleton_death_6: 2064925623152909838
+      character_skeleton_death_7: 5909377758162774354
+      character_skeleton_death_8: -5743667914922980385
+      character_skeleton_death_9: -6988734499638121933
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

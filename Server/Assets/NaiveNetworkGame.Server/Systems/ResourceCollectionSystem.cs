@@ -10,7 +10,7 @@ namespace NaiveNetworkGame.Server.Systems
         {
             Entities
                 .WithNone<SpawningAction>()
-                .WithAll<IsAlive, ResourceCollector, ServerOnly>()
+                .WithAll<IsAlive, ResourceCollector, ServerOnlyComponentData>()
                 .ForEach(delegate(ref ResourceCollector r)
                 {
                     r.currentCollectionTime += World.Time.DeltaTime;
@@ -30,7 +30,7 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<PlayerController, ServerOnly>()
+                .WithAll<PlayerController, ServerOnlyComponentData>()
                 .ForEach(delegate(ref PlayerController p)
                 {
                     var playerId = p.player;
@@ -39,7 +39,7 @@ namespace NaiveNetworkGame.Server.Systems
                     
                     Entities
                         .WithNone<SpawningAction>()
-                        .WithAll<IsAlive, Unit, ResourceCollector, ServerOnly>()
+                        .WithAll<IsAlive, Unit, ResourceCollector, ServerOnlyComponentData>()
                         .ForEach(delegate(ref Unit unit, ref ResourceCollector r)
                         {
                             if (unit.player == playerId)
@@ -51,7 +51,7 @@ namespace NaiveNetworkGame.Server.Systems
                     
                     Entities
                         .WithNone<SpawningAction>()
-                        .WithAll<IsAlive, Unit, House, ServerOnly>()
+                        .WithAll<IsAlive, Unit, House, ServerOnlyComponentData>()
                         .ForEach(delegate(ref Unit unit, ref House h)
                         {
                             if (unit.player == playerId)

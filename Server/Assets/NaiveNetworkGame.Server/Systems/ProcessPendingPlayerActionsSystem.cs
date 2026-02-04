@@ -13,7 +13,7 @@ namespace NaiveNetworkGame.Server.Systems
         {
             // process all player pending actions
             Entities
-                .WithAll<ServerOnly, PendingPlayerAction, PlayerController>()
+                .WithAll<ServerOnlyComponentData, PendingPlayerAction, PlayerController>()
                 .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController)
                 {
                     var player = p.player;
@@ -131,7 +131,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
               Entities
-                .WithAll<ServerOnly, PendingPlayerAction, PlayerController, PlayerBehaviour>()
+                .WithAll<ServerOnlyComponentData, PendingPlayerAction, PlayerController, PlayerBehaviour>()
                 .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref PlayerBehaviour b)
                 {
                     // Changed to only process build unit actions
@@ -149,7 +149,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
               
               Entities
-                  .WithAll<ServerOnly, PendingPlayerAction, PlayerController, Translation>()
+                  .WithAll<ServerOnlyComponentData, PendingPlayerAction, PlayerController, Translation>()
                   .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref Translation t)
                   {
                       // destroy the other pending actions not processed...

@@ -312,7 +312,7 @@ TextureImporter:
       213: 6079181137156570464
     second: war1_icons_102
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -333,6 +333,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -342,8 +343,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -371,6 +372,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -2596,6 +2598,110 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      war1_icons_0: -8055985429197906837
+      war1_icons_1: 7887551530626080494
+      war1_icons_10: -7634604572041095069
+      war1_icons_100: 8295968953389682249
+      war1_icons_101: 1406832061682927694
+      war1_icons_102: 6079181137156570464
+      war1_icons_11: -1835460532712481082
+      war1_icons_12: 8897509070960808461
+      war1_icons_13: -2484577483952858581
+      war1_icons_14: 555452607713995286
+      war1_icons_15: -2712947790631697684
+      war1_icons_16: 3453774245348982920
+      war1_icons_17: 5448857429851818841
+      war1_icons_18: 7717601772708494974
+      war1_icons_2: 8465956396746588900
+      war1_icons_21: 8708660787009926950
+      war1_icons_22: 6553633514651459394
+      war1_icons_23: 7767375662923123158
+      war1_icons_24: 442572888467055890
+      war1_icons_25: 5986046956417225389
+      war1_icons_26: 8866607039974711136
+      war1_icons_27: -5680317178594258933
+      war1_icons_28: -1090123022230870432
+      war1_icons_29: 2260617479157438145
+      war1_icons_3: 2176611140105787686
+      war1_icons_30: -3479189873422918088
+      war1_icons_31: 4298508204003828073
+      war1_icons_32: 8417739856811103718
+      war1_icons_33: -5242673221003312604
+      war1_icons_34: -2983567016457091177
+      war1_icons_35: 7884918458224501131
+      war1_icons_36: -7944095039819324585
+      war1_icons_37: 7105855357059381690
+      war1_icons_38: -5835847078985378961
+      war1_icons_39: 3438142190877396574
+      war1_icons_4: 7326550977706177406
+      war1_icons_40: 3948378537792432482
+      war1_icons_41: -3161723647597953275
+      war1_icons_42: -6863166230105157004
+      war1_icons_43: 1974671766914011973
+      war1_icons_44: 1423332200698113317
+      war1_icons_45: 7927494014500710305
+      war1_icons_46: 6071466534676300627
+      war1_icons_47: -8452386071529715950
+      war1_icons_48: -8456966026352964578
+      war1_icons_49: 5850174183852858948
+      war1_icons_5: -5881604420054329662
+      war1_icons_50: -5047058265646316035
+      war1_icons_51: 6040879438127469675
+      war1_icons_52: 4466598767154287315
+      war1_icons_53: -3070985683755409961
+      war1_icons_54: -6172227415170174859
+      war1_icons_55: 1783310459978039783
+      war1_icons_56: -5640833683455310052
+      war1_icons_57: 7058119371921521951
+      war1_icons_58: 721567698054788062
+      war1_icons_59: 3479367082399306587
+      war1_icons_6: 2082042202501922626
+      war1_icons_60: 3504635491352754669
+      war1_icons_61: 47354069796707048
+      war1_icons_62: -8826607443007433924
+      war1_icons_63: -6401324188260574592
+      war1_icons_64: 9194473505843863428
+      war1_icons_65: 4985729155218282416
+      war1_icons_66: 6221331948731312944
+      war1_icons_67: -8000821249857062207
+      war1_icons_68: -5277325969988077724
+      war1_icons_69: -3750239851376689456
+      war1_icons_7: 2502509175197651628
+      war1_icons_70: -6469392372297780162
+      war1_icons_71: -1346191344942178952
+      war1_icons_72: 929328947265113199
+      war1_icons_73: -883257558265249437
+      war1_icons_74: -463651943854280026
+      war1_icons_75: -2226300317412525820
+      war1_icons_76: -5144931903761239230
+      war1_icons_78: 7071327147743446622
+      war1_icons_79: -8641027768777844985
+      war1_icons_8: 6645179246273581649
+      war1_icons_80: -732091557458025788
+      war1_icons_81: -5121570504135575051
+      war1_icons_82: 6832450946079652865
+      war1_icons_83: 7801055261925463272
+      war1_icons_84: -3048533183590636594
+      war1_icons_85: -1772825524228356746
+      war1_icons_86: 6603778706281379294
+      war1_icons_87: 6587569693895478657
+      war1_icons_88: 8308632980367148674
+      war1_icons_89: -4262945724989523812
+      war1_icons_9: -5262054602655440848
+      war1_icons_90: 2893268088213431761
+      war1_icons_91: 6001271182654416657
+      war1_icons_92: 4185581911113316845
+      war1_icons_93: -2646733759935279775
+      war1_icons_94: -7764031767529306273
+      war1_icons_95: 611903635017161717
+      war1_icons_96: -7741338151699409886
+      war1_icons_97: -6676325009567591010
+      war1_icons_99: -1035002016105591709
+      war1_icons_attack2: 2472634739442444648
+      war1_icons_barracks1: 3270240797262255910
+      war1_icons_barracks2: -3296582304524419426
+      war1_icons_defend2: 8589516367080140324
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

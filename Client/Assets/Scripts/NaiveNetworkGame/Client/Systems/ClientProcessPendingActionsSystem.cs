@@ -11,7 +11,7 @@ namespace NaiveNetworkGame.Client.Systems
         protected override void OnUpdate()
         {
             Entities
-                .ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerController p, ref PlayerPendingAction playerPendingActions)
+                .ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerControllerComponentData p, ref PlayerPendingAction playerPendingActions)
             {
                 if (networkPlayerId.state != NetworkConnection.State.Connected)
                     return;
