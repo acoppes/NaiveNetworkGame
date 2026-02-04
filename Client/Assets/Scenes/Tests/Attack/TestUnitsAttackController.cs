@@ -74,7 +74,8 @@ namespace Scenes.Tests
             
             // simulationSystemGroup.SortSystemUpdateList();
             
-            ScriptBehaviourUpdateOrder.UpdatePlayerLoop(world);
+            // ScriptBehaviourUpdateOrder.AppendWorldToPlayerLoop(world, simulationSystemGroup);
+            // ScriptBehaviourUpdateOrder.UpdatePlayerLoop(world);
             
             // world.CreateManager<MyCustomSystem>();
             // world.CreateManager<MyOtherCustomSystem>();

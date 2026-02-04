@@ -85,9 +85,9 @@ namespace NaiveNetworkGame.Server.Systems
                     
                     PostUpdateCommands.SetSharedComponent(serverEntity, server);
 
-                    PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerSingleton>().ToEntityQuery());
+                    PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerSingleton>().ToEntityQuery().ToEntityArray(Allocator.Temp));
                     PostUpdateCommands.DestroyEntity(GetSingletonEntity<ServerSimulation>());
-                    PostUpdateCommands.DestroyEntity(Entities.WithAll<Prefab>().ToEntityQuery());
+                    PostUpdateCommands.DestroyEntity(Entities.WithAll<Prefab>().ToEntityQuery().ToEntityArray(Allocator.Temp));
                     
                     if (stop.restart)
                     {
