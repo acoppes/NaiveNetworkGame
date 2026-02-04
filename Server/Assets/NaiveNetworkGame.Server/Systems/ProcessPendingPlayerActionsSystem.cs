@@ -13,8 +13,8 @@ namespace NaiveNetworkGame.Server.Systems
         {
             // process all player pending actions
             Entities
-                .WithAll<ServerOnlyComponentData, PendingPlayerAction, PlayerControllerComponentData>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerControllerComponentData playerController)
+                .WithAll<ServerOnly, PendingPlayerAction, PlayerController>()
+                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController)
                 {
                     var player = p.player;
                     
@@ -131,8 +131,8 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
               Entities
-                .WithAll<ServerOnlyComponentData, PendingPlayerAction, PlayerControllerComponentData, PlayerBehaviour>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerControllerComponentData playerController, ref PlayerBehaviour b)
+                .WithAll<ServerOnly, PendingPlayerAction, PlayerController, PlayerBehaviour>()
+                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref PlayerBehaviour b)
                 {
                     // Changed to only process build unit actions
                     if (p.actionType == PlayerAction.Attack)
@@ -149,8 +149,8 @@ namespace NaiveNetworkGame.Server.Systems
                 });
               
               Entities
-                  .WithAll<ServerOnlyComponentData, PendingPlayerAction, PlayerControllerComponentData, Translation>()
-                  .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerControllerComponentData playerController, ref Translation t)
+                  .WithAll<ServerOnly, PendingPlayerAction, PlayerController, Translation>()
+                  .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref Translation t)
                   {
                       // destroy the other pending actions not processed...
                       PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);

@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public struct ServerOnlyComponentData : IComponentData
+    public struct ServerOnly : IComponentData
     {
         
     }
 
-    public class ServerOnly : MonoBehaviour, IConvertGameObjectToEntity
+    public class ServerOnlyAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {

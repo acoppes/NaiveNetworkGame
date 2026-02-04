@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public struct PlayerControllerComponentData : IComponentData
+    public struct PlayerController : IComponentData
     {
         public byte player;
         public byte maxUnits;
@@ -54,7 +54,7 @@ namespace NaiveNetworkGame.Server.Components
         public float defensiveRange;
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            dstManager.AddComponentData(entity, new PlayerControllerComponentData()
+            dstManager.AddComponentData(entity, new PlayerController()
             {
                 player = player,
                 maxUnits = maxUnits,

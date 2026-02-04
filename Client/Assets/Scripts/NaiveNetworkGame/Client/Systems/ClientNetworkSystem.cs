@@ -321,7 +321,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                 // avoid destroying server entities with queued client player action...
                 Entities
-                    .WithNone<ServerOnlyComponentData>()
+                    .WithNone<ServerOnly>()
                     .WithAll<PendingPlayerAction>()
                     .ForEach(delegate(Entity e, ref PendingPlayerAction p)
                     {

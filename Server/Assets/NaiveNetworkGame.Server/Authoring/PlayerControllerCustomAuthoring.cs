@@ -51,7 +51,7 @@ namespace NaiveNetworkGame.Server.Components
 
             dstManager.AddComponentData(entity, new PlayerBehaviour());
 
-            var p = dstManager.GetComponentData<PlayerControllerComponentData>(entity);
+            var p = dstManager.GetComponentData<PlayerController>(entity);
             p.defensiveRange = defensiveRange;
             dstManager.SetComponentData(entity, p);
         }

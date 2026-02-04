@@ -10,7 +10,7 @@ namespace NaiveNetworkGame.Server.Systems
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach(delegate(ref PlayerControllerComponentData p)
+            Entities.ForEach(delegate(ref PlayerController p)
             {
                 var player = p.player;
 

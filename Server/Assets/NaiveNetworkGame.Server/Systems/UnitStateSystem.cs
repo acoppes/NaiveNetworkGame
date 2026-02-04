@@ -15,7 +15,7 @@ namespace NaiveNetworkGame.Server.Systems
         {
             Entities
                 .WithNone<MovementAction, SpawningAction, AttackAction>()
-                .WithAll<ServerOnlyComponentData, UnitState, IsAlive>()
+                .WithAll<ServerOnly, UnitState, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitStateTypes.idleState;
@@ -23,7 +23,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<MovementAction>()
-                .WithAll<ServerOnlyComponentData, SpawningAction, UnitState, IsAlive>()
+                .WithAll<ServerOnly, SpawningAction, UnitState, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref SpawningAction s)
                 {
                     u.state = UnitStateTypes.spawningState;
@@ -32,21 +32,21 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<SpawningAction>()
-                .WithAll<ServerOnlyComponentData, MovementAction, UnitState, IsAlive>()
+                .WithAll<ServerOnly, MovementAction, UnitState, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitStateTypes.walkState;
                 });
 
             Entities
-                .WithAll<ServerOnlyComponentData, UnitState, AttackAction, IsAlive>()
+                .WithAll<ServerOnly, UnitState, AttackAction, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u)
                 {
                     u.state = UnitStateTypes.attackingState;
                 });
             
             Entities
-                .WithAll<ServerOnlyComponentData, UnitState, ReloadAction, IsAlive>()
+                .WithAll<ServerOnly, UnitState, ReloadAction, IsAlive>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref ReloadAction a)
                 {
                     u.state = UnitStateTypes.reloadingState;
@@ -55,7 +55,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             Entities
                 .WithNone<IsAlive>()
-                .WithAll<ServerOnlyComponentData, UnitState, DeathAction>()
+                .WithAll<ServerOnly, UnitState, DeathAction>()
                 .ForEach(delegate(Entity e, ref UnitState u, ref DeathAction a)
                 {
                     u.state = UnitStateTypes.deathState;

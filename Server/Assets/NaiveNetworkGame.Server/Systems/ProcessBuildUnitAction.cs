@@ -19,7 +19,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithAll<ServerOnlyComponentData, BuildUnitAction, Unit>()
+                .WithAll<ServerOnly, BuildUnitAction, Unit>()
                 .ForEach(delegate(Entity e, ref BuildUnitAction buildAction, ref UnitSpawnPosition spawnPosition, ref Unit barrackUnit, 
                     ref Translation t)
                 {
