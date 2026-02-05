@@ -19,7 +19,7 @@ namespace NaiveNetworkGame.Common
         public byte percentage;
     }
     
-    public class UnitState : MonoBehaviour, IConvertGameObjectToEntity
+    public class UnitStateAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         public byte state;
         public byte percentage;
