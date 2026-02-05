@@ -43,11 +43,11 @@ namespace NaiveNetworkGame.Client.Systems
             RequireSingletonForUpdate<ClientSingleton>();
             
             // now server network system is in charge of creating server singleton...
-            var clientEntity = EntityManager.CreateEntity();
+            var clientEntity = EntityManager.CreateEntity(typeof(ClientSingleton));
 #if UNITY_EDITOR
             EntityManager.SetName(clientEntity, "ClientSingleton");
 #endif
-            EntityManager.AddSharedComponentData(clientEntity, new ClientSingleton());
+            // EntityManager.AddSharedComponentData(clientEntity, new ClientSingleton());
         }
 
         protected override void OnUpdate()
