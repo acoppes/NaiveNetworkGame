@@ -61,7 +61,7 @@ namespace NaiveNetworkGame.Server.Systems
                 // n.lookingDirection = l.direction;
             });
             
-            Entities.WithAll<ServerOnly, UnitState, NetworkGameState>().ForEach(delegate(ref UnitState state, 
+            Entities.WithAll<ServerOnly, UnitStateComponent, NetworkGameState>().ForEach(delegate(ref UnitStateComponent state, 
                 ref NetworkGameState n)
             {
                 n.state = state.state;

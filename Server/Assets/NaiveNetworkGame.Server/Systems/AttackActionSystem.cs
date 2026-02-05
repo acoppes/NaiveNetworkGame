@@ -14,14 +14,14 @@ namespace NaiveNetworkGame.Server.Systems
             var dt = Time.DeltaTime;
             
             Entities
-                .WithAll<Attack, AttackTarget, IsAlive>()
+                .WithAll<AttackComponent, AttackTargetComponent, IsAlive>()
                 .WithNone<AttackAction, ReloadAction>()
-                .ForEach(delegate(Entity e, ref Attack attack, ref AttackTarget target, ref Translation t)
+                .ForEach(delegate(Entity e, ref AttackComponent attack, ref AttackTargetComponent target, ref Translation t)
                 {
                     // if target entity was destroyed, forget about it...
                     if (!EntityManager.Exists(target.target))
                     {
-                        PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                        PostUpdateCommands.RemoveComponent<AttackTargetComponent>(e);
                     }
                     else
                     {
@@ -31,7 +31,7 @@ namespace NaiveNetworkGame.Server.Systems
                         
                         if (!isAlive || math.distancesq(tp.Value, t.Value) > attack.range * attack.range)
                         {
-                            PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                            PostUpdateCommands.RemoveComponent<AttackTargetComponent>(e);
                         }
                         else
                         {
@@ -47,22 +47,22 @@ namespace NaiveNetworkGame.Server.Systems
                     PostUpdateCommands.RemoveComponent<AttackAction>(e);
                 });
             
-            Entities.WithAll<AttackAction, DisableAttack>()
+            Entities.WithAll<AttackAction, DisableAttackComponent>()
                 .ForEach(delegate(Entity e)
                 {
                     PostUpdateCommands.RemoveComponent<AttackAction>(e);
                 });
             
             Entities
-                .WithAll<Attack, AttackTarget, AttackAction, MovementAction>()
+                .WithAll<AttackComponent, AttackTargetComponent, AttackAction, MovementAction>()
                 .ForEach(delegate(Entity e)
                 {
                     PostUpdateCommands.RemoveComponent<MovementAction>(e);
                 });
             
             Entities
-                .WithAll<Attack, AttackAction, AttackTarget>()
-                .ForEach(delegate(Entity e, ref Attack a, ref AttackTarget target, ref AttackAction action)
+                .WithAll<AttackComponent, AttackAction, AttackTargetComponent>()
+                .ForEach(delegate(Entity e, ref AttackComponent a, ref AttackTargetComponent target, ref AttackAction action)
                 {
                     action.time += dt;
 
@@ -91,7 +91,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithAll<Attack, ReloadAction>()
+                .WithAll<AttackComponent, ReloadAction>()
                 .ForEach(delegate(Entity e, ref ReloadAction action)
                 {
                     action.time += dt;
@@ -101,8 +101,8 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 });
 
-            Entities.WithAll<LookingDirection, AttackAction, AttackTarget>()
-                .ForEach(delegate(Entity e, ref LookingDirection d, ref Translation t, ref AttackTarget a)
+            Entities.WithAll<LookingDirection, AttackAction, AttackTargetComponent>()
+                .ForEach(delegate(Entity e, ref LookingDirection d, ref Translation t, ref AttackTargetComponent a)
                 {
                     if (EntityManager.Exists(a.target))
                     {

@@ -18,10 +18,10 @@ namespace NaiveNetworkGame.Server.Systems
             
             
             Entities
-                .WithAll<DeathAction, ChaseTarget>()
+                .WithAll<DeathAction, ChaseTargetComponent>()
                 .ForEach(delegate(Entity e, ref DeathAction a)
                 {
-                    PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                    PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
                 });
 
             Entities

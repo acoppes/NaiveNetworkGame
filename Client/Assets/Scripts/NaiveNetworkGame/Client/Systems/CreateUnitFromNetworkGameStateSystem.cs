@@ -75,7 +75,7 @@ namespace NaiveNetworkGame.Client.Systems
                     Value = new float3(100, 100, 0)
                 });
                 
-                PostUpdateCommands.AddComponent(entity, new UnitState());
+                PostUpdateCommands.AddComponent(entity, new UnitStateComponent());
                 PostUpdateCommands.AddComponent(entity, new LookingDirection());
                 // PostUpdateCommands.AddComponent(entity, new Selectable());
                 PostUpdateCommands.AddComponent(entity, new NetworkObject());

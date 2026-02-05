@@ -78,7 +78,7 @@ namespace NaiveNetworkGame.Server.Components
             {
                 speed = speed
             });
-            em.AddComponentData(entity, new UnitState());
+            em.AddComponentData(entity, new UnitStateComponent());
             // entityManager.AddComponentData(entity, new Attack
             // {
             //     damage = damage,
@@ -102,7 +102,7 @@ namespace NaiveNetworkGame.Server.Components
 
             if (!isBuilding && !isHolder)
             {
-                em.AddComponentData(entity, new UnitBehaviour
+                em.AddComponentData(entity, new UnitBehaviourComponent
                 {
                     minIdleTime = behaviourData.minIdleTime,
                     maxIdleTime = behaviourData.maxIdleTime,

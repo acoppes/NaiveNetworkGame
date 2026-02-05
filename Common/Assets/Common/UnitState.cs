@@ -1,4 +1,5 @@
 using Unity.Entities;
+using UnityEngine;
 
 namespace NaiveNetworkGame.Common
 {
@@ -12,10 +13,24 @@ namespace NaiveNetworkGame.Common
         public static readonly byte deathState = 5;
     }
     
-    [GenerateAuthoringComponent]
-    public struct UnitState : IComponentData
+    public struct UnitStateComponent : IComponentData
     {
         public byte state;
         public byte percentage;
+    }
+    
+    public class UnitState : MonoBehaviour, IConvertGameObjectToEntity
+    {
+        public byte state;
+        public byte percentage;
+        
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        {
+            dstManager.AddComponentData(entity, new UnitStateComponent()
+            {
+                state = state,
+                percentage = percentage
+            });
+        }
     }
 }

@@ -19,8 +19,8 @@ namespace NaiveNetworkGame.Client.Systems
                 });
             
             Entities
-                .WithAll<ModelPrefabComponent, ModelInstanceComponent, UnitState>()
-                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref UnitState state)
+                .WithAll<ModelPrefabComponent, ModelInstanceComponent, UnitStateComponent>()
+                .ForEach(delegate(Entity e,  ModelInstanceComponent m, ref UnitStateComponent state)
                 {
                     var animator = m.instance.GetComponent<Animator>();
                     if (animator != null)

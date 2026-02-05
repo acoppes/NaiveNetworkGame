@@ -30,9 +30,9 @@ namespace NaiveNetworkGame.Server.Systems
             var targetUnits = targetsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
 
             Entities
-                .WithAll<Attack, Unit, Translation, IsAlive>()
-                .WithNone<AttackTarget, SpawningAction, DeathAction, ReloadAction, DisableAttack>()
-                .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit, ref Translation t)
+                .WithAll<AttackComponent, Unit, Translation, IsAlive>()
+                .WithNone<AttackTargetComponent, SpawningAction, DeathAction, ReloadAction, DisableAttackComponent>()
+                .ForEach(delegate(Entity e, ref AttackComponent attack, ref Unit unit, ref Translation t)
                 {
                     // search for targets near my range...
                     for (var i = 0; i < targetUnits.Length; i++)
@@ -43,7 +43,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                         if (math.distancesq(t.Value, targetTranslations[i].Value) < attack.range * attack.range)
                         {
-                            PostUpdateCommands.AddComponent(e, new AttackTarget
+                            PostUpdateCommands.AddComponent(e, new AttackTargetComponent
                             {
                                 target = targets[i]
                             });
@@ -54,10 +54,10 @@ namespace NaiveNetworkGame.Server.Systems
             
             // TODO: search for best target here (distance, less targeting units, etc)
             Entities
-                .WithAll<Attack, Unit, IsAlive>()
-                .WithNone<AttackTarget, ChaseTarget, SpawningAction, DeathAction, ReloadAction>()
-                .WithNone<DisableAttack>()
-                .ForEach(delegate(Entity e, ref Attack attack, ref Unit unit)
+                .WithAll<AttackComponent, Unit, IsAlive>()
+                .WithNone<AttackTargetComponent, ChaseTargetComponent, SpawningAction, DeathAction, ReloadAction>()
+                .WithNone<DisableAttackComponent>()
+                .ForEach(delegate(Entity e, ref AttackComponent attack, ref Unit unit)
                 {
                     // var bestTarget = Entity.Null;
                     var bestTargetIndex = -1;
@@ -85,7 +85,7 @@ namespace NaiveNetworkGame.Server.Systems
                     if (bestTargetIndex == -1)
                         return;
 
-                    PostUpdateCommands.AddComponent(e, new ChaseTarget
+                    PostUpdateCommands.AddComponent(e, new ChaseTargetComponent
                     {
                         target = targets[bestTargetIndex]
                     });

@@ -29,7 +29,7 @@ namespace NaiveNetworkGame.Client.Systems
                     
                     Entities
                         .WithAll<Unit, LookingDirection, HealthPercentage>()
-                        .ForEach(delegate(ref Unit u, ref UnitState us, ref LookingDirection l, ref HealthPercentage h)
+                        .ForEach(delegate(ref Unit u, ref UnitStateComponent us, ref LookingDirection l, ref HealthPercentage h)
                         {
                             if (u.unitId != ngs.unitId)
                                 return;

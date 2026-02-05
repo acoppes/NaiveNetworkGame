@@ -45,7 +45,7 @@ namespace NaiveNetworkGame.Server.Systems
                             Value = t.Value + spawnPosition.position
                         });
                     
-                        PostUpdateCommands.SetComponent(unitEntity, new UnitState
+                        PostUpdateCommands.SetComponent(unitEntity, new UnitStateComponent
                         {
                             state = UnitStateTypes.spawningState
                         });
@@ -57,7 +57,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                         var wanderArea = buildAction.wanderArea;
 
-                        PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviour
+                        PostUpdateCommands.AddComponent(unitEntity, new UnitBehaviourComponent
                         {
                             wanderArea = wanderArea,
                             minIdleTime = 1,

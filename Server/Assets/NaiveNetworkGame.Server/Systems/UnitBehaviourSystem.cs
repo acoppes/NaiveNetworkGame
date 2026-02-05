@@ -13,10 +13,10 @@ namespace NaiveNetworkGame.Server.Systems
         {
             // if we have attack target, remove chase target...
             Entities
-                .WithAll<AttackTarget, ChaseTarget>()
+                .WithAll<AttackTargetComponent, ChaseTargetComponent>()
                 .ForEach(delegate(Entity e)
                 {
-                    PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                    PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
                 });
             
             
@@ -40,29 +40,29 @@ namespace NaiveNetworkGame.Server.Systems
             //     });
             
             Entities
-                .WithAll<ChaseTarget>()
-                .ForEach(delegate(Entity e, ref ChaseTarget chaseTarget)
+                .WithAll<ChaseTargetComponent>()
+                .ForEach(delegate(Entity e, ref ChaseTargetComponent chaseTarget)
                 {
                     if (!EntityManager.Exists(chaseTarget.target))
                     {
-                        PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                        PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
                     }
                     else
                     {
                         var isAlive = EntityManager.HasComponent<IsAlive>(chaseTarget.target);
                         if (!isAlive)
                         {
-                            PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                            PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
                         }
                     } 
                 });
         
 
             Entities
-                .WithAll<Unit, Movement, UnitBehaviour, IsAlive, ChaseTarget>()
+                .WithAll<Unit, Movement, UnitBehaviourComponent, IsAlive, ChaseTargetComponent>()
                 .WithNone<ReloadAction, DeathAction>()
-                .WithNone<MovementAction, SpawningAction, AttackAction, AttackTarget>()
-                .ForEach(delegate (Entity e, ref ChaseTarget chaseTarget)
+                .WithNone<MovementAction, SpawningAction, AttackAction, AttackTargetComponent>()
+                .ForEach(delegate (Entity e, ref ChaseTargetComponent chaseTarget)
                 {
                     var t = GetComponentDataFromEntity<Translation>()[chaseTarget.target];
                     
@@ -73,21 +73,21 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithAll<Unit, Movement, UnitBehaviour, IsAlive, ChaseTarget>()
+                .WithAll<Unit, Movement, UnitBehaviourComponent, IsAlive, ChaseTargetComponent>()
                 .WithAll<MovementAction>()
                 .WithNone<ReloadAction, DeathAction>()
-                .WithNone<SpawningAction, AttackAction, AttackTarget>()
-                .ForEach(delegate (Entity e, ref MovementAction m, ref ChaseTarget chaseTarget)
+                .WithNone<SpawningAction, AttackAction, AttackTargetComponent>()
+                .ForEach(delegate (Entity e, ref MovementAction m, ref ChaseTargetComponent chaseTarget)
                 {
                     var t = GetComponentDataFromEntity<Translation>()[chaseTarget.target];
                     m.target = t.Value.xy;
                 });
             
             Entities
-                .WithAll<Unit, Movement, UnitBehaviour, IsAlive>()
-                .WithNone<ReloadAction, ChaseTarget, DeathAction>()
-                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTarget>()
-                .ForEach(delegate (Entity e, ref UnitBehaviour behaviour)
+                .WithAll<Unit, Movement, UnitBehaviourComponent, IsAlive>()
+                .WithNone<ReloadAction, ChaseTargetComponent, DeathAction>()
+                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTargetComponent>()
+                .ForEach(delegate (Entity e, ref UnitBehaviourComponent behaviour)
                 {
                     var wanderAreaEntity = behaviour.wanderArea;
                     

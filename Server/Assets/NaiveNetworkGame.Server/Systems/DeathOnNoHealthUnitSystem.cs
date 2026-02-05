@@ -9,7 +9,7 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnUpdate()
         {
             Entities
-                .WithAll<Health, IsAlive, UnitBehaviour>()
+                .WithAll<Health, IsAlive, UnitBehaviourComponent>()
                 .ForEach(delegate(Entity e, ref Health h)
                 {
                     if (h.current <= 0.01f)
@@ -26,7 +26,7 @@ namespace NaiveNetworkGame.Server.Systems
                 });
             
             Entities
-                .WithNone<UnitBehaviour>()
+                .WithNone<UnitBehaviourComponent>()
                 .WithAll<Health, IsAlive>()
                 .ForEach(delegate(Entity e, ref Health h)
                 {

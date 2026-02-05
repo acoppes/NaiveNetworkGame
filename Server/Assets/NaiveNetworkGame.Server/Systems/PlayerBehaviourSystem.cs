@@ -13,8 +13,8 @@ namespace NaiveNetworkGame.Server.Systems
         {
             // By default, we sue the unit position as the chase center
             Entities
-                .WithAll<Attack, Translation, IsAlive>()
-                .ForEach(delegate(Entity e, ref Attack attack, ref Translation t)
+                .WithAll<AttackComponent, Translation, IsAlive>()
+                .ForEach(delegate(Entity e, ref AttackComponent attack, ref Translation t)
                 {
                     attack.chaseCenter = t.Value;
                 });
@@ -107,8 +107,8 @@ namespace NaiveNetworkGame.Server.Systems
                     {
                         case PlayerBehaviour.aggressive:
                             
-                            Entities.WithAll<Unit, UnitBehaviour>()
-                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
+                            Entities.WithAll<Unit, UnitBehaviourComponent>()
+                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviourComponent ub)
                                 {
                                     if (u.player != player)
                                         return;
@@ -116,19 +116,19 @@ namespace NaiveNetworkGame.Server.Systems
                                 });
                             
                             Entities
-                                .WithAll<Unit, DisableAttack>()
+                                .WithAll<Unit, DisableAttackComponent>()
                                 .ForEach(delegate(Entity ue, ref Unit u)
                                 {
                                     if (u.player != player)
                                         return;
-                                    PostUpdateCommands.RemoveComponent<DisableAttack>(ue);
+                                    PostUpdateCommands.RemoveComponent<DisableAttackComponent>(ue);
                                 });
                             break;
                         case PlayerBehaviour.defensive:
                             // could be processed all the time, not only here...
                             
-                            Entities.WithAll<Unit, UnitBehaviour>()
-                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviour ub)
+                            Entities.WithAll<Unit, UnitBehaviourComponent>()
+                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviourComponent ub)
                                 {
                                     if (u.player != player)
                                         return;
@@ -137,8 +137,8 @@ namespace NaiveNetworkGame.Server.Systems
                             
                             // While we are on defensive mode, we use the defend center as the center of chase target
                             Entities
-                                .WithAll<Unit, Attack>()
-                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref Attack attack)
+                                .WithAll<Unit, AttackComponent>()
+                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref AttackComponent attack)
                                 {
                                     if (u.player != player)
                                         return;
@@ -146,7 +146,7 @@ namespace NaiveNetworkGame.Server.Systems
                                 });
                             
                             Entities
-                                .WithNone<DisableAttack>()
+                                .WithNone<DisableAttackComponent>()
                                 .WithAll<Unit, Translation>()
                                 .ForEach(delegate(Entity ue, ref Unit u, ref Translation ut)
                                 {
@@ -155,12 +155,12 @@ namespace NaiveNetworkGame.Server.Systems
 
                                     if (math.distancesq(ut.Value, defendCenter) > defendRange)
                                     {
-                                        PostUpdateCommands.AddComponent<DisableAttack>(ue);
+                                        PostUpdateCommands.AddComponent<DisableAttackComponent>(ue);
                                     }
                                 });
                             
                             Entities
-                                .WithAll<DisableAttack, Unit, Translation>()
+                                .WithAll<DisableAttackComponent, Unit, Translation>()
                                 .ForEach(delegate(Entity ue, ref Unit u, ref Translation ut)
                                 {
                                     if (u.player != player)
@@ -168,29 +168,29 @@ namespace NaiveNetworkGame.Server.Systems
 
                                     if (math.distancesq(ut.Value, defendCenter) < defendRange)
                                     {
-                                        PostUpdateCommands.RemoveComponent<DisableAttack>(ue);
+                                        PostUpdateCommands.RemoveComponent<DisableAttackComponent>(ue);
                                     }
                                 });
                             
                             Entities
-                                .WithAll<ChaseTarget, MovementAction, DisableAttack>()
+                                .WithAll<ChaseTargetComponent, MovementAction, DisableAttackComponent>()
                                 .ForEach(delegate(Entity e)
                                 {
                                     PostUpdateCommands.RemoveComponent<MovementAction>(e);
                                 });
                             
                             Entities
-                                .WithAll<ChaseTarget, DisableAttack>()
+                                .WithAll<ChaseTargetComponent, DisableAttackComponent>()
                                 .ForEach(delegate(Entity e)
                                 {
-                                    PostUpdateCommands.RemoveComponent<ChaseTarget>(e);
+                                    PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
                                 });
 
                             Entities
-                                .WithAll<AttackTarget, DisableAttack>()
+                                .WithAll<AttackTargetComponent, DisableAttackComponent>()
                                 .ForEach(delegate(Entity e)
                                 {
-                                    PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+                                    PostUpdateCommands.RemoveComponent<AttackTargetComponent>(e);
                                 });
                             
                             break;

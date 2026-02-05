@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.Assertions;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
