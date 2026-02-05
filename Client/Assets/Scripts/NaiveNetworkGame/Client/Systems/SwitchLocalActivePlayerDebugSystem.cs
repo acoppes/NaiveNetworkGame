@@ -21,11 +21,11 @@ namespace NaiveNetworkGame.Client.Systems
 
                 var activePlayerEntity = Entity.Null;
                 Entities
-                    .WithAll<ActivePlayer, LocalPlayerControllerComponentData>()
+                    .WithAll<ActivePlayerComponent, LocalPlayerControllerComponentData>()
                     .ForEach(delegate(Entity e)
                     {
                         activePlayerEntity = e;
-                        PostUpdateCommands.RemoveComponent<ActivePlayer>(e);
+                        PostUpdateCommands.RemoveComponent<ActivePlayerComponent>(e);
                     });
             
                 // it only works for two player entities
@@ -33,12 +33,12 @@ namespace NaiveNetworkGame.Client.Systems
                 var switched = false;
                 Entities
                     .WithAll<LocalPlayerControllerComponentData>()
-                    .WithNone<ActivePlayer>()
+                    .WithNone<ActivePlayerComponent>()
                     .ForEach(delegate(Entity e)
                     {
                         if (e == activePlayerEntity || switched)
                             return;
-                        PostUpdateCommands.AddComponent<ActivePlayer>(e);
+                        PostUpdateCommands.AddComponent<ActivePlayerComponent>(e);
                         switched = true;
                     });
             });

@@ -10,18 +10,18 @@ namespace NaiveNetworkGame.Client.Systems
         protected override void OnCreate()
         {
             base.OnCreate();
-            RequireSingletonForUpdate<ActivePlayer>();
+            RequireSingletonForUpdate<ActivePlayerComponent>();
         }
 
         protected override void OnUpdate()
         {
             // get ui from shared component, singleton or not...
-            if (!HasSingleton<ActivePlayer>())
+            if (!HasSingleton<ActivePlayerComponent>())
             {
                 return;
             }
             
-            var activePlayerEntity = GetSingletonEntity<ActivePlayer>();
+            var activePlayerEntity = GetSingletonEntity<ActivePlayerComponent>();
             var player = EntityManager.GetComponentData<LocalPlayerControllerComponentData>(activePlayerEntity);
 
             // player wasny sync...

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Client
 {
-    public struct PlayerPendingActionComponent : IComponentData
+    public struct PlayerPendingAction : IComponentData
     {
         public bool pending;
         public byte actionType;
@@ -15,7 +15,7 @@ namespace NaiveNetworkGame.Client
     {
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            dstManager.AddComponentData(entity, new PlayerPendingActionComponent()
+            dstManager.AddComponentData(entity, new PlayerPendingAction()
             {
 
             });

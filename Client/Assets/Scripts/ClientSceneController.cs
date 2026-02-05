@@ -75,8 +75,8 @@ namespace Scenes
             
             playerControllerQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadWrite<LocalPlayerControllerComponentData>(), 
-                ComponentType.ReadOnly<ActivePlayer>(), 
-                ComponentType.ReadWrite<PlayerPendingActionComponent>());
+                ComponentType.ReadOnly<ActivePlayerComponent>(), 
+                ComponentType.ReadWrite<PlayerPendingAction>());
             
             var userInterfaceEntity = entityManager.CreateEntity();
             entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceSharedComponent
@@ -223,7 +223,7 @@ namespace Scenes
             if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
             {
                 // var playerEntity = playerControllerQuery.GetSingletonEntity();
-                var playerInput = entityManager.GetComponentData<PlayerPendingActionComponent>(playerEntity);
+                var playerInput = entityManager.GetComponentData<PlayerPendingAction>(playerEntity);
 
                 playerInput.pending = true;
                 playerInput.actionType = playerAction.type;
