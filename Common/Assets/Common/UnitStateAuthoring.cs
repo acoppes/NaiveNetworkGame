@@ -18,19 +18,31 @@ namespace NaiveNetworkGame.Common
         public byte state;
         public byte percentage;
     }
-    
-    public class UnitStateAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+
+    public class UnitStateAuthoring : MonoBehaviour
     {
-        public byte state;
-        public byte percentage;
-        
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        public class UnitStateComponentBaker : Baker<UnitStateAuthoring>
         {
-            dstManager.AddComponentData(entity, new UnitStateComponent()
+            public override void Bake(UnitStateAuthoring authoring)
             {
-                state = state,
-                percentage = percentage
-            });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent<UnitStateComponent>(entity);
+            }
         }
     }
+
+    // public class UnitStateAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    // {
+    //     public byte state;
+    //     public byte percentage;
+    //     
+    //     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+    //     {
+    //         dstManager.AddComponentData(entity, new UnitStateComponent()
+    //         {
+    //             state = state,
+    //             percentage = percentage
+    //         });
+    //     }
+    // }
 }

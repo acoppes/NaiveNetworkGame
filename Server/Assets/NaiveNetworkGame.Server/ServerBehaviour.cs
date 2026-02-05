@@ -108,7 +108,7 @@ namespace NaiveNetworkGame.Server
             // create multiple player controllers, all disabled....
             // with each connection, remove disabled component.
 
-            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
+            // var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
             
             // How to convert from GameObject to Entity
             // GameObjectConversionUtility.ConvertGameObjectHierarchy(unitPrefab, settings)

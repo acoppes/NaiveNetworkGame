@@ -1,6 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Networking.Transport;
+
 using UnityEngine;
 
 namespace NaiveNetworkGame.Common
@@ -19,7 +19,7 @@ namespace NaiveNetworkGame.Common
             }
         }
 
-        public NetworkTranslationSync Write(ref DataStreamWriter writer)
+        public NetworkTranslationSync Write(ref Unity.Collections.DataStreamWriter writer)
         {
             // writer.WriteByte(PacketType.ServerTranslationSync);
             writer.WriteUShort(unitId);
@@ -32,7 +32,7 @@ namespace NaiveNetworkGame.Common
             return this;
         }
 
-        public NetworkTranslationSync Read(ref DataStreamReader stream)
+        public NetworkTranslationSync Read(ref Unity.Collections.DataStreamReader stream)
         {;
             unitId = stream.ReadUShort();
             // delta = stream.ReadFloat();

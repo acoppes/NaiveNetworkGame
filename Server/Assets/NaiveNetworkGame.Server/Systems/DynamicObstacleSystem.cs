@@ -18,7 +18,7 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnCreate()
         {
             base.OnCreate();
-            obstaclesQuery = GetEntityQuery(typeof(Translation), typeof(DynamicObstacle));
+            obstaclesQuery = GetEntityQuery(typeof(LocalTransform), typeof(DynamicObstacle));
         }
 
         [BurstCompile]
@@ -26,7 +26,7 @@ namespace NaiveNetworkGame.Server.Systems
         {
             // var query = Entities.WithAll<Translation, DynamicObstacle>().ToEntityQuery();
             
-            var translations = obstaclesQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            var translations = obstaclesQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
             var obstacles = obstaclesQuery.ToComponentDataArray<DynamicObstacle>(Allocator.TempJob);
 
             uint currentInternalIndex = 0;
@@ -50,8 +50,8 @@ namespace NaiveNetworkGame.Server.Systems
                 }).Run();
 
             Entities
-                .WithAll<Translation, DynamicObstacle>()
-                .ForEach((Entity e, ref DynamicObstacle d0, in Translation t0) =>
+                .WithAll<LocalTransform, DynamicObstacle>()
+                .ForEach((Entity e, ref DynamicObstacle d0, in LocalTransform t0) =>
                 {
                     // we have the logic disabled...
                     if (d0.priority == 0)
@@ -69,7 +69,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                         var t1 = translations[j];
 
-                        var m = t1.Value - t0.Value;
+                        var m = t1.Position - t0.Position;
                         var d = math.lengthsq(m);
                         var r = d0.rangeSq + d1.rangeSq;
 
@@ -88,10 +88,10 @@ namespace NaiveNetworkGame.Server.Systems
                 }).Run();
             
             Entities
-                .WithAll<Translation, DynamicObstacle>()
-                .ForEach((ref Translation t, ref DynamicObstacle d) =>
+                .WithAll<LocalTransform, DynamicObstacle>()
+                .ForEach((ref LocalTransform t, ref DynamicObstacle d) =>
                 {
-                    t.Value += d.movement;
+                    t.Position += d.movement;
                     d.movement = float3.zero;
                 }).ScheduleParallel();
             

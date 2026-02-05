@@ -1,5 +1,5 @@
 using Unity.Entities;
-using Unity.Networking.Transport;
+
 
 namespace NaiveNetworkGame.Common
 {
@@ -28,7 +28,7 @@ namespace NaiveNetworkGame.Common
             }
         }
         
-        public NetworkGameState Write(ref DataStreamWriter writer)
+        public NetworkGameState Write(ref Unity.Collections.DataStreamWriter writer)
         {
             writer.WriteUShort(unitId);
             writer.WriteByte(playerId);
@@ -48,7 +48,7 @@ namespace NaiveNetworkGame.Common
             return this;
         }
 
-        public NetworkGameState Read(ref DataStreamReader stream)
+        public NetworkGameState Read(ref Unity.Collections.DataStreamReader stream)
         {
             unitId = stream.ReadUShort();
             playerId = stream.ReadByte();

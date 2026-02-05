@@ -1,5 +1,5 @@
 using Unity.Entities;
-using Unity.Networking.Transport;
+
 
 namespace NaiveNetworkGame.Common
 {
@@ -15,7 +15,7 @@ namespace NaiveNetworkGame.Common
         
         public byte behaviourMode;
         
-        public NetworkPlayerState Write(ref DataStreamWriter writer)
+        public NetworkPlayerState Write(ref Unity.Collections.DataStreamWriter writer)
         {
             writer.WriteByte(player);
             writer.WriteByte(skinType);
@@ -29,7 +29,7 @@ namespace NaiveNetworkGame.Common
             return this;
         }
 
-        public NetworkPlayerState Read(ref DataStreamReader stream)
+        public NetworkPlayerState Read(ref Unity.Collections.DataStreamReader stream)
         {
             player = stream.ReadByte();
             skinType = stream.ReadByte();

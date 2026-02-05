@@ -16,7 +16,7 @@ namespace NaiveNetworkGame.Common
         }
 
         public static Entity TryGetFirstReadOnly<T>(this EntityQuery query, Func<T, bool> matcher) 
-            where T : struct, IComponentData
+            where T : unmanaged, IComponentData
         {
             var entity = Entity.Null;
             

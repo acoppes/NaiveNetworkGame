@@ -1,6 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Networking.Transport;
+
 
 namespace NaiveNetworkGame.Common
 {
@@ -13,7 +13,7 @@ namespace NaiveNetworkGame.Common
         
         public float2 target;
         
-        public PendingPlayerAction Write(ref DataStreamWriter writer)
+        public PendingPlayerAction Write(ref Unity.Collections.DataStreamWriter writer)
         {
             writer.WriteByte(PacketType.ClientPlayerAction);
             writer.WriteByte(player);
@@ -24,7 +24,7 @@ namespace NaiveNetworkGame.Common
             return this;
         }
 
-        public PendingPlayerAction Read(ref DataStreamReader stream)
+        public PendingPlayerAction Read(ref Unity.Collections.DataStreamReader stream)
         {
             player = stream.ReadByte();
             actionType = stream.ReadByte();
