@@ -15,7 +15,7 @@ namespace NaiveNetworkGame.Client.Components
         public byte behaviourMode;
     }
 
-    public class LocalPlayerController : MonoBehaviour, IConvertGameObjectToEntity
+    public class LocalPlayerController : MonoBehaviour
     {
         public byte player;
         public byte skinType;
@@ -25,20 +25,25 @@ namespace NaiveNetworkGame.Client.Components
         public byte buildingSlots;
         public byte freeBarracksCount;
         public byte behaviourMode;
-        
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+
+        private class LocalPlayerControllerBaker : Baker<LocalPlayerController>
         {
-            dstManager.AddComponentData(entity, new LocalPlayerControllerComponentData
+            public override void Bake(LocalPlayerController authoring)
             {
-                player = player,
-                skinType = skinType,
-                gold = gold,
-                maxUnits = maxUnits,
-                currentUnits = currentUnits,
-                buildingSlots = buildingSlots,
-                freeBarracksCount = freeBarracksCount,
-                behaviourMode = behaviourMode
-            });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                
+                AddComponent(entity, new LocalPlayerControllerComponentData
+                {
+                    player = authoring.player,
+                    skinType = authoring.skinType,
+                    gold = authoring.gold,
+                    maxUnits = authoring.maxUnits,
+                    currentUnits = authoring.currentUnits,
+                    buildingSlots = authoring.buildingSlots,
+                    freeBarracksCount = authoring.freeBarracksCount,
+                    behaviourMode = authoring.behaviourMode
+                });
+            }
         }
     }
 }

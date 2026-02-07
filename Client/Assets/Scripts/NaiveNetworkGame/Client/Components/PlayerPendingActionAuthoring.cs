@@ -11,14 +11,15 @@ namespace NaiveNetworkGame.Client
         public byte unitType;
     }
     
-    public class PlayerPendingActionAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class PlayerPendingActionAuthoring : MonoBehaviour
     {
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        private class PlayerPendingActionBaker : Baker<PlayerPendingActionAuthoring>
         {
-            dstManager.AddComponentData(entity, new PlayerPendingAction()
+            public override void Bake(PlayerPendingActionAuthoring authoring)
             {
-
-            });
+                var entity= GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new PlayerPendingAction());
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public class PlayerControllerCustomAuthoring : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
+    public class PlayerControllerCustomAuthoring : MonoBehaviour
     {
         
         [Serializable]
@@ -17,41 +17,42 @@ namespace NaiveNetworkGame.Server.Components
         }
 
         public List<PlayerActionData> actions;
-        // public Transform buildingSlotsParent;
 
         public float defensiveRange;
 
-        public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
+        private class PlayerControllerCustomBaker : Baker<PlayerControllerCustomAuthoring>
         {
-            foreach (var action in actions)
+            public override void Bake(PlayerControllerCustomAuthoring authoring)
             {
-                if (action.prefab != null)
-                    referencedPrefabs.Add(action.prefab);
-            }
-        }
-        
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
-        {
-            var buffer = dstManager.AddBuffer<PlayerAction>(entity);
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                var buffer = AddBuffer<PlayerAction>(entity);
             
-            foreach (var action in actions)
-            {
-                //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
-
-                buffer = dstManager.GetBuffer<PlayerAction>(entity);
-                buffer.Add(new PlayerAction
+                foreach (var action in authoring.actions)
                 {
-                    type = action.type,
-                    cost = action.cost,
-                    prefab = action.prefab != null ? conversionSystem.GetPrimaryEntity(action.prefab) : Entity.Null
-                });
+                    //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
+                    // buffer = dstManager.GetBuffer<PlayerAction>(entity);
+                    
+                    buffer.Add(new PlayerAction
+                    {
+                        type = action.type,
+                        cost = action.cost,
+                        prefab = action.prefab ? GetEntity(action.prefab, TransformUsageFlags.Dynamic) : Entity.Null
+                    });
+                }
+
+                AddComponent(entity, new PlayerBehaviour());
+                
+                // THIS WILL OVERRIDE PLAYER CONTROLLER
+                // AddComponent(entity, new PlayerController()
+                // {
+                //     defensiveRange = authoring.defensiveRange
+                // });
+                
+
+                // var p = dstManager.GetComponentData<PlayerController>(entity);
+                // p.defensiveRange = defensiveRange;
+                // dstManager.SetComponentData(entity, p);
             }
-
-            dstManager.AddComponentData(entity, new PlayerBehaviour());
-
-            var p = dstManager.GetComponentData<PlayerController>(entity);
-            p.defensiveRange = defensiveRange;
-            dstManager.SetComponentData(entity, p);
         }
 
         private void OnDrawGizmosSelected()

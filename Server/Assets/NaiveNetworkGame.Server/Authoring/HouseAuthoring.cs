@@ -3,21 +3,26 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public class HouseAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class HouseAuthoring : MonoBehaviour
     {
         public byte unitSlots;
         public byte goldPerSedond;
-        
-        public void Convert(Entity e, EntityManager em, GameObjectConversionSystem conversionSystem)
+
+        private class HouseBaker : Baker<HouseAuthoring>
         {
-            em.AddComponentData(e, new House
+            public override void Bake(HouseAuthoring authoring)
             {
-                maxUnits = unitSlots
-            });
-            em.AddComponentData(e, new ResourceCollector
-            {
-                goldPerSecond = goldPerSedond
-            });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                
+                AddComponent(entity, new House
+                {
+                    maxUnits = authoring.unitSlots
+                });
+                AddComponent(entity, new ResourceCollector
+                {
+                    goldPerSecond = authoring.goldPerSedond
+                });
+            }
         }
     }
 }

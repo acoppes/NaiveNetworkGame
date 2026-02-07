@@ -33,7 +33,7 @@ namespace NaiveNetworkGame.Server.Components
         // mode data?
     }
     
-    public class PlayerControllerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class PlayerControllerAuthoring : MonoBehaviour
     {
         public byte player;
         public byte maxUnits;
@@ -52,30 +52,35 @@ namespace NaiveNetworkGame.Server.Components
         public byte freeBarracksCount;
 
         public float defensiveRange;
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+
+        private class PlayerControllerBaker : Baker<PlayerControllerAuthoring>
         {
-            dstManager.AddComponentData(entity, new PlayerController()
+            public override void Bake(PlayerControllerAuthoring authoring)
             {
-                player = player,
-                maxUnits = maxUnits,
-                currentUnits = currentUnits,
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new PlayerController()
+                {
+                    player = authoring.player,
+                    maxUnits = authoring.maxUnits,
+                    currentUnits = authoring.currentUnits,
 
-                maxGold = maxGold,
-                gold = gold,
+                    maxGold = authoring.maxGold,
+                    gold = authoring.gold,
 
-                skinType = skinType,
+                    skinType = authoring.skinType,
 
-                defendArea = conversionSystem.GetPrimaryEntity(defendArea),
-                attackArea = conversionSystem.GetPrimaryEntity(attackArea),
+                    defendArea = GetEntity(authoring.defendArea, TransformUsageFlags.Dynamic),
+                    attackArea = GetEntity(authoring.attackArea, TransformUsageFlags.Dynamic),
 
-                availableBuildingSlots = availableBuildingSlots,
+                    availableBuildingSlots = authoring.availableBuildingSlots,
 
-                freeBarracksCount = freeBarracksCount,
+                    freeBarracksCount = authoring.freeBarracksCount,
 
-                defensiveRange = defensiveRange,
-            });
+                    defensiveRange = authoring.defensiveRange,
+                });
             
-            // conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
+                // conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
+            }
         }
     }
 }

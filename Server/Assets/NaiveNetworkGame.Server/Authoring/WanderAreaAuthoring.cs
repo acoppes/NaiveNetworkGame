@@ -3,16 +3,20 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public class WanderAreaAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class WanderAreaAuthoring : MonoBehaviour
     {
         public float range;
         
-        public void Convert(Entity entity, EntityManager em, GameObjectConversionSystem conversionSystem)
+        private class WanderAreaBaker : Baker<WanderAreaAuthoring>
         {
-            em.AddComponentData(entity, new WanderArea()
+            public override void Bake(WanderAreaAuthoring authoring)
             {
-                range = range
-            });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new WanderArea()
+                {
+                    range = authoring.range
+                });
+            }
         }
 
         private void OnDrawGizmos()

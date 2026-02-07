@@ -37,7 +37,7 @@ namespace NaiveNetworkGame.Server.Components
         public Entity target;
     }
     
-    public class AttackAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class AttackAuthoring : MonoBehaviour
     {
         public float damage;
         
@@ -53,26 +53,30 @@ namespace NaiveNetworkGame.Server.Components
         // public float chaseRange;
 
         public float3 chaseCenter;
-        
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+
+        private class AttackBaker : Baker<AttackAuthoring>
         {
-            dstManager.AddComponentData(entity, new AttackComponent()
+            public override void Bake(AttackAuthoring authoring)
             {
-                damage = damage,
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new AttackComponent()
+                {
+                    damage = authoring.damage,
                 
-                range = range,
-                chaseRange = chaseRange,
+                    range = authoring.range,
+                    chaseRange = authoring.chaseRange,
 
-                attackTime = attackTime,
-                duration = duration,
+                    attackTime = authoring.attackTime,
+                    duration = authoring.duration,
 
-                reload = reload,
+                    reload = authoring.reload,
 
-                reloadRandom = reloadRandom,
-                // chaseRange = chaseRange,
+                    reloadRandom = authoring.reloadRandom,
+                    // chaseRange = chaseRange,
 
-                chaseCenter = chaseCenter,
-            });
+                    chaseCenter = authoring.chaseCenter,
+                });
+            }
         }
     }
 }

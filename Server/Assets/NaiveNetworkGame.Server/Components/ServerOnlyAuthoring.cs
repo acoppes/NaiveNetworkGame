@@ -8,11 +8,15 @@ namespace NaiveNetworkGame.Server.Components
         
     }
 
-    public class ServerOnlyAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class ServerOnlyAuthoring : MonoBehaviour
     {
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        private class ServerOnlyBaker : Baker<ServerOnlyAuthoring>
         {
-            
+            public override void Bake(ServerOnlyAuthoring authoring)
+            {
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new ServerOnly());
+            }
         }
     }
 }

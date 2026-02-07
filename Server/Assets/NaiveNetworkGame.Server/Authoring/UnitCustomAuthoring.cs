@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public class UnitCustomAuthoring : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
+    public class UnitCustomAuthoring : MonoBehaviour
     {
         [Serializable]
         public struct Behaviour
@@ -52,111 +52,107 @@ namespace NaiveNetworkGame.Server.Components
         public bool isHolder;
 
         public bool networking;
-        
-        public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
+
+        private class UnitCustomBaker : Baker<UnitCustomAuthoring>
         {
-            if (behaviourData.wanderArea != null)
+            public override void Bake(UnitCustomAuthoring authoring)
             {
-                referencedPrefabs.Add(behaviourData.wanderArea);
-            }
-        }
-        
-        public void Convert(Entity entity, EntityManager em, GameObjectConversionSystem conversionSystem)
-        {
-            em.AddComponentData(entity, new Unit
-            {
-                player = player,
-                type = unitType,
-                slotCost = slotsCost,
-                id = NetworkUnitId.current++,
-                isBuilding = isBuilding,
-                spawnDuration = spawnDuration
-            });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new Unit
+                {
+                    player = authoring.player,
+                    type = authoring.unitType,
+                    slotCost = authoring.slotsCost,
+                    id = NetworkUnitId.current++,
+                    isBuilding = authoring.isBuilding,
+                    spawnDuration = authoring.spawnDuration
+                });
 
-            em.AddComponentData(entity, new Skin());
-            em.AddComponentData(entity, new Movement
-            {
-                speed = speed
-            });
-            em.AddComponentData(entity, new UnitStateComponent());
-            // entityManager.AddComponentData(entity, new Attack
-            // {
-            //     damage = damage,
-            //     range = range
-            // });
-            em.AddComponentData(entity, new LookingDirection
-            {
-                direction = new float2(1, 0)
-            });
-            
-            if (health > 0)
-            {
-                em.AddComponentData(entity, new Health
+                AddComponent(entity, new Skin());
+                AddComponent(entity, new Movement
                 {
-                    total = health,
-                    current = health
+                    speed = authoring.speed
                 });
-            }
+                AddComponent(entity, new UnitStateComponent());
+                // entityManager.AddComponentData(entity, new Attack
+                // {
+                //     damage = damage,
+                //     range = range
+                // });
+                AddComponent(entity, new LookingDirection
+                {
+                    direction = new float2(1, 0)
+                });
+                
+                if (authoring.health > 0)
+                {
+                    AddComponent(entity, new Health
+                    {
+                        total = authoring.health,
+                        current = authoring.health
+                    });
+                }
 
-            em.AddComponentData(entity, new IsAlive());
+                AddComponent(entity, new IsAlive());
 
-            if (!isBuilding && !isHolder)
-            {
-                em.AddComponentData(entity, new UnitBehaviourComponent
+                if (!authoring.isBuilding && !authoring.isHolder)
                 {
-                    minIdleTime = behaviourData.minIdleTime,
-                    maxIdleTime = behaviourData.maxIdleTime,
-                    wanderArea = behaviourData.wanderArea != null
-                        ? conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
-                        : Entity.Null
-                });
-            }
+                    AddComponent(entity, new UnitBehaviourComponent
+                    {
+                        minIdleTime = authoring.behaviourData.minIdleTime,
+                        maxIdleTime = authoring.behaviourData.maxIdleTime,
+                        wanderArea = authoring.behaviourData.wanderArea != null
+                            ? GetEntity(authoring.behaviourData.wanderArea, TransformUsageFlags.Dynamic)
+                            : Entity.Null
+                    });
+                }
 
-            if (spawnDuration > 0)
-            {
-                em.AddComponentData(entity, new SpawningAction
+                if (authoring.spawnDuration > 0)
                 {
-                    duration = spawnDuration
-                });
-            }
+                    AddComponent(entity, new SpawningAction
+                    {
+                        duration = authoring.spawnDuration
+                    });
+                }
 
-            if (networking)
-            {
-                em.AddComponentData(entity, new NetworkGameState());
-                em.AddComponentData(entity, new NetworkTranslationSync());
-            }
+                if (authoring.networking)
+                {
+                    AddComponent(entity, new NetworkGameState());
+                    AddComponent(entity, new NetworkTranslationSync());
+                }
 
-            if (dynamiceObstacleData.priority > 0)
-            {
-                em.AddComponentData(entity, new DynamicObstacle
+                if (authoring.dynamiceObstacleData.priority > 0)
                 {
-                    priority = dynamiceObstacleData.priority,
-                    range = dynamiceObstacleData.range
-                });
-            }
+                    AddComponent(entity, new DynamicObstacle
+                    {
+                        priority = authoring.dynamiceObstacleData.priority,
+                        range = authoring.dynamiceObstacleData.range
+                    });
+                }
 
-            if (barracksData.isBarrack)
-            {
-                em.AddComponentData(entity, new Barracks
+                if (authoring.barracksData.isBarrack)
                 {
-                    unitType = barracksData.unitType,
-                });
-                em.AddComponentData(entity, new UnitSpawnPosition
+                    AddComponent(entity, new Barracks
+                    {
+                        unitType = authoring.barracksData.unitType,
+                    });
+                    AddComponent(entity, new UnitSpawnPosition
+                    {
+                        position = authoring.barracksData.spawnPosition.localPosition
+                    });
+                }
+                
+                if (authoring.isHolder)
                 {
-                    position = barracksData.spawnPosition.localPosition
-                });
-            }
-            
-            if (isHolder)
-            {
-                em.AddComponentData(entity, new BuildingHolder
-                {
-                    hasBuilding = false
-                });
-                em.AddComponentData(entity, new UnitSpawnPosition
-                {
-                    position = float3.zero
-                });
+                    AddComponent(entity, new BuildingHolder
+                    {
+                        hasBuilding = false
+                    });
+                    AddComponent(entity, new UnitSpawnPosition
+                    {
+                        position = float3.zero
+                    });
+                }
             }
         }
 

@@ -8,14 +8,15 @@ namespace NaiveNetworkGame.Client.Components
         // should be named something like "i want to connect to server"
     }
     
-    public class ConnectPlayerToServerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class ConnectPlayerToServerAuthoring : MonoBehaviour
     {
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        private class ConnectPlayerToServerBaker : Baker<ConnectPlayerToServerAuthoring>
         {
-            dstManager.AddComponentData(entity, new ConnectPlayerToServer()
+            public override void Bake(ConnectPlayerToServerAuthoring authoring)
             {
-
-            });
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new ConnectPlayerToServer());
+            }
         }
     }
 }

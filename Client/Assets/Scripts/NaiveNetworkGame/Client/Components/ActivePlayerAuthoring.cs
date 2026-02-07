@@ -8,11 +8,15 @@ namespace NaiveNetworkGame.Client.Components
     
     }
     
-    public class ActivePlayerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class ActivePlayerAuthoring : MonoBehaviour
     {
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        private class ActivePlayerBaker : Baker<ActivePlayerAuthoring>
         {
-            dstManager.AddComponentData(entity, new ActivePlayerComponent());
+            public override void Bake(ActivePlayerAuthoring authoring)
+            {
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
+                AddComponent(entity, new ActivePlayerComponent());
+            }
         }
     }
 }
