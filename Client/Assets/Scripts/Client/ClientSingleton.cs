@@ -30,7 +30,7 @@ namespace Client
         public NetworkDriver m_Driver;
         public NetworkPipeline framentationPipeline;
         public NetworkPipeline reliabilityPipeline;
-        public NetworkEndPoint endpoint;
+        public NetworkEndpoint endpoint;
         
         public bool Equals(ClientSingleton other)
         {

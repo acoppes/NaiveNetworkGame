@@ -1,6 +1,5 @@
 using NaiveNetworkGame.Server.Components;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
