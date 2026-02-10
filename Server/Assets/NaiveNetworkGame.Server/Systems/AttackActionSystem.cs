@@ -7,110 +7,106 @@ namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateBefore(typeof(DamageSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class AttackActionSystem : ComponentSystem
+    public partial struct AttackActionSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            var dt = Time.DeltaTime;
+            var dt = SystemAPI.Time.DeltaTime;
             
-            Entities
-                .WithAll<AttackComponent, AttackTargetComponent, IsAlive>()
-                .WithNone<AttackAction, ReloadAction>()
-                .ForEach(delegate(Entity e, ref AttackComponent attack, ref AttackTargetComponent target, ref Translation t)
+            foreach (var (attack, target, localTransform, entity) in 
+                SystemAPI.Query<RefRO<AttackComponent>, RefRO<AttackTargetComponent>, RefRO<LocalTransform>>()
+                    .WithAll<IsAlive>()
+                    .WithNone<AttackAction, ReloadAction>()
+                    .WithEntityAccess())
+            {
+                // if target entity was destroyed, forget about it...
+                if (!state.EntityManager.Exists(target.ValueRO.target))
                 {
-                    // if target entity was destroyed, forget about it...
-                    if (!EntityManager.Exists(target.target))
+                    state.EntityManager.RemoveComponent<AttackTargetComponent>(entity);
+                }
+                else
+                {
+                    // if target too far away, forget about it...
+                    var tp = state.EntityManager.GetComponentData<LocalTransform>(target.ValueRO.target);
+                    var isAlive = state.EntityManager.HasComponent<IsAlive>(target.ValueRO.target);
+                    
+                    if (!isAlive || math.distancesq(tp.Position, localTransform.ValueRO.Position) > attack.ValueRO.range * attack.ValueRO.range)
                     {
-                        PostUpdateCommands.RemoveComponent<AttackTargetComponent>(e);
+                        state.EntityManager.RemoveComponent<AttackTargetComponent>(entity);
                     }
                     else
                     {
-                        // if target too far away, forget about it...
-                        var tp = EntityManager.GetComponentData<Translation>(target.target);
-                        var isAlive = EntityManager.HasComponent<IsAlive>(target.target);
-                        
-                        if (!isAlive || math.distancesq(tp.Value, t.Value) > attack.range * attack.range)
-                        {
-                            PostUpdateCommands.RemoveComponent<AttackTargetComponent>(e);
-                        }
-                        else
-                        {
-                            // if lost isalive, lose target...
-                            PostUpdateCommands.AddComponent(e, new AttackAction());
-                        }
-                    } 
-                });
-            
-            Entities.WithAll<AttackAction, DeathAction>()
-                .ForEach(delegate(Entity e)
-                {
-                    PostUpdateCommands.RemoveComponent<AttackAction>(e);
-                });
-            
-            Entities.WithAll<AttackAction, DisableAttackComponent>()
-                .ForEach(delegate(Entity e)
-                {
-                    PostUpdateCommands.RemoveComponent<AttackAction>(e);
-                });
-            
-            Entities
-                .WithAll<AttackComponent, AttackTargetComponent, AttackAction, MovementAction>()
-                .ForEach(delegate(Entity e)
-                {
-                    PostUpdateCommands.RemoveComponent<MovementAction>(e);
-                });
-            
-            Entities
-                .WithAll<AttackComponent, AttackAction, AttackTargetComponent>()
-                .ForEach(delegate(Entity e, ref AttackComponent a, ref AttackTargetComponent target, ref AttackAction action)
-                {
-                    action.time += dt;
-
-                    if (!action.performed && action.time > a.attackTime)
-                    {
-                        action.performed = true;
-                        // do damage and remove...
-
-                        var damageEntity = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(damageEntity, new Damage()
-                        {
-                            target = target.target,
-                            damage = a.damage
-                        });
+                        // if lost isalive, lose target...
+                        state.EntityManager.AddComponent<AttackAction>(entity);
                     }
-
-                    if (action.time > a.duration)
-                    {
-                        PostUpdateCommands.RemoveComponent<AttackAction>(e);
-                        PostUpdateCommands.AddComponent(e, new ReloadAction
-                        {
-                            time = UnityEngine.Random.Range(-a.reloadRandom, a.reloadRandom),
-                            duration = a.reload
-                        });
-                    }
-                });
+                } 
+            }
             
-            Entities
-                .WithAll<AttackComponent, ReloadAction>()
-                .ForEach(delegate(Entity e, ref ReloadAction action)
-                {
-                    action.time += dt;
-                    if (action.time > action.duration)
-                    {
-                        PostUpdateCommands.RemoveComponent<ReloadAction>(e);
-                    }
-                });
+            // Remove AttackAction from entities with DeathAction
+            var deathQuery = SystemAPI.QueryBuilder().WithAll<AttackAction, DeathAction>().Build();
+            state.EntityManager.RemoveComponent<AttackAction>(deathQuery);
+            
+            // Remove AttackAction from entities with DisableAttackComponent
+            var disableQuery = SystemAPI.QueryBuilder().WithAll<AttackAction, DisableAttackComponent>().Build();
+            state.EntityManager.RemoveComponent<AttackAction>(disableQuery);
+            
+            // Remove MovementAction from entities attacking
+            var movementQuery = SystemAPI.QueryBuilder().WithAll<AttackComponent, AttackTargetComponent, AttackAction, MovementAction>().Build();
+            state.EntityManager.RemoveComponent<MovementAction>(movementQuery);
+            
+            foreach (var (attack, target, action, entity) in 
+                SystemAPI.Query<RefRO<AttackComponent>, RefRO<AttackTargetComponent>, RefRW<AttackAction>>()
+                    .WithEntityAccess())
+            {
+                action.ValueRW.time += dt;
 
-            Entities.WithAll<LookingDirection, AttackAction, AttackTargetComponent>()
-                .ForEach(delegate(Entity e, ref LookingDirection d, ref Translation t, ref AttackTargetComponent a)
+                if (!action.ValueRO.performed && action.ValueRO.time > attack.ValueRO.attackTime)
                 {
-                    if (EntityManager.Exists(a.target))
-                    {
-                        var targetTranslation = EntityManager.GetComponentData<Translation>(a.target);
-                        d.direction = targetTranslation.Value.xy - t.Value.xy;
-                    }
-                });
+                    action.ValueRW.performed = true;
+                    // do damage and remove...
 
+                    var damageEntity = state.EntityManager.CreateEntity();
+                    state.EntityManager.AddComponentData(damageEntity, new Damage()
+                    {
+                        target = target.ValueRO.target,
+                        damage = attack.ValueRO.damage
+                    });
+                }
+
+                if (action.ValueRO.time > attack.ValueRO.duration)
+                {
+                    state.EntityManager.RemoveComponent<AttackAction>(entity);
+                    state.EntityManager.AddComponentData(entity, new ReloadAction
+                    {
+                        time = UnityEngine.Random.Range(-attack.ValueRO.reloadRandom, attack.ValueRO.reloadRandom),
+                        duration = attack.ValueRO.reload
+                    });
+                }
+            }
+            
+            foreach (var (action, entity) in 
+                SystemAPI.Query<RefRW<ReloadAction>>()
+                    .WithAll<AttackComponent>()
+                    .WithEntityAccess())
+            {
+                action.ValueRW.time += dt;
+                if (action.ValueRO.time > action.ValueRO.duration)
+                {
+                    state.EntityManager.RemoveComponent<ReloadAction>(entity);
+                }
+            }
+
+            foreach (var (lookingDirection, localTransform, attackTarget, entity) in 
+                SystemAPI.Query<RefRW<LookingDirection>, RefRO<LocalTransform>, RefRO<AttackTargetComponent>>()
+                    .WithAll<AttackAction>()
+                    .WithEntityAccess())
+            {
+                if (state.EntityManager.Exists(attackTarget.ValueRO.target))
+                {
+                    var targetTransform = state.EntityManager.GetComponentData<LocalTransform>(attackTarget.ValueRO.target);
+                    lookingDirection.ValueRW.direction = targetTransform.Position.xy - localTransform.ValueRO.Position.xy;
+                }
+            }
         }
     }
 }
