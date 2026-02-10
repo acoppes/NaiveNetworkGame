@@ -5,7 +5,7 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateBefore(typeof(CreateUnitFromNetworkGameStateSystem))]
-    public class DestroyUnitsWithoutNetworkGameStateSystem : ComponentSystem
+    public partial class DestroyUnitsWithoutNetworkGameStateSystem : SystemBase
     {
         protected override void OnUpdate()
         {

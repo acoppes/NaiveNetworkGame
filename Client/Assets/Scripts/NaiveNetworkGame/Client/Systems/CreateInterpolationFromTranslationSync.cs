@@ -5,7 +5,7 @@ using Unity.Transforms;
 namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateAfter(typeof(CopyTranslationSyncToUnit))]
-    public class CreateInterpolationFromTranslationSync : ComponentSystem
+    public partial class CreateInterpolationFromTranslationSync : SystemBase
     {
         protected override void OnUpdate()
         {

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public class UpdateUnitModelSystem : ComponentSystem
+    public partial class UpdateUnitModelSystem : SystemBase
     {
         protected override void OnUpdate()
         {

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateAfter(typeof(CreateUnitFromNetworkGameStateSystem))]
-    public class UpdateUnitFromNetworkGameStateSystem : ComponentSystem
+    public partial class UpdateUnitFromNetworkGameStateSystem : SystemBase
     {
         private Vector2 Vector2FromAngle(float a)
         {

@@ -47,7 +47,7 @@ namespace NaiveNetworkGame.Client.Systems
         }
     }
 
-    public class VisualModelSystem : ComponentSystem
+    public partial class VisualModelSystem : SystemBase
     {
         protected override void OnUpdate()
         {

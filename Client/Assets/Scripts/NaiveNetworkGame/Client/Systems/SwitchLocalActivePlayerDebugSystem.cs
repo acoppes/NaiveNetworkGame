@@ -8,7 +8,7 @@ namespace NaiveNetworkGame.Client.Systems
         
     }
     
-    public class SwitchLocalActivePlayerDebugSystem : ComponentSystem
+    public partial class SwitchLocalActivePlayerDebugSystem : SystemBase
     {
         protected override void OnUpdate()
         {

@@ -9,7 +9,7 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public class CreateUnitFromNetworkGameStateSystem : ComponentSystem
+    public partial class CreateUnitFromNetworkGameStateSystem : SystemBase
     {
         protected override void OnUpdate()
         {

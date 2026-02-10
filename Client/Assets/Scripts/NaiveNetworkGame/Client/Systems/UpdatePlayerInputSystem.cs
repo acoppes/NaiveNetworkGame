@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     // Given mouse state, updates player input state.
-    public class UpdatePlayerInputSystem : ComponentSystem
+    public partial class UpdatePlayerInputSystem : SystemBase
     {
         protected override void OnUpdate()
         {

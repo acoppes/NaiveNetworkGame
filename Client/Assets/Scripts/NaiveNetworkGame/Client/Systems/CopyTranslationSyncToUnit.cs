@@ -5,7 +5,7 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public class CopyTranslationSyncToUnit : ComponentSystem
+    public partial class CopyTranslationSyncToUnit : SystemBase
     {
         protected override void OnUpdate()
         {

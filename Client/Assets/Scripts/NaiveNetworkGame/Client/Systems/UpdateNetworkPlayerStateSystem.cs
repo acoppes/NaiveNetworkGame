@@ -4,7 +4,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public class UpdateNetworkPlayerStateSystem : ComponentSystem
+    public partial class UpdateNetworkPlayerStateSystem : SystemBase
     {
         protected override void OnUpdate()
         {

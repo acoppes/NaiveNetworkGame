@@ -7,7 +7,7 @@ namespace NaiveNetworkGame.Client.Systems
     [UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateAfter(typeof(CreateUnitFromNetworkGameStateSystem))]
     [UpdateBefore(typeof(UpdateUnitModelSystem))]
-    public class TranslationInterpolationSystem : ComponentSystem
+    public partial class TranslationInterpolationSystem : SystemBase
     {
         protected override void OnUpdate()
         {

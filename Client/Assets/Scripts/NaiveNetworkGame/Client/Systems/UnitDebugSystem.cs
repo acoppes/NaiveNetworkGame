@@ -23,7 +23,7 @@ namespace NaiveNetworkGame.Client.Systems
         }
     }
     
-    public class UnitDebugSystem : ComponentSystem
+    public partial class UnitDebugSystem : SystemBase
     {
         protected override void OnUpdate()
         {

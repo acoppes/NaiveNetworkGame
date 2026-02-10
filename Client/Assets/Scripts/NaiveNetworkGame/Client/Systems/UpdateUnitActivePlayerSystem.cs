@@ -4,7 +4,7 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Client.Systems
 {
     // for each unit, it updates if the unit is owned by local player
-    public class UpdateUnitActivePlayerSystem : ComponentSystem
+    public partial class UpdateUnitActivePlayerSystem : SystemBase
     {
         protected override void OnUpdate()
         {

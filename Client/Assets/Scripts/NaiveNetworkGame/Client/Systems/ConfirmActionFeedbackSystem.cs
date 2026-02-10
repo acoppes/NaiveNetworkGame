@@ -7,12 +7,12 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     // Shows a confirm action feedback for player move actions (currently disabled)
-    public class ConfirmActionFeedbackSystem : ComponentSystem
+    public partial class ConfirmActionFeedbackSystem : SystemBase
     {
         protected override void OnCreate()
         {
             base.OnCreate();
-            RequireSingletonForUpdate<ClientPrefabsSharedComponent>();
+            RequireForUpdate<ClientPrefabsSharedComponent>();
         }
 
         protected override void OnUpdate()

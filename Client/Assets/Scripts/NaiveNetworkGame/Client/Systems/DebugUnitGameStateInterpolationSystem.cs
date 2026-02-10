@@ -26,7 +26,7 @@ namespace NaiveNetworkGame.Client.Systems
     }
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public class DebugUnitGameStateInterpolationSystem : ComponentSystem
+    public partial class DebugUnitGameStateInterpolationSystem : SystemBase
     {
         protected override void OnUpdate()
         {

@@ -5,12 +5,12 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public class UpdateUserInterfaceSystem : ComponentSystem
+    public partial class UpdateUserInterfaceSystem : SystemBase
     {
         protected override void OnCreate()
         {
             base.OnCreate();
-            RequireSingletonForUpdate<ActivePlayerComponent>();
+            RequireForUpdate<ActivePlayerComponent>();
         }
 
         protected override void OnUpdate()

@@ -6,7 +6,7 @@ using Unity.Networking.Transport;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public class ClientProcessPendingActionsSystem : ComponentSystem
+    public partial class ClientProcessPendingActionsSystem : SystemBase
     {
         protected override void OnUpdate()
         {
