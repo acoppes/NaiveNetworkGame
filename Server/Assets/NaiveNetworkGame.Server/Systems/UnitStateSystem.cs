@@ -9,58 +9,58 @@ namespace NaiveNetworkGame.Server.Systems
     
     [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class UnitStateSystem : ComponentSystem
+    public partial struct UnitStateSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithNone<MovementAction, SpawningAction, AttackAction>()
-                .WithAll<ServerOnly, UnitStateComponent, IsAlive>()
-                .ForEach(delegate(Entity e, ref UnitStateComponent u)
-                {
-                    u.state = UnitStateTypes.idleState;
-                });
+            foreach (var unitState in 
+                SystemAPI.Query<RefRW<UnitStateComponent>>()
+                    .WithNone<MovementAction, SpawningAction, AttackAction>()
+                    .WithAll<ServerOnly, IsAlive>())
+            {
+                unitState.ValueRW.state = UnitStateTypes.idleState;
+            }
             
-            Entities
-                .WithNone<MovementAction>()
-                .WithAll<ServerOnly, SpawningAction, UnitStateComponent, IsAlive>()
-                .ForEach(delegate(Entity e, ref UnitStateComponent u, ref SpawningAction s)
-                {
-                    u.state = UnitStateTypes.spawningState;
-                    u.percentage = (byte) Mathf.RoundToInt(100.0f * s.time / s.duration);
-                });
+            foreach (var (unitState, spawning) in 
+                SystemAPI.Query<RefRW<UnitStateComponent>, RefRO<SpawningAction>>()
+                    .WithNone<MovementAction>()
+                    .WithAll<ServerOnly, IsAlive>())
+            {
+                unitState.ValueRW.state = UnitStateTypes.spawningState;
+                unitState.ValueRW.percentage = (byte) Mathf.RoundToInt(100.0f * spawning.ValueRO.time / spawning.ValueRO.duration);
+            }
             
-            Entities
-                .WithNone<SpawningAction>()
-                .WithAll<ServerOnly, MovementAction, UnitStateComponent, IsAlive>()
-                .ForEach(delegate(Entity e, ref UnitStateComponent u)
-                {
-                    u.state = UnitStateTypes.walkState;
-                });
+            foreach (var unitState in 
+                SystemAPI.Query<RefRW<UnitStateComponent>>()
+                    .WithNone<SpawningAction>()
+                    .WithAll<ServerOnly, MovementAction, IsAlive>())
+            {
+                unitState.ValueRW.state = UnitStateTypes.walkState;
+            }
 
-            Entities
-                .WithAll<ServerOnly, UnitStateComponent, AttackAction, IsAlive>()
-                .ForEach(delegate(Entity e, ref UnitStateComponent u)
-                {
-                    u.state = UnitStateTypes.attackingState;
-                });
+            foreach (var unitState in 
+                SystemAPI.Query<RefRW<UnitStateComponent>>()
+                    .WithAll<ServerOnly, AttackAction, IsAlive>())
+            {
+                unitState.ValueRW.state = UnitStateTypes.attackingState;
+            }
             
-            Entities
-                .WithAll<ServerOnly, UnitStateComponent, ReloadAction, IsAlive>()
-                .ForEach(delegate(Entity e, ref UnitStateComponent u, ref ReloadAction a)
-                {
-                    u.state = UnitStateTypes.reloadingState;
-                    u.percentage = (byte) Mathf.RoundToInt(100.0f * a.time / a.duration);
-                });
+            foreach (var (unitState, reloadAction) in 
+                SystemAPI.Query<RefRW<UnitStateComponent>, RefRO<ReloadAction>>()
+                    .WithAll<ServerOnly, IsAlive>())
+            {
+                unitState.ValueRW.state = UnitStateTypes.reloadingState;
+                unitState.ValueRW.percentage = (byte) Mathf.RoundToInt(100.0f * reloadAction.ValueRO.time / reloadAction.ValueRO.duration);
+            }
             
-            Entities
-                .WithNone<IsAlive>()
-                .WithAll<ServerOnly, UnitStateComponent, DeathAction>()
-                .ForEach(delegate(Entity e, ref UnitStateComponent u, ref DeathAction a)
-                {
-                    u.state = UnitStateTypes.deathState;
-                    u.percentage = (byte) Mathf.RoundToInt(100.0f * a.time / a.duration);
-                });
+            foreach (var (unitState, deathAction) in 
+                SystemAPI.Query<RefRW<UnitStateComponent>, RefRO<DeathAction>>()
+                    .WithNone<IsAlive>()
+                    .WithAll<ServerOnly>())
+            {
+                unitState.ValueRW.state = UnitStateTypes.deathState;
+                unitState.ValueRW.percentage = (byte) Mathf.RoundToInt(100.0f * deathAction.ValueRO.time / deathAction.ValueRO.duration);
+            }
         }
     }
 }
