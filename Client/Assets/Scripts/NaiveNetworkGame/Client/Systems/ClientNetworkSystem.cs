@@ -32,7 +32,7 @@ namespace NaiveNetworkGame.Client.Systems
         
     }
     
-    public class ClientNetworkSystem : ComponentSystem
+    public partial class ClientNetworkSystem : SystemBase
     {
         private float lastLatencyUpdate;
         
@@ -40,21 +40,28 @@ namespace NaiveNetworkGame.Client.Systems
         {
             base.OnCreate();
 
-            RequireSingletonForUpdate<ClientSingleton>();
+            RequireForUpdate<ClientSingleton>();
+            
+//             var serverEntity = EntityManager.CreateEntity();
+// #if UNITY_EDITOR
+//             EntityManager.SetName(serverEntity, "ServerSingleton");
+// #endif
+//             EntityManager.AddComponentData(serverEntity, new ServerSingleton());
+//             EntityManager.AddSharedComponentManaged(serverEntity, new ServerData());
             
             // now server network system is in charge of creating server singleton...
-            var clientEntity = EntityManager.CreateEntity(typeof(ClientSingleton));
+            var clientEntity = EntityManager.CreateEntity();
 #if UNITY_EDITOR
             EntityManager.SetName(clientEntity, "ClientSingleton");
 #endif
-            // EntityManager.AddSharedComponentData(clientEntity, new ClientSingleton());
+            EntityManager.AddSharedComponent(clientEntity, new ClientSingleton());
         }
 
         protected override void OnUpdate()
         {
-            var clientEntity = GetSingletonEntity<ClientSingleton>();
+            var clientEntity = SystemAPI.GetSingletonEntity<ClientSingleton>();
             var client =
-                EntityManager.GetSharedComponentData<ClientSingleton>(clientEntity);
+                EntityManager.GetSharedComponent<ClientSingleton>(clientEntity);
 
             Entities
                 .WithAll<StartClientCommand>()

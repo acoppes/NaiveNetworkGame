@@ -5,7 +5,12 @@ using Unity.Networking.Transport;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public struct ServerSingleton : ISharedComponentData, IEquatable<ServerSingleton>
+    public struct ServerSingleton : IComponentData
+    {
+        
+    }
+    
+    public struct ServerData : ISharedComponentData, IEquatable<ServerData>
     {
         public bool started;
         public NetworkManager networkManager;
@@ -16,7 +21,7 @@ namespace NaiveNetworkGame.Server.Components
         public ushort port;
         public byte playersNeededToStartSimulation;
 
-        public bool Equals(ServerSingleton other)
+        public bool Equals(ServerData other)
         {
             return started == other.started && Equals(networkManager, other.networkManager) && 
                    framentationPipeline.Equals(other.framentationPipeline) && 
@@ -26,7 +31,7 @@ namespace NaiveNetworkGame.Server.Components
 
         public override bool Equals(object obj)
         {
-            return obj is ServerSingleton other && Equals(other);
+            return obj is ServerData other && Equals(other);
         }
 
         public override int GetHashCode()

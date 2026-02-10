@@ -34,27 +34,28 @@ namespace NaiveNetworkGame.Server.Systems
         public bool restart;
     }
 
-    public class ServerNetworkSystem : ComponentSystem
+    public partial class ServerNetworkSystem : SystemBase
     {
         protected override void OnCreate()
         {
             base.OnCreate();
-
-            RequireSingletonForUpdate<ServerSingleton>();
+            
+            RequireForUpdate<ServerSingleton>();
             
             // now server network system is in charge of creating server singleton...
             var serverEntity = EntityManager.CreateEntity();
             #if UNITY_EDITOR
             EntityManager.SetName(serverEntity, "ServerSingleton");
             #endif
-            EntityManager.AddSharedComponentData(serverEntity, new ServerSingleton());
+            EntityManager.AddComponentData(serverEntity, new ServerSingleton());
+            EntityManager.AddSharedComponentManaged(serverEntity, new ServerData());
         }
 
         protected override void OnUpdate()
         {
-            var serverEntity = GetSingletonEntity<ServerSingleton>();
+            var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
             var server =
-                EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
+                EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
             Entities
                 .ForEach(delegate(Entity e, ref StopServerCommand stop)
@@ -85,7 +86,7 @@ namespace NaiveNetworkGame.Server.Systems
                     
                     PostUpdateCommands.SetSharedComponent(serverEntity, server);
 
-                    PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerSingleton>().ToEntityQuery().ToEntityArray(Allocator.Temp));
+                    PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerData>().ToEntityQuery().ToEntityArray(Allocator.Temp));
                     PostUpdateCommands.DestroyEntity(GetSingletonEntity<ServerSimulation>());
                     PostUpdateCommands.DestroyEntity(Entities.WithAll<Prefab>().ToEntityQuery().ToEntityArray(Allocator.Temp));
                     
@@ -353,9 +354,9 @@ namespace NaiveNetworkGame.Server.Systems
         {
             
 
-            var serverEntity = GetSingletonEntity<ServerSingleton>();
+            var serverEntity = GetSingletonEntity<ServerData>();
             var server =
-                EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
+                EntityManager.GetSharedComponentData<ServerData>(serverEntity);
             
             var networkManager = server.networkManager;
 

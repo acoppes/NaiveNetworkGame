@@ -5,7 +5,7 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class ServerSendGameStateSystem : ComponentSystem
+    public partial class ServerSendGameStateSystem : SystemBase
     {
         private float sendGameStateTime;
         private float sendTranslationStateTime;
@@ -13,14 +13,16 @@ namespace NaiveNetworkGame.Server.Systems
         protected override void OnCreate()
         {
             base.OnCreate();
-            RequireSingletonForUpdate<ServerSingleton>();
+            RequireForUpdate<ServerSingleton>();
         }
 
         protected override void OnUpdate()
         {
-            var serverEntity = GetSingletonEntity<ServerSingleton>();
+            // Entity serverEntity = new Entity();
+            // var serverEntity = GetSingletonEntity<ServerSingleton>();
+            var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
             var server =
-                EntityManager.GetSharedComponentData<ServerSingleton>(serverEntity);
+                EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
             var networkManager = server.networkManager;
 
@@ -30,8 +32,10 @@ namespace NaiveNetworkGame.Server.Systems
             ServerNetworkStatistics.outputBytesLastFrame = 0;
             ServerNetworkStatistics.currentConnections = 0;
 
-            sendGameStateTime += Time.DeltaTime;
-            sendTranslationStateTime += Time.DeltaTime;
+            var dt = SystemAPI.Time.DeltaTime;
+            
+            sendGameStateTime += dt;
+            sendTranslationStateTime += dt;
             
             // First, for each connection, send player id
             var m_Driver = networkManager.m_Driver;

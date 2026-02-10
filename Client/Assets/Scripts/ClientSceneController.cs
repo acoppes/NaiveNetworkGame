@@ -79,7 +79,7 @@ namespace Scenes
                 ComponentType.ReadWrite<PlayerPendingAction>());
             
             var userInterfaceEntity = entityManager.CreateEntity();
-            entityManager.AddSharedComponentData(userInterfaceEntity, new UserInterfaceSharedComponent
+            entityManager.AddSharedComponentManaged(userInterfaceEntity, new UserInterfaceSharedComponent
             {
                 userInterface = userInterface
             });
@@ -92,7 +92,7 @@ namespace Scenes
             // var query = entityManager.CreateEntityQuery(
             //     ComponentType.ReadWrite<ClientPrefabsSharedComponent>());
             var clientPrefabsEntity = entityManager.CreateEntity();
-            entityManager.AddSharedComponentData(clientPrefabsEntity, new ClientPrefabsSharedComponent
+            entityManager.AddSharedComponentManaged(clientPrefabsEntity, new ClientPrefabsSharedComponent
             {
                 confirmActionPrefab = actionPrefab
             });
