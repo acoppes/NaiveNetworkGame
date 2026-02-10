@@ -7,195 +7,202 @@ namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
     [UpdateBefore(typeof(PlayerBehaviourSystem))]
-    public class UpdateChaseCenterSystem : ComponentSystem
+    public partial struct UpdateChaseCenterSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            // By default, we sue the unit position as the chase center
-            Entities
-                .WithAll<AttackComponent, Translation, IsAlive>()
-                .ForEach(delegate(Entity e, ref AttackComponent attack, ref Translation t)
-                {
-                    attack.chaseCenter = t.Value;
-                });
+            // By default, we use the unit position as the chase center
+            foreach (var (attack, localTransform) in 
+                SystemAPI.Query<RefRW<AttackComponent>, RefRO<LocalTransform>>()
+                    .WithAll<IsAlive>())
+            {
+                attack.ValueRW.chaseCenter = localTransform.ValueRO.Position;
+            }
         }
     }
     
     [UpdateAfter(typeof(ProcessPendingPlayerActionsSystem))]
     [UpdateBefore(typeof(UnitBehaviourSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class PlayerBehaviourSystem : ComponentSystem
+    public partial struct PlayerBehaviourSystem : ISystem
     {
-        protected override void OnCreate()
+        public void OnUpdate(ref SystemState state)
         {
-            base.OnCreate();
-            InitEntityQueryCache(100);
-        }
-
-        protected override void OnUpdate()
-        {
-            Entities
-                .WithAll<ServerOnly>()
-                .ForEach(delegate(Entity e, ref SwitchToAttackAction a, ref PlayerController playerController, 
-                    ref PlayerBehaviour b)
+            foreach (var (switchToAttack, playerController, behaviour, entity) in 
+                SystemAPI.Query<RefRO<SwitchToAttackAction>, RefRO<PlayerController>, RefRW<PlayerBehaviour>>()
+                    .WithAll<ServerOnly>()
+                    .WithEntityAccess())
             {
-                PostUpdateCommands.RemoveComponent<SwitchToAttackAction>(e);
+                state.EntityManager.RemoveComponent<SwitchToAttackAction>(entity);
                 
-                var player = playerController.player;
-                var area = playerController.attackArea;
+                var player = playerController.ValueRO.player;
+                var area = playerController.ValueRO.attackArea;
 
-                b.mode = PlayerBehaviour.aggressive;
+                behaviour.ValueRW.mode = PlayerBehaviour.aggressive;
 
-                Entities.WithAll<Unit, IdleAction>()
-                    .ForEach(delegate(Entity unitEntity, ref Unit u)
-                    {
-                        if (u.player != player)
-                            return;
-                        PostUpdateCommands.RemoveComponent<IdleAction>(unitEntity);
-                    });
-                        
-                Entities.WithAll<Unit, MovementAction>()
-                    .ForEach(delegate(Entity unitEntity, ref Unit u)
-                    {
-                        if (u.player != player)
-                            return;
-                        PostUpdateCommands.RemoveComponent<MovementAction>(unitEntity);
-                    });
-            });
-            
-            Entities
-                .WithAll<ServerOnly>()
-                .ForEach(delegate(Entity e, ref SwitchToDefendAction a, ref PlayerController playerController, 
-                    ref PlayerBehaviour b)
+                // Remove IdleAction from player's units
+                var idleQuery = SystemAPI.QueryBuilder()
+                    .WithAll<Unit, IdleAction>()
+                    .Build();
+                
+                foreach (var (unit, unitEntity) in 
+                    SystemAPI.Query<RefRO<Unit>>()
+                        .WithAll<IdleAction>()
+                        .WithEntityAccess())
                 {
-                    PostUpdateCommands.RemoveComponent<SwitchToDefendAction>(e);
-                    
-                    var player = playerController.player;
-                    var area = playerController.defendArea;
-
-                    b.mode = PlayerBehaviour.defensive;
-
-                    Entities.WithAll<Unit, IdleAction>()
-                        .ForEach(delegate(Entity ue, ref Unit u)
-                        {
-                            if (u.player != player)
-                                return;
-                            PostUpdateCommands.RemoveComponent<IdleAction>(ue);
-                        });
-                        
-                    Entities.WithAll<Unit, MovementAction>()
-                        .ForEach(delegate(Entity ue, ref Unit u)
-                        {
-                            if (u.player != player)
-                                return;
-                            PostUpdateCommands.RemoveComponent<MovementAction>(ue);
-                        });
-                });
-            
-            Entities
-                .WithAll<ServerOnly>()
-                .ForEach(delegate(Entity e, ref PlayerController playerController, ref Translation t, ref PlayerBehaviour b)
+                    if (unit.ValueRO.player != player)
+                        continue;
+                    state.EntityManager.RemoveComponent<IdleAction>(unitEntity);
+                }
+                
+                // Remove MovementAction from player's units
+                foreach (var (unit, unitEntity) in 
+                    SystemAPI.Query<RefRO<Unit>>()
+                        .WithAll<MovementAction>()
+                        .WithEntityAccess())
                 {
-                    var player = playerController.player;
-                    var defendCenter = t.Value;
-                    var defendRange = playerController.defensiveRange * playerController.defensiveRange;
+                    if (unit.ValueRO.player != player)
+                        continue;
+                    state.EntityManager.RemoveComponent<MovementAction>(unitEntity);
+                }
+            }
+            
+            foreach (var (switchToDefend, playerController, behaviour, entity) in 
+                SystemAPI.Query<RefRO<SwitchToDefendAction>, RefRO<PlayerController>, RefRW<PlayerBehaviour>>()
+                    .WithAll<ServerOnly>()
+                    .WithEntityAccess())
+            {
+                state.EntityManager.RemoveComponent<SwitchToDefendAction>(entity);
+                
+                var player = playerController.ValueRO.player;
+                var area = playerController.ValueRO.defendArea;
 
-                    var attackArea = playerController.attackArea;
-                    var defendArea = playerController.defendArea;
+                behaviour.ValueRW.mode = PlayerBehaviour.defensive;
 
-                    switch (b.mode)
-                    {
-                        case PlayerBehaviour.aggressive:
-                            
-                            Entities.WithAll<Unit, UnitBehaviourComponent>()
-                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviourComponent ub)
-                                {
-                                    if (u.player != player)
-                                        return;
-                                    ub.wanderArea = attackArea;
-                                });
-                            
-                            Entities
-                                .WithAll<Unit, DisableAttackComponent>()
-                                .ForEach(delegate(Entity ue, ref Unit u)
-                                {
-                                    if (u.player != player)
-                                        return;
-                                    PostUpdateCommands.RemoveComponent<DisableAttackComponent>(ue);
-                                });
-                            break;
-                        case PlayerBehaviour.defensive:
-                            // could be processed all the time, not only here...
-                            
-                            Entities.WithAll<Unit, UnitBehaviourComponent>()
-                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref UnitBehaviourComponent ub)
-                                {
-                                    if (u.player != player)
-                                        return;
-                                    ub.wanderArea = defendArea;
-                                });
-                            
-                            // While we are on defensive mode, we use the defend center as the center of chase target
-                            Entities
-                                .WithAll<Unit, AttackComponent>()
-                                .ForEach(delegate(Entity unitEntity, ref Unit u, ref AttackComponent attack)
-                                {
-                                    if (u.player != player)
-                                        return;
-                                    attack.chaseCenter = defendCenter;
-                                });
-                            
-                            Entities
+                // Remove IdleAction from player's units
+                foreach (var (unit, unitEntity) in 
+                    SystemAPI.Query<RefRO<Unit>>()
+                        .WithAll<IdleAction>()
+                        .WithEntityAccess())
+                {
+                    if (unit.ValueRO.player != player)
+                        continue;
+                    state.EntityManager.RemoveComponent<IdleAction>(unitEntity);
+                }
+                
+                // Remove MovementAction from player's units
+                foreach (var (unit, unitEntity) in 
+                    SystemAPI.Query<RefRO<Unit>>()
+                        .WithAll<MovementAction>()
+                        .WithEntityAccess())
+                {
+                    if (unit.ValueRO.player != player)
+                        continue;
+                    state.EntityManager.RemoveComponent<MovementAction>(unitEntity);
+                }
+            }
+            
+            foreach (var (playerController, localTransform, behaviour) in 
+                SystemAPI.Query<RefRO<PlayerController>, RefRO<LocalTransform>, RefRO<PlayerBehaviour>>()
+                    .WithAll<ServerOnly>())
+            {
+                var player = playerController.ValueRO.player;
+                var defendCenter = localTransform.ValueRO.Position;
+                var defendRange = playerController.ValueRO.defensiveRange * playerController.ValueRO.defensiveRange;
+
+                var attackArea = playerController.ValueRO.attackArea;
+                var defendArea = playerController.ValueRO.defendArea;
+
+                switch (behaviour.ValueRO.mode)
+                {
+                    case PlayerBehaviour.aggressive:
+                        
+                        foreach (var (unit, unitBehaviour) in 
+                            SystemAPI.Query<RefRO<Unit>, RefRW<UnitBehaviourComponent>>())
+                        {
+                            if (unit.ValueRO.player != player)
+                                continue;
+                            unitBehaviour.ValueRW.wanderArea = attackArea;
+                        }
+                        
+                        foreach (var (unit, unitEntity) in 
+                            SystemAPI.Query<RefRO<Unit>>()
+                                .WithAll<DisableAttackComponent>()
+                                .WithEntityAccess())
+                        {
+                            if (unit.ValueRO.player != player)
+                                continue;
+                            state.EntityManager.RemoveComponent<DisableAttackComponent>(unitEntity);
+                        }
+                        break;
+                        
+                    case PlayerBehaviour.defensive:
+                        // could be processed all the time, not only here...
+                        
+                        foreach (var (unit, unitBehaviour) in 
+                            SystemAPI.Query<RefRO<Unit>, RefRW<UnitBehaviourComponent>>())
+                        {
+                            if (unit.ValueRO.player != player)
+                                continue;
+                            unitBehaviour.ValueRW.wanderArea = defendArea;
+                        }
+                        
+                        // While we are on defensive mode, we use the defend center as the center of chase target
+                        foreach (var (unit, attack) in 
+                            SystemAPI.Query<RefRO<Unit>, RefRW<AttackComponent>>())
+                        {
+                            if (unit.ValueRO.player != player)
+                                continue;
+                            attack.ValueRW.chaseCenter = defendCenter;
+                        }
+                        
+                        foreach (var (unit, unitTransform, unitEntity) in 
+                            SystemAPI.Query<RefRO<Unit>, RefRO<LocalTransform>>()
                                 .WithNone<DisableAttackComponent>()
-                                .WithAll<Unit, Translation>()
-                                .ForEach(delegate(Entity ue, ref Unit u, ref Translation ut)
-                                {
-                                    if (u.player != player)
-                                        return;
+                                .WithEntityAccess())
+                        {
+                            if (unit.ValueRO.player != player)
+                                continue;
 
-                                    if (math.distancesq(ut.Value, defendCenter) > defendRange)
-                                    {
-                                        PostUpdateCommands.AddComponent<DisableAttackComponent>(ue);
-                                    }
-                                });
-                            
-                            Entities
-                                .WithAll<DisableAttackComponent, Unit, Translation>()
-                                .ForEach(delegate(Entity ue, ref Unit u, ref Translation ut)
-                                {
-                                    if (u.player != player)
-                                        return;
+                            if (math.distancesq(unitTransform.ValueRO.Position, defendCenter) > defendRange)
+                            {
+                                state.EntityManager.AddComponent<DisableAttackComponent>(unitEntity);
+                            }
+                        }
+                        
+                        foreach (var (unit, unitTransform, unitEntity) in 
+                            SystemAPI.Query<RefRO<Unit>, RefRO<LocalTransform>>()
+                                .WithAll<DisableAttackComponent>()
+                                .WithEntityAccess())
+                        {
+                            if (unit.ValueRO.player != player)
+                                continue;
 
-                                    if (math.distancesq(ut.Value, defendCenter) < defendRange)
-                                    {
-                                        PostUpdateCommands.RemoveComponent<DisableAttackComponent>(ue);
-                                    }
-                                });
-                            
-                            Entities
-                                .WithAll<ChaseTargetComponent, MovementAction, DisableAttackComponent>()
-                                .ForEach(delegate(Entity e)
-                                {
-                                    PostUpdateCommands.RemoveComponent<MovementAction>(e);
-                                });
-                            
-                            Entities
-                                .WithAll<ChaseTargetComponent, DisableAttackComponent>()
-                                .ForEach(delegate(Entity e)
-                                {
-                                    PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
-                                });
+                            if (math.distancesq(unitTransform.ValueRO.Position, defendCenter) < defendRange)
+                            {
+                                state.EntityManager.RemoveComponent<DisableAttackComponent>(unitEntity);
+                            }
+                        }
+                        
+                        // Bulk remove components using QueryBuilder
+                        var chaseMovementQuery = SystemAPI.QueryBuilder()
+                            .WithAll<ChaseTargetComponent, MovementAction, DisableAttackComponent>()
+                            .Build();
+                        state.EntityManager.RemoveComponent<MovementAction>(chaseMovementQuery);
+                        
+                        var chaseTargetQuery = SystemAPI.QueryBuilder()
+                            .WithAll<ChaseTargetComponent, DisableAttackComponent>()
+                            .Build();
+                        state.EntityManager.RemoveComponent<ChaseTargetComponent>(chaseTargetQuery);
 
-                            Entities
-                                .WithAll<AttackTargetComponent, DisableAttackComponent>()
-                                .ForEach(delegate(Entity e)
-                                {
-                                    PostUpdateCommands.RemoveComponent<AttackTargetComponent>(e);
-                                });
-                            
-                            break;
-                    }
-                });
+                        var attackTargetQuery = SystemAPI.QueryBuilder()
+                            .WithAll<AttackTargetComponent, DisableAttackComponent>()
+                            .Build();
+                        state.EntityManager.RemoveComponent<AttackTargetComponent>(attackTargetQuery);
+                        
+                        break;
+                }
+            }
             
             // Enable attack again for units in defend area...
         }
