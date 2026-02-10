@@ -9,25 +9,43 @@ namespace NaiveNetworkGame.Client.Systems
     {
         protected override void OnUpdate()
         {
-            var unitsQuery = Entities.WithAll<Unit, Translation>().ToEntityQuery();
+            var unitsQuery = Entities.WithAll<Unit, LocalTransform>().ToQuery();
             var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
 
-            Entities
-                .WithNone<Unit>()
-                .WithAll<NetworkTranslationSync, ClientOnly>()
-                .ForEach(delegate(Entity e, ref NetworkTranslationSync n)
+            foreach (var (n, e) in SystemAPI.Query<NetworkTranslationSync>()
+                         .WithAll<NetworkTranslationSync, ClientOnly>()
+                         .WithNone<Unit>()
+                         .WithEntityAccess())
+            {
+                for (var i = 0; i < units.Length; i++)
                 {
-                    for (var i = 0; i < units.Length; i++)
+                    var unit = units[i];
+                    if (unit.unitId == n.unitId)
                     {
-                        var unit = units[i];
-                        if (unit.unitId == n.unitId)
-                        {
-                            PostUpdateCommands.AddComponent(unitEntities[i], n);
-                        }
+                        EntityManager.AddComponentData(unitEntities[i], n);
                     }
-                    PostUpdateCommands.DestroyEntity(e);
-                });
+                }
+
+                EntityManager.DestroyEntity(e);
+            }
+            
+            // Entities
+            //     .WithNone<Unit>()
+            //     .WithAll<NetworkTranslationSync, ClientOnly>()
+            //     .ForEach((Entity e, ref NetworkTranslationSync n) =>
+            //     {
+            //         for (var i = 0; i < units.Length; i++)
+            //         {
+            //             var unit = units[i];
+            //             if (unit.unitId == n.unitId)
+            //             {
+            //                 PostUpdateCommands.AddComponent(unitEntities[i], n);
+            //             }
+            //         }
+            //
+            //         PostUpdateCommands.DestroyEntity(e);
+            //     }).Run();
 
             units.Dispose();
             unitEntities.Dispose();
