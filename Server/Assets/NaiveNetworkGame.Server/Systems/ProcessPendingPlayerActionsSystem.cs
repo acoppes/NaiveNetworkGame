@@ -7,154 +7,152 @@ namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateBefore(typeof(UpdateNetworkGameStateSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class ProcessPendingPlayerActionsSystem : ComponentSystem
+    public partial struct ProcessPendingPlayerActionsSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             // process all player pending actions
-            Entities
-                .WithAll<ServerOnly, PendingPlayerAction, PlayerController>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController)
+            foreach (var (pendingAction, playerController, e) in 
+                SystemAPI.Query<RefRO<PendingPlayerAction>, RefRW<PlayerController>>()
+                    .WithAll<ServerOnly>()
+                    .WithEntityAccess())
+            {
+                var player = pendingAction.ValueRO.player;
+                
+                // Changed to only process build unit actions
+                if (pendingAction.ValueRO.actionType != PlayerAction.BuildUnit)
+                    continue;
+                
+                state.EntityManager.RemoveComponent<PendingPlayerAction>(e);
+
+                var playerActions = state.EntityManager.GetBuffer<PlayerAction>(e);
+                var playerAction = playerActions[pendingAction.ValueRO.unitType];
+
+                // can't execute action if not enough gold...
+
+                var prefab = playerAction.prefab;
+                
+                var unitComponent = state.EntityManager.GetComponentData<Unit>(prefab);
+
+                // dont create unit if at maximum capacity
+                if (unitComponent.slotCost > 0 && 
+                    playerController.ValueRO.currentUnits + unitComponent.slotCost > playerController.ValueRO.maxUnits) 
+                    continue;
+
+                if (playerController.ValueRO.gold < playerAction.cost)
+                    continue;
+
+                var availableSlotIndex = 0;
+
+                if (unitComponent.isBuilding)
                 {
-                    var player = p.player;
+                    if (playerController.ValueRO.availableBuildingSlots == 0)
+                        continue;
+
+                    var actionProcessed = false;
                     
-                    // Changed to only process build unit actions
-                    if (p.actionType != PlayerAction.BuildUnit)
-                        return;
-                    
-                    PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
-
-                    var playerActions = GetBufferFromEntity<PlayerAction>()[e];
-                    var playerAction = playerActions[p.unitType];
-
-                    // can't execute action if not enough gold...
-
-
-                    var prefab = playerAction.prefab;
-                    
-                    var unitComponent = GetComponentDataFromEntity<Unit>()[prefab];
-
-                    // dont create unit if at maximum capacity
-                    if (unitComponent.slotCost > 0 && 
-                        playerController.currentUnits + unitComponent.slotCost > playerController.maxUnits) 
-                        return;
-
-                    if (playerController.gold < playerAction.cost)
-                        return;
-
-                    var availableSlotIndex = 0;
-
-                    if (unitComponent.isBuilding)
-                    {
-                        if (playerController.availableBuildingSlots == 0)
-                            return;
-
-                        var actionProcessed = false;
-                        
-                        Entities
+                    foreach (var (holder, buildingUnit, buildingEntity) in 
+                        SystemAPI.Query<RefRO<BuildingHolder>, RefRO<Unit>>()
                             .WithNone<BuildUnitAction>()
-                            .WithAll<BuildingHolder, Unit>()
-                            .ForEach(delegate(Entity be, ref BuildingHolder holder, ref Unit u)
-                            {
-                                if (u.player != player)
-                                    return;
-                                
-                                // don't allow other barracks to process this action...
-                                if (actionProcessed)
-                                    return;
-
-                                if (holder.hasBuilding)
-                                    return;
-                                
-                                // enqueue unit build...
-                                // consume player gold...
-
-                                PostUpdateCommands.AddComponent(be, new BuildUnitAction
-                                {
-                                    // duration = b.spawnDuration,
-                                    prefab = prefab
-                                });
-                                // PostUpdateCommands.AddComponent(be, pendingAction);
-
-                                actionProcessed = true;
-                            });
-
-                        if (actionProcessed)
-                        {
-                            playerController.gold -= playerAction.cost;
-                        }
-                        
-                    }
-                    else
+                            .WithEntityAccess())
                     {
-                        // search barrack capable of biulding this unit...
-                        var actionProcessed = false;
-
-                        var pendingAction = p;
-                        var wanderArea = playerController.defendArea;
+                        if (buildingUnit.ValueRO.player != player)
+                            continue;
                         
-                        Entities
-                            .WithNone<BuildUnitAction>()
-                            .WithAll<Barracks, Unit>()
-                            .ForEach(delegate(Entity be, ref Barracks b, ref Unit u)
-                            {
-                                if (u.player != player)
-                                    return;
-                                
-                                // don't allow other barracks to process this action...
-                                if (actionProcessed)
-                                    return;
-                                
-                                // enqueue unit build...
-                                // consume player gold...
-
-                                // check if this barracks can build this kind of units...
-                                if (b.unitType != unitComponent.type)
-                                    return;
-                                
-                                PostUpdateCommands.AddComponent(be, new BuildUnitAction
-                                {
-                                    // duration = b.spawnDuration,
-                                    prefab = prefab,
-                                    wanderArea = wanderArea
-                                });
-                                // PostUpdateCommands.AddComponent(be, pendingAction);
-
-                                actionProcessed = true;
-                            });
-
+                        // don't allow other barracks to process this action...
                         if (actionProcessed)
+                            continue;
+
+                        if (holder.ValueRO.hasBuilding)
+                            continue;
+                        
+                        // enqueue unit build...
+                        // consume player gold...
+
+                        state.EntityManager.AddComponentData(buildingEntity, new BuildUnitAction
                         {
-                            playerController.gold -= playerAction.cost;
-                        }
+                            // duration = b.spawnDuration,
+                            prefab = prefab
+                        });
+
+                        actionProcessed = true;
                     }
-                });
+
+                    if (actionProcessed)
+                    {
+                        playerController.ValueRW.gold -= playerAction.cost;
+                    }
+                    
+                }
+                else
+                {
+                    // search barrack capable of building this unit...
+                    var actionProcessed = false;
+
+                    var wanderArea = playerController.ValueRO.defendArea;
+                    
+                    foreach (var (barracks, barrackUnit, barrackEntity) in 
+                        SystemAPI.Query<RefRO<Barracks>, RefRO<Unit>>()
+                            .WithNone<BuildUnitAction>()
+                            .WithEntityAccess())
+                    {
+                        if (barrackUnit.ValueRO.player != player)
+                            continue;
+                        
+                        // don't allow other barracks to process this action...
+                        if (actionProcessed)
+                            continue;
+                        
+                        // check if this barracks can build this kind of units...
+                        if (barracks.ValueRO.unitType != unitComponent.type)
+                            continue;
+                        
+                        // enqueue unit build...
+                        // consume player gold...
+                        
+                        state.EntityManager.AddComponentData(barrackEntity, new BuildUnitAction
+                        {
+                            // duration = b.spawnDuration,
+                            prefab = prefab,
+                            wanderArea = wanderArea
+                        });
+
+                        actionProcessed = true;
+                    }
+
+                    if (actionProcessed)
+                    {
+                        playerController.ValueRW.gold -= playerAction.cost;
+                    }
+                }
+            }
             
-              Entities
-                .WithAll<ServerOnly, PendingPlayerAction, PlayerController, PlayerBehaviour>()
-                .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref PlayerBehaviour b)
+            foreach (var (pendingAction, e) in 
+                SystemAPI.Query<RefRO<PendingPlayerAction>>()
+                    .WithAll<PlayerController>()
+                    .WithAll<PlayerBehaviour>()
+                    .WithAll<ServerOnly>()
+                    .WithEntityAccess())
+            {
+                // Changed to only process build unit actions
+                if (pendingAction.ValueRO.actionType == PlayerAction.Attack)
                 {
-                    // Changed to only process build unit actions
-                    if (p.actionType == PlayerAction.Attack)
-                    {
-                        PostUpdateCommands.AddComponent(e, new SwitchToAttackAction());
-                        PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
-                        
-                    } else if (p.actionType == PlayerAction.Defend)
-                    {
-                        PostUpdateCommands.AddComponent(e, new SwitchToDefendAction()); 
-                        PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
-                    }
+                    state.EntityManager.AddComponent<SwitchToAttackAction>(e);
+                    state.EntityManager.RemoveComponent<PendingPlayerAction>(e);
                     
-                });
-              
-              Entities
-                  .WithAll<ServerOnly, PendingPlayerAction, PlayerController, Translation>()
-                  .ForEach(delegate (Entity e, ref PendingPlayerAction p, ref PlayerController playerController, ref Translation t)
-                  {
-                      // destroy the other pending actions not processed...
-                      PostUpdateCommands.RemoveComponent<PendingPlayerAction>(e);
-                  });
+                } 
+                else if (pendingAction.ValueRO.actionType == PlayerAction.Defend)
+                {
+                    state.EntityManager.AddComponent<SwitchToDefendAction>(e); 
+                    state.EntityManager.RemoveComponent<PendingPlayerAction>(e);
+                }
+            }
+            
+            // Destroy the other pending actions not processed...
+            var remainingPendingQuery = SystemAPI.QueryBuilder()
+                .WithAll<ServerOnly, PendingPlayerAction, PlayerController, LocalTransform>()
+                .Build();
+            state.EntityManager.RemoveComponent<PendingPlayerAction>(remainingPendingQuery);
         }
     }
 }

@@ -4,69 +4,69 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class ResourceCollectionSystem : ComponentSystem
+    public partial struct ResourceCollectionSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithNone<SpawningAction>()
-                .WithAll<IsAlive, ResourceCollector, ServerOnly>()
-                .ForEach(delegate(ref ResourceCollector r)
+            foreach (var resourceCollector in 
+                SystemAPI.Query<RefRW<ResourceCollector>>()
+                    .WithNone<SpawningAction>()
+                    .WithAll<IsAlive, ServerOnly>())
+            {
+                resourceCollector.ValueRW.currentCollectionTime += SystemAPI.Time.DeltaTime;
+                if (resourceCollector.ValueRO.currentCollectionTime > 1)
                 {
-                    r.currentCollectionTime += World.Time.DeltaTime;
-                    if (r.currentCollectionTime > 1)
-                    {
-                        r.currentCollectionTime -= 1;
-                        r.collectedGold += r.goldPerSecond;
-                    }
-                });
+                    resourceCollector.ValueRW.currentCollectionTime -= 1;
+                    resourceCollector.ValueRW.collectedGold += resourceCollector.ValueRO.goldPerSecond;
+                }
+            }
         }
     }
 
     [UpdateAfter(typeof(ResourceCollectionSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class CopyResourceCollectionToPlayerControllerSystem : ComponentSystem
+    public partial struct CopyResourceCollectionToPlayerControllerSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithAll<PlayerController, ServerOnly>()
-                .ForEach(delegate(ref PlayerController p)
+            foreach (var playerController in 
+                SystemAPI.Query<RefRW<PlayerController>>()
+                    .WithAll<ServerOnly>())
+            {
+                var playerId = playerController.ValueRO.player;
+                var gold = playerController.ValueRO.gold;
+                byte maxUnits = 0;
+                
+                foreach (var (unit, resourceCollector) in 
+                    SystemAPI.Query<RefRO<Unit>, RefRW<ResourceCollector>>()
+                        .WithNone<SpawningAction>()
+                        .WithAll<IsAlive, ServerOnly>())
                 {
-                    var playerId = p.player;
-                    var gold = p.gold;
-                    byte maxUnits = 0;
-                    
-                    Entities
+                    if (unit.ValueRO.player == playerId)
+                    {
+                        gold += resourceCollector.ValueRO.collectedGold;
+                        resourceCollector.ValueRW.collectedGold = 0;
+                    }
+                }
+                
+                foreach (var (unit, house) in 
+                    SystemAPI.Query<RefRO<Unit>, RefRO<House>>()
                         .WithNone<SpawningAction>()
-                        .WithAll<IsAlive, Unit, ResourceCollector, ServerOnly>()
-                        .ForEach(delegate(ref Unit unit, ref ResourceCollector r)
-                        {
-                            if (unit.player == playerId)
-                            {
-                                gold += r.collectedGold;
-                                r.collectedGold = 0;
-                            }
-                        });
-                    
-                    Entities
-                        .WithNone<SpawningAction>()
-                        .WithAll<IsAlive, Unit, House, ServerOnly>()
-                        .ForEach(delegate(ref Unit unit, ref House h)
-                        {
-                            if (unit.player == playerId)
-                            {
-                                maxUnits += h.maxUnits;
-                            }
-                        });
+                        .WithAll<IsAlive, ServerOnly>())
+                {
+                    if (unit.ValueRO.player == playerId)
+                    {
+                        maxUnits += house.ValueRO.maxUnits;
+                    }
+                }
 
-                    p.maxUnits = maxUnits;
+                playerController.ValueRW.maxUnits = maxUnits;
 
-                    if (gold > p.maxGold)
-                        gold = p.maxGold;
-                    
-                    p.gold = gold;
-                });
+                if (gold > playerController.ValueRO.maxGold)
+                    gold = playerController.ValueRO.maxGold;
+                
+                playerController.ValueRW.gold = gold;
+            }
         }
     }
 }

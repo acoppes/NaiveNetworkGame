@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    [UpdateAfter(typeof(ProcessBuildUnitAction))]
+    [UpdateAfter(typeof(ProcessBuildUnitActionSystem))]
     public class UpdatePlayerUnitSkinSystem : ComponentSystem
     {
         protected override void OnUpdate()

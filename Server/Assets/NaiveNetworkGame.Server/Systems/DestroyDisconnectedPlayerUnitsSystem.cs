@@ -3,38 +3,37 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    public class DestroyDisconnectedPlayerUnitsSystem : ComponentSystem
+    public partial struct DestroyDisconnectedPlayerUnitsSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithNone<PlayerConnectionId>()
-                .WithAll<PlayerController>()
-                .ForEach(delegate(Entity playerEntity, ref PlayerController pc)
+            foreach (var (playerController, playerEntity) in 
+                SystemAPI.Query<RefRO<PlayerController>>()
+                    .WithNone<PlayerConnectionId>()
+                    .WithEntityAccess())
             {
-                var player = pc.player;
+                var player = playerController.ValueRO.player;
                 
                 // destroy all player units if no connection
-                Entities
-                    .WithAll<NetworkUnit>()
-                    .ForEach(delegate(Entity unitEntity, ref Unit unit)
+                foreach (var (unit, unitEntity) in 
+                    SystemAPI.Query<RefRO<Unit>>()
+                        .WithAll<NetworkUnit>()
+                        .WithEntityAccess())
                 {
-                    if (unit.player == player)
+                    if (unit.ValueRO.player == player)
                     {
-                        PostUpdateCommands.DestroyEntity(unitEntity);
+                        state.EntityManager.DestroyEntity(unitEntity);
                     }
-                });
-            });
+                }
+            }
             
             // Stop sending dead units gamestate sync...
-            // Entities
-            //     .WithNone<IsAlive>()
+            // var deadUnitsQuery = SystemAPI.QueryBuilder()
             //     .WithAll<ServerOnly, NetworkTranslationSync, NetworkGameState>()
-            //     .ForEach(delegate(Entity e)
-            //     {
-            //         PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
-            //         PostUpdateCommands.RemoveComponent<NetworkGameState>(e);
-            //     });
+            //     .WithNone<IsAlive>()
+            //     .Build();
+            // state.EntityManager.RemoveComponent<NetworkTranslationSync>(deadUnitsQuery);
+            // state.EntityManager.RemoveComponent<NetworkGameState>(deadUnitsQuery);
         }
     }
 }

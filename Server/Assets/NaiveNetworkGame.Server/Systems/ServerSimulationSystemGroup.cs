@@ -3,12 +3,12 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
-    public class ServerSimulationSystemGroup : ComponentSystemGroup
+    public partial class ServerSimulationSystemGroup : ComponentSystemGroup
     {
         protected override void OnCreate()
         {
             base.OnCreate();
-            RequireSingletonForUpdate<ServerSimulation>();
+            RequireForUpdate<ServerSimulation>();
         }
     }
 }
