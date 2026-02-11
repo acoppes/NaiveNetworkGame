@@ -18,7 +18,7 @@ namespace NaiveNetworkGame.Client.Systems
         protected override void OnUpdate()
         {
             var singletonEntity = GetSingletonEntity<ClientPrefabsSharedComponent>();
-            var clientPrefabs = EntityManager.GetSharedComponentData<ClientPrefabsSharedComponent>(singletonEntity);
+            var clientPrefabs = EntityManager.GetSharedComponentManaged<ClientPrefabsSharedComponent>(singletonEntity);
             
             Entities
                 .WithAll<ConfirmActionFeedback>()

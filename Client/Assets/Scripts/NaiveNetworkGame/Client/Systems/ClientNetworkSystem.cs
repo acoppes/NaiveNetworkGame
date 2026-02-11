@@ -90,7 +90,7 @@ namespace NaiveNetworkGame.Client.Systems
                     client.reliabilityPipeline = 
                         client.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
                     
-                    var endpoint = NetworkEndPoint.LoopbackIpv4.WithPort(9000);
+                    var endpoint = NetworkEndpoint.LoopbackIpv4.WithPort(9000);
 
                     var parametersObject = ServerConnectionParametersObject.Instance;
                     var parameters = new ServerConnectionParameters();
@@ -117,7 +117,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                     if (!string.IsNullOrEmpty(parameters.ip))
                     {
-                        endpoint = NetworkEndPoint.Parse(parameters.ip, parameters.port);
+                        endpoint = NetworkEndpoint.Parse(parameters.ip, parameters.port);
                     }
 
                     // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);

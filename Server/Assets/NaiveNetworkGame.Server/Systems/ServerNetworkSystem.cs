@@ -187,7 +187,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     // if there is a connection available, then assign it
                     networkManager.m_Connections.Add(c1);
-                    Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c1).Address}");
+                    Debug.Log($"Accepted connection from: {networkManager.m_Driver.GetRemoteEndpoint(c1).Address}");
                     
                     state.EntityManager.AddComponentData(entity, new PlayerConnectionId
                     {
@@ -210,7 +210,7 @@ namespace NaiveNetworkGame.Server.Systems
                 writer.WriteByte(PacketType.ServerDeniedConnectionMaxPlayers);
                 m_Driver.EndSend(writer);
                     
-                Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c2).Address}");
+                Debug.Log($"Denied connection from: {networkManager.m_Driver.GetRemoteEndpoint(c2).Address}");
                     
                 m_Driver.Disconnect(c2);
             }

@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public struct UnitDebugSystemStateComponent : ISystemStateSharedComponentData, IEquatable<UnitDebugSystemStateComponent>
+    public struct UnitDebugSystemStateComponent : ICleanupSharedComponentData, IEquatable<UnitDebugSystemStateComponent>
     {
         public UnitDebugBehaviour unitDebug;
 

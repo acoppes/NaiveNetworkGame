@@ -26,7 +26,7 @@ namespace NaiveNetworkGame.Client.Systems
         }
     }
     
-    public struct ModelInstanceComponent : ISystemStateSharedComponentData, IEquatable<ModelInstanceComponent>
+    public struct ModelInstanceComponent : ICleanupSharedComponentData, IEquatable<ModelInstanceComponent>
     {
         public GameObject instance;
         public UnitModelBehaviour unitModel;

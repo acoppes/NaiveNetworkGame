@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
 #if UNITY_EDITOR
-    public struct DebugUnitGameStateInterpolationComponent : ISystemStateSharedComponentData, IEquatable<DebugUnitGameStateInterpolationComponent>
+    public struct DebugUnitGameStateInterpolationComponent : ICleanupSharedComponentData, IEquatable<DebugUnitGameStateInterpolationComponent>
     {
         public DebugInterpolationMonoBehaviour debugObject;
 
