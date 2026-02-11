@@ -7,93 +7,98 @@ using UnityEngine;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class UpdateNetworkGameStateSystem : ComponentSystem
+    public partial struct UpdateNetworkGameStateSystem : ISystem
     {
         private int frame;
-        // private float time;
 
-        protected override void OnCreate()
+        public void OnCreate(ref SystemState state)
         {
-            base.OnCreate();
             frame = 0;
-            // time = 0;
-
             // TODO: store frame in an entity + singleton component
         }
 
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             frame++;
             
-            // var delta = Time.DeltaTime;
+            // var delta = SystemAPI.Time.DeltaTime;
             
-            // Entities.WithAll<NetworkGameState>().ForEach(delegate(ref NetworkGameState n)
+            // foreach (var networkGameState in 
+            //     SystemAPI.Query<RefRW<NetworkGameState>>())
             // {
-            //     n.frame = frame;
+            //     networkGameState.ValueRW.frame = frame;
             //     // n.delta = delta;
             //     // n.delta = ServerNetworkStaticData.sendGameStateFrequency;
             //     // n.syncVersion = n.version;
-            // });
+            // }
             
-            Entities.WithAll<ServerOnly, Unit, NetworkGameState>().ForEach(delegate(ref Unit u, 
-                ref NetworkGameState n)
+            foreach (var (unit, networkGameState) in 
+                SystemAPI.Query<RefRO<Unit>, RefRW<NetworkGameState>>()
+                    .WithAll<ServerOnly>())
             {
-                n.unitId = u.id;
-                n.playerId = u.player;
-                n.unitType = u.type;
+                ref var n = ref networkGameState.ValueRW;
+                
+                n.unitId = unit.ValueRO.id;
+                n.playerId = unit.ValueRO.player;
+                n.unitType = unit.ValueRO.type;
                 // n.unitType = u.player % 2;
-            });
+            }
             
-            Entities
-                .WithAll<ServerOnly, Unit, Translation, NetworkTranslationSync>()
-                .ForEach(delegate(ref Unit unit, ref Translation t, ref NetworkTranslationSync n)
-                {
-                    n.unitId = unit.id;
-                    n.translation = t.Value.xy;
-                    n.delta = ServerNetworkStaticData.sendTranslationStateFrequency;
-            });
-            
-            Entities.WithAll<ServerOnly, LookingDirection, NetworkGameState>().ForEach(delegate(ref LookingDirection l, 
-                ref NetworkGameState n)
+            foreach (var (unit, localTransform, networkTranslationSync) in 
+                SystemAPI.Query<RefRO<Unit>, RefRO<LocalTransform>, RefRW<NetworkTranslationSync>>()
+                    .WithAll<ServerOnly>())
             {
-                n.lookingDirectionAngleInDegrees = (ushort) 
-                    Mathf.RoundToInt(Vector2.Angle(Vector2.right, l.direction));
+                networkTranslationSync.ValueRW.unitId = unit.ValueRO.id;
+                networkTranslationSync.ValueRW.translation = localTransform.ValueRO.Position.xy;
+                networkTranslationSync.ValueRW.delta = ServerNetworkStaticData.sendTranslationStateFrequency;
+            }
+            
+            foreach (var (lookingDirection, networkGameState) in 
+                SystemAPI.Query<RefRO<LookingDirection>, RefRW<NetworkGameState>>()
+                    .WithAll<ServerOnly>())
+            {
+                networkGameState.ValueRW.lookingDirectionAngleInDegrees = (ushort) 
+                    Mathf.RoundToInt(Vector2.Angle(Vector2.right, lookingDirection.ValueRO.direction));
                 // n.lookingDirection = l.direction;
-            });
+            }
             
-            Entities.WithAll<ServerOnly, UnitStateComponent, NetworkGameState>().ForEach(delegate(ref UnitStateComponent state, 
-                ref NetworkGameState n)
+            foreach (var (unitState, networkGameState) in 
+                SystemAPI.Query<RefRO<UnitStateComponent>, RefRW<NetworkGameState>>()
+                    .WithAll<ServerOnly>())
             {
-                n.state = state.state;
-                n.statePercentage = state.percentage;
-            });
+                networkGameState.ValueRW.state = unitState.ValueRO.state;
+                networkGameState.ValueRW.statePercentage = unitState.ValueRO.percentage;
+            }
             
-            Entities.WithAll<ServerOnly, Skin, NetworkGameState>().ForEach(delegate(ref Skin skin, 
-                ref NetworkGameState n)
+            foreach (var (skin, networkGameState) in 
+                SystemAPI.Query<RefRO<Skin>, RefRW<NetworkGameState>>()
+                    .WithAll<ServerOnly>())
             {
-                n.skinType = skin.type;
-            });
+                networkGameState.ValueRW.skinType = skin.ValueRO.type;
+            }
             
-            Entities.WithAll<ServerOnly, Health, NetworkGameState>().ForEach(delegate(ref Health health, 
-                ref NetworkGameState n)
+            foreach (var (health, networkGameState) in 
+                SystemAPI.Query<RefRO<Health>, RefRW<NetworkGameState>>()
+                    .WithAll<ServerOnly>())
             {
-                n.health = (byte) Mathf.RoundToInt(100.0f * health.current / health.total);
-            });
+                networkGameState.ValueRW.health = (byte) Mathf.RoundToInt(100.0f * health.ValueRO.current / health.ValueRO.total);
+            }
             
-            Entities
-                .WithAll<ServerOnly, PlayerController, NetworkPlayerState, PlayerConnectionId>()
-                .ForEach(delegate(ref PlayerController player, ref NetworkPlayerState n, 
-                    ref PlayerConnectionId p, ref PlayerBehaviour b) 
-                {
-                    n.player = player.player;
-                    n.skinType = player.skinType;
-                    n.gold = player.gold;
-                    n.maxUnits = player.maxUnits;
-                    n.currentUnits = player.currentUnits;
-                    n.buildingSlots = player.availableBuildingSlots;
-                    n.freeBarracks = player.freeBarracksCount;
-                    n.behaviourMode = b.mode;
-                });
+            foreach (var (playerController, networkPlayerState, playerConnectionId, playerBehaviour) in 
+                SystemAPI.Query<RefRO<PlayerController>, RefRW<NetworkPlayerState>, RefRO<PlayerConnectionId>, RefRO<PlayerBehaviour>>()
+                    .WithAll<ServerOnly>())
+            {
+                ref var playerState = ref networkPlayerState.ValueRW;
+                
+                playerState.player = playerController.ValueRO.player;
+                playerState.skinType = playerController.ValueRO.skinType;
+                playerState.gold = playerController.ValueRO.gold;
+                playerState.maxUnits = playerController.ValueRO.maxUnits;
+                playerState.currentUnits = playerController.ValueRO.currentUnits;
+                playerState.buildingSlots = playerController.ValueRO.availableBuildingSlots;
+                playerState.freeBarracks = playerController.ValueRO.freeBarracksCount;
+                playerState.behaviourMode = playerBehaviour.ValueRO.mode;
+            }
         }
     }
 }

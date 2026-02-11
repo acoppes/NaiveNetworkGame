@@ -4,27 +4,27 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateAfter(typeof(ProcessBuildUnitActionSystem))]
-    public class UpdatePlayerUnitSkinSystem : ComponentSystem
+    public partial struct UpdatePlayerUnitSkinSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities.ForEach(delegate(ref PlayerController p)
+            foreach (var playerController in 
+                SystemAPI.Query<RefRO<PlayerController>>())
             {
-                var player = p.player;
-                var skinType = p.skinType;
+                var player = playerController.ValueRO.player;
+                var skinType = playerController.ValueRO.skinType;
                 
                 // This system only allows one skin per player (can't combine)
                 
-                Entities
-                    .WithAll<Unit, Skin>()
-                    .ForEach(delegate(ref Unit u, ref Skin skin)
+                foreach (var (unit, skin) in 
+                    SystemAPI.Query<RefRO<Unit>, RefRW<Skin>>())
+                {
+                    if (unit.ValueRO.player == player)
                     {
-                        if (u.player == player)
-                        {
-                            skin.type = skinType;
-                        }
-                    });
-            });
+                        skin.ValueRW.type = skinType;
+                    }
+                }
+            }
         }
     }
 }

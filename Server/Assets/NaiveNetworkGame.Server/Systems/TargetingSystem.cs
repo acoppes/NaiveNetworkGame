@@ -7,9 +7,9 @@ using Unity.Transforms;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class TargetingSystem : ComponentSystem
+    public partial struct TargetingSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             // for each unit, calculate best target
             // order by number of attacking units and select it
@@ -20,81 +20,83 @@ namespace NaiveNetworkGame.Server.Systems
             // if unit is in attack position
             // perform attack, wait, attack, wait...
 
-            var targetsQuery = Entities
+            var targetsQuery = SystemAPI.QueryBuilder()
                 .WithNone<SpawningAction, DeathAction>()
-                .WithAll<Unit, Health, Translation, IsAlive>()
-                .ToEntityQuery();
+                .WithAll<Unit, Health, LocalTransform, IsAlive>()
+                .Build();
             
             var targets = targetsQuery.ToEntityArray(Allocator.TempJob);
-            var targetTranslations = targetsQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
+            var targetTransforms = targetsQuery.ToComponentDataArray<LocalTransform>(Allocator.TempJob);
             var targetUnits = targetsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
 
-            Entities
-                .WithAll<AttackComponent, Unit, Translation, IsAlive>()
-                .WithNone<AttackTargetComponent, SpawningAction, DeathAction, ReloadAction, DisableAttackComponent>()
-                .ForEach(delegate(Entity e, ref AttackComponent attack, ref Unit unit, ref Translation t)
+            foreach (var (attack, unit, localTransform, entity) in 
+                SystemAPI.Query<RefRO<AttackComponent>, RefRO<Unit>, RefRO<LocalTransform>>()
+                    .WithNone<AttackTargetComponent, SpawningAction, DeathAction>()
+                    .WithNone<ReloadAction, DisableAttackComponent>()
+                    .WithAll<IsAlive>()
+                    .WithEntityAccess())
+            {
+                // search for targets near my range...
+                for (var i = 0; i < targetUnits.Length; i++)
                 {
-                    // search for targets near my range...
-                    for (var i = 0; i < targetUnits.Length; i++)
-                    {
-                        // dont attack my units
-                        if (targetUnits[i].player == unit.player)
-                            continue;
+                    // dont attack my units
+                    if (targetUnits[i].player == unit.ValueRO.player)
+                        continue;
 
-                        if (math.distancesq(t.Value, targetTranslations[i].Value) < attack.range * attack.range)
+                    if (math.distancesq(localTransform.ValueRO.Position, targetTransforms[i].Position) < attack.ValueRO.range * attack.ValueRO.range)
+                    {
+                        state.EntityManager.AddComponentData(entity, new AttackTargetComponent
                         {
-                            PostUpdateCommands.AddComponent(e, new AttackTargetComponent
-                            {
-                                target = targets[i]
-                            });
-                            return;
-                        }
+                            target = targets[i]
+                        });
+                        goto NextEntity;
                     }
-                });
+                }
+                NextEntity:;
+            }
             
             // TODO: search for best target here (distance, less targeting units, etc)
-            Entities
-                .WithAll<AttackComponent, Unit, IsAlive>()
-                .WithNone<AttackTargetComponent, ChaseTargetComponent, SpawningAction, DeathAction, ReloadAction>()
-                .WithNone<DisableAttackComponent>()
-                .ForEach(delegate(Entity e, ref AttackComponent attack, ref Unit unit)
+            foreach (var (attack, unit, entity) in 
+                SystemAPI.Query<RefRO<AttackComponent>, RefRO<Unit>>()
+                    .WithNone<AttackTargetComponent, ChaseTargetComponent, SpawningAction>()
+                    .WithNone<DeathAction, ReloadAction, DisableAttackComponent>()
+                    .WithAll<IsAlive>()
+                    .WithEntityAccess())
+            {
+                var bestTargetIndex = -1;
+                var bestTargetDistanceSq = float.MaxValue;
+                var chaseRangeSq = attack.ValueRO.chaseRange * attack.ValueRO.chaseRange;
+
+                var chaseCenter = attack.ValueRO.chaseCenter;
+                
+                // search for targets near my range...
+                for (var i = 0; i < targetUnits.Length; i++)
                 {
-                    // var bestTarget = Entity.Null;
-                    var bestTargetIndex = -1;
-                    var bestTargetDistanceSq = float.MaxValue;
-                    var chaseRangeSq = attack.chaseRange * attack.chaseRange;
+                    // dont attack my units
+                    if (targetUnits[i].player == unit.ValueRO.player)
+                        continue;
 
-                    var chaseCenter = attack.chaseCenter;
-                    
-                    // search for targets near my range...
-                    for (var i = 0; i < targetUnits.Length; i++)
+                    // inside chase area
+                    var currentDistanceSq = math.distancesq(chaseCenter, targetTransforms[i].Position);
+                    if (currentDistanceSq < chaseRangeSq && currentDistanceSq < bestTargetDistanceSq)
                     {
-                        // dont attack my units
-                        if (targetUnits[i].player == unit.player)
-                            continue;
-
-                        // inside chase area
-                        var currentDistanceSq = math.distancesq(chaseCenter, targetTranslations[i].Value);
-                        if (currentDistanceSq < chaseRangeSq && currentDistanceSq < bestTargetDistanceSq)
-                        {
-                            bestTargetIndex = i;
-                            bestTargetDistanceSq = currentDistanceSq;
-                        }
+                        bestTargetIndex = i;
+                        bestTargetDistanceSq = currentDistanceSq;
                     }
-                    
-                    if (bestTargetIndex == -1)
-                        return;
+                }
+                
+                if (bestTargetIndex == -1)
+                    continue;
 
-                    PostUpdateCommands.AddComponent(e, new ChaseTargetComponent
-                    {
-                        target = targets[bestTargetIndex]
-                    });
+                state.EntityManager.AddComponentData(entity, new ChaseTargetComponent
+                {
+                    target = targets[bestTargetIndex]
                 });
+            }
 
             targets.Dispose();
-            targetTranslations.Dispose();
+            targetTransforms.Dispose();
             targetUnits.Dispose();
-
         }
     }
 }

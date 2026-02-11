@@ -7,106 +7,90 @@ namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateAfter(typeof(TargetingSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class UnitBehaviourSystem : ComponentSystem
+    public partial struct UnitBehaviourSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             // if we have attack target, remove chase target...
-            Entities
+            var removeChaseQuery = SystemAPI.QueryBuilder()
                 .WithAll<AttackTargetComponent, ChaseTargetComponent>()
-                .ForEach(delegate(Entity e)
-                {
-                    PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
-                });
+                .Build();
+            state.EntityManager.RemoveComponent<ChaseTargetComponent>(removeChaseQuery);
             
             
             // Stop chasing if target is not valid or is not alive
-            // Entities
-            //     .WithAll<ChaseAction>()
-            //     .ForEach(delegate(Entity e, ref ChaseAction chasingAction)
-            //     {
-            //         if (!EntityManager.Exists(chasingAction.target))
-            //         {
-            //             PostUpdateCommands.RemoveComponent<ChaseAction>(e);
-            //         }
-            //         else
-            //         {
-            //             var isAlive = EntityManager.HasComponent<IsAlive>(chasingAction.target);
-            //             if (!isAlive)
-            //             {
-            //                 PostUpdateCommands.RemoveComponent<ChaseAction>(e);
-            //             }
-            //         } 
-            //     });
-            
-            Entities
-                .WithAll<ChaseTargetComponent>()
-                .ForEach(delegate(Entity e, ref ChaseTargetComponent chaseTarget)
+            foreach (var (chaseTarget, entity) in 
+                SystemAPI.Query<RefRO<ChaseTargetComponent>>()
+                    .WithEntityAccess())
+            {
+                if (!state.EntityManager.Exists(chaseTarget.ValueRO.target))
                 {
-                    if (!EntityManager.Exists(chaseTarget.target))
+                    state.EntityManager.RemoveComponent<ChaseTargetComponent>(entity);
+                }
+                else
+                {
+                    var isAlive = state.EntityManager.HasComponent<IsAlive>(chaseTarget.ValueRO.target);
+                    if (!isAlive)
                     {
-                        PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
+                        state.EntityManager.RemoveComponent<ChaseTargetComponent>(entity);
                     }
-                    else
-                    {
-                        var isAlive = EntityManager.HasComponent<IsAlive>(chaseTarget.target);
-                        if (!isAlive)
-                        {
-                            PostUpdateCommands.RemoveComponent<ChaseTargetComponent>(e);
-                        }
-                    } 
-                });
+                } 
+            }
         
 
-            Entities
-                .WithAll<Unit, Movement, UnitBehaviourComponent, IsAlive, ChaseTargetComponent>()
-                .WithNone<ReloadAction, DeathAction>()
-                .WithNone<MovementAction, SpawningAction, AttackAction, AttackTargetComponent>()
-                .ForEach(delegate (Entity e, ref ChaseTargetComponent chaseTarget)
+            foreach (var (chaseTarget, entity) in 
+                SystemAPI.Query<RefRO<ChaseTargetComponent>>()
+                    .WithNone<ReloadAction, DeathAction, MovementAction>()
+                    .WithNone<SpawningAction, AttackAction, AttackTargetComponent>()
+                    .WithAll<Unit, Movement, UnitBehaviourComponent>()
+                    .WithAll<IsAlive>()
+                    .WithEntityAccess())
+            {
+                var targetTransform = state.EntityManager.GetComponentData<LocalTransform>(chaseTarget.ValueRO.target);
+                
+                state.EntityManager.AddComponentData(entity, new MovementAction
                 {
-                    var t = GetComponentDataFromEntity<Translation>()[chaseTarget.target];
+                    target = targetTransform.Position.xy
+                });
+            }
+            
+            foreach (var (movementAction, chaseTarget) in 
+                SystemAPI.Query<RefRW<MovementAction>, RefRO<ChaseTargetComponent>>()
+                    .WithNone<ReloadAction, DeathAction, SpawningAction>()
+                    .WithNone<AttackAction, AttackTargetComponent>()
+                    .WithAll<Unit, Movement, UnitBehaviourComponent>()
+                    .WithAll<IsAlive>())
+            {
+                var targetTransform = state.EntityManager.GetComponentData<LocalTransform>(chaseTarget.ValueRO.target);
+                movementAction.ValueRW.target = targetTransform.Position.xy;
+            }
+            
+            foreach (var (behaviour, entity) in 
+                SystemAPI.Query<RefRO<UnitBehaviourComponent>>()
+                    .WithNone<ReloadAction, ChaseTargetComponent, DeathAction>()
+                    .WithNone<MovementAction, SpawningAction, IdleAction>()
+                    .WithNone<AttackAction, AttackTargetComponent>()
+                    .WithAll<Unit, Movement, IsAlive>()
+                    .WithEntityAccess())
+            {
+                var wanderAreaEntity = behaviour.ValueRO.wanderArea;
+                
+                if (state.EntityManager.Exists(wanderAreaEntity))
+                {
+                    var wanderArea = state.EntityManager.GetComponentData<WanderArea>(wanderAreaEntity);
+                    var wanderCenter = state.EntityManager.GetComponentData<LocalTransform>(wanderAreaEntity);
                     
-                    PostUpdateCommands.AddComponent(e, new MovementAction
+                    var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, wanderArea.range);
+                    state.EntityManager.AddComponentData(entity, new MovementAction
                     {
-                        target = t.Value.xy
+                        target = wanderCenter.Position.xy + new float2(offset.x, offset.y)
                     });
-                });
-            
-            Entities
-                .WithAll<Unit, Movement, UnitBehaviourComponent, IsAlive, ChaseTargetComponent>()
-                .WithAll<MovementAction>()
-                .WithNone<ReloadAction, DeathAction>()
-                .WithNone<SpawningAction, AttackAction, AttackTargetComponent>()
-                .ForEach(delegate (Entity e, ref MovementAction m, ref ChaseTargetComponent chaseTarget)
-                {
-                    var t = GetComponentDataFromEntity<Translation>()[chaseTarget.target];
-                    m.target = t.Value.xy;
-                });
-            
-            Entities
-                .WithAll<Unit, Movement, UnitBehaviourComponent, IsAlive>()
-                .WithNone<ReloadAction, ChaseTargetComponent, DeathAction>()
-                .WithNone<MovementAction, SpawningAction, IdleAction, AttackAction, AttackTargetComponent>()
-                .ForEach(delegate (Entity e, ref UnitBehaviourComponent behaviour)
-                {
-                    var wanderAreaEntity = behaviour.wanderArea;
-                    
-                    if (EntityManager.Exists(wanderAreaEntity))
+                    state.EntityManager.AddComponentData(entity, new IdleAction
                     {
-                        var wanderArea = GetComponentDataFromEntity<WanderArea>()[wanderAreaEntity];
-                        var wanderCenter = GetComponentDataFromEntity<Translation>()[wanderAreaEntity];
-                        
-                        var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, wanderArea.range);
-                        PostUpdateCommands.AddComponent(e, new MovementAction
-                        {
-                            target = wanderCenter.Value.xy + new float2(offset.x, offset.y)
-                        });
-                        PostUpdateCommands.AddComponent(e, new IdleAction
-                        {
-                            time = UnityEngine.Random.Range(behaviour.minIdleTime, behaviour.maxIdleTime)
-                        });    
-                    }
-                });
+                        time = UnityEngine.Random.Range(behaviour.ValueRO.minIdleTime, behaviour.ValueRO.maxIdleTime)
+                    });    
+                }
+            }
         }
     }
 }

@@ -4,37 +4,39 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class DeathOnNoHealthUnitSystem : ComponentSystem
+    public partial struct DeathOnNoHealthUnitSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithAll<Health, IsAlive, UnitBehaviourComponent>()
-                .ForEach(delegate(Entity e, ref Health h)
+            foreach (var (health, entity) in 
+                SystemAPI.Query<RefRO<Health>>()
+                    .WithAll<IsAlive, UnitBehaviourComponent>()
+                    .WithEntityAccess())
+            {
+                if (health.ValueRO.current <= 0.01f)
                 {
-                    if (h.current <= 0.01f)
+                    // TODO: configure death action with unit behaviour or unit data, or new component death
+                    state.EntityManager.AddComponentData(entity, new DeathAction
                     {
-                        // TODO: configure death action with unit behaviour or unit data, or new component death
-                        PostUpdateCommands.AddComponent(e, new DeathAction
-                        {
-                            time = 0, 
-                            duration = 1
-                        });
-                        PostUpdateCommands.RemoveComponent<IsAlive>(e);
-                        // PostUpdateCommands.DestroyEntity(e);
-                    }
-                });
+                        time = 0, 
+                        duration = 1
+                    });
+                    state.EntityManager.RemoveComponent<IsAlive>(entity);
+                    // state.EntityManager.DestroyEntity(entity);
+                }
+            }
             
-            Entities
-                .WithNone<UnitBehaviourComponent>()
-                .WithAll<Health, IsAlive>()
-                .ForEach(delegate(Entity e, ref Health h)
+            foreach (var (health, entity) in 
+                SystemAPI.Query<RefRO<Health>>()
+                    .WithNone<UnitBehaviourComponent>()
+                    .WithAll<IsAlive>()
+                    .WithEntityAccess())
+            {
+                if (health.ValueRO.current <= 0.01f)
                 {
-                    if (h.current <= 0.01f)
-                    {
-                        PostUpdateCommands.RemoveComponent<IsAlive>(e);
-                    }
-                });
+                    state.EntityManager.RemoveComponent<IsAlive>(entity);
+                }
+            }
         }
     }
 }

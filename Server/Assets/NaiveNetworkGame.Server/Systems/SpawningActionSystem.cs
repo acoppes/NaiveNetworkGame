@@ -7,23 +7,23 @@ namespace NaiveNetworkGame.Server.Systems
     
     [UpdateBefore(typeof(UnitStateSystem))]
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public class SpawningActionSystem : ComponentSystem
+    public partial struct SpawningActionSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            var dt = Time.DeltaTime;
+            var dt = SystemAPI.Time.DeltaTime;
             
-            Entities
-                .WithAll<SpawningAction>()
-                .ForEach(delegate(Entity e, ref SpawningAction s)
-                {
-                    s.time += dt;
+            foreach (var (spawningAction, entity) in 
+                SystemAPI.Query<RefRW<SpawningAction>>()
+                    .WithEntityAccess())
+            {
+                spawningAction.ValueRW.time += dt;
 
-                    if (s.time >= s.duration)
-                    {
-                        PostUpdateCommands.RemoveComponent<SpawningAction>(e);
-                    }
-                });
+                if (spawningAction.ValueRO.time >= spawningAction.ValueRO.duration)
+                {
+                    state.EntityManager.RemoveComponent<SpawningAction>(entity);
+                }
+            }
         }
     }
 }
