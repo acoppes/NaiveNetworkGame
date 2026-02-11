@@ -3,6 +3,7 @@ using NaiveNetworkGame.Server.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Relay;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -34,133 +35,130 @@ namespace NaiveNetworkGame.Server.Systems
         public bool restart;
     }
 
-    public partial class ServerNetworkSystem : SystemBase
+    public partial struct ServerNetworkSystem : ISystem
     {
-        protected override void OnCreate()
+        public void OnCreate(ref SystemState state)
         {
-            base.OnCreate();
-            
-            RequireForUpdate<ServerSingleton>();
+            state.RequireForUpdate<ServerSingleton>();
             
             // now server network system is in charge of creating server singleton...
-            var serverEntity = EntityManager.CreateEntity();
+            var serverEntity = state.EntityManager.CreateEntity();
             #if UNITY_EDITOR
-            EntityManager.SetName(serverEntity, "ServerSingleton");
+            state.EntityManager.SetName(serverEntity, "ServerSingleton");
             #endif
-            EntityManager.AddComponentData(serverEntity, new ServerSingleton());
-            EntityManager.AddSharedComponentManaged(serverEntity, new ServerData());
+            state.EntityManager.AddComponentData(serverEntity, new ServerSingleton());
+            state.EntityManager.AddSharedComponentManaged(serverEntity, new ServerData());
         }
 
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
-            var server =
-                EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
+            var server = state.EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
-            Entities
-                .ForEach(delegate(Entity e, ref StopServerCommand stop)
+            foreach (var (stopCommand, entity) in 
+                SystemAPI.Query<RefRO<StopServerCommand>>()
+                    .WithEntityAccess())
+            {
+                state.EntityManager.DestroyEntity(entity);
+
+                if (!server.started)
+                    continue;
+
+                if (server.networkManager != null)
                 {
-                    PostUpdateCommands.DestroyEntity(e);
-
-                    if (!server.started)
-                        return;
-
-                    if (server.networkManager != null)
+                    for (var i = 0; i < server.networkManager.m_Connections.Length; i++)
                     {
-                        for (var i = 0; i < server.networkManager.m_Connections.Length; i++)
+                        var c = server.networkManager.m_Connections[i];
+                        if (c.IsCreated && server.networkManager.m_Driver.GetConnectionState(c) ==
+                            NetworkConnection.State.Connected)
                         {
-                            var c = server.networkManager.m_Connections[i];
-                            if (c.IsCreated && server.networkManager.m_Driver.GetConnectionState(c) ==
-                                NetworkConnection.State.Connected)
-                            {
-                                server.networkManager.m_Driver.Disconnect(c);
-                            }
+                            server.networkManager.m_Driver.Disconnect(c);
                         }
-                        
-                        server.networkManager.m_Connections.Dispose();
-                        server.networkManager.m_Driver.Dispose();
                     }
-
-                    server.networkManager = null;
-                    server.started = false;
                     
-                    PostUpdateCommands.SetSharedComponent(serverEntity, server);
+                    server.networkManager.m_Connections.Dispose();
+                    server.networkManager.m_Driver.Dispose();
+                }
 
-                    PostUpdateCommands.DestroyEntity(Entities.WithNone<ServerData>().ToEntityQuery().ToEntityArray(Allocator.Temp));
-                    PostUpdateCommands.DestroyEntity(GetSingletonEntity<ServerSimulation>());
-                    PostUpdateCommands.DestroyEntity(Entities.WithAll<Prefab>().ToEntityQuery().ToEntityArray(Allocator.Temp));
+                server.networkManager = null;
+                server.started = false;
+                
+                state.EntityManager.SetSharedComponentManaged(serverEntity, server);
+
+                var nonServerDataQuery = SystemAPI.QueryBuilder().WithNone<ServerData>().Build();
+                state.EntityManager.DestroyEntity(nonServerDataQuery.ToEntityArray(Allocator.Temp));
+                state.EntityManager.DestroyEntity(SystemAPI.GetSingletonEntity<ServerSimulation>());
+                
+                var prefabQuery = SystemAPI.QueryBuilder().WithAll<Prefab>().Build();
+                state.EntityManager.DestroyEntity(prefabQuery.ToEntityArray(Allocator.Temp));
+                
+                if (stopCommand.ValueRO.restart)
+                {
+                    SceneManager.LoadScene("ServerScene");
                     
-                    if (stop.restart)
+                    var restart = state.EntityManager.CreateEntity();
+                    state.EntityManager.AddComponentData(restart, new StartServerCommand
                     {
-                        SceneManager.LoadScene("ServerScene");
-                        
-                        var restart = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(restart, new StartServerCommand
-                        {
-                            port = server.port,
-                            playersNeededToStartSimulation = server.playersNeededToStartSimulation
-                        });
-                    }
-                });
+                        port = server.port,
+                        playersNeededToStartSimulation = server.playersNeededToStartSimulation
+                    });
+                }
+            }
             
               
-            Entities
-                .ForEach(delegate(Entity e, ref StartServerCommand start)
+            foreach (var (startCommand, entity) in 
+                SystemAPI.Query<RefRO<StartServerCommand>>()
+                    .WithEntityAccess())
+            {
+                state.EntityManager.DestroyEntity(entity);
+
+                if (server.started)
+                    continue;
+                
+                // m_ServerDriver = NetworkDriver.Create(new ReliableUtility.Parameters { WindowSize = 32 });
+                // m_Pipeline = m_ServerDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+
+                server.started = true;
+                server.port = startCommand.ValueRO.port;
+                server.playersNeededToStartSimulation = startCommand.ValueRO.playersNeededToStartSimulation;
+
+                var networkSettings = new NetworkSettings(Allocator.Persistent);
+                //   new NetworkDataStreamParameter { size = 0 },
+                networkSettings.WithFragmentationStageParameters(payloadCapacity:16 * 1024);
+                networkSettings.WithReliableStageParameters(windowSize: 32);
+
+                server.networkManager = new NetworkManager
                 {
-                    PostUpdateCommands.DestroyEntity(e);
+                    m_Driver = NetworkDriver.Create(networkSettings),
+                    // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
+                    // {
+                    //     MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
+                    // }),
+                    m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
+                };
 
-                    if (server.started)
-                        return;
-                    
-                    // m_ServerDriver = NetworkDriver.Create(new ReliableUtility.Parameters { WindowSize = 32 });
-                    // m_Pipeline = m_ServerDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+                // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
+                //     typeof(SimulatorPipelineStage));
 
-                    server.started = true;
-                    server.port = start.port;
-                    server.playersNeededToStartSimulation = start.playersNeededToStartSimulation;
-                    
-                    server.networkManager = new NetworkManager
-                    {
-                        m_Driver = NetworkDriver.Create(
-                            new NetworkDataStreamParameter { size = 0 },
-                            new FragmentationUtility.Parameters
-                            {
-                                PayloadCapacity = 16 * 1024
-                            }, 
-                            new ReliableUtility.Parameters
-                            {
-                                WindowSize = 32
-                            }),
-                        
-                        // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
-                        // {
-                        //     MaxPacketSize = NetworkParameterConstants.MTU, MaxPacketCount = 30, PacketDelayMs = 100, PacketDropPercentage = 10
-                        // }),
-                        m_Connections = new NativeList<NetworkConnection>(16, Allocator.Persistent)
-                    };
+                server.fragmentationPipeline = 
+                    server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+                server.reliabilityPipeline = 
+                    server.networkManager.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
 
-                    // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
-                    //     typeof(SimulatorPipelineStage));
+                var endpoint = NetworkEndpoint.AnyIpv4.WithPort(startCommand.ValueRO.port);
+                
+                // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
+                // endpoint.Port = 9000;
+                
+                Debug.Log($"Starting Server at port: {startCommand.ValueRO.port}");
+                
+                if (server.networkManager.m_Driver.Bind(endpoint) != 0)
+                    Debug.Log($"Failed to bind to port {startCommand.ValueRO.port}");
+                else
+                    server.networkManager.m_Driver.Listen();
 
-                    server.framentationPipeline = 
-                        server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
-                    server.reliabilityPipeline = 
-                        server.networkManager.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
-
-                    var endpoint = NetworkEndPoint.AnyIpv4.WithPort(start.port);
-                    
-                    // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
-                    // endpoint.Port = 9000;
-                    
-                    Debug.Log($"Starting Server at port: {start.port}");
-                    
-                    if (server.networkManager.m_Driver.Bind(endpoint) != 0)
-                        Debug.Log($"Failed to bind to port {start.port}");
-                    else
-                        server.networkManager.m_Driver.Listen();
-
-                    PostUpdateCommands.SetSharedComponent(serverEntity, server);
-                });
+                state.EntityManager.SetSharedComponentManaged(serverEntity, server);
+            }
 
             // create server
 
@@ -171,62 +169,50 @@ namespace NaiveNetworkGame.Server.Systems
 
             var m_Driver = networkManager.m_Driver;
 
-            if (!m_Driver.IsCreated)
-                return;
-            
             m_Driver.ScheduleUpdate().Complete();
             
-            Assert.IsTrue(m_Driver.IsCreated);
-            Assert.IsTrue(m_Driver.Listening);
+            ServerNetworkStatistics.currentConnections = 0;
             
-            // CleanUpConnections
-            for (var i = 0; i < networkManager.m_Connections.Length; i++)
+            foreach (var (_, entity) in 
+                SystemAPI.Query<PlayerController>()
+                    .WithNone<PlayerConnectionId>()
+                    .WithAll<ServerOnly>()
+                    .WithEntityAccess())
             {
-                if (!networkManager.m_Connections[i].IsCreated)
+                ServerNetworkStatistics.currentConnections++;
+
+                NetworkConnection c1;
+                
+                if ((c1 = m_Driver.Accept()) != default)
                 {
-                    networkManager.m_Connections.RemoveAtSwapBack(i);
-                    --i;
-                }
-            }
-            
-            Entities
-                .WithNone<PlayerConnectionId>()
-                .WithAll<PlayerController>()
-                .ForEach(delegate(Entity e, ref PlayerController p)
-                {   
-                    // for each player without connection, we try to accept a connection
-
-                    NetworkConnection c;
-                    if ((c = m_Driver.Accept()) != default)
+                    // if there is a connection available, then assign it
+                    networkManager.m_Connections.Add(c1);
+                    Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c1).Address}");
+                    
+                    state.EntityManager.AddComponentData(entity, new PlayerConnectionId
                     {
-                        // if there is a connection available, then assign it
-                        networkManager.m_Connections.Add(c);
-                        Debug.Log($"Accepted connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
-                        
-                        PostUpdateCommands.AddComponent(e, new PlayerConnectionId
-                        {
-                            // player = p.player,
-                            connection = c,
-                        });
-                        PostUpdateCommands.AddComponent(e, new NetworkPlayerState());                        
-                    }
+                        // player = p.player,
+                        connection = c1,
+                    });
+                    state.EntityManager.AddComponentData(entity, new NetworkPlayerState());                        
+                }
 
-                });
+            }
             
             // TODO: if needed players reached => create server simulation singleton in order to start the simulation..
             
             // If there are still connections, accept them and send denied because max players...
-            NetworkConnection c;
-            while ((c = m_Driver.Accept()) != default)
+            NetworkConnection c2;
+            while ((c2 = m_Driver.Accept()) != default)
             {
-                var result = m_Driver.BeginSend(c, out var writer);
+                var result = m_Driver.BeginSend(c2, out var writer);
                 // var writer = m_Driver.BeginSend(c);
                 writer.WriteByte(PacketType.ServerDeniedConnectionMaxPlayers);
                 m_Driver.EndSend(writer);
                     
-                Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c).Address}");
+                Debug.Log($"Denied connection from: {networkManager.m_Driver.RemoteEndPoint(c2).Address}");
                     
-                m_Driver.Disconnect(c);
+                m_Driver.Disconnect(c2);
             }
 
             for (var i = 0; i < networkManager.m_Connections.Length; i++)
@@ -249,45 +235,48 @@ namespace NaiveNetworkGame.Server.Systems
                             
                             var action = new PendingPlayerAction().Read(ref stream);
                             
-                            Entities
-                                .WithNone<PendingPlayerAction>()
-                                .ForEach(delegate(Entity playerEntity, ref PlayerController p)
+                            foreach (var (playerController, playerEntity) in 
+                                SystemAPI.Query<RefRO<PlayerController>>()
+                                    .WithNone<PendingPlayerAction>()
+                                    .WithEntityAccess())
                             {
-                                if (p.player == action.player)
+                                if (playerController.ValueRO.player == action.player)
                                 {
-                                    PostUpdateCommands.AddComponent(playerEntity, action);
+                                    state.EntityManager.AddComponentData(playerEntity, action);
                                 }
-                            });
+                            }
 
-                            // var pendingActionEntity = PostUpdateCommands.CreateEntity();
-                            // // PostUpdateCommands.AddComponent<ServerOnly>(pendingActionEntity);
-                            // PostUpdateCommands.AddComponent(pendingActionEntity, pendingPlayerAction);
+                            // var pendingActionEntity = state.EntityManager.CreateEntity();
+                            // // state.EntityManager.AddComponent<ServerOnly>(pendingActionEntity);
+                            // state.EntityManager.AddComponent(pendingActionEntity, pendingPlayerAction);
                         }
 
                         if (packet == PacketType.ClientDisconnect)
                         {
                             var connection = networkManager.m_Connections[i];
-                            Entities
-                                .WithAll<PlayerController, PlayerConnectionId, NetworkPlayerState>()
-                                .ForEach(delegate(Entity e, ref PlayerConnectionId p)
+                            foreach (var (playerConnectionId, entity) in 
+                                SystemAPI.Query<RefRO<PlayerConnectionId>>()
+                                    .WithAll<PlayerController, NetworkPlayerState>()
+                                    .WithEntityAccess())
+                            {
+                                if (playerConnectionId.ValueRO.connection == connection)
                                 {
-                                    if (p.connection == connection)
+                                    // p.destroyed = true;
+                                    state.EntityManager.RemoveComponent<PlayerConnectionId>(entity);
+                                    state.EntityManager.RemoveComponent<NetworkPlayerState>(entity);
+                                    state.EntityManager.RemoveComponent<PlayerConnectionSynchronized>(entity);
+                                    
+                                    if (SystemAPI.HasSingleton<ServerSimulation>())
                                     {
-                                        // p.destroyed = true;
-                                        PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
-                                        PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
-                                        PostUpdateCommands.RemoveComponent<PlayerConnectionSynchronized>(e);
-                                        
-                                        if (HasSingleton<ServerSimulation>())
+                                        // If client disconnected manually and simulation already started, then restart server...
+                                        var stopEntity = state.EntityManager.CreateEntity();
+                                        state.EntityManager.AddComponentData(stopEntity, new StopServerCommand
                                         {
-                                            // If client disconnected manually and simulation already started, then restart server...
-                                            PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new StopServerCommand
-                                            {
-                                                restart = true
-                                            });
-                                        }
+                                            restart = true
+                                        });
                                     }
-                                });
+                                }
+                            }
                         
                             Debug.Log("Client disconnected from server");
                             // networkManager.m_Connections[i] = default;
@@ -311,27 +300,29 @@ namespace NaiveNetworkGame.Server.Systems
                         // do something to player stuff? 
 
                         var connection = networkManager.m_Connections[i];
-                        Entities
-                            .WithAll<PlayerController, PlayerConnectionId, NetworkPlayerState>()
-                            .ForEach(delegate(Entity e, ref PlayerConnectionId p)
+                        foreach (var (playerConnectionId, entity) in 
+                            SystemAPI.Query<RefRO<PlayerConnectionId>>()
+                                .WithAll<PlayerController, NetworkPlayerState>()
+                                .WithEntityAccess())
                         {
-                            if (p.connection == connection)
+                            if (playerConnectionId.ValueRO.connection == connection)
                             {
                                 // p.destroyed = true;
-                                PostUpdateCommands.RemoveComponent<PlayerConnectionId>(e);
-                                PostUpdateCommands.RemoveComponent<NetworkPlayerState>(e);
-                                PostUpdateCommands.RemoveComponent<PlayerConnectionSynchronized>(e);
+                                state.EntityManager.RemoveComponent<PlayerConnectionId>(entity);
+                                state.EntityManager.RemoveComponent<NetworkPlayerState>(entity);
+                                state.EntityManager.RemoveComponent<PlayerConnectionSynchronized>(entity);
                                 
-                                if (HasSingleton<ServerSimulation>())
+                                if (SystemAPI.HasSingleton<ServerSimulation>())
                                 {
                                     // If client disconnected by timeout, and simulation already started, then restart server...
-                                    PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new StopServerCommand
+                                    var stopEntity = state.EntityManager.CreateEntity();
+                                    state.EntityManager.AddComponentData(stopEntity, new StopServerCommand
                                     {
                                         restart = true
                                     });
                                 }
                             }
-                        });
+                        }
                         
                         Debug.Log("Client disconnected from server");
                         networkManager.m_Connections[i] = default;
@@ -339,24 +330,22 @@ namespace NaiveNetworkGame.Server.Systems
                 }
             }
 
-            if (!HasSingleton<ServerSimulation>())
+            if (!SystemAPI.HasSingleton<ServerSimulation>())
             {
-                var players = Entities.WithAll<PlayerConnectionId>().ToEntityQuery().CalculateEntityCount();
+                var playerConnectionQuery = SystemAPI.QueryBuilder().WithAll<PlayerConnectionId>().Build();
+                var players = playerConnectionQuery.CalculateEntityCount();
                 if (server.playersNeededToStartSimulation == players)
                 {
                     // start simulation if reached needed players
-                    EntityManager.CreateEntity(typeof(ServerSimulation));
+                    state.EntityManager.CreateEntity(typeof(ServerSimulation));
                 }
             }
         }
 
-        protected override void OnDestroy()
+        public void OnDestroy(ref SystemState state)
         {
-            
-
-            var serverEntity = GetSingletonEntity<ServerData>();
-            var server =
-                EntityManager.GetSharedComponentData<ServerData>(serverEntity);
+            var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
+            var server = state.EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
             var networkManager = server.networkManager;
 
@@ -365,8 +354,6 @@ namespace NaiveNetworkGame.Server.Systems
                     
             networkManager.m_Connections.Dispose();
             networkManager.m_Driver.Dispose();
-
-            base.OnDestroy();
         }
     }
 }

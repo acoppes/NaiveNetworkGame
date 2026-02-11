@@ -5,24 +5,20 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public partial class ServerSendGameStateSystem : SystemBase
+    public partial struct ServerSendGameStateSystem : ISystem
     {
         private float sendGameStateTime;
         private float sendTranslationStateTime;
 
-        protected override void OnCreate()
+        public void OnCreate(ref SystemState state)
         {
-            base.OnCreate();
-            RequireForUpdate<ServerSingleton>();
+            state.RequireForUpdate<ServerSingleton>();
         }
 
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            // Entity serverEntity = new Entity();
-            // var serverEntity = GetSingletonEntity<ServerSingleton>();
             var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
-            var server =
-                EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
+            var server = state.EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
             var networkManager = server.networkManager;
 
@@ -43,46 +39,46 @@ namespace NaiveNetworkGame.Server.Systems
             // Send simulation started packet to all connections,
             // we are not waiting for players anymore... reliablity pipeline!
 
-            Entities
-                .WithAll<PlayerConnectionId>()
-                .ForEach(delegate(Entity e, ref PlayerConnectionId p)
-                {
-                    if (!p.simulationStarted)
-                    {
-                        // var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
-                        m_Driver.BeginSend(server.reliabilityPipeline, p.connection, out var writer);
-                        writer.WriteByte(PacketType.ServerSimulationStarted);
-                        m_Driver.EndSend(writer);
-                    }
-                    p.simulationStarted = true;
-                });
-            
-            Entities
-                .WithNone<PlayerConnectionSynchronized>()
-                .WithAll<PlayerController, PlayerConnectionId>()
-                .ForEach(delegate(Entity pe, ref PlayerConnectionId p, ref PlayerController playerController)
+            foreach (var (playerConnectionId, entity) in 
+                SystemAPI.Query<RefRW<PlayerConnectionId>>()
+                    .WithEntityAccess())
+            {
+                if (!playerConnectionId.ValueRO.simulationStarted)
                 {
                     // var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
-                    m_Driver.BeginSend(server.reliabilityPipeline, p.connection, out var writer);
-                    writer.WriteByte(PacketType.ServerSendPlayerId);
-                    writer.WriteByte(playerController.player);
-
-                    var playerActions = GetBufferFromEntity<PlayerAction>()[pe];
-                    
-                    writer.WriteByte((byte) playerActions.Length);
-                    for (var i = 0; i < playerActions.Length; i++)
-                    {
-                        writer.WriteByte(playerActions[i].type);
-                        writer.WriteByte(playerActions[i].cost);
-                    }
-                    
+                    m_Driver.BeginSend(server.reliabilityPipeline, playerConnectionId.ValueRO.connection, out var writer);
+                    writer.WriteByte(PacketType.ServerSimulationStarted);
                     m_Driver.EndSend(writer);
+                }
+                playerConnectionId.ValueRW.simulationStarted = true;
+            }
+            
+            foreach (var (playerConnectionId, playerController, playerEntity) in 
+                SystemAPI.Query<RefRO<PlayerConnectionId>, RefRO<PlayerController>>()
+                    .WithNone<PlayerConnectionSynchronized>()
+                    .WithEntityAccess())
+            {
+                // var writer = m_Driver.BeginSend(server.reliabilityPipeline, p.connection);
+                m_Driver.BeginSend(server.reliabilityPipeline, playerConnectionId.ValueRO.connection, out var writer);
+                writer.WriteByte(PacketType.ServerSendPlayerId);
+                writer.WriteByte(playerController.ValueRO.player);
 
-                    ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                    ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                var playerActions = state.EntityManager.GetBuffer<PlayerAction>(playerEntity);
+                
+                writer.WriteByte((byte) playerActions.Length);
+                for (var i = 0; i < playerActions.Length; i++)
+                {
+                    writer.WriteByte(playerActions[i].type);
+                    writer.WriteByte(playerActions[i].cost);
+                }
+                
+                m_Driver.EndSend(writer);
 
-                    PostUpdateCommands.AddComponent<PlayerConnectionSynchronized>(pe);
-                });
+                ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+
+                state.EntityManager.AddComponent<PlayerConnectionSynchronized>(playerEntity);
+            }
 
             var sendTranslation = false;
             var sendOtherState = false;
@@ -112,26 +108,25 @@ namespace NaiveNetworkGame.Server.Systems
 
                 if (sendOtherState)
                 {
-                    Entities
-                        .WithAll<NetworkPlayerState>()
-                        .ForEach(delegate(ref NetworkPlayerState n, ref PlayerConnectionId p)
+                    foreach (var (networkPlayerState, playerConnectionId) in 
+                        SystemAPI.Query<RefRO<NetworkPlayerState>, RefRO<PlayerConnectionId>>())
+                    {
+                        // only send player state to each player...
+                        if (playerConnectionId.ValueRO.connection == connection)
                         {
-                            // only send player state to each player...
-                            if (p.connection == connection)
-                            {
-                                // var writer = m_Driver.BeginSend(connection);
-                                m_Driver.BeginSend(connection, out var writer);
-                                writer.WriteByte(PacketType.ServerPlayerState);
-                                n.Write(ref writer);
-                                m_Driver.EndSend(writer);
-                            
-                                ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                                ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
-                            }
-                        });
+                            // var writer = m_Driver.BeginSend(connection);
+                            m_Driver.BeginSend(connection, out var writer);
+                            writer.WriteByte(PacketType.ServerPlayerState);
+                            networkPlayerState.ValueRO.Write(ref writer);
+                            m_Driver.EndSend(writer);
+                        
+                            ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                            ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
+                        }
+                    }
 
-                    var count = Entities
-                        .WithAll<NetworkGameState>().ToEntityQuery().CalculateEntityCount();
+                    var gameStateQuery = SystemAPI.QueryBuilder().WithAll<NetworkGameState>().Build();
+                    var count = gameStateQuery.CalculateEntityCount();
 
                     if (count == 0)
                     {
@@ -148,18 +143,17 @@ namespace NaiveNetworkGame.Server.Systems
                         // var writer = m_Driver.BeginSend(server.framentationPipeline, connection, 
                         //     sizeof(byte) + sizeof(ushort) +
                         //     NetworkGameState.GetSize() * count);
-                        m_Driver.BeginSend(server.framentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
+                        m_Driver.BeginSend(server.fragmentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
                             NetworkGameState.GetSize() * count);
                     
                         writer.WriteByte(PacketType.ServerGameState);
                         writer.WriteUShort((ushort) count);
 
-                        Entities
-                            .WithAll<NetworkGameState>()
-                            .ForEach(delegate(ref NetworkGameState n)
-                            {
-                                n.Write(ref writer);
-                            });
+                        foreach (var networkGameState in 
+                            SystemAPI.Query<RefRO<NetworkGameState>>())
+                        {
+                            networkGameState.ValueRO.Write(ref writer);
+                        }
                     
                         m_Driver.EndSend(writer);
                         
@@ -170,8 +164,8 @@ namespace NaiveNetworkGame.Server.Systems
 
                 if (sendTranslation)
                 {
-                    var count = Entities
-                        .WithAll<NetworkTranslationSync>().ToEntityQuery().CalculateEntityCount();
+                    var translationSyncQuery = SystemAPI.QueryBuilder().WithAll<NetworkTranslationSync>().Build();
+                    var count = translationSyncQuery.CalculateEntityCount();
                     
                     if (count > 0)
                     {
@@ -179,15 +173,17 @@ namespace NaiveNetworkGame.Server.Systems
                         //     sizeof(byte) + sizeof(ushort) +
                         //     NetworkTranslationSync.GetSize() * count);
                         
-                        m_Driver.BeginSend(server.framentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
+                        m_Driver.BeginSend(server.fragmentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
                             NetworkTranslationSync.GetSize() * count);
 
                         writer.WriteByte(PacketType.ServerTranslationSync);
                         writer.WriteUShort((ushort) count);
 
-                        Entities
-                            .WithAll<NetworkTranslationSync>()
-                            .ForEach(delegate(ref NetworkTranslationSync n) { n.Write(ref writer); });
+                        foreach (var networkTranslationSync in 
+                            SystemAPI.Query<RefRO<NetworkTranslationSync>>())
+                        {
+                            networkTranslationSync.ValueRO.Write(ref writer);
+                        }
 
                         m_Driver.EndSend(writer);
 

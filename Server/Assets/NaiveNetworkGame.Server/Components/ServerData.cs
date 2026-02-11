@@ -14,7 +14,7 @@ namespace NaiveNetworkGame.Server.Components
     {
         public bool started;
         public NetworkManager networkManager;
-        public NetworkPipeline framentationPipeline;
+        public NetworkPipeline fragmentationPipeline;
         public NetworkPipeline reliabilityPipeline;
 
         // players needed to start simulation
@@ -24,7 +24,7 @@ namespace NaiveNetworkGame.Server.Components
         public bool Equals(ServerData other)
         {
             return started == other.started && Equals(networkManager, other.networkManager) && 
-                   framentationPipeline.Equals(other.framentationPipeline) && 
+                   fragmentationPipeline.Equals(other.fragmentationPipeline) && 
                    reliabilityPipeline.Equals(other.reliabilityPipeline) && 
                    playersNeededToStartSimulation == other.playersNeededToStartSimulation;
         }
@@ -40,7 +40,7 @@ namespace NaiveNetworkGame.Server.Components
             {
                 var hashCode = started.GetHashCode();
                 hashCode = (hashCode * 397) ^ (networkManager != null ? networkManager.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ framentationPipeline.GetHashCode();
+                hashCode = (hashCode * 397) ^ fragmentationPipeline.GetHashCode();
                 hashCode = (hashCode * 397) ^ reliabilityPipeline.GetHashCode();
                 hashCode = (hashCode * 397) ^ playersNeededToStartSimulation.GetHashCode();
                 return hashCode;
