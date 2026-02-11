@@ -62,7 +62,12 @@ namespace NaiveNetworkGame.Client.Systems
             var clientEntity = SystemAPI.GetSingletonEntity<ClientSingleton>();
             var client =
                 EntityManager.GetSharedComponent<ClientSingleton>(clientEntity);
-
+            
+            var networkSettings = new NetworkSettings(Allocator.Persistent);
+            //   new NetworkDataStreamParameter { size = 0 },
+            networkSettings.WithFragmentationStageParameters(payloadCapacity:16 * 1024);
+            networkSettings.WithReliableStageParameters(windowSize: 32);
+            
             Entities
                 .WithAll<StartClientCommand>()
                 .ForEach(delegate(Entity e, ref StartClientCommand s)
@@ -73,17 +78,7 @@ namespace NaiveNetworkGame.Client.Systems
                     
                     // PostUpdateCommands.RemoveComponent<StartClientCommand>(e);
 
-                    client.m_Driver = NetworkDriver.Create(
-                        new NetworkDataStreamParameter {size = 0},
-                        new FragmentationUtility.Parameters
-                        {
-                            PayloadCapacity = 16 * 1024
-                        }, 
-                        new ReliableUtility.Parameters
-                        {
-                            WindowSize = 32
-                        }
-                    );
+                    client.m_Driver = NetworkDriver.Create(networkSettings);
                     
                     client.framentationPipeline = 
                         client.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
