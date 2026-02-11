@@ -8,50 +8,64 @@ using UnityEngine;
 
 namespace Scenes.Tests
 {
+    [DisableAutoCreation]
+    public partial struct TestUnitsAttackComponentSystem : ISystem
+    {
+        private bool done;
+
+        public void OnUpdate(ref SystemState state)
+        {
+            foreach (var p in SystemAPI.Query<RefRO<LocalPlayerControllerComponentData>>()
+                         .WithAll<NetworkPlayerId>())
+            {
+                var command = state.EntityManager.CreateEntity();
+                state.EntityManager.AddComponentData(command, new PendingPlayerAction
+                {
+                    player = p.ValueRO.player,
+                    actionType = 2,
+                    unitType = 1
+                });
+
+                done = true;
+            }
+
+            // Entities.WithAll<LocalPlayerControllerComponentData, NetworkPlayerId>()
+            //     .ForEach(delegate(ref LocalPlayerControllerComponentData p)
+            //     {
+            //         var command = PostUpdateCommands.CreateEntity();
+            //         PostUpdateCommands.AddComponent(command, new PendingPlayerAction
+            //         {
+            //             player = p.player,
+            //             actionType = 2,
+            //             unitType = 1
+            //         });
+            //
+            //         done = true;
+            //     });
+
+            // PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new ClientPlayerAction
+            // {
+            //     player = 1,
+            //     unit = 0,
+            //     actionType = 2,
+            //     unitType = 1
+            // });
+            //
+            // // wait some time
+            //
+            // PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new ClientPlayerAction
+            // {
+            //     player = 1,
+            //     unit = 0,
+            //     actionType = 2,
+            //     unitType = 0
+            // });
+
+        }
+    }
+        
     public class TestUnitsAttackController : MonoBehaviour
     {
-        [DisableAutoCreation]
-        private class TestUnitsAttackComponentSystem : ComponentSystem
-        {
-            private bool done;
-            
-            protected override void OnUpdate()
-            {
-                Entities.WithAll<LocalPlayerControllerComponentData, NetworkPlayerId>()
-                    .ForEach(delegate(ref LocalPlayerControllerComponentData p)
-                    {
-                        var command = PostUpdateCommands.CreateEntity();
-                        PostUpdateCommands.AddComponent(command, new PendingPlayerAction
-                        {
-                            player = p.player,
-                            actionType = 2,
-                            unitType = 1
-                        });
-
-                        done = true;
-                    });
-
-                // PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new ClientPlayerAction
-                // {
-                //     player = 1,
-                //     unit = 0,
-                //     actionType = 2,
-                //     unitType = 1
-                // });
-                //
-                // // wait some time
-                //
-                // PostUpdateCommands.AddComponent(PostUpdateCommands.CreateEntity(), new ClientPlayerAction
-                // {
-                //     player = 1,
-                //     unit = 0,
-                //     actionType = 2,
-                //     unitType = 0
-                // });
-                
-            }
-        }
-        
         public int unitsCount = 1;
 
         public GameObject unitPrefab;
@@ -69,8 +83,10 @@ namespace Scenes.Tests
 
             var testUnitsAttack = world.GetOrCreateSystem<TestUnitsAttackComponentSystem>();
             
-            var simulationSystemGroup = world.GetOrCreateSystem<SimulationSystemGroup>();
-            simulationSystemGroup.AddSystemToUpdateList(testUnitsAttack);
+            // var simulationSystemGroup = world.GetOrCreateSystem<SimulationSystemGroup>();
+            // simulationSystemGroup.AddSystemToUpdateList(testUnitsAttack);
+            
+            // testUnitsAttack.Update(world);
             
             // simulationSystemGroup.SortSystemUpdateList();
             
