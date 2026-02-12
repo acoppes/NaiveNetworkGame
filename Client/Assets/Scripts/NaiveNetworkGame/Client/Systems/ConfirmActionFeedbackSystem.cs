@@ -7,31 +7,41 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     // Shows a confirm action feedback for player move actions (currently disabled)
-    public partial class ConfirmActionFeedbackSystem : SystemBase
+    public partial struct ConfirmActionFeedbackSystem : ISystem
     {
-        protected override void OnCreate()
+        public void OnCreate(ref SystemState state)
         {
-            base.OnCreate();
-            RequireForUpdate<ClientPrefabsSharedComponent>();
+            state.RequireForUpdate<ClientPrefabsSingleton>();
         }
 
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            var singletonEntity = GetSingletonEntity<ClientPrefabsSharedComponent>();
-            var clientPrefabs = EntityManager.GetSharedComponentManaged<ClientPrefabsSharedComponent>(singletonEntity);
+            var singletonEntity = SystemAPI.GetSingletonEntity<ClientPrefabsSingleton>();
+            // var singletonEntity = GetSingletonEntity<ClientPrefabsSharedComponent>();
+            var clientPrefabs = state.EntityManager.GetSharedComponentManaged<ClientPrefabsSharedComponent>(singletonEntity);
             
-            Entities
-                .WithAll<ConfirmActionFeedback>()
-                .ForEach(delegate(Entity e, ref ConfirmActionFeedback feedback)
-                {
-                    PostUpdateCommands.DestroyEntity(e);
-
-                    var confirmActionFeedback = GameObject.Instantiate(clientPrefabs.confirmActionPrefab);
-                    confirmActionFeedback.transform.position = new Vector3(feedback.position.x, feedback.position.y, 0);
-                    confirmActionFeedback.AddComponent<TempMonobehaviourForCoroutines>()
-                        .StartCoroutine(DestroyActionOnComplete(confirmActionFeedback));
-
-                });
+            foreach (var (feedback, e) in SystemAPI.Query<RefRO<ConfirmActionFeedback>>().WithEntityAccess())
+            {
+                var confirmActionFeedback = GameObject.Instantiate(clientPrefabs.confirmActionPrefab);
+                confirmActionFeedback.transform.position = new Vector3(feedback.ValueRO.position.x, feedback.ValueRO.position.y, 0);
+                confirmActionFeedback.AddComponent<TempMonobehaviourForCoroutines>()
+                    .StartCoroutine(DestroyActionOnComplete(confirmActionFeedback));
+                
+                state.EntityManager.DestroyEntity(e);
+            }
+            
+            // Entities
+            //     .WithAll<ConfirmActionFeedback>()
+            //     .ForEach(delegate(Entity e, ref ConfirmActionFeedback feedback)
+            //     {
+            //         PostUpdateCommands.DestroyEntity(e);
+            //
+            //         var confirmActionFeedback = GameObject.Instantiate(clientPrefabs.confirmActionPrefab);
+            //         confirmActionFeedback.transform.position = new Vector3(feedback.position.x, feedback.position.y, 0);
+            //         confirmActionFeedback.AddComponent<TempMonobehaviourForCoroutines>()
+            //             .StartCoroutine(DestroyActionOnComplete(confirmActionFeedback));
+            //
+            //     });
         }
         
         private IEnumerator DestroyActionOnComplete(GameObject actionInstance)

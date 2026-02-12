@@ -13,6 +13,11 @@ using UnityEngine.UI;
 
 namespace Scenes
 {
+    public struct ClientPrefabsSingleton : ISharedComponentData
+    {
+        
+    }
+    
     public struct ClientPrefabsSharedComponent : ISharedComponentData, IEquatable<ClientPrefabsSharedComponent>
     {
         public GameObject confirmActionPrefab;

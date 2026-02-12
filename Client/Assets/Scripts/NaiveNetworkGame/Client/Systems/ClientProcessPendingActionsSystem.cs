@@ -1,19 +1,19 @@
 using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public partial class ClientProcessPendingActionsSystem : SystemBase
+    public partial struct ClientProcessPendingActisonsSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerControllerComponentData p, ref PlayerPendingAction playerPendingActions)
+            foreach (var (networkPlayerId, playerPendingActions, localPlayer) in SystemAPI.Query<RefRO<NetworkPlayerId>, 
+                             RefRW<PlayerPendingAction>, 
+                             RefRO<LocalPlayerControllerComponentData>>())
             {
-                if (networkPlayerId.state != NetworkConnection.State.Connected)
+                if (networkPlayerId.ValueRO.state != NetworkConnection.State.Connected)
                     return;
 
                 // if (!networkPlayerId.assigned)
@@ -28,20 +28,26 @@ namespace NaiveNetworkGame.Client.Systems
                 //         unit.isSelected = false;
                 //     });
 
-                if (playerPendingActions.pending)
+                if (playerPendingActions.ValueRW.pending)
                 {
                     // send player action...
-                    var e = PostUpdateCommands.CreateEntity();
-                    PostUpdateCommands.AddComponent(e, new PendingPlayerAction
+                    var e = state.EntityManager.CreateEntity();
+                    state.EntityManager.AddComponentData(e, new PendingPlayerAction
                     {
-                        player = p.player,
-                        actionType = playerPendingActions.actionType,
-                        unitType = playerPendingActions.unitType
+                        player = localPlayer.ValueRO.player,
+                        actionType = playerPendingActions.ValueRW.actionType,
+                        unitType = playerPendingActions.ValueRW.unitType
                     });
 
-                    playerPendingActions.pending = false;
+                    playerPendingActions.ValueRW.pending = false;
                 }
-            });
+            }
+            
+            // Entities
+            //     .ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerControllerComponentData p, ref PlayerPendingAction playerPendingActions)
+            // {
+            //
+            // });
         }
     }
 }
