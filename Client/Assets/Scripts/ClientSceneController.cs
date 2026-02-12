@@ -15,7 +15,7 @@ namespace Scenes
 {
     public struct ClientPrefabsSingleton : ISharedComponentData
     {
-        
+        public int value;
     }
     
     public struct ClientPrefabsSharedComponent : ISharedComponentData, IEquatable<ClientPrefabsSharedComponent>

@@ -103,13 +103,14 @@ namespace NaiveNetworkGame.Server.Systems
                     });
                 }
             }
-            
+
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
               
             foreach (var (startCommand, entity) in 
                 SystemAPI.Query<RefRO<StartServerCommand>>()
                     .WithEntityAccess())
             {
-                state.EntityManager.DestroyEntity(entity);
+                ecb.DestroyEntity(entity);
 
                 if (server.started)
                     continue;
@@ -156,9 +157,12 @@ namespace NaiveNetworkGame.Server.Systems
                 else
                     server.networkManager.m_Driver.Listen();
 
-                state.EntityManager.SetSharedComponentManaged(serverEntity, server);
+                ecb.SetSharedComponentManaged(serverEntity, server);
             }
 
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
+            
             // create server
 
             var networkManager = server.networkManager;
