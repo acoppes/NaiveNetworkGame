@@ -5,30 +5,30 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public partial class UpdateUserInterfaceSystem : SystemBase
+    public partial struct UpdateUserInterfaceSystem : ISystem
     {
-        protected override void OnCreate()
+        public void OnCreate(ref SystemState state)
         {
-            base.OnCreate();
-            RequireForUpdate<ActivePlayerComponent>();
+            state.RequireForUpdate<ActivePlayerComponent>();
         }
 
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             // get ui from shared component, singleton or not...
-            if (!HasSingleton<ActivePlayerComponent>())
+            if (!SystemAPI.HasSingleton<ActivePlayerComponent>())
             {
                 return;
             }
             
-            var activePlayerEntity = GetSingletonEntity<ActivePlayerComponent>();
-            var player = EntityManager.GetComponentData<LocalPlayerControllerComponentData>(activePlayerEntity);
+            var activePlayerEntity = SystemAPI.GetSingletonEntity<ActivePlayerComponent>();
+            var player = state.EntityManager.GetComponentData<LocalPlayerControllerComponentData>(activePlayerEntity);
 
-            // player wasny sync...
+            // player wasn't sync...
             if (player.player == 0)
                 return;
             
-            Entities.ForEach(delegate(Entity entity, UserInterfaceSharedComponent ui)
+            foreach (var ui in 
+                SystemAPI.Query<UserInterfaceSharedComponent>())
             {
                 var userInterface = ui.userInterface;
                 
@@ -42,7 +42,7 @@ namespace NaiveNetworkGame.Client.Systems
                     userInterface.playerStats.unitType = player.skinType;
                 }
                 
-                var actions = GetBufferFromEntity<PlayerAction>()[activePlayerEntity];
+                var actions = state.EntityManager.GetBuffer<PlayerAction>(activePlayerEntity);
 
                 var unitButton = userInterface.buildUnitButton;
                 var houseButton = userInterface.buildHouseButton;
@@ -77,7 +77,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                 userInterface.attackButton.enabled = player.behaviourMode == 0;
                 userInterface.defendButton.enabled = player.behaviourMode == 1;
-            });
+            }
         }
     }
 }

@@ -47,36 +47,36 @@ namespace NaiveNetworkGame.Client.Systems
         }
     }
 
-    public partial class VisualModelSystem : SystemBase
+    public partial struct VisualModelSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithAll<ModelPrefabComponent>()
-                .WithNone<ModelInstanceComponent>()
-                .ForEach(delegate(Entity e, ModelPrefabComponent m)
+            foreach (var (modelPrefab, entity) in 
+                SystemAPI.Query<ModelPrefabComponent>()
+                    .WithNone<ModelInstanceComponent>()
+                    .WithEntityAccess())
+            {
+                var modelRoot = ModelProviderSingleton.Instance.root;
+
+                var modelInstanceComponent = new ModelInstanceComponent
                 {
-                    var modelRoot = ModelProviderSingleton.Instance.root;
+                    instance = GameObject.Instantiate(modelPrefab.prefab, modelRoot)
+                };
+                
+                modelInstanceComponent.unitModel =
+                    modelInstanceComponent.instance.GetComponentInChildren<UnitModelBehaviour>();
 
-                    var modelInstanceComponent = new ModelInstanceComponent
-                    {
-                        instance = GameObject.Instantiate(m.prefab, modelRoot)
-                    };
-                    
-                    modelInstanceComponent.unitModel =
-                        modelInstanceComponent.instance.GetComponentInChildren<UnitModelBehaviour>();
+                state.EntityManager.AddSharedComponentManaged(entity, modelInstanceComponent);
+            }
 
-                    PostUpdateCommands.AddSharedComponent(e, modelInstanceComponent);
-                });
-
-            Entities
-                .WithNone<ModelPrefabComponent>()
-                .WithAll<ModelInstanceComponent>()
-                .ForEach(delegate(Entity e, ModelInstanceComponent m)
-                {
-                    GameObject.Destroy(m.instance);
-                    PostUpdateCommands.RemoveComponent<ModelInstanceComponent>(e);
-                });
+            foreach (var (modelInstance, entity) in 
+                SystemAPI.Query<ModelInstanceComponent>()
+                    .WithNone<ModelPrefabComponent>()
+                    .WithEntityAccess())
+            {
+                GameObject.Destroy(modelInstance.instance);
+                state.EntityManager.RemoveComponent<ModelInstanceComponent>(entity);
+            }
         }
     }
 }

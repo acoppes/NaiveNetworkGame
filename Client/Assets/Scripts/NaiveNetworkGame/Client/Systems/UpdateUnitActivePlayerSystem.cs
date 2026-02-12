@@ -4,20 +4,21 @@ using Unity.Entities;
 namespace NaiveNetworkGame.Client.Systems
 {
     // for each unit, it updates if the unit is owned by local player
-    public partial class UpdateUnitActivePlayerSystem : SystemBase
+    public partial struct UpdateUnitActivePlayerSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities.ForEach(delegate(ref LocalPlayerControllerComponentData p)
+            foreach (var playerController in 
+                SystemAPI.Query<RefRO<LocalPlayerControllerComponentData>>())
             {
-                var player = p.player;
+                var player = playerController.ValueRO.player;
                 
-                Entities.ForEach(delegate(ref Unit unit)
+                foreach (var unit in 
+                    SystemAPI.Query<RefRW<Unit>>())
                 {
-                    unit.isLocalPlayer = unit.player == player;
-                });
-                
-            });
+                    unit.ValueRW.isLocalPlayer = unit.ValueRO.player == player;
+                }
+            }
         }
     }
 }

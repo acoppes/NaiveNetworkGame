@@ -26,44 +26,43 @@ namespace NaiveNetworkGame.Client.Systems
     }
 
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    public partial class DebugUnitGameStateInterpolationSystem : SystemBase
+    public partial struct DebugUnitGameStateInterpolationSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithAll<TranslationInterpolation>()
-                .WithNone<DebugUnitGameStateInterpolationComponent>()
-                .ForEach(delegate(Entity e)
-                {
-                    // create the debug object here...
+            foreach (var (_, entity) in 
+                SystemAPI.Query<TranslationInterpolation>()
+                    .WithNone<DebugUnitGameStateInterpolationComponent>()
+                    .WithEntityAccess())
+            {
+                // create the debug object here...
 
-                    var gameObject = new GameObject("~Debug-" + EntityManager.GetName(e));
-                    var debugObject = gameObject.AddComponent<DebugInterpolationMonoBehaviour>();
-                    
-                    PostUpdateCommands.AddSharedComponent(e, new DebugUnitGameStateInterpolationComponent
-                    {
-                        debugObject = debugObject
-                    });
+                var gameObject = new GameObject("~Debug-" + state.EntityManager.GetName(entity));
+                var debugObject = gameObject.AddComponent<DebugInterpolationMonoBehaviour>();
+                
+                state.EntityManager.AddSharedComponentManaged(entity, new DebugUnitGameStateInterpolationComponent
+                {
+                    debugObject = debugObject
                 });
+            }
             
-            Entities
-                .WithAll<TranslationInterpolation, DebugUnitGameStateInterpolationComponent>()
-                .ForEach(delegate(Entity e,  DebugUnitGameStateInterpolationComponent debug, ref TranslationInterpolation interpolation)
-                {
-                    debug.debugObject.p0 = new Vector3(interpolation.previousTranslation.x, 
-                        interpolation.previousTranslation.y, 0);
-                    debug.debugObject.p1 = new Vector3(interpolation.currentTranslation.x, 
-                        interpolation.currentTranslation.y, 0);
-                });
+            foreach (var (interpolation, debug) in 
+                SystemAPI.Query<RefRO<TranslationInterpolation>, DebugUnitGameStateInterpolationComponent>())
+            {
+                debug.debugObject.p0 = new Vector3(interpolation.ValueRO.previousTranslation.x, 
+                    interpolation.ValueRO.previousTranslation.y, 0);
+                debug.debugObject.p1 = new Vector3(interpolation.ValueRO.currentTranslation.x, 
+                    interpolation.ValueRO.currentTranslation.y, 0);
+            }
 
-            Entities
-                .WithNone<TranslationInterpolation>()
-                .WithAll<DebugUnitGameStateInterpolationComponent>()
-                .ForEach(delegate(Entity e, DebugUnitGameStateInterpolationComponent debug)
-                {
-                    GameObject.Destroy(debug.debugObject.gameObject);
-                    PostUpdateCommands.RemoveComponent<DebugUnitGameStateInterpolationComponent>(e);
-                });
+            foreach (var (debug, entity) in 
+                SystemAPI.Query<DebugUnitGameStateInterpolationComponent>()
+                    .WithNone<TranslationInterpolation>()
+                    .WithEntityAccess())
+            {
+                GameObject.Destroy(debug.debugObject.gameObject);
+                state.EntityManager.RemoveComponent<DebugUnitGameStateInterpolationComponent>(entity);
+            }
         }
     }
     

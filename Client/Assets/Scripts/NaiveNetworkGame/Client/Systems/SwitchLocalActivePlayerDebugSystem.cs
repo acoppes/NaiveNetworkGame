@@ -8,42 +8,44 @@ namespace NaiveNetworkGame.Client.Systems
         
     }
     
-    public partial class SwitchLocalActivePlayerDebugSystem : SystemBase
+    public partial struct SwitchLocalActivePlayerDebugSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities.WithAll<SwitchLocalPlayerAction>().ForEach(delegate(Entity switchCommand)
+            foreach (var (_, e) in 
+                SystemAPI.Query<RefRO<SwitchLocalPlayerAction>>()
+                    .WithEntityAccess())
             {
-                PostUpdateCommands.DestroyEntity(switchCommand);
+                state.EntityManager.DestroyEntity(e);
                 
-                if (Entities.WithAll<LocalPlayerControllerComponentData>().ToEntityQuery().CalculateEntityCount() == 1)
-                    return;
+                var playerQuery = SystemAPI.QueryBuilder().WithAll<LocalPlayerControllerComponentData>().Build();
+                if (playerQuery.CalculateEntityCount() == 1)
+                    continue;
 
                 var activePlayerEntity = Entity.Null;
-                Entities
-                    .WithAll<ActivePlayerComponent, LocalPlayerControllerComponentData>()
-                    .ForEach(delegate(Entity e)
-                    {
-                        activePlayerEntity = e;
-                        PostUpdateCommands.RemoveComponent<ActivePlayerComponent>(e);
-                    });
+                foreach (var (_, entity) in 
+                    SystemAPI.Query<RefRO<ActivePlayerComponent>>()
+                        .WithAll<LocalPlayerControllerComponentData>()
+                        .WithEntityAccess())
+                {
+                    activePlayerEntity = entity;
+                    state.EntityManager.RemoveComponent<ActivePlayerComponent>(e);
+                }
             
                 // it only works for two player entities
 
                 var switched = false;
-                Entities
-                    .WithAll<LocalPlayerControllerComponentData>()
-                    .WithNone<ActivePlayerComponent>()
-                    .ForEach(delegate(Entity e)
-                    {
-                        if (e == activePlayerEntity || switched)
-                            return;
-                        PostUpdateCommands.AddComponent<ActivePlayerComponent>(e);
-                        switched = true;
-                    });
-            });
-            
-            
+                foreach (var (_, entity) in 
+                    SystemAPI.Query<RefRO<LocalPlayerControllerComponentData>>()
+                        .WithNone<ActivePlayerComponent>()
+                        .WithEntityAccess())
+                {
+                    if (entity == activePlayerEntity || switched)
+                        continue;
+                    state.EntityManager.AddComponent<ActivePlayerComponent>(entity);
+                    switched = true;
+                }
+            }
         }
     }
 }

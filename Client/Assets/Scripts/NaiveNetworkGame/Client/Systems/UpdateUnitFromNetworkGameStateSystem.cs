@@ -6,7 +6,7 @@ using UnityEngine;
 namespace NaiveNetworkGame.Client.Systems
 {
     [UpdateAfter(typeof(CreateUnitFromNetworkGameStateSystem))]
-    public partial class UpdateUnitFromNetworkGameStateSystem : SystemBase
+    public partial struct UpdateUnitFromNetworkGameStateSystem : ISystem
     {
         private Vector2 Vector2FromAngle(float a)
         {
@@ -14,36 +14,35 @@ namespace NaiveNetworkGame.Client.Systems
             return new Vector2(Mathf.Cos(a), Mathf.Sin(a));
         }
         
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             // TODO: separate in different network state syncs too
 
             // updates all created units with network state...
             
-            Entities
-                .WithAll<NetworkGameState, ClientOnly>()
-                .ForEach(delegate(Entity e, ref NetworkGameState n)
-                {
-                    // var uid = n.unitId;
-                    var ngs = n;
-                    
-                    Entities
-                        .WithAll<Unit, LookingDirection, HealthPercentage>()
-                        .ForEach(delegate(ref Unit u, ref UnitStateComponent us, ref LookingDirection l, ref HealthPercentage h)
-                        {
-                            if (u.unitId != ngs.unitId)
-                                return;
-
-                            h.value = ngs.health;
-
-                            us.state = ngs.state;
-                            us.percentage = ngs.statePercentage;
-                            
-                            l.direction = Vector2FromAngle(ngs.lookingDirectionAngleInDegrees);
-                        });
+            foreach (var (networkGameState, entity) in 
+                SystemAPI.Query<RefRO<NetworkGameState>>()
+                    .WithAll<ClientOnly>()
+                    .WithEntityAccess())
+            {
+                var ngs = networkGameState.ValueRO;
                 
-                    PostUpdateCommands.DestroyEntity(e);
-                });
+                foreach (var (unit, unitState, lookingDirection, healthPercentage) in 
+                    SystemAPI.Query<RefRO<Unit>, RefRW<UnitStateComponent>, RefRW<LookingDirection>, RefRW<HealthPercentage>>())
+                {
+                    if (unit.ValueRO.unitId != ngs.unitId)
+                        continue;
+
+                    healthPercentage.ValueRW.value = ngs.health;
+
+                    unitState.ValueRW.state = ngs.state;
+                    unitState.ValueRW.percentage = ngs.statePercentage;
+                    
+                    lookingDirection.ValueRW.direction = Vector2FromAngle(ngs.lookingDirectionAngleInDegrees);
+                }
+            
+                state.EntityManager.DestroyEntity(entity);
+            }
         }
     }
 }

@@ -23,30 +23,29 @@ namespace NaiveNetworkGame.Client.Systems
         }
     }
     
-    public partial class UnitDebugSystem : SystemBase
+    public partial struct UnitDebugSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
-            Entities
-                .WithAll<ModelInstanceComponent>()
-                .WithNone<UnitDebugSystemStateComponent>()
-                .ForEach(delegate(Entity e, ModelInstanceComponent m)
+            foreach (var (modelInstance, entity) in 
+                SystemAPI.Query<ModelInstanceComponent>()
+                    .WithNone<UnitDebugSystemStateComponent>()
+                    .WithEntityAccess())
+            {
+                var debug = new UnitDebugSystemStateComponent
                 {
-                    var debug = new UnitDebugSystemStateComponent
-                    {
-                        unitDebug = m.instance.gameObject.AddComponent<UnitDebugBehaviour>()
-                    };
-                    
-                    PostUpdateCommands.AddSharedComponent(e, debug);
-                });
+                    unitDebug = modelInstance.instance.gameObject.AddComponent<UnitDebugBehaviour>()
+                };
+                
+                state.EntityManager.AddSharedComponentManaged(entity, debug);
+            }
 
-            Entities
-                .WithAll<Unit, UnitDebugSystemStateComponent>()
-                .ForEach(delegate(Entity e, UnitDebugSystemStateComponent debug, ref Unit u)
-                {
-                    // update debug
-                    debug.unitDebug.unitId = u.unitId;
-                });
+            foreach (var (debug, unit) in 
+                SystemAPI.Query<UnitDebugSystemStateComponent, RefRO<Unit>>())
+            {
+                // update debug
+                debug.unitDebug.unitId = unit.ValueRO.unitId;
+            }
         }
     }
 }

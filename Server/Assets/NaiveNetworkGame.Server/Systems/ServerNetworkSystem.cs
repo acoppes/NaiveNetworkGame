@@ -3,7 +3,6 @@ using NaiveNetworkGame.Server.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
-using Unity.Networking.Transport.Relay;
 using Unity.Networking.Transport.Utilities;
 using UnityEngine;
 using UnityEngine.Assertions;

@@ -4,36 +4,37 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public partial class UpdateNetworkPlayerStateSystem : SystemBase
+    public partial struct UpdateNetworkPlayerStateSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             // given a network gamestate, update player local data
             
-            Entities
-                .WithAll<NetworkPlayerState, ClientOnly>()
-                .ForEach(delegate(Entity e, ref NetworkPlayerState p)
+            foreach (var (networkPlayerState, entity) in 
+                SystemAPI.Query<RefRO<NetworkPlayerState>>()
+                    .WithAll<ClientOnly>()
+                    .WithEntityAccess())
             {
-                var networkPlayerState = p;
+                var networkState = networkPlayerState.ValueRO;
                 
-                Entities
-                    .ForEach(delegate(ref LocalPlayerControllerComponentData playerController)
+                foreach (var playerController in 
+                    SystemAPI.Query<RefRW<LocalPlayerControllerComponentData>>())
                 {
-                    if (playerController.player != networkPlayerState.player) 
-                        return;
+                    if (playerController.ValueRO.player != networkState.player) 
+                        continue;
                     
-                    playerController.gold = networkPlayerState.gold;
-                    playerController.player = networkPlayerState.player;
-                    playerController.skinType = networkPlayerState.skinType;
-                    playerController.currentUnits = networkPlayerState.currentUnits;
-                    playerController.maxUnits = networkPlayerState.maxUnits;
-                    playerController.buildingSlots = networkPlayerState.buildingSlots;
-                    playerController.freeBarracksCount = networkPlayerState.freeBarracks;
-                    playerController.behaviourMode = networkPlayerState.behaviourMode;
-                });
+                    playerController.ValueRW.gold = networkState.gold;
+                    playerController.ValueRW.player = networkState.player;
+                    playerController.ValueRW.skinType = networkState.skinType;
+                    playerController.ValueRW.currentUnits = networkState.currentUnits;
+                    playerController.ValueRW.maxUnits = networkState.maxUnits;
+                    playerController.ValueRW.buildingSlots = networkState.buildingSlots;
+                    playerController.ValueRW.freeBarracksCount = networkState.freeBarracks;
+                    playerController.ValueRW.behaviourMode = networkState.behaviourMode;
+                }
                 
-                PostUpdateCommands.DestroyEntity(e);
-            });
+                state.EntityManager.DestroyEntity(entity);
+            }
         }
     }
 }
