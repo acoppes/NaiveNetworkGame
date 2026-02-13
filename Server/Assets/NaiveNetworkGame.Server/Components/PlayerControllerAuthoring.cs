@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -35,6 +37,14 @@ namespace NaiveNetworkGame.Server.Components
     
     public class PlayerControllerAuthoring : MonoBehaviour
     {
+        [Serializable]
+        public struct PlayerActionData
+        {
+            public byte type;
+            public byte cost;
+            public GameObject prefab;
+        }
+        
         public byte player;
         public byte maxUnits;
         public byte currentUnits;
@@ -52,12 +62,15 @@ namespace NaiveNetworkGame.Server.Components
         public byte freeBarracksCount;
 
         public float defensiveRange;
+        
+        public List<PlayerActionData> actions;
 
         private class PlayerControllerBaker : Baker<PlayerControllerAuthoring>
         {
             public override void Bake(PlayerControllerAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
+                
                 AddComponent(entity, new PlayerController()
                 {
                     player = authoring.player,
@@ -79,8 +92,29 @@ namespace NaiveNetworkGame.Server.Components
                     defensiveRange = authoring.defensiveRange,
                 });
             
+                AddComponent(entity, new PlayerBehaviour());
                 // conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
+                
+                var buffer = AddBuffer<PlayerAction>(entity);
+            
+                foreach (var action in authoring.actions)
+                {
+                    //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
+                    // buffer = dstManager.GetBuffer<PlayerAction>(entity);
+                    
+                    buffer.Add(new PlayerAction
+                    {
+                        type = action.type,
+                        cost = action.cost,
+                        prefab = action.prefab ? GetEntity(action.prefab, TransformUsageFlags.Dynamic) : Entity.Null
+                    });
+                }
             }
+        }
+        
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.DrawWireSphere(transform.position, defensiveRange);
         }
     }
 }

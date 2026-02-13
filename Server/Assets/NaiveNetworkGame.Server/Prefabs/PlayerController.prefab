@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5135555761720755056}
   - component: {fileID: 8609711086089260182}
   - component: {fileID: 3280818747309904161}
-  - component: {fileID: 2399657498532375606}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -69,18 +68,6 @@ MonoBehaviour:
   availableBuildingSlots: 0
   freeBarracksCount: 0
   defensiveRange: 0
---- !u!114 &2399657498532375606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa883b75c3794248a97bc0c362334d4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   actions:
   - type: 0
     cost: 5
@@ -91,4 +78,3 @@ MonoBehaviour:
   - type: 2
     cost: 30
     prefab: {fileID: 5135555761720755020, guid: b797800646dc4c443bcc2c632bb5abf9, type: 3}
-  defensiveRange: 0

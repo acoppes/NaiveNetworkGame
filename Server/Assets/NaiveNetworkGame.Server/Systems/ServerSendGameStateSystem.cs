@@ -1,5 +1,6 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
@@ -38,7 +39,8 @@ namespace NaiveNetworkGame.Server.Systems
             
             // Send simulation started packet to all connections,
             // we are not waiting for players anymore... reliablity pipeline!
-
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (playerConnectionId, entity) in 
                 SystemAPI.Query<RefRW<PlayerConnectionId>>()
                     .WithEntityAccess())
@@ -77,9 +79,12 @@ namespace NaiveNetworkGame.Server.Systems
                 ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
                 ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
 
-                state.EntityManager.AddComponent<PlayerConnectionSynchronized>(playerEntity);
+                ecb.AddComponent<PlayerConnectionSynchronized>(playerEntity);
             }
-
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
+            
             var sendTranslation = false;
             var sendOtherState = false;
 

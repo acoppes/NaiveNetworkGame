@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -28,12 +29,14 @@ namespace NaiveNetworkGame.Server.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (switchToAttack, playerController, behaviour, entity) in 
                 SystemAPI.Query<RefRO<SwitchToAttackAction>, RefRO<PlayerController>, RefRW<PlayerBehaviour>>()
                     .WithAll<ServerOnly>()
                     .WithEntityAccess())
             {
-                state.EntityManager.RemoveComponent<SwitchToAttackAction>(entity);
+                ecb.RemoveComponent<SwitchToAttackAction>(entity);
                 
                 var player = playerController.ValueRO.player;
                 var area = playerController.ValueRO.attackArea;
@@ -52,7 +55,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.ValueRO.player != player)
                         continue;
-                    state.EntityManager.RemoveComponent<IdleAction>(unitEntity);
+                    ecb.RemoveComponent<IdleAction>(unitEntity);
                 }
                 
                 // Remove MovementAction from player's units
@@ -63,7 +66,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.ValueRO.player != player)
                         continue;
-                    state.EntityManager.RemoveComponent<MovementAction>(unitEntity);
+                    ecb.RemoveComponent<MovementAction>(unitEntity);
                 }
             }
             
@@ -72,7 +75,7 @@ namespace NaiveNetworkGame.Server.Systems
                     .WithAll<ServerOnly>()
                     .WithEntityAccess())
             {
-                state.EntityManager.RemoveComponent<SwitchToDefendAction>(entity);
+                ecb.RemoveComponent<SwitchToDefendAction>(entity);
                 
                 var player = playerController.ValueRO.player;
                 var area = playerController.ValueRO.defendArea;
@@ -87,7 +90,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.ValueRO.player != player)
                         continue;
-                    state.EntityManager.RemoveComponent<IdleAction>(unitEntity);
+                    ecb.RemoveComponent<IdleAction>(unitEntity);
                 }
                 
                 // Remove MovementAction from player's units
@@ -98,7 +101,7 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.ValueRO.player != player)
                         continue;
-                    state.EntityManager.RemoveComponent<MovementAction>(unitEntity);
+                    ecb.RemoveComponent<MovementAction>(unitEntity);
                 }
             }
             
@@ -132,7 +135,7 @@ namespace NaiveNetworkGame.Server.Systems
                         {
                             if (unit.ValueRO.player != player)
                                 continue;
-                            state.EntityManager.RemoveComponent<DisableAttackComponent>(unitEntity);
+                            ecb.RemoveComponent<DisableAttackComponent>(unitEntity);
                         }
                         break;
                         
@@ -166,7 +169,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                             if (math.distancesq(unitTransform.ValueRO.Position, defendCenter) > defendRange)
                             {
-                                state.EntityManager.AddComponent<DisableAttackComponent>(unitEntity);
+                                ecb.AddComponent<DisableAttackComponent>(unitEntity);
                             }
                         }
                         
@@ -180,7 +183,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                             if (math.distancesq(unitTransform.ValueRO.Position, defendCenter) < defendRange)
                             {
-                                state.EntityManager.RemoveComponent<DisableAttackComponent>(unitEntity);
+                                ecb.RemoveComponent<DisableAttackComponent>(unitEntity);
                             }
                         }
                         
@@ -204,6 +207,8 @@ namespace NaiveNetworkGame.Server.Systems
                 }
             }
             
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
             // Enable attack again for units in defend area...
         }
     }
