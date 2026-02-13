@@ -144,9 +144,6 @@ namespace NaiveNetworkGame.Client.Systems
             
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
-
-            if (!state.EntityManager.HasComponent<ClientData>(clientEntity))
-                return;
             
             var client = state.EntityManager.GetSharedComponentManaged<ClientData>(clientEntity);
 
@@ -156,7 +153,9 @@ namespace NaiveNetworkGame.Client.Systems
             if (!client.m_Driver.IsCreated)
                 return;
             
-            foreach (var (connectPlayer, entity) in 
+            ecb = new EntityCommandBuffer(Allocator.Temp);
+            
+            foreach (var (_, entity) in 
                 SystemAPI.Query<RefRO<ConnectPlayerToServer>>()
                     .WithNone<NetworkPlayerId>()
                     .WithAll<LocalPlayerControllerComponentData>()
@@ -167,12 +166,15 @@ namespace NaiveNetworkGame.Client.Systems
                 Debug.Log("Connecting local player to server");
                 // Debug.Log($"Connecting to server: {client.m_Driver.LocalEndPoint().Address}");
                 
-                state.EntityManager.AddComponentData(entity, new NetworkPlayerId
+                ecb.AddComponent(entity, new NetworkPlayerId
                 {
                     connection = connection
                 });
-                state.EntityManager.RemoveComponent<ConnectPlayerToServer>(entity);
+                ecb.RemoveComponent<ConnectPlayerToServer>(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
             DataStreamReader stream;
             NetworkEvent.Type cmd;

@@ -31,3 +31,147 @@ MonoBehaviour:
       sceneName: 
       scenePath: 
       globalObjectId: 
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-1990033513-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-5438342940982462002-5988993936100280688
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-2855578190924618428-5988993936100280688
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-199431580-5988993936100280688
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-1633604425-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-252646855-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-1915798956-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-5988993934910889927-5988993936100280688
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-457302701-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-317864906-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-1519455859-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-47782193-0
+    - reference: {fileID: 0}
+      sceneName: ClientSubscene
+      scenePath: Assets/Scenes/ClientScene/ClientSubscene.unity
+      globalObjectId: GlobalObjectId_V1-2-e1b51e913f0870549bfa5a7bf9556c50-693300645167947220-693300644839384092
+    - reference: {fileID: 0}
+      sceneName: ClientSubscene
+      scenePath: Assets/Scenes/ClientScene/ClientSubscene.unity
+      globalObjectId: GlobalObjectId_V1-2-e1b51e913f0870549bfa5a7bf9556c50-693300645167947220-1503317651
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-2068112529
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-114401758
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-664316930
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-478883387
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-1777049750
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-1062975594
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-1218664669
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-1132151210
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-5135555761720755020-241763440
+    - reference: {fileID: 102900000, guid: f383b0426ddd3dd58489048d7f5747a1, type: 3}
+      sceneName: 
+      scenePath: 
+      globalObjectId: 
+    - reference: {fileID: 11500000, guid: 5d1c68657874c3e46a958949de13f335, type: 3}
+      sceneName: 
+      scenePath: 
+      globalObjectId: 
+    - reference: {fileID: 0}
+      sceneName: ServerSubScene
+      scenePath: Assets/Scenes/ClientScene/ServerSubScene.unity
+      globalObjectId: GlobalObjectId_V1-2-1dcc9271c4a802b47b56e410e713bac7-5135555761720755020-1609942742
+    - reference: {fileID: 102900000, guid: 1837d73045248fb4787a57e30b466d47, type: 3}
+      sceneName: 
+      scenePath: 
+      globalObjectId: 
+    - reference: {fileID: 102900000, guid: 1dcc9271c4a802b47b56e410e713bac7, type: 3}
+      sceneName: 
+      scenePath: 
+      globalObjectId: 
+    - reference: {fileID: 102900000, guid: 54ce42aaeb833024595d736ca061ece9, type: 3}
+      sceneName: 
+      scenePath: 
+      globalObjectId: 
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-1633604425-0
+    - reference: {fileID: 0}
+      sceneName: ClientScene
+      scenePath: Assets/Scenes/ClientScene.unity
+      globalObjectId: GlobalObjectId_V1-2-2036e2a22f088f94ba81971c64c0a48a-1405979423-0
+    - reference: {fileID: 0}
+      sceneName: ServerSubScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerSubScene.unity
+      globalObjectId: GlobalObjectId_V1-2-1dcc9271c4a802b47b56e410e713bac7-542104054-0
+    - reference: {fileID: 0}
+      sceneName: ServerScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerScene.unity
+      globalObjectId: GlobalObjectId_V1-2-54ce42aaeb833024595d736ca061ece9-692006063-0
+    - reference: {fileID: 0}
+      sceneName: ServerSubScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerSubScene.unity
+      globalObjectId: GlobalObjectId_V1-2-1dcc9271c4a802b47b56e410e713bac7-5135555761720755020-719187437
+    - reference: {fileID: 0}
+      sceneName: ServerSubScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerSubScene.unity
+      globalObjectId: GlobalObjectId_V1-2-1dcc9271c4a802b47b56e410e713bac7-5135555761720755020-670200751
+    - reference: {fileID: 0}
+      sceneName: ServerSubScene
+      scenePath: Packages/naivenetworkgame.server/Scenes/ServerSubScene.unity
+      globalObjectId: GlobalObjectId_V1-2-1dcc9271c4a802b47b56e410e713bac7-542104054-0

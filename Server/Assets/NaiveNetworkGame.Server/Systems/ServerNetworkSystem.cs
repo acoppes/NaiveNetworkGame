@@ -170,6 +170,8 @@ namespace NaiveNetworkGame.Server.Systems
             if (networkManager == null)
                 return;
 
+            ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             var m_Driver = networkManager.m_Driver;
 
             m_Driver.ScheduleUpdate().Complete();
@@ -192,15 +194,18 @@ namespace NaiveNetworkGame.Server.Systems
                     networkManager.m_Connections.Add(c1);
                     Debug.Log($"Accepted connection from: {networkManager.m_Driver.GetRemoteEndpoint(c1).Address}");
                     
-                    state.EntityManager.AddComponentData(entity, new PlayerConnectionId
+                    ecb.AddComponent(entity, new PlayerConnectionId
                     {
                         // player = p.player,
                         connection = c1,
                     });
-                    state.EntityManager.AddComponentData(entity, new NetworkPlayerState());                        
+                    ecb.AddComponent(entity, new NetworkPlayerState());                        
                 }
 
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
             
             // TODO: if needed players reached => create server simulation singleton in order to start the simulation..
             

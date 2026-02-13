@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5135555761720755056}
   - component: {fileID: 8609711086089260182}
   - component: {fileID: 3280818747309904161}
-  - component: {fileID: 3743679423661859816}
   - component: {fileID: 2399657498532375606}
   m_Layer: 0
   m_Name: PlayerController
@@ -27,12 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5135555761720755020}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8609711086089260182
 MonoBehaviour:
@@ -64,22 +64,11 @@ MonoBehaviour:
   maxGold: 999
   gold: 0
   skinType: 0
-  playerWander: {fileID: 0}
+  defendArea: {fileID: 0}
+  attackArea: {fileID: 0}
   availableBuildingSlots: 0
   freeBarracksCount: 0
---- !u!114 &3743679423661859816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135555761720755020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
+  defensiveRange: 0
 --- !u!114 &2399657498532375606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,3 +91,4 @@ MonoBehaviour:
   - type: 2
     cost: 30
     prefab: {fileID: 5135555761720755020, guid: b797800646dc4c443bcc2c632bb5abf9, type: 3}
+  defensiveRange: 0

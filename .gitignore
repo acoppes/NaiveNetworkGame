@@ -79,3 +79,6 @@ Client/TempAssets
 Client/UserSettings/EditorUserSettings.asset
 Server/UserSettings/EditorUserSettings.asset
 fastlane/report.xml
+
+Client/Assets/SceneDependencyCache
+Server/Assets/SceneDependencyCache
