@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
@@ -27,6 +28,8 @@ namespace NaiveNetworkGame.Client.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (modelInstance, entity) in 
                 SystemAPI.Query<ModelInstanceComponent>()
                     .WithNone<UnitDebugSystemStateComponent>()
@@ -37,7 +40,7 @@ namespace NaiveNetworkGame.Client.Systems
                     unitDebug = modelInstance.instance.gameObject.AddComponent<UnitDebugBehaviour>()
                 };
                 
-                state.EntityManager.AddSharedComponentManaged(entity, debug);
+                ecb.AddSharedComponentManaged(entity, debug);
             }
 
             foreach (var (debug, unit) in 
@@ -46,6 +49,9 @@ namespace NaiveNetworkGame.Client.Systems
                 // update debug
                 debug.unitDebug.unitId = unit.ValueRO.unitId;
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

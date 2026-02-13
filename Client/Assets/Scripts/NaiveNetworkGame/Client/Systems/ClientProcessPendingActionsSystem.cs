@@ -11,7 +11,7 @@ namespace NaiveNetworkGame.Client.Systems
         {
             foreach (var (networkPlayerId, playerPendingActions, localPlayer) in SystemAPI.Query<RefRO<NetworkPlayerId>, 
                              RefRW<PlayerPendingAction>, 
-                             RefRO<LocalPlayerControllerComponentData>>())
+                             RefRO<LocalPlayerController>>())
             {
                 if (networkPlayerId.ValueRO.state != NetworkConnection.State.Connected)
                     return;

@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -30,6 +31,8 @@ namespace NaiveNetworkGame.Client.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (_, entity) in 
                 SystemAPI.Query<TranslationInterpolation>()
                     .WithNone<DebugUnitGameStateInterpolationComponent>()
@@ -40,7 +43,7 @@ namespace NaiveNetworkGame.Client.Systems
                 var gameObject = new GameObject("~Debug-" + state.EntityManager.GetName(entity));
                 var debugObject = gameObject.AddComponent<DebugInterpolationMonoBehaviour>();
                 
-                state.EntityManager.AddSharedComponentManaged(entity, new DebugUnitGameStateInterpolationComponent
+                ecb.AddSharedComponentManaged(entity, new DebugUnitGameStateInterpolationComponent
                 {
                     debugObject = debugObject
                 });
@@ -61,8 +64,11 @@ namespace NaiveNetworkGame.Client.Systems
                     .WithEntityAccess())
             {
                 GameObject.Destroy(debug.debugObject.gameObject);
-                state.EntityManager.RemoveComponent<DebugUnitGameStateInterpolationComponent>(entity);
+                ecb.RemoveComponent<DebugUnitGameStateInterpolationComponent>(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
     

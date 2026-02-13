@@ -22,6 +22,8 @@ namespace NaiveNetworkGame.Client.Systems
             
             var createdUnitsInThisUpdate = new List<int>();
             
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             // first create entities to be updated....
             
             foreach (var networkGameState in 
@@ -47,13 +49,13 @@ namespace NaiveNetworkGame.Client.Systems
 
                 // create visual model for this unit
                 var entity = state.EntityManager.CreateEntity();
-                state.EntityManager.AddComponentData(entity, new Unit
+                ecb.AddComponent(entity, new Unit
                 {
                     unitId = networkGameState.ValueRO.unitId,
                     player = networkGameState.ValueRO.playerId
                 });
                 
-                state.EntityManager.AddComponentData(entity, new HealthPercentage
+                ecb.AddComponent(entity, new HealthPercentage
                 {
                     value = networkGameState.ValueRO.health
                 });
@@ -64,29 +66,32 @@ namespace NaiveNetworkGame.Client.Systems
                 var skinModels = modelProvider.skinModels[skinType];
                 var modelPrefab = skinModels.list[networkGameState.ValueRO.unitType];
                 
-                state.EntityManager.AddSharedComponentManaged(entity, new ModelPrefabComponent
+                ecb.AddSharedComponentManaged(entity, new ModelPrefabComponent
                 {
                     prefab = modelPrefab
                 });
                 
                 // create it far away first time...
-                state.EntityManager.AddComponentData(entity, new LocalTransform
+                ecb.AddComponent(entity, new LocalTransform
                 {
                     Position = new float3(100, 100, 0),
                     Rotation = quaternion.identity,
                     Scale = 1f
                 });
                 
-                state.EntityManager.AddComponentData(entity, new UnitStateComponent());
-                state.EntityManager.AddComponentData(entity, new LookingDirection());
+                ecb.AddComponent(entity, new UnitStateComponent());
+                ecb.AddComponent(entity, new LookingDirection());
                 // state.EntityManager.AddComponent(entity, new Selectable());
-                state.EntityManager.AddComponentData(entity, new NetworkObject());
-                state.EntityManager.AddComponent<ClientOnly>(entity);
+                ecb.AddComponent(entity, new NetworkObject());
+                ecb.AddComponent<ClientOnly>(entity);
 
                 createdUnitsInThisUpdate.Add(networkGameState.ValueRO.unitId);
                 
                 NextNetworkState:;
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
             units.Dispose();
         }

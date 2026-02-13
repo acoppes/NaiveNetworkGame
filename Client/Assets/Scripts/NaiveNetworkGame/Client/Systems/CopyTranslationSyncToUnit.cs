@@ -13,6 +13,8 @@ namespace NaiveNetworkGame.Client.Systems
             var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
 
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (n, e) in SystemAPI.Query<NetworkTranslationSync>()
                          .WithAll<NetworkTranslationSync, ClientOnly>()
                          .WithNone<Unit>()
@@ -23,11 +25,11 @@ namespace NaiveNetworkGame.Client.Systems
                     var unit = units[i];
                     if (unit.unitId == n.unitId)
                     {
-                        EntityManager.AddComponentData(unitEntities[i], n);
+                        ecb.AddComponent(unitEntities[i], n);
                     }
                 }
 
-                EntityManager.DestroyEntity(e);
+                ecb.DestroyEntity(e);
             }
             
             // Entities
@@ -46,6 +48,9 @@ namespace NaiveNetworkGame.Client.Systems
             //
             //         PostUpdateCommands.DestroyEntity(e);
             //     }).Run();
+            
+            ecb.Playback(EntityManager);
+            ecb.Dispose();
 
             units.Dispose();
             unitEntities.Dispose();

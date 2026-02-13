@@ -1,5 +1,6 @@
 using Client;
 using NaiveNetworkGame.Common;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ namespace NaiveNetworkGame.Client.Systems
             // TODO: separate in different network state syncs too
 
             // updates all created units with network state...
+            
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
             
             foreach (var (networkGameState, entity) in 
                 SystemAPI.Query<RefRO<NetworkGameState>>()
@@ -41,8 +44,11 @@ namespace NaiveNetworkGame.Client.Systems
                     lookingDirection.ValueRW.direction = Vector2FromAngle(ngs.lookingDirectionAngleInDegrees);
                 }
             
-                state.EntityManager.DestroyEntity(entity);
+                ecb.DestroyEntity(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

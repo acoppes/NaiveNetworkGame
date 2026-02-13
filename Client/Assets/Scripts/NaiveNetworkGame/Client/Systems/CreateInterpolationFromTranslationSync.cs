@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Common;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
@@ -9,6 +10,8 @@ namespace NaiveNetworkGame.Client.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             // First time interpolation created with proper translation...
             foreach (var (_, networkSync, entity) in 
                      SystemAPI.Query<RefRO<LocalTransform>, RefRO<NetworkTranslationSync>>()
@@ -16,7 +19,7 @@ namespace NaiveNetworkGame.Client.Systems
                          .WithAll<Unit, ClientOnly>()
                          .WithEntityAccess())
             {
-                state.EntityManager.AddComponentData(entity, new TranslationInterpolation
+                ecb.AddComponent(entity, new TranslationInterpolation
                 {
                     previousTranslation = networkSync.ValueRO.translation,
                     currentTranslation = networkSync.ValueRO.translation,
@@ -38,8 +41,11 @@ namespace NaiveNetworkGame.Client.Systems
                 interpolation.remoteDelta = networkSync.ValueRO.delta;
                 interpolation.time = 0;
                 
-                state.EntityManager.RemoveComponent<NetworkTranslationSync>(entity);
+                ecb.RemoveComponent<NetworkTranslationSync>(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

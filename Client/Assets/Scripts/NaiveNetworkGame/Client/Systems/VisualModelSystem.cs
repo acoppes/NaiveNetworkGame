@@ -1,5 +1,6 @@
 using System;
 using Client;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -51,6 +52,8 @@ namespace NaiveNetworkGame.Client.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (modelPrefab, entity) in 
                 SystemAPI.Query<ModelPrefabComponent>()
                     .WithNone<ModelInstanceComponent>()
@@ -66,7 +69,7 @@ namespace NaiveNetworkGame.Client.Systems
                 modelInstanceComponent.unitModel =
                     modelInstanceComponent.instance.GetComponentInChildren<UnitModelBehaviour>();
 
-                state.EntityManager.AddSharedComponentManaged(entity, modelInstanceComponent);
+                ecb.AddSharedComponentManaged(entity, modelInstanceComponent);
             }
 
             foreach (var (modelInstance, entity) in 
@@ -75,8 +78,11 @@ namespace NaiveNetworkGame.Client.Systems
                     .WithEntityAccess())
             {
                 GameObject.Destroy(modelInstance.instance);
-                state.EntityManager.RemoveComponent<ModelInstanceComponent>(entity);
+                ecb.RemoveComponent<ModelInstanceComponent>(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

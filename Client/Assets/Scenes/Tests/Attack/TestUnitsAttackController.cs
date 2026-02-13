@@ -15,7 +15,7 @@ namespace Scenes.Tests
 
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var p in SystemAPI.Query<RefRO<LocalPlayerControllerComponentData>>()
+            foreach (var p in SystemAPI.Query<RefRO<LocalPlayerController>>()
                          .WithAll<NetworkPlayerId>())
             {
                 var command = state.EntityManager.CreateEntity();

@@ -158,7 +158,7 @@ namespace NaiveNetworkGame.Client.Systems
             foreach (var (_, entity) in 
                 SystemAPI.Query<RefRO<ConnectPlayerToServer>>()
                     .WithNone<NetworkPlayerId>()
-                    .WithAll<LocalPlayerControllerComponentData>()
+                    .WithAll<LocalPlayerController>()
                     .WithEntityAccess())
             {
                 var connection = client.m_Driver.Connect(client.endpoint);
@@ -173,9 +173,6 @@ namespace NaiveNetworkGame.Client.Systems
                 ecb.RemoveComponent<ConnectPlayerToServer>(entity);
             }
             
-            ecb.Playback(state.EntityManager);
-            ecb.Dispose();
-
             DataStreamReader stream;
             NetworkEvent.Type cmd;
             
@@ -183,7 +180,7 @@ namespace NaiveNetworkGame.Client.Systems
             m_Driver.ScheduleUpdate().Complete();
 
             foreach (var (networkPlayer, playerController, entity) in 
-                SystemAPI.Query<RefRW<NetworkPlayerId>, RefRW<LocalPlayerControllerComponentData>>()
+                SystemAPI.Query<RefRW<NetworkPlayerId>, RefRW<LocalPlayerController>>()
                     .WithNone<ConnectPlayerToServer>()
                     .WithEntityAccess())
             {
@@ -227,15 +224,18 @@ namespace NaiveNetworkGame.Client.Systems
 
                             var playerActionsCount = stream.ReadByte();
 
-                            var playerActions = state.EntityManager.GetBuffer<PlayerAction>(entity);
-
-                            for (var i = 0; i < playerActionsCount; i++)
+                            if (playerActionsCount > 0)
                             {
-                                playerActions.Add(new PlayerAction
+                                var playerActions = state.EntityManager.GetBuffer<PlayerAction>(entity);
+
+                                for (var i = 0; i < playerActionsCount; i++)
                                 {
-                                    type = stream.ReadByte(),
-                                    cost = stream.ReadByte()
-                                });
+                                    playerActions.Add(new PlayerAction
+                                    {
+                                        type = stream.ReadByte(),
+                                        cost = stream.ReadByte()
+                                    });
+                                }  
                             }
                         }
 
@@ -249,8 +249,8 @@ namespace NaiveNetworkGame.Client.Systems
                             for (var j = 0; j < count; j++)
                             {
                                 var networkStateEntity = state.EntityManager.CreateEntity();
-                                state.EntityManager.AddComponent<ClientOnly>(networkStateEntity);
-                                state.EntityManager.AddComponentData(networkStateEntity, new NetworkGameState().Read(ref stream));
+                                ecb.AddComponent<ClientOnly>(networkStateEntity);
+                                ecb.AddComponent(networkStateEntity, new NetworkGameState().Read(ref stream));
                             }
                         }
 
@@ -260,8 +260,8 @@ namespace NaiveNetworkGame.Client.Systems
                             // read unit info...
 
                             var networkStateEntity = state.EntityManager.CreateEntity();
-                            state.EntityManager.AddComponent<ClientOnly>(networkStateEntity);
-                            state.EntityManager.AddComponentData(networkStateEntity, 
+                            ecb.AddComponent<ClientOnly>(networkStateEntity);
+                            ecb.AddComponent(networkStateEntity, 
                                 new NetworkPlayerState().Read(ref stream));
                         }
                         
@@ -270,8 +270,8 @@ namespace NaiveNetworkGame.Client.Systems
                             // empty game state, no units in town..
 
                             var networkStateEntity = state.EntityManager.CreateEntity();
-                            state.EntityManager.AddComponent<ClientOnly>(networkStateEntity);
-                            state.EntityManager.AddComponentData(networkStateEntity, 
+                            ecb.AddComponent<ClientOnly>(networkStateEntity);
+                            ecb.AddComponent(networkStateEntity, 
                                 new NetworkGameState
                                 {
                                     unitId = 0, playerId = 0
@@ -285,9 +285,9 @@ namespace NaiveNetworkGame.Client.Systems
                             for (var j = 0; j < count; j++)
                             {
                                 var networkStateEntity = state.EntityManager.CreateEntity();
-                                state.EntityManager.AddComponent<ClientOnly>(networkStateEntity);
+                                ecb.AddComponent<ClientOnly>(networkStateEntity);
                                 var translationSync = new NetworkTranslationSync().Read(ref stream);
-                                state.EntityManager.AddComponentData(networkStateEntity, translationSync);
+                                ecb.AddComponent(networkStateEntity, translationSync);
                             }
 
                             // read all packets~!!!
@@ -319,7 +319,7 @@ namespace NaiveNetworkGame.Client.Systems
                         
                         Debug.Log("Client got disconnected from server");
 
-                        state.EntityManager.SetSharedComponent(clientEntity, client);
+                        ecb.SetSharedComponent(clientEntity, client);
 
                         ConnectionState.currentState = ConnectionState.State.Disconnected;
                     }
@@ -340,7 +340,7 @@ namespace NaiveNetworkGame.Client.Systems
                         .WithNone<ServerOnly>()
                         .WithEntityAccess())
                 {
-                    state.EntityManager.DestroyEntity(entity);
+                    ecb.DestroyEntity(entity);
                     // state.EntityManager.RemoveComponent<PendingPlayerAction>(entity);
                             
                     // var writer = m_Driver.BeginSend(m_Connection);
@@ -404,7 +404,7 @@ namespace NaiveNetworkGame.Client.Systems
                 SystemAPI.Query<RefRO<DisconnectClientCommand>>()
                     .WithEntityAccess())
             {
-                state.EntityManager.DestroyEntity(entity);
+                ecb.DestroyEntity(entity);
                 
                 foreach (var networkPlayer in 
                     SystemAPI.Query<RefRO<NetworkPlayerId>>())
@@ -421,8 +421,11 @@ namespace NaiveNetworkGame.Client.Systems
                 }
 
                 ConnectionState.currentState = ConnectionState.State.Disconnected;
-                state.EntityManager.SetSharedComponent(clientEntity, client);
+                ecb.SetSharedComponent(clientEntity, client);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
 
         public void OnDestroy(ref SystemState state)

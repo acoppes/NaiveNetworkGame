@@ -1,5 +1,6 @@
 using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Client.Systems
@@ -9,6 +10,7 @@ namespace NaiveNetworkGame.Client.Systems
         public void OnUpdate(ref SystemState state)
         {
             // given a network gamestate, update player local data
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
             
             foreach (var (networkPlayerState, entity) in 
                 SystemAPI.Query<RefRO<NetworkPlayerState>>()
@@ -18,7 +20,7 @@ namespace NaiveNetworkGame.Client.Systems
                 var networkState = networkPlayerState.ValueRO;
                 
                 foreach (var playerController in 
-                    SystemAPI.Query<RefRW<LocalPlayerControllerComponentData>>())
+                    SystemAPI.Query<RefRW<LocalPlayerController>>())
                 {
                     if (playerController.ValueRO.player != networkState.player) 
                         continue;
@@ -33,8 +35,11 @@ namespace NaiveNetworkGame.Client.Systems
                     playerController.ValueRW.behaviourMode = networkState.behaviourMode;
                 }
                 
-                state.EntityManager.DestroyEntity(entity);
+                ecb.DestroyEntity(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

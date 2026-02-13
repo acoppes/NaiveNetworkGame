@@ -18,14 +18,14 @@ namespace NaiveNetworkGame.Client.Systems
             {
                 state.EntityManager.DestroyEntity(e);
                 
-                var playerQuery = SystemAPI.QueryBuilder().WithAll<LocalPlayerControllerComponentData>().Build();
+                var playerQuery = SystemAPI.QueryBuilder().WithAll<LocalPlayerController>().Build();
                 if (playerQuery.CalculateEntityCount() == 1)
                     continue;
 
                 var activePlayerEntity = Entity.Null;
                 foreach (var (_, entity) in 
                     SystemAPI.Query<RefRO<ActivePlayerComponent>>()
-                        .WithAll<LocalPlayerControllerComponentData>()
+                        .WithAll<LocalPlayerController>()
                         .WithEntityAccess())
                 {
                     activePlayerEntity = entity;
@@ -36,7 +36,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                 var switched = false;
                 foreach (var (_, entity) in 
-                    SystemAPI.Query<RefRO<LocalPlayerControllerComponentData>>()
+                    SystemAPI.Query<RefRO<LocalPlayerController>>()
                         .WithNone<ActivePlayerComponent>()
                         .WithEntityAccess())
                 {

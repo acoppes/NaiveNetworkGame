@@ -9,7 +9,7 @@ namespace NaiveNetworkGame.Client.Systems
         public void OnUpdate(ref SystemState state)
         {
             foreach (var playerController in 
-                SystemAPI.Query<RefRO<LocalPlayerControllerComponentData>>())
+                SystemAPI.Query<RefRO<LocalPlayerController>>())
             {
                 var player = playerController.ValueRO.player;
                 
