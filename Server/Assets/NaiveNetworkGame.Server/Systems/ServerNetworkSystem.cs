@@ -52,7 +52,7 @@ namespace NaiveNetworkGame.Server.Systems
         public void OnUpdate(ref SystemState state)
         {
             var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
-            var server = state.EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
+            var serverData = state.EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
             foreach (var (stopCommand, entity) in 
                 SystemAPI.Query<RefRO<StopServerCommand>>()
@@ -60,29 +60,29 @@ namespace NaiveNetworkGame.Server.Systems
             {
                 state.EntityManager.DestroyEntity(entity);
 
-                if (!server.started)
+                if (!serverData.started)
                     continue;
 
-                if (server.networkManager != null)
+                if (serverData.networkManager != null)
                 {
-                    for (var i = 0; i < server.networkManager.m_Connections.Length; i++)
+                    for (var i = 0; i < serverData.networkManager.m_Connections.Length; i++)
                     {
-                        var c = server.networkManager.m_Connections[i];
-                        if (c.IsCreated && server.networkManager.m_Driver.GetConnectionState(c) ==
+                        var c = serverData.networkManager.m_Connections[i];
+                        if (c.IsCreated && serverData.networkManager.m_Driver.GetConnectionState(c) ==
                             NetworkConnection.State.Connected)
                         {
-                            server.networkManager.m_Driver.Disconnect(c);
+                            serverData.networkManager.m_Driver.Disconnect(c);
                         }
                     }
                     
-                    server.networkManager.m_Connections.Dispose();
-                    server.networkManager.m_Driver.Dispose();
+                    serverData.networkManager.m_Connections.Dispose();
+                    serverData.networkManager.m_Driver.Dispose();
                 }
 
-                server.networkManager = null;
-                server.started = false;
+                serverData.networkManager = null;
+                serverData.started = false;
                 
-                state.EntityManager.SetSharedComponentManaged(serverEntity, server);
+                state.EntityManager.SetSharedComponentManaged(serverEntity, serverData);
 
                 var nonServerDataQuery = SystemAPI.QueryBuilder().WithNone<ServerData>().Build();
                 state.EntityManager.DestroyEntity(nonServerDataQuery.ToEntityArray(Allocator.Temp));
@@ -98,8 +98,8 @@ namespace NaiveNetworkGame.Server.Systems
                     var restart = state.EntityManager.CreateEntity();
                     state.EntityManager.AddComponentData(restart, new StartServerCommand
                     {
-                        port = server.port,
-                        playersNeededToStartSimulation = server.playersNeededToStartSimulation
+                        port = serverData.port,
+                        playersNeededToStartSimulation = serverData.playersNeededToStartSimulation
                     });
                 }
             }
@@ -112,22 +112,22 @@ namespace NaiveNetworkGame.Server.Systems
             {
                 ecb.DestroyEntity(entity);
 
-                if (server.started)
+                if (serverData.started)
                     continue;
                 
                 // m_ServerDriver = NetworkDriver.Create(new ReliableUtility.Parameters { WindowSize = 32 });
                 // m_Pipeline = m_ServerDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
 
-                server.started = true;
-                server.port = startCommand.ValueRO.port;
-                server.playersNeededToStartSimulation = startCommand.ValueRO.playersNeededToStartSimulation;
+                serverData.started = true;
+                serverData.port = startCommand.ValueRO.port;
+                serverData.playersNeededToStartSimulation = startCommand.ValueRO.playersNeededToStartSimulation;
 
                 var networkSettings = new NetworkSettings(Allocator.Persistent);
                 //   new NetworkDataStreamParameter { size = 0 },
                 networkSettings.WithFragmentationStageParameters(payloadCapacity:16 * 1024);
                 networkSettings.WithReliableStageParameters(windowSize: 32);
 
-                server.networkManager = new NetworkManager
+                serverData.networkManager = new NetworkManager
                 {
                     m_Driver = NetworkDriver.Create(networkSettings),
                     // m_Driver = NetworkDriver.Create(new SimulatorUtility.Parameters
@@ -140,10 +140,10 @@ namespace NaiveNetworkGame.Server.Systems
                 // var m_Pipeline = networkManager.networkManager.m_Driver.CreatePipeline(
                 //     typeof(SimulatorPipelineStage));
 
-                server.fragmentationPipeline = 
-                    server.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
-                server.reliabilityPipeline = 
-                    server.networkManager.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+                serverData.fragmentationPipeline = 
+                    serverData.networkManager.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+                serverData.reliabilityPipeline = 
+                    serverData.networkManager.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
 
                 var endpoint = NetworkEndpoint.AnyIpv4.WithPort(startCommand.ValueRO.port);
                 
@@ -152,12 +152,12 @@ namespace NaiveNetworkGame.Server.Systems
                 
                 Debug.Log($"Starting Server at port: {startCommand.ValueRO.port}");
                 
-                if (server.networkManager.m_Driver.Bind(endpoint) != 0)
+                if (serverData.networkManager.m_Driver.Bind(endpoint) != 0)
                     Debug.Log($"Failed to bind to port {startCommand.ValueRO.port}");
                 else
-                    server.networkManager.m_Driver.Listen();
+                    serverData.networkManager.m_Driver.Listen();
 
-                ecb.SetSharedComponentManaged(serverEntity, server);
+                ecb.SetSharedComponentManaged(serverEntity, serverData);
             }
 
             ecb.Playback(state.EntityManager);
@@ -165,7 +165,7 @@ namespace NaiveNetworkGame.Server.Systems
             
             // create server
 
-            var networkManager = server.networkManager;
+            var networkManager = serverData.networkManager;
 
             if (networkManager == null)
                 return;
@@ -337,7 +337,7 @@ namespace NaiveNetworkGame.Server.Systems
             {
                 var playerConnectionQuery = SystemAPI.QueryBuilder().WithAll<PlayerConnectionId>().Build();
                 var players = playerConnectionQuery.CalculateEntityCount();
-                if (server.playersNeededToStartSimulation == players)
+                if (serverData.playersNeededToStartSimulation == players)
                 {
                     // start simulation if reached needed players
                     state.EntityManager.CreateEntity(typeof(ServerSimulation));

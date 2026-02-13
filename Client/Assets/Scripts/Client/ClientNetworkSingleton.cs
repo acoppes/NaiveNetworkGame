@@ -1,5 +1,4 @@
 using System;
-using NaiveNetworkGame.Common;
 using Unity.Entities;
 using Unity.Networking.Transport;
 
@@ -25,41 +24,34 @@ namespace Client
         public static byte latencyPacket;
     }
 
-    public struct ClientSingleton : ISharedComponentData
+    public struct ClientSingleton : IComponentData
     {
-        public int value;
+        
     }
 
-    public struct ClientNetworkComponentData: ISharedComponentData
+    public struct ClientData: ISharedComponentData, IEquatable<ClientData>
     {
         public NetworkDriver m_Driver;
+        
         public NetworkPipeline framentationPipeline;
         public NetworkPipeline reliabilityPipeline;
         public NetworkEndpoint endpoint;
         
-        // public bool Equals(ClientNetworkSingleton other)
-        // {
-        //     return m_Driver.Equals(other.m_Driver) && 
-        //            framentationPipeline.Equals(other.framentationPipeline) && 
-        //            reliabilityPipeline.Equals(other.reliabilityPipeline) && 
-        //            endpoint.Equals(other.endpoint);
-        // }
-        //
-        // public override bool Equals(object obj)
-        // {
-        //     return obj is ClientNetworkSingleton other && Equals(other);
-        // }
-        //
-        // public override int GetHashCode()
-        // {
-        //     unchecked
-        //     {
-        //         var hashCode = m_Driver.GetHashCode();
-        //         hashCode = (hashCode * 397) ^ framentationPipeline.GetHashCode();
-        //         hashCode = (hashCode * 397) ^ reliabilityPipeline.GetHashCode();
-        //         hashCode = (hashCode * 397) ^ endpoint.GetHashCode();
-        //         return hashCode;
-        //     }
-        // }
+        public bool Equals(ClientData other)
+        {
+            return framentationPipeline.Equals(other.framentationPipeline) && 
+                   reliabilityPipeline.Equals(other.reliabilityPipeline) && 
+                   endpoint.Equals(other.endpoint);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ClientData other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(framentationPipeline, reliabilityPipeline, endpoint);
+        }
     }
 }

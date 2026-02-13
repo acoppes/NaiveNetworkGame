@@ -45,12 +45,14 @@ namespace NaiveNetworkGame.Client.Systems
 #if UNITY_EDITOR
             state.EntityManager.SetName(clientEntity, "ClientSingleton");
 #endif
-            state.EntityManager.AddSharedComponentManaged(clientEntity, new ClientSingleton());
+            state.EntityManager.AddComponentData(clientEntity, new ClientSingleton());
+            state.EntityManager.AddSharedComponentManaged(clientEntity, new ClientData());
         }
 
         public void OnUpdate(ref SystemState state)
         {
             var clientEntity = SystemAPI.GetSingletonEntity<ClientSingleton>();
+            var clientData = state.EntityManager.GetSharedComponentManaged<ClientData>(clientEntity);
             
             var networkSettings = new NetworkSettings(Allocator.Persistent);
             //   new NetworkDataStreamParameter { size = 0 },
@@ -63,18 +65,20 @@ namespace NaiveNetworkGame.Client.Systems
                 SystemAPI.Query<RefRO<StartClientCommand>>()
                     .WithEntityAccess())
             {
+                ecb.DestroyEntity(entity);
+                
                 Debug.Log("Starting Client");
                 
                 // state.EntityManager.RemoveComponent<StartClientCommand>(entity);
 
-                var driver = NetworkDriver.Create(networkSettings);
+                clientData.m_Driver = NetworkDriver.Create(networkSettings);
                 
-                var framentationPipeline = 
-                    driver.CreatePipeline(typeof(FragmentationPipelineStage));
-                var reliabilityPipeline = 
-                    driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+                clientData.framentationPipeline = 
+                    clientData.m_Driver.CreatePipeline(typeof(FragmentationPipelineStage));
+                clientData.reliabilityPipeline = 
+                    clientData.m_Driver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
                 
-                var endpoint = NetworkEndpoint.LoopbackIpv4.WithPort(9000);
+                clientData.endpoint = NetworkEndpoint.LoopbackIpv4.WithPort(9000);
 
                 var parametersObject = ServerConnectionParametersObject.Instance;
                 var parameters = new ServerConnectionParameters();
@@ -101,12 +105,12 @@ namespace NaiveNetworkGame.Client.Systems
                 
                 if (!string.IsNullOrEmpty(parameters.ip))
                 {
-                    endpoint = NetworkEndpoint.Parse(parameters.ip, parameters.port);
+                    clientData.endpoint = NetworkEndpoint.Parse(parameters.ip, parameters.port);
                 }
 
                 // var endpoint = NetworkEndPoint.Parse("167.57.35.238", 9000, NetworkFamily.Ipv4);
 
-                Debug.Log($"Connecting to {endpoint.Address}, {endpoint.IsValid}");
+                Debug.Log($"Connecting to {clientData.endpoint.Address}, {clientData.endpoint.IsValid}");
                 
                 // endpoint.Address = "167.57.86.221";
                 // endpoint.Port = 9000;
@@ -127,24 +131,24 @@ namespace NaiveNetworkGame.Client.Systems
                 // client.endpoint = endpoint;
 
                 // var clientConnectionEntity = ecb.CreateEntity();
-                ecb.SetSharedComponentManaged(clientEntity, new ClientNetworkComponentData
-                {
-                    m_Driver = driver,
-                    endpoint = endpoint,
-                    framentationPipeline = framentationPipeline,
-                    reliabilityPipeline = reliabilityPipeline
-                });
+                // ecb.SetSharedComponentManaged(clientEntity, new ClientData
+                // {
+                //     m_Driver = driver,
+                //     endpoint = endpoint,
+                //     framentationPipeline = framentationPipeline,
+                //     reliabilityPipeline = reliabilityPipeline
+                // });
                 
-                ecb.DestroyEntity(entity);
+                ecb.SetSharedComponentManaged(clientEntity, clientData);
             }
             
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
 
-            if (!state.EntityManager.HasComponent<ClientNetworkComponentData>(clientEntity))
+            if (!state.EntityManager.HasComponent<ClientData>(clientEntity))
                 return;
             
-            var client = state.EntityManager.GetSharedComponentManaged<ClientNetworkComponentData>(clientEntity);
+            var client = state.EntityManager.GetSharedComponentManaged<ClientData>(clientEntity);
 
             // if (client.networkManager == null || !client.connectionInitialized)
             //     return;
@@ -424,7 +428,7 @@ namespace NaiveNetworkGame.Client.Systems
             var clientEntity = SystemAPI.GetSingletonEntity<ClientSingleton>();
             
             foreach (var client in 
-                SystemAPI.Query<ClientNetworkComponentData>())
+                SystemAPI.Query<ClientData>())
             {
                 if (client.m_Driver.IsCreated)
                     client.m_Driver.Dispose();

@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.gemserk.selectionhistory": {
+      "version": "1.5.9",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.gemserk.tools.gameobjectbrush": {
       "version": "https://github.com/acoppes/unity-gameobject-brush.git#0.0.2",
       "depth": 0,
@@ -88,7 +95,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.36",
+      "version": "3.0.39",
       "depth": 0,
       "source": "registry",
       "dependencies": {
