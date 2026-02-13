@@ -42,7 +42,7 @@ namespace NaiveNetworkGame.Client.Systems
                     userInterface.playerStats.unitType = player.skinType;
                 }
                 
-                var actions = state.EntityManager.GetBuffer<PlayerAction>(activePlayerEntity);
+                var actions = state.EntityManager.GetBuffer<PlayerActionDefinition>(activePlayerEntity);
 
                 var unitButton = userInterface.buildUnitButton;
                 var houseButton = userInterface.buildHouseButton;

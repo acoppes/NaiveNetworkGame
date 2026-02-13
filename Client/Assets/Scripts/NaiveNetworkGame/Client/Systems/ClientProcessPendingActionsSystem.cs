@@ -1,5 +1,6 @@
 using NaiveNetworkGame.Client.Components;
 using NaiveNetworkGame.Common;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Networking.Transport;
 
@@ -9,6 +10,8 @@ namespace NaiveNetworkGame.Client.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (networkPlayerId, playerPendingActions, localPlayer) in SystemAPI.Query<RefRO<NetworkPlayerId>, 
                              RefRW<PlayerPendingAction>, 
                              RefRO<LocalPlayerController>>())
@@ -32,7 +35,7 @@ namespace NaiveNetworkGame.Client.Systems
                 {
                     // send player action...
                     var e = state.EntityManager.CreateEntity();
-                    state.EntityManager.AddComponentData(e, new PendingPlayerAction
+                    ecb.AddComponent(e, new PendingPlayerAction
                     {
                         player = localPlayer.ValueRO.player,
                         actionType = playerPendingActions.ValueRW.actionType,
@@ -42,6 +45,9 @@ namespace NaiveNetworkGame.Client.Systems
                     playerPendingActions.ValueRW.pending = false;
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
             
             // Entities
             //     .ForEach(delegate(ref NetworkPlayerId networkPlayerId, ref LocalPlayerControllerComponentData p, ref PlayerPendingAction playerPendingActions)

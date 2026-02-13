@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Components
 {
-    public struct PlayerAction : IBufferElementData
+    public struct PlayerActionDefinition : IBufferElementData
     {
         public static byte BuildUnit = 2;
         public static byte Attack = 3;

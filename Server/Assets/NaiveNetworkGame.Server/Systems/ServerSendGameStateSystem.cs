@@ -65,7 +65,7 @@ namespace NaiveNetworkGame.Server.Systems
                 writer.WriteByte(PacketType.ServerSendPlayerId);
                 writer.WriteByte(playerController.ValueRO.player);
 
-                var playerActions = state.EntityManager.GetBuffer<PlayerAction>(playerEntity);
+                var playerActions = state.EntityManager.GetBuffer<PlayerActionDefinition>(playerEntity);
                 
                 writer.WriteByte((byte) playerActions.Length);
                 for (var i = 0; i < playerActions.Length; i++)

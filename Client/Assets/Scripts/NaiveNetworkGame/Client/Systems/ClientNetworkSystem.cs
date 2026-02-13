@@ -193,6 +193,8 @@ namespace NaiveNetworkGame.Client.Systems
                     // this client was disconnected or failed to connect the first time...
                     continue;
                 }
+                
+                networkPlayer.ValueRW.state = m_Driver.GetConnectionState(m_Connection);
 
                 while ((cmd = m_Driver.PopEventForConnection(m_Connection, out stream)) != NetworkEvent.Type.Empty)
                 {
@@ -226,11 +228,11 @@ namespace NaiveNetworkGame.Client.Systems
 
                             if (playerActionsCount > 0)
                             {
-                                var playerActions = state.EntityManager.GetBuffer<PlayerAction>(entity);
+                                var playerActions = state.EntityManager.GetBuffer<PlayerActionDefinition>(entity);
 
                                 for (var i = 0; i < playerActionsCount; i++)
                                 {
-                                    playerActions.Add(new PlayerAction
+                                    playerActions.Add(new PlayerActionDefinition
                                     {
                                         type = stream.ReadByte(),
                                         cost = stream.ReadByte()
@@ -338,9 +340,9 @@ namespace NaiveNetworkGame.Client.Systems
                 foreach (var (pendingAction, entity) in 
                     SystemAPI.Query<RefRO<PendingPlayerAction>>()
                         .WithNone<ServerOnly>()
+                        .WithNone<LocalPlayerController>()
                         .WithEntityAccess())
                 {
-                    ecb.DestroyEntity(entity);
                     // state.EntityManager.RemoveComponent<PendingPlayerAction>(entity);
                             
                     // var writer = m_Driver.BeginSend(m_Connection);
@@ -349,6 +351,8 @@ namespace NaiveNetworkGame.Client.Systems
                     m_Driver.EndSend(writer);
 
                     pendingActionSent = true;
+                    
+                    ecb.DestroyEntity(entity);
                 }
 
                 // if (!pendingActionSent)

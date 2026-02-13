@@ -45,7 +45,7 @@ namespace NaiveNetworkGame.Client.Components
                     behaviourMode = authoring.behaviourMode
                 });
                 
-                AddBuffer<PlayerAction>(entity);
+                AddBuffer<PlayerActionDefinition>(entity);
             }
         }
     }

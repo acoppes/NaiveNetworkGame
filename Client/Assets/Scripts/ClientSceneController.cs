@@ -77,11 +77,11 @@ namespace Scenes
             ConnectionState.currentState = ConnectionState.State.Connecting;
             
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            
+
             playerControllerQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<LocalPlayerController>(), 
-                ComponentType.ReadOnly<ActivePlayerComponent>(), 
-                ComponentType.ReadWrite<PlayerPendingAction>());
+                ComponentType.ReadWrite<LocalPlayerController>(),
+                ComponentType.ReadOnly<ActivePlayerComponent>()); 
+                // ComponentType.ReadWrite<PlayerPendingAction>());
             
             var userInterfaceEntity = entityManager.CreateEntity();
             entityManager.AddSharedComponentManaged(userInterfaceEntity, new UserInterfaceSharedComponent
@@ -228,14 +228,26 @@ namespace Scenes
             if (playerControllerQuery.TryGetSingletonEntity(out var playerEntity))
             {
                 // var playerEntity = playerControllerQuery.GetSingletonEntity();
-                var playerInput = entityManager.GetComponentData<PlayerPendingAction>(playerEntity);
 
-                playerInput.pending = true;
-                playerInput.actionType = playerAction.type;
-                playerInput.unitType = playerAction.unitType;
-                playerControllerQuery.SetSingleton(playerInput);
+                // var pendingActionEntity =  entityManager.CreateEntity();
+                
+                entityManager.AddComponentData(playerEntity, new PlayerPendingAction()
+                {
+                    pending = true,
+                    actionType = playerAction.type,
+                    unitType = playerAction.unitType
+                });
+                
+                // entityManager.AddComponentData(pendingActionEntity, new ClientOnly());
+                
+                // var pendingAction = entityManager.GetComponentData<PlayerPendingAction>(playerEntity);
+                //
+                // pendingAction.pending = true;
+                // pendingAction.actionType = playerAction.type;
+                // pendingAction.unitType = playerAction.unitType;
+                // playerControllerQuery.SetSingleton(pendingAction);
 
-                var playerActions = entityManager.GetBuffer<PlayerAction>(playerEntity);
+                var playerActions = entityManager.GetBuffer<PlayerActionDefinition>(playerEntity);
                 var playerController = entityManager.GetComponentData<LocalPlayerController>(playerEntity);
 
                 for (var i = 0; i < playerActions.Length; i++)

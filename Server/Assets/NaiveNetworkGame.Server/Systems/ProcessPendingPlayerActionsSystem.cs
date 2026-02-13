@@ -1,5 +1,6 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
@@ -11,6 +12,8 @@ namespace NaiveNetworkGame.Server.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             // process all player pending actions
             foreach (var (pendingAction, playerController, e) in 
                 SystemAPI.Query<RefRO<PendingPlayerAction>, RefRW<PlayerController>>()
@@ -20,12 +23,12 @@ namespace NaiveNetworkGame.Server.Systems
                 var player = pendingAction.ValueRO.player;
                 
                 // Changed to only process build unit actions
-                if (pendingAction.ValueRO.actionType != PlayerAction.BuildUnit)
+                if (pendingAction.ValueRO.actionType != PlayerActionDefinition.BuildUnit)
                     continue;
                 
-                state.EntityManager.RemoveComponent<PendingPlayerAction>(e);
+                ecb.RemoveComponent<PendingPlayerAction>(e);
 
-                var playerActions = state.EntityManager.GetBuffer<PlayerAction>(e);
+                var playerActions = state.EntityManager.GetBuffer<PlayerActionDefinition>(e);
                 var playerAction = playerActions[pendingAction.ValueRO.unitType];
 
                 // can't execute action if not enough gold...
@@ -69,7 +72,7 @@ namespace NaiveNetworkGame.Server.Systems
                         // enqueue unit build...
                         // consume player gold...
 
-                        state.EntityManager.AddComponentData(buildingEntity, new BuildUnitAction
+                        ecb.AddComponent(buildingEntity, new BuildUnitAction
                         {
                             // duration = b.spawnDuration,
                             prefab = prefab
@@ -110,7 +113,7 @@ namespace NaiveNetworkGame.Server.Systems
                         // enqueue unit build...
                         // consume player gold...
                         
-                        state.EntityManager.AddComponentData(barrackEntity, new BuildUnitAction
+                        ecb.AddComponent(barrackEntity, new BuildUnitAction
                         {
                             // duration = b.spawnDuration,
                             prefab = prefab,
@@ -135,16 +138,16 @@ namespace NaiveNetworkGame.Server.Systems
                     .WithEntityAccess())
             {
                 // Changed to only process build unit actions
-                if (pendingAction.ValueRO.actionType == PlayerAction.Attack)
+                if (pendingAction.ValueRO.actionType == PlayerActionDefinition.Attack)
                 {
-                    state.EntityManager.AddComponent<SwitchToAttackAction>(e);
-                    state.EntityManager.RemoveComponent<PendingPlayerAction>(e);
+                    ecb.AddComponent<SwitchToAttackAction>(e);
+                    ecb.RemoveComponent<PendingPlayerAction>(e);
                     
                 } 
-                else if (pendingAction.ValueRO.actionType == PlayerAction.Defend)
+                else if (pendingAction.ValueRO.actionType == PlayerActionDefinition.Defend)
                 {
-                    state.EntityManager.AddComponent<SwitchToDefendAction>(e); 
-                    state.EntityManager.RemoveComponent<PendingPlayerAction>(e);
+                    ecb.AddComponent<SwitchToDefendAction>(e); 
+                    ecb.RemoveComponent<PendingPlayerAction>(e);
                 }
             }
             
@@ -153,6 +156,9 @@ namespace NaiveNetworkGame.Server.Systems
                 .WithAll<ServerOnly, PendingPlayerAction, PlayerController, LocalTransform>()
                 .Build();
             state.EntityManager.RemoveComponent<PendingPlayerAction>(remainingPendingQuery);
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

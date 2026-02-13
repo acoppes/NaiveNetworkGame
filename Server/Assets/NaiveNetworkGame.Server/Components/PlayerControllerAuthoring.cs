@@ -95,14 +95,14 @@ namespace NaiveNetworkGame.Server.Components
                 AddComponent(entity, new PlayerBehaviour());
                 // conversionSystem.GetPrimaryEntity(behaviourData.wanderArea)
                 
-                var buffer = AddBuffer<PlayerAction>(entity);
+                var buffer = AddBuffer<PlayerActionDefinition>(entity);
             
                 foreach (var action in authoring.actions)
                 {
                     //  Assert.IsTrue(conversionSystem.HasPrimaryEntity(action.prefab));
                     // buffer = dstManager.GetBuffer<PlayerAction>(entity);
                     
-                    buffer.Add(new PlayerAction
+                    buffer.Add(new PlayerActionDefinition
                     {
                         type = action.type,
                         cost = action.cost,

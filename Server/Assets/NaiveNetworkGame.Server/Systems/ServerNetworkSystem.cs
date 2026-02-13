@@ -204,8 +204,7 @@ namespace NaiveNetworkGame.Server.Systems
 
             }
             
-            ecb.Playback(state.EntityManager);
-            ecb.Dispose();
+     
             
             // TODO: if needed players reached => create server simulation singleton in order to start the simulation..
             
@@ -250,7 +249,7 @@ namespace NaiveNetworkGame.Server.Systems
                             {
                                 if (playerController.ValueRO.player == action.player)
                                 {
-                                    state.EntityManager.AddComponentData(playerEntity, action);
+                                    ecb.AddComponent(playerEntity, action);
                                 }
                             }
 
@@ -270,15 +269,15 @@ namespace NaiveNetworkGame.Server.Systems
                                 if (playerConnectionId.ValueRO.connection == connection)
                                 {
                                     // p.destroyed = true;
-                                    state.EntityManager.RemoveComponent<PlayerConnectionId>(entity);
-                                    state.EntityManager.RemoveComponent<NetworkPlayerState>(entity);
-                                    state.EntityManager.RemoveComponent<PlayerConnectionSynchronized>(entity);
+                                    ecb.RemoveComponent<PlayerConnectionId>(entity);
+                                    ecb.RemoveComponent<NetworkPlayerState>(entity);
+                                    ecb.RemoveComponent<PlayerConnectionSynchronized>(entity);
                                     
                                     if (SystemAPI.HasSingleton<ServerSimulation>())
                                     {
                                         // If client disconnected manually and simulation already started, then restart server...
                                         var stopEntity = state.EntityManager.CreateEntity();
-                                        state.EntityManager.AddComponentData(stopEntity, new StopServerCommand
+                                        ecb.AddComponent(stopEntity, new StopServerCommand
                                         {
                                             restart = true
                                         });
@@ -316,15 +315,15 @@ namespace NaiveNetworkGame.Server.Systems
                             if (playerConnectionId.ValueRO.connection == connection)
                             {
                                 // p.destroyed = true;
-                                state.EntityManager.RemoveComponent<PlayerConnectionId>(entity);
-                                state.EntityManager.RemoveComponent<NetworkPlayerState>(entity);
-                                state.EntityManager.RemoveComponent<PlayerConnectionSynchronized>(entity);
+                                ecb.RemoveComponent<PlayerConnectionId>(entity);
+                                ecb.RemoveComponent<NetworkPlayerState>(entity);
+                                ecb.RemoveComponent<PlayerConnectionSynchronized>(entity);
                                 
                                 if (SystemAPI.HasSingleton<ServerSimulation>())
                                 {
                                     // If client disconnected by timeout, and simulation already started, then restart server...
-                                    var stopEntity = state.EntityManager.CreateEntity();
-                                    state.EntityManager.AddComponentData(stopEntity, new StopServerCommand
+                                    var stopEntity = ecb.CreateEntity();
+                                    ecb.AddComponent(stopEntity, new StopServerCommand
                                     {
                                         restart = true
                                     });
@@ -337,6 +336,9 @@ namespace NaiveNetworkGame.Server.Systems
                     }
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
             if (!SystemAPI.HasSingleton<ServerSimulation>())
             {
@@ -348,6 +350,8 @@ namespace NaiveNetworkGame.Server.Systems
                     state.EntityManager.CreateEntity(typeof(ServerSimulation));
                 }
             }
+            
+            
         }
 
         public void OnDestroy(ref SystemState state)

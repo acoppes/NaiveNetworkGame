@@ -1,5 +1,6 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
@@ -13,6 +14,8 @@ namespace NaiveNetworkGame.Server.Systems
         {
             var dt = SystemAPI.Time.DeltaTime;
                 
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var holder in 
                 SystemAPI.Query<RefRW<BuildingHolder>>()
                     .WithAll<BuildUnitAction>())
@@ -40,43 +43,46 @@ namespace NaiveNetworkGame.Server.Systems
                     unitComponent.id = NetworkUnitId.current++;
                     unitComponent.player = barrackUnit.ValueRO.player;
                 
-                    state.EntityManager.SetComponentData(unitEntity, unitComponent);
+                    ecb.SetComponent(unitEntity, unitComponent);
                 
-                    state.EntityManager.SetComponentData(unitEntity, new LocalTransform
+                    ecb.SetComponent(unitEntity, new LocalTransform
                     {
                         Position = localTransform.ValueRO.Position + spawnPosition.ValueRO.position,
                         Rotation = Unity.Mathematics.quaternion.identity,
                         Scale = 1f
                     });
                 
-                    state.EntityManager.SetComponentData(unitEntity, new UnitStateComponent
+                    ecb.SetComponent(unitEntity, new UnitStateComponent
                     {
                         state = UnitStateTypes.spawningState
                     });
                 
-                    state.EntityManager.AddComponentData(unitEntity, new SpawningAction
+                    ecb.AddComponent(unitEntity, new SpawningAction
                     {
                         duration = buildAction.ValueRO.duration 
                     });
 
                     var wanderArea = buildAction.ValueRO.wanderArea;
 
-                    state.EntityManager.AddComponentData(unitEntity, new UnitBehaviourComponent
+                    ecb.AddComponent(unitEntity, new UnitBehaviourComponent
                     {
                         wanderArea = wanderArea,
                         minIdleTime = 1,
                         maxIdleTime = 3
                     });
                 
-                    state.EntityManager.AddComponent<NetworkUnit>(unitEntity);
-                    state.EntityManager.AddComponentData(unitEntity, new NetworkGameState());
-                    state.EntityManager.AddComponentData(unitEntity, new NetworkTranslationSync());
+                    ecb.AddComponent<NetworkUnit>(unitEntity);
+                    ecb.AddComponent(unitEntity, new NetworkGameState());
+                    ecb.AddComponent(unitEntity, new NetworkTranslationSync());
                 }
                 
                 // this is to block this barrack to now allow other units to spawn...
                 if (buildAction.ValueRO.time >= buildAction.ValueRO.duration)
-                    state.EntityManager.RemoveComponent<BuildUnitAction>(entity);
+                    ecb.RemoveComponent<BuildUnitAction>(entity);
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

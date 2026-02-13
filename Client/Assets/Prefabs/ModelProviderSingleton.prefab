@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7575947278116564945}
   - component: {fileID: 7575947278116564946}
   m_Layer: 9
-  m_Name: ModelProviderSingleton
+  m_Name: ~ModelProviderSingleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
