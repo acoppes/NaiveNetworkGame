@@ -9,53 +9,60 @@ namespace NaiveNetworkGame.Server.Systems
     // Given a move action in a unit, it processes movement updates
 
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public partial class MovementActionSystem : SystemBase
+    public partial struct MovementActionSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             var dt = SystemAPI.Time.DeltaTime;
             
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
+            var ecb = new EntityCommandBuffer(Allocator.TempJob);
             
-            Entities
-                .WithNone<SpawningAction, AttackAction>()
-                .WithAll<Movement, LocalTransform>()
-                // .WithAllReadOnly<MovementAction>()
-                .ForEach((Entity e, ref Movement movement, ref LocalTransform t, ref MovementAction m) =>
+            foreach (var (t, movement, m, e) in 
+                     SystemAPI.Query<RefRW<LocalTransform>, RefRO<Movement>, RefRW<MovementAction>>()
+                         .WithNone<SpawningAction, AttackAction>()
+                         .WithEntityAccess())
+            {
+                var p0 = t.ValueRW.Position.xy;
+                var p1 = m.ValueRO.target;
+
+                var speed = movement.ValueRO.speed * dt;
+
+                if (math.distancesq(p1, p0) < speed * speed)
                 {
-                    var p0 = t.Position.xy;
-                    var p1 = m.target;
+                    // already near destination...
+                    ecb.RemoveComponent<MovementAction>(e);
+                    t.ValueRW.Position = new float3(p1.x, p1.y, t.ValueRO.Position.z);
+                    continue;
+                }
 
-                    var speed = movement.speed * dt;
+                m.ValueRW.direction = math.normalize(p1 - p0);
 
-                    if (math.distancesq(p1, p0) < speed * speed)
-                    {
-                        // already near destination...
-                        ecb.RemoveComponent<MovementAction>(e);
-                        t.Position = new float3(p1.x, p1.y, t.Position.z);
-                        return;
-                    }
+                var newpos = p0 + m.ValueRW.direction * movement.ValueRO.speed * dt;
 
-                    m.direction = math.normalize(p1 - p0);
-
-                    var newpos = p0 + m.direction * movement.speed * dt;
-
-                    if (math.distancesq(p1, p0) < math.distancesq(newpos, p0))
-                    {
-                        newpos = p1;
-                        ecb.RemoveComponent<MovementAction>(e);
-                    }
-
-                    t.Position = new float3(newpos.x, newpos.y, t.Position.z);
-                }).Run();
-
-            Entities.WithAll<LookingDirection, MovementAction>()
-                .ForEach((Entity e, ref LookingDirection d, ref MovementAction m) =>
+                if (math.distancesq(p1, p0) < math.distancesq(newpos, p0))
                 {
-                    d.direction = m.direction;
-                }).Run();
+                    newpos = p1;
+                    ecb.RemoveComponent<MovementAction>(e);
+                }
 
-            ecb.Playback(EntityManager);
+                t.ValueRW.Position = new float3(newpos.x, newpos.y, t.ValueRW.Position.z);
+            }
+            
+            // Entities
+            //     .WithNone<SpawningAction, AttackAction>()
+            //     .WithAll<Movement, LocalTransform>()
+            //     // .WithAllReadOnly<MovementAction>()
+            //     .ForEach((Entity e, ref Movement movement, ref LocalTransform t, ref MovementAction m) =>
+            //     {
+            //
+            //     }).Run();
+
+            foreach (var (d, m) in SystemAPI.Query<RefRW<LookingDirection>, RefRO<MovementAction>>())
+            {
+                d.ValueRW.direction = m.ValueRO.direction;
+            }
+
+            ecb.Playback(state.EntityManager);
             ecb.Dispose();
         }
     }

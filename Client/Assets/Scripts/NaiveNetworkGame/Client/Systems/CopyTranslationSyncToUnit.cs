@@ -5,11 +5,19 @@ using Unity.Transforms;
 
 namespace NaiveNetworkGame.Client.Systems
 {
-    public partial class CopyTranslationSyncToUnit : SystemBase
+    public partial struct CopyTranslationSyncToUnit : ISystem
     {
-        protected override void OnUpdate()
+        private EntityQuery unitsQuery;
+
+        public void OnCreate(ref SystemState state)
         {
-            var unitsQuery = Entities.WithAll<Unit, LocalTransform>().ToQuery();
+            unitsQuery = state.GetEntityQuery(typeof(Unit), typeof(LocalTransform));
+        }
+
+        public void OnUpdate(ref SystemState state)
+        {
+            // var unitsQuery = Entities.WithAll<Unit, LocalTransform>().ToQuery();
+            
             var units = unitsQuery.ToComponentDataArray<Unit>(Allocator.TempJob);
             var unitEntities = unitsQuery.ToEntityArray(Allocator.TempJob);
 
@@ -49,7 +57,7 @@ namespace NaiveNetworkGame.Client.Systems
             //         PostUpdateCommands.DestroyEntity(e);
             //     }).Run();
             
-            ecb.Playback(EntityManager);
+            ecb.Playback(state.EntityManager);
             ecb.Dispose();
 
             units.Dispose();
