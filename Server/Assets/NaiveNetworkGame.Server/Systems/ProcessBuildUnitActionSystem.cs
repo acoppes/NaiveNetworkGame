@@ -38,13 +38,12 @@ namespace NaiveNetworkGame.Server.Systems
                     buildAction.ValueRW.duration = unitComponent.spawnDuration;
 
                     // delay? 
-                    var unitEntity = state.EntityManager.Instantiate(buildAction.ValueRO.prefab);
+                    var unitEntity = ecb.Instantiate(buildAction.ValueRO.prefab);
                 
                     unitComponent.id = NetworkUnitId.current++;
                     unitComponent.player = barrackUnit.ValueRO.player;
                 
                     ecb.SetComponent(unitEntity, unitComponent);
-                
                     ecb.SetComponent(unitEntity, new LocalTransform
                     {
                         Position = localTransform.ValueRO.Position + spawnPosition.ValueRO.position,

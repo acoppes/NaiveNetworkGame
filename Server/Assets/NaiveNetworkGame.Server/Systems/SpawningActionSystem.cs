@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
@@ -13,6 +14,8 @@ namespace NaiveNetworkGame.Server.Systems
         {
             var dt = SystemAPI.Time.DeltaTime;
             
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (spawningAction, entity) in 
                 SystemAPI.Query<RefRW<SpawningAction>>()
                     .WithEntityAccess())
@@ -21,9 +24,12 @@ namespace NaiveNetworkGame.Server.Systems
 
                 if (spawningAction.ValueRO.time >= spawningAction.ValueRO.duration)
                 {
-                    state.EntityManager.RemoveComponent<SpawningAction>(entity);
+                    ecb.RemoveComponent<SpawningAction>(entity);
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

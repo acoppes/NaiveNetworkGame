@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -11,12 +12,13 @@ namespace NaiveNetworkGame.Server.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             // if we have attack target, remove chase target...
             var removeChaseQuery = SystemAPI.QueryBuilder()
                 .WithAll<AttackTargetComponent, ChaseTargetComponent>()
                 .Build();
             state.EntityManager.RemoveComponent<ChaseTargetComponent>(removeChaseQuery);
-            
             
             // Stop chasing if target is not valid or is not alive
             foreach (var (chaseTarget, entity) in 
@@ -25,14 +27,14 @@ namespace NaiveNetworkGame.Server.Systems
             {
                 if (!state.EntityManager.Exists(chaseTarget.ValueRO.target))
                 {
-                    state.EntityManager.RemoveComponent<ChaseTargetComponent>(entity);
+                    ecb.RemoveComponent<ChaseTargetComponent>(entity);
                 }
                 else
                 {
                     var isAlive = state.EntityManager.HasComponent<IsAlive>(chaseTarget.ValueRO.target);
                     if (!isAlive)
                     {
-                        state.EntityManager.RemoveComponent<ChaseTargetComponent>(entity);
+                        ecb.RemoveComponent<ChaseTargetComponent>(entity);
                     }
                 } 
             }
@@ -48,7 +50,7 @@ namespace NaiveNetworkGame.Server.Systems
             {
                 var targetTransform = state.EntityManager.GetComponentData<LocalTransform>(chaseTarget.ValueRO.target);
                 
-                state.EntityManager.AddComponentData(entity, new MovementAction
+                ecb.AddComponent(entity, new MovementAction
                 {
                     target = targetTransform.Position.xy
                 });
@@ -81,16 +83,19 @@ namespace NaiveNetworkGame.Server.Systems
                     var wanderCenter = state.EntityManager.GetComponentData<LocalTransform>(wanderAreaEntity);
                     
                     var offset = UnityEngine.Random.insideUnitCircle * UnityEngine.Random.Range(0, wanderArea.range);
-                    state.EntityManager.AddComponentData(entity, new MovementAction
+                    ecb.AddComponent(entity, new MovementAction
                     {
                         target = wanderCenter.Position.xy + new float2(offset.x, offset.y)
                     });
-                    state.EntityManager.AddComponentData(entity, new IdleAction
+                    ecb.AddComponent(entity, new IdleAction
                     {
                         time = UnityEngine.Random.Range(behaviour.ValueRO.minIdleTime, behaviour.ValueRO.maxIdleTime)
                     });    
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }
