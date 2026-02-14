@@ -1,21 +1,24 @@
 using NaiveNetworkGame.Common;
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
 {
     [UpdateInGroup(typeof(ServerSimulationSystemGroup))]
-    public partial class DeathActionSystem : SystemBase
+    public partial struct DeathActionSystem : ISystem
     {
-        protected override void OnUpdate()
+        public void OnUpdate(ref SystemState state)
         {
             var dt = SystemAPI.Time.DeltaTime;
+            
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
             
             foreach (var (_, e) in SystemAPI.Query<MovementAction>()
                          .WithAll<DeathAction>()
                          .WithEntityAccess())
             {
-                EntityManager.RemoveComponent<MovementAction>(e);
+                ecb.RemoveComponent<MovementAction>(e);
             }
             
             // Entities
@@ -29,7 +32,7 @@ namespace NaiveNetworkGame.Server.Systems
                          .WithAll<DeathAction>()
                          .WithEntityAccess())
             {
-                EntityManager.RemoveComponent<ChaseTargetComponent>(e);
+                ecb.RemoveComponent<ChaseTargetComponent>(e);
             }
             
             // Entities
@@ -48,13 +51,16 @@ namespace NaiveNetworkGame.Server.Systems
                 if (a.ValueRW.time > a.ValueRW.duration)
                 {
                     // set completely death?
-                    EntityManager.RemoveComponent<DeathAction>(e);
+                    ecb.RemoveComponent<DeathAction>(e);
 
                     // TODO: for now we are sending gamestate of death units too to keep corpses in client...
                     //PostUpdateCommands.RemoveComponent<NetworkTranslationSync>(e);
-                    EntityManager.RemoveComponent<NetworkGameState>(e);
+                    ecb.RemoveComponent<NetworkGameState>(e);
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
             // Entities
             //     .WithNone<IsAlive>()

@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
@@ -8,6 +9,8 @@ namespace NaiveNetworkGame.Server.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (health, entity) in 
                 SystemAPI.Query<RefRO<Health>>()
                     .WithAll<IsAlive, UnitBehaviourComponent>()
@@ -16,12 +19,12 @@ namespace NaiveNetworkGame.Server.Systems
                 if (health.ValueRO.current <= 0.01f)
                 {
                     // TODO: configure death action with unit behaviour or unit data, or new component death
-                    state.EntityManager.AddComponentData(entity, new DeathAction
+                    ecb.AddComponent(entity, new DeathAction
                     {
                         time = 0, 
                         duration = 1
                     });
-                    state.EntityManager.RemoveComponent<IsAlive>(entity);
+                    ecb.RemoveComponent<IsAlive>(entity);
                     // state.EntityManager.DestroyEntity(entity);
                 }
             }
@@ -34,9 +37,12 @@ namespace NaiveNetworkGame.Server.Systems
             {
                 if (health.ValueRO.current <= 0.01f)
                 {
-                    state.EntityManager.RemoveComponent<IsAlive>(entity);
+                    ecb.RemoveComponent<IsAlive>(entity);
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

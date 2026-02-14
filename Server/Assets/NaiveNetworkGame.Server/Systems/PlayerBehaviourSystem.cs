@@ -187,25 +187,25 @@ namespace NaiveNetworkGame.Server.Systems
                             }
                         }
                         
-                        // Bulk remove components using QueryBuilder
-                        var chaseMovementQuery = SystemAPI.QueryBuilder()
-                            .WithAll<ChaseTargetComponent, MovementAction, DisableAttackComponent>()
-                            .Build();
-                        state.EntityManager.RemoveComponent<MovementAction>(chaseMovementQuery);
-                        
-                        var chaseTargetQuery = SystemAPI.QueryBuilder()
-                            .WithAll<ChaseTargetComponent, DisableAttackComponent>()
-                            .Build();
-                        state.EntityManager.RemoveComponent<ChaseTargetComponent>(chaseTargetQuery);
-
-                        var attackTargetQuery = SystemAPI.QueryBuilder()
-                            .WithAll<AttackTargetComponent, DisableAttackComponent>()
-                            .Build();
-                        state.EntityManager.RemoveComponent<AttackTargetComponent>(attackTargetQuery);
-                        
                         break;
                 }
             }
+            
+            // Bulk remove components using QueryBuilder
+            var chaseMovementQuery = SystemAPI.QueryBuilder()
+                .WithAll<ChaseTargetComponent, MovementAction, DisableAttackComponent>()
+                .Build();
+            state.EntityManager.RemoveComponent<MovementAction>(chaseMovementQuery);
+                        
+            var chaseTargetQuery = SystemAPI.QueryBuilder()
+                .WithAll<ChaseTargetComponent, DisableAttackComponent>()
+                .Build();
+            state.EntityManager.RemoveComponent<ChaseTargetComponent>(chaseTargetQuery);
+
+            var attackTargetQuery = SystemAPI.QueryBuilder()
+                .WithAll<AttackTargetComponent, DisableAttackComponent>()
+                .Build();
+            state.EntityManager.RemoveComponent<AttackTargetComponent>(attackTargetQuery);
             
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
