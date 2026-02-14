@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace NaiveNetworkGame.Server.Systems
@@ -7,6 +8,8 @@ namespace NaiveNetworkGame.Server.Systems
     {
         public void OnUpdate(ref SystemState state)
         {
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (playerController, playerEntity) in 
                 SystemAPI.Query<RefRO<PlayerController>>()
                     .WithNone<PlayerConnectionId>()
@@ -22,10 +25,13 @@ namespace NaiveNetworkGame.Server.Systems
                 {
                     if (unit.ValueRO.player == player)
                     {
-                        state.EntityManager.DestroyEntity(unitEntity);
+                        ecb.DestroyEntity(unitEntity);
                     }
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
             
             // Stop sending dead units gamestate sync...
             // var deadUnitsQuery = SystemAPI.QueryBuilder()
