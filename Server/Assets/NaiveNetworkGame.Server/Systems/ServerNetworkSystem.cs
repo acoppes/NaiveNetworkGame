@@ -54,11 +54,13 @@ namespace NaiveNetworkGame.Server.Systems
             var serverEntity = SystemAPI.GetSingletonEntity<ServerSingleton>();
             var serverData = state.EntityManager.GetSharedComponentManaged<ServerData>(serverEntity);
             
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (stopCommand, entity) in 
                 SystemAPI.Query<RefRO<StopServerCommand>>()
                     .WithEntityAccess())
             {
-                state.EntityManager.DestroyEntity(entity);
+                ecb.DestroyEntity(entity);
 
                 if (!serverData.started)
                     continue;
@@ -82,29 +84,27 @@ namespace NaiveNetworkGame.Server.Systems
                 serverData.networkManager = null;
                 serverData.started = false;
                 
-                state.EntityManager.SetSharedComponentManaged(serverEntity, serverData);
+                ecb.SetSharedComponentManaged(serverEntity, serverData);
 
                 var nonServerDataQuery = SystemAPI.QueryBuilder().WithNone<ServerData>().Build();
-                state.EntityManager.DestroyEntity(nonServerDataQuery.ToEntityArray(Allocator.Temp));
-                state.EntityManager.DestroyEntity(SystemAPI.GetSingletonEntity<ServerSimulation>());
+                ecb.DestroyEntity(nonServerDataQuery.ToEntityArray(Allocator.Temp));
+                ecb.DestroyEntity(SystemAPI.GetSingletonEntity<ServerSimulation>());
                 
                 var prefabQuery = SystemAPI.QueryBuilder().WithAll<Prefab>().Build();
-                state.EntityManager.DestroyEntity(prefabQuery.ToEntityArray(Allocator.Temp));
+                ecb.DestroyEntity(prefabQuery.ToEntityArray(Allocator.Temp));
                 
                 if (stopCommand.ValueRO.restart)
                 {
                     SceneManager.LoadScene("ServerScene");
                     
-                    var restart = state.EntityManager.CreateEntity();
-                    state.EntityManager.AddComponentData(restart, new StartServerCommand
+                    var restart = ecb.CreateEntity();
+                    ecb.AddComponent(restart, new StartServerCommand
                     {
                         port = serverData.port,
                         playersNeededToStartSimulation = serverData.playersNeededToStartSimulation
                     });
                 }
             }
-
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
               
             foreach (var (startCommand, entity) in 
                 SystemAPI.Query<RefRO<StartServerCommand>>()
