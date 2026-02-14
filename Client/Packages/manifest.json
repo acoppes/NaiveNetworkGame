@@ -10,6 +10,7 @@
     "com.unity.ide.rider": "3.0.39",
     "com.unity.scriptablebuildpipeline": "1.21.25",
     "com.unity.test-framework": "1.1.33",
+    "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.11",
     "com.unity.transport": "2.0.2",
     "com.unity.ugui": "1.0.0",
     "naivenetworkgame.common": "file:../../Common/Assets/Common",

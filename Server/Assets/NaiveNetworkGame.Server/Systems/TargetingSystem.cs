@@ -19,6 +19,8 @@ namespace NaiveNetworkGame.Server.Systems
 
             // if unit is in attack position
             // perform attack, wait, attack, wait...
+            
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             var targetsQuery = SystemAPI.QueryBuilder()
                 .WithNone<SpawningAction, DeathAction>()
@@ -45,7 +47,7 @@ namespace NaiveNetworkGame.Server.Systems
 
                     if (math.distancesq(localTransform.ValueRO.Position, targetTransforms[i].Position) < attack.ValueRO.range * attack.ValueRO.range)
                     {
-                        state.EntityManager.AddComponentData(entity, new AttackTargetComponent
+                        ecb.AddComponent(entity, new AttackTargetComponent
                         {
                             target = targets[i]
                         });
@@ -88,11 +90,14 @@ namespace NaiveNetworkGame.Server.Systems
                 if (bestTargetIndex == -1)
                     continue;
 
-                state.EntityManager.AddComponentData(entity, new ChaseTargetComponent
+                ecb.AddComponent(entity, new ChaseTargetComponent
                 {
                     target = targets[bestTargetIndex]
                 });
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
 
             targets.Dispose();
             targetTransforms.Dispose();

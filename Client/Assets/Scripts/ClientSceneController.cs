@@ -65,9 +65,7 @@ namespace Scenes
         public Text latencyText;
 
         private EntityManager entityManager;
-
-        public GameObject secondLocalPlayer;
-
+        
         private bool secondPlayerAdded = false;
         
         private void Start()
@@ -102,6 +100,16 @@ namespace Scenes
                 confirmActionPrefab = actionPrefab
             });
             
+            // Issue the creation of the first local player
+
+            {
+                var createLocalPlayerCommand = entityManager.CreateEntity();
+                entityManager.AddComponentData(createLocalPlayerCommand, new CreateLocalPlayerCommand()
+                {
+                    active = true
+                });
+            }
+            
             disconnectButton.onClick.AddListener(OnDisconnectButtonPressed);
             
             secondPlayerButton.onClick.AddListener(delegate
@@ -110,9 +118,17 @@ namespace Scenes
                 // create server simulation
                 if (!secondPlayerAdded)
                 {
-                    secondLocalPlayer.SetActive(true);
+                    var createLocalPlayerCommand = entityManager.CreateEntity();
+                    entityManager.AddComponentData(createLocalPlayerCommand, new CreateLocalPlayerCommand());
+                    
+                    // var localPlayerInstance = Instantiate(localPlayerPrefab);
+                    // localPlayerInstance.transform.SetParent(clientScene.transform);
+                    
+                    // entityManager.Instantiate(localPlayerPrefab);
+                    // entityManager.CreateEntity(localPlayerPrefab);
+                    // localPlayerPrefab.SetActive(true);
+                    
                     secondPlayerAdded = true;
-
                     secondPlayerButton.GetComponentInChildren<Text>().text = "Switch Player";
                 }
                 else

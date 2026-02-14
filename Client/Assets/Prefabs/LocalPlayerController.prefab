@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 693300645167947217}
   - component: {fileID: 693300645167947216}
   - component: {fileID: 693300645167947223}
-  - component: {fileID: 693300645167947222}
   m_Layer: 0
-  m_Name: PlayerControllerEntity
+  m_Name: LocalPlayerController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,17 +63,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a248ff5f793e4f10b41878b014264720, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &693300645167947222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693300645167947220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdfeb282152d4caead6794444ef2ab40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

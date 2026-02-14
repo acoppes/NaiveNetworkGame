@@ -1,4 +1,5 @@
 using NaiveNetworkGame.Server.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -13,6 +14,8 @@ namespace NaiveNetworkGame.Server.Systems
         {
             var dt = SystemAPI.Time.DeltaTime;
             
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            
             foreach (var (attack, target, localTransform, entity) in 
                 SystemAPI.Query<RefRO<AttackComponent>, RefRO<AttackTargetComponent>, RefRO<LocalTransform>>()
                     .WithAll<IsAlive>()
@@ -22,7 +25,7 @@ namespace NaiveNetworkGame.Server.Systems
                 // if target entity was destroyed, forget about it...
                 if (!state.EntityManager.Exists(target.ValueRO.target))
                 {
-                    state.EntityManager.RemoveComponent<AttackTargetComponent>(entity);
+                    ecb.RemoveComponent<AttackTargetComponent>(entity);
                 }
                 else
                 {
@@ -32,12 +35,12 @@ namespace NaiveNetworkGame.Server.Systems
                     
                     if (!isAlive || math.distancesq(tp.Position, localTransform.ValueRO.Position) > attack.ValueRO.range * attack.ValueRO.range)
                     {
-                        state.EntityManager.RemoveComponent<AttackTargetComponent>(entity);
+                        ecb.RemoveComponent<AttackTargetComponent>(entity);
                     }
                     else
                     {
                         // if lost isalive, lose target...
-                        state.EntityManager.AddComponent<AttackAction>(entity);
+                        ecb.AddComponent<AttackAction>(entity);
                     }
                 } 
             }
@@ -65,8 +68,8 @@ namespace NaiveNetworkGame.Server.Systems
                     action.ValueRW.performed = true;
                     // do damage and remove...
 
-                    var damageEntity = state.EntityManager.CreateEntity();
-                    state.EntityManager.AddComponentData(damageEntity, new Damage()
+                    var damageEntity = ecb.CreateEntity();
+                    ecb.AddComponent(damageEntity, new Damage()
                     {
                         target = target.ValueRO.target,
                         damage = attack.ValueRO.damage
@@ -75,8 +78,8 @@ namespace NaiveNetworkGame.Server.Systems
 
                 if (action.ValueRO.time > attack.ValueRO.duration)
                 {
-                    state.EntityManager.RemoveComponent<AttackAction>(entity);
-                    state.EntityManager.AddComponentData(entity, new ReloadAction
+                    ecb.RemoveComponent<AttackAction>(entity);
+                    ecb.AddComponent(entity, new ReloadAction
                     {
                         time = UnityEngine.Random.Range(-attack.ValueRO.reloadRandom, attack.ValueRO.reloadRandom),
                         duration = attack.ValueRO.reload
@@ -92,7 +95,7 @@ namespace NaiveNetworkGame.Server.Systems
                 action.ValueRW.time += dt;
                 if (action.ValueRO.time > action.ValueRO.duration)
                 {
-                    state.EntityManager.RemoveComponent<ReloadAction>(entity);
+                    ecb.RemoveComponent<ReloadAction>(entity);
                 }
             }
 
@@ -107,6 +110,9 @@ namespace NaiveNetworkGame.Server.Systems
                     lookingDirection.ValueRW.direction = targetTransform.Position.xy - localTransform.ValueRO.Position.xy;
                 }
             }
+            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }
