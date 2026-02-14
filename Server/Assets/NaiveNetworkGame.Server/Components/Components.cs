@@ -23,6 +23,11 @@ namespace NaiveNetworkGame.Server.Components
         public float spawnDuration;
     }
 
+    public struct RequireNetworkUnitId : IComponentData
+    {
+        
+    }
+
     public struct LookingDirection : IComponentData
     {
         public float2 direction;

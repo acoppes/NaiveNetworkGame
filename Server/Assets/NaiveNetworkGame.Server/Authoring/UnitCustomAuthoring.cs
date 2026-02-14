@@ -63,10 +63,12 @@ namespace NaiveNetworkGame.Server.Components
                     player = authoring.player,
                     type = authoring.unitType,
                     slotCost = authoring.slotsCost,
-                    id = NetworkUnitId.current++,
+                    // id = NetworkUnitId.current++,
                     isBuilding = authoring.isBuilding,
                     spawnDuration = authoring.spawnDuration
                 });
+                
+                AddComponent(entity, new RequireNetworkUnitId());
 
                 AddComponent(entity, new Skin());
                 AddComponent(entity, new Movement
