@@ -1,5 +1,6 @@
 using System;
 using Client;
+using FMODUnity;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -38,7 +39,9 @@ namespace NaiveNetworkGame.Client
         
         [NonSerialized]
         public float2 lookingDirection;
-
+        
+        public StudioEventEmitter footstepSfx;
+        
         private void Awake()
         {
             selectedKeyHash = Animator.StringToHash("selected");
@@ -70,5 +73,14 @@ namespace NaiveNetworkGame.Client
             }
 
         }
+
+        public void PlayFootstepSfx()
+        {
+            if (footstepSfx)
+            {
+                footstepSfx.Play();
+            }
+        }
     }
 }
+
