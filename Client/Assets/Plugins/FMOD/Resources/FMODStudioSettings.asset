@@ -311,8 +311,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../../../Users/Ariel/Documents/Fmod Examples/Examples/Examples.fspro
-  sourceBankPath: ../../../Users/Ariel/Documents/Fmod Examples/Examples/Build
+  sourceProjectPath: ../FmodProject/TW/TW.fspro
+  sourceBankPath: ../FmodProject/TW/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -337,9 +337,6 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
-  - Dialogue_CN
-  - Dialogue_EN
-  - Dialogue_JP
   - Music
   - SFX
   - Vehicles
