@@ -108,3 +108,5 @@ FmodProject/**/.unsaved
 FmodProject/**/.user
 FmodProject/TW/Build
 FmodProject/**/ProfilerSession
+
+**/Gemserk/Gemserk.SelectionHistory.asset
