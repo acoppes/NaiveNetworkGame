@@ -10,6 +10,7 @@
     "com.unity.entities.graphics": "6.5.0",
     "com.unity.ide.rider": "3.0.39",
     "com.unity.multiplayer.center": "1.0.1",
+    "com.unity.render-pipelines.universal": "17.5.0",
     "com.unity.scriptablebuildpipeline": "2.5.2",
     "com.unity.test-framework": "1.7.0",
     "com.unity.transport": "2.6.0",

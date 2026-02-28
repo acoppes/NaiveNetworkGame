@@ -177,23 +177,25 @@ namespace NaiveNetworkGame.Server.Systems
                         // var writer = m_Driver.BeginSend(server.framentationPipeline, connection,
                         //     sizeof(byte) + sizeof(ushort) +
                         //     NetworkTranslationSync.GetSize() * count);
-                        
-                        m_Driver.BeginSend(server.fragmentationPipeline, connection, out var writer, sizeof(byte) + sizeof(ushort) +
-                            NetworkTranslationSync.GetSize() * count);
 
-                        writer.WriteByte(PacketType.ServerTranslationSync);
-                        writer.WriteUShort((ushort) count);
-
-                        foreach (var networkTranslationSync in 
-                            SystemAPI.Query<RefRO<NetworkTranslationSync>>())
+                        if (m_Driver.BeginSend(server.fragmentationPipeline, connection, out var writer, sizeof(byte) +
+                                sizeof(ushort) +
+                                NetworkTranslationSync.GetSize() * count) == 0)
                         {
-                            networkTranslationSync.ValueRO.Write(ref writer);
+                            writer.WriteByte(PacketType.ServerTranslationSync);
+                            writer.WriteUShort((ushort) count);
+
+                            foreach (var networkTranslationSync in 
+                                     SystemAPI.Query<RefRO<NetworkTranslationSync>>())
+                            {
+                                networkTranslationSync.ValueRO.Write(ref writer);
+                            }
+
+                            m_Driver.EndSend(writer);
+
+                            ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
+                            ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                         }
-
-                        m_Driver.EndSend(writer);
-
-                        ServerNetworkStatistics.outputBytesTotal += writer.LengthInBits / 8;
-                        ServerNetworkStatistics.outputBytesLastFrame += writer.LengthInBits / 8;
                     }
                 }
             }
