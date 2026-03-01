@@ -8,6 +8,5 @@ namespace NaiveNetworkGame.Client.Components
     {
         public List<Sprite> sprites;
         public float fps;
-        public float frameTime => 1f / fps;
     }
 }
