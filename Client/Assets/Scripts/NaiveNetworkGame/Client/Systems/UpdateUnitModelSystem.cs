@@ -23,11 +23,11 @@ namespace NaiveNetworkGame.Client.Systems
                     .WithAll<ModelPrefabComponent>())
             {
                 var animator = modelInstance.instance.GetComponent<Animator>();
-                if (animator != null)
+                if (animator)
                     animator.SetInteger("state", unitState.ValueRO.state);
 
                 var model = modelInstance.instance.GetComponent<UnitModelBehaviour>();
-                if (model != null)
+                if (model)
                 {
                     model.isDurationVisible = unitState.ValueRO.state == UnitStateTypes.spawningState;
                     model.durationAlpha = unitState.ValueRO.percentage / 100.0f;
@@ -41,7 +41,7 @@ namespace NaiveNetworkGame.Client.Systems
                 SystemAPI.Query<ModelInstanceComponent, RefRO<Unit>>())
             {
                 var model = modelInstance.instance.GetComponent<UnitModelBehaviour>();
-                if (model == null)
+                if (!model)
                     continue;
                 model.isActivePlayer = unit.ValueRO.isLocalPlayer;
                 model.isSelected = unit.ValueRO.isSelected;

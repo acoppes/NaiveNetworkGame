@@ -12,26 +12,28 @@ namespace NaiveNetworkGame.Client.Systems
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             
             foreach (var animationComponent in 
-                     SystemAPI.Query<SpriteAnimationComponent>())
+                     SystemAPI.Query<RefRW<SpriteAnimationComponent>>())
             {
-                animationComponent.currentTime += SystemAPI.Time.DeltaTime;
+                var animation = animationComponent.ValueRO.animationReference.Value;
+                
+                animationComponent.ValueRW.currentTime += SystemAPI.Time.DeltaTime;
 
-                if (animationComponent.currentTime > animationComponent.frameTime)
+                if (animationComponent.ValueRW.currentTime > animation.frameTime)
                 {
-                    animationComponent.currentTime -= animationComponent.frameTime;
-                    animationComponent.current++;
+                    animationComponent.ValueRW.currentTime -= animation.frameTime;
+                    animationComponent.ValueRW.current++;
                 }
 
-                if (animationComponent.current >= animationComponent.sprites.Count)
+                if (animationComponent.ValueRW.current >= animation.sprites.Count)
                 {
-                    animationComponent.current = 0;
+                    animationComponent.ValueRW.current = 0;
                 }
             }
             
-            foreach (var (animationComponent, spriteRenderer) in 
-                     SystemAPI.Query<SpriteAnimationComponent, SystemAPI.ManagedAPI.UnityEngineComponent<SpriteRenderer>>())
+            foreach (var (spriteAnimation, spriteRenderer) in 
+                     SystemAPI.Query<RefRO<SpriteAnimationComponent>, SystemAPI.ManagedAPI.UnityEngineComponent<SpriteRenderer>>())
             {
-                spriteRenderer.Value.sprite = animationComponent.sprites[animationComponent.current];
+                spriteRenderer.Value.sprite = spriteAnimation.ValueRO.animationReference.Value.sprites[spriteAnimation.ValueRO.current];
             }
             
             ecb.Playback(state.EntityManager);

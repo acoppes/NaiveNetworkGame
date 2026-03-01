@@ -2,6 +2,7 @@ using System;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NaiveNetworkGame.Client.Systems
 {
@@ -62,7 +63,7 @@ namespace NaiveNetworkGame.Client.Systems
 
                 var modelInstanceComponent = new ModelInstanceComponent
                 {
-                    instance = GameObject.Instantiate(modelPrefab.prefab, modelRoot)
+                    instance = Object.Instantiate(modelPrefab.prefab, modelRoot)
                 };
                 
                 modelInstanceComponent.unitModel =
@@ -76,7 +77,7 @@ namespace NaiveNetworkGame.Client.Systems
                     .WithNone<ModelPrefabComponent>()
                     .WithEntityAccess())
             {
-                GameObject.Destroy(modelInstance.instance);
+                Object.Destroy(modelInstance.instance);
                 ecb.RemoveComponent<ModelInstanceComponent>(entity);
             }
             

@@ -223,17 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79cada0b57504e41b136bef6bc46ae77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NaiveNetworkGame.Client.Components.SpriteAnimationComponentAuthoring
-  sprites:
-  - {fileID: -1096866312849734670, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: -6277335050577714769, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: -7949638372275176648, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: 6727000310633856509, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: -5996513106995404902, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: 8803972094293049750, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: -9168275576555318742, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: -1276143253683655830, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  - {fileID: -2062449835145457812, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
-  fps: 15
+  animationDefinition: {fileID: 11400000, guid: dc95b0fd3afbbe44fb74495d50478dee, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

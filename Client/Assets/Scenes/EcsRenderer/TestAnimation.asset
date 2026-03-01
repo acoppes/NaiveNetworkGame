@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6321cb7ee0064e6d8b900581d3585c50, type: 3}
+  m_Name: TestAnimation
+  m_EditorClassIdentifier: Assembly-CSharp::NaiveNetworkGame.Client.Components.AnimationDefinition
+  sprites:
+  - {fileID: -1096866312849734670, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: -6277335050577714769, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: -7949638372275176648, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: 6727000310633856509, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: -5996513106995404902, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: 8803972094293049750, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: -9168275576555318742, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: -1276143253683655830, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  - {fileID: -2062449835145457812, guid: 13e1b9d0cadc95e48a5f4efbab93bd05, type: 3}
+  fps: 12
