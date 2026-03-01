@@ -25,38 +25,40 @@ namespace NaiveNetworkGame.Client.Systems
                          .WithEntityAccess())
             {
                 var newAnimation = unitSprites.ValueRO.animations[play.ValueRO.animation];
-                animation.ValueRW.animation = newAnimation;
+
+                animation.ValueRW.currentAnimation = play.ValueRO.animation;
+                animation.ValueRW.currentFrame = 0;
+                animation.ValueRW.frameTime = newAnimation.Value.frameTime;
+                animation.ValueRW.totalFrames = newAnimation.Value.sprites.Count;
+                
                 ecb.RemoveComponent(e, typeof(UnitSpritePlayAnimationComponent));
             }
             
+            // TODO: TEST RUNNING THIS IN PARALLEL WITH JOBS
             foreach (var animationComponent in 
                      SystemAPI.Query<RefRW<SpriteAnimationComponent>>())
             {
-                if (animationComponent.ValueRO.animation == null)
-                {
-                    continue;
-                }
+                ref var animator = ref animationComponent.ValueRW;
                 
-                var animation = animationComponent.ValueRO.animation.Value;
-                
-                animationComponent.ValueRW.currentTime += SystemAPI.Time.DeltaTime;
+                animator.currentTime += SystemAPI.Time.DeltaTime;
 
-                if (animationComponent.ValueRW.currentTime > animation.frameTime)
+                if (animator.currentTime > animator.frameTime)
                 {
-                    animationComponent.ValueRW.currentTime -= animation.frameTime;
-                    animationComponent.ValueRW.current++;
+                    animator.currentTime -= animator.frameTime;
+                    animator.currentFrame++;
                 }
 
-                if (animationComponent.ValueRW.current >= animation.sprites.Count)
+                if (animator.currentFrame >= animator.totalFrames)
                 {
-                    animationComponent.ValueRW.current = 0;
+                    animator.currentFrame = 0;
                 }
             }
             
-            foreach (var (spriteAnimation, spriteRenderer) in 
-                     SystemAPI.Query<RefRO<SpriteAnimationComponent>, SystemAPI.ManagedAPI.UnityEngineComponent<SpriteRenderer>>())
+            foreach (var (animator, animations, renderer) in 
+                     SystemAPI.Query<RefRO<SpriteAnimationComponent>, RefRO<UnitSpritesAnimationsComponent>, SystemAPI.ManagedAPI.UnityEngineComponent<SpriteRenderer>>())
             {
-                spriteRenderer.Value.sprite = spriteAnimation.ValueRO.animation.Value.sprites[spriteAnimation.ValueRO.current];
+                var animationRef = animations.ValueRO.animations[animator.ValueRO.currentAnimation];
+                renderer.Value.sprite = animationRef.Value.sprites[animator.ValueRO.currentFrame];
             }
             
             ecb.Playback(state.EntityManager);

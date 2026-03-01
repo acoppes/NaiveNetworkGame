@@ -5,9 +5,13 @@ namespace NaiveNetworkGame.Client.Components
 {
     public struct SpriteAnimationComponent : IComponentData
     {
-        public UnityObjectRef<AnimationDefinition> animation;
         public float currentTime;
-        public int current;
+        public int currentFrame;
+        
+        public int currentAnimation;
+        
+        public int totalFrames;
+        public float frameTime;
     }
 
     public class SpriteAnimationComponentAuthoring : MonoBehaviour
